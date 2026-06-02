@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" width="96" height="96" shape-rendering="crispEdges">
+  <metadata>Generated pixel-art inspired game asset for Red Dust demo.</metadata>
+  <rect x="0" y="0" width="96" height="96" fill="transparent"/><rect x="16" y="62" width="64" height="10" fill="#07090b" opacity="0.55"/><rect x="18" y="30" width="60" height="40" fill="#d9c6a3" opacity="0.9"/><rect x="26" y="24" width="44" height="12" fill="#e84545"/><rect x="43" y="38" width="10" height="22" fill="#e84545"/><rect x="36" y="44" width="24" height="10" fill="#e84545"/><rect x="66" y="6" width="4" height="4" fill="#a8482a" opacity="0.32"/>
+  <rect x="7" y="29" width="8" height="8" fill="#71808a" opacity="0.32"/>
+  <rect x="44" y="52" width="12" height="4" fill="#e84545" opacity="0.32"/>
+  <rect x="81" y="75" width="4" height="8" fill="#a8482a" opacity="0.32"/>
+  <rect x="22" y="2" width="8" height="4" fill="#71808a" opacity="0.32"/>
+  <rect x="59" y="25" width="12" height="8" fill="#e84545" opacity="0.32"/>
+  <rect x="0" y="48" width="4" height="4" fill="#a8482a" opacity="0.32"/>
+  <rect x="37" y="71" width="8" height="8" fill="#71808a" opacity="0.32"/>
+  <rect x="74" y="94" width="12" height="4" fill="#e84545" opacity="0.32"/>
+  <rect x="15" y="21" width="4" height="8" fill="#a8482a" opacity="0.32"/>
+</svg>

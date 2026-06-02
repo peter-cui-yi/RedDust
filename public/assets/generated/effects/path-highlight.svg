@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 32" width="256" height="32" shape-rendering="crispEdges">
+  <metadata>Generated pixel-art inspired game asset for Red Dust demo.</metadata>
+  <rect x="0" y="0" width="256" height="32" fill="transparent"/><line x1="8" y1="16" x2="248" y2="16" stroke="#8feaff" stroke-width="8" opacity="0.36"/><line x1="8" y1="16" x2="248" y2="16" stroke="#8feaff" stroke-width="2" opacity="0.95"/><rect x="132" y="12" width="4" height="4" fill="#8feaff" opacity="0.32"/>
+  <rect x="169" y="3" width="8" height="8" fill="#ffb15f" opacity="0.32"/>
+  <rect x="206" y="26" width="12" height="4" fill="#8feaff" opacity="0.32"/>
+  <rect x="243" y="17" width="4" height="8" fill="#ffb15f" opacity="0.32"/>
+  <rect x="24" y="8" width="8" height="4" fill="#8feaff" opacity="0.32"/>
+  <rect x="61" y="31" width="12" height="8" fill="#ffb15f" opacity="0.32"/>
+  <rect x="98" y="22" width="4" height="4" fill="#8feaff" opacity="0.32"/>
+  <rect x="135" y="13" width="8" height="8" fill="#ffb15f" opacity="0.32"/>
+  <rect x="172" y="4" width="12" height="4" fill="#8feaff" opacity="0.32"/>
+  <rect x="209" y="27" width="4" height="8" fill="#ffb15f" opacity="0.32"/>
+  <rect x="246" y="18" width="8" height="4" fill="#8feaff" opacity="0.32"/>
+  <rect x="27" y="9" width="12" height="8" fill="#ffb15f" opacity="0.32"/>
+  <rect x="64" y="0" width="4" height="4" fill="#8feaff" opacity="0.32"/>
+  <rect x="101" y="23" width="8" height="8" fill="#ffb15f" opacity="0.32"/>
+  <rect x="138" y="14" width="12" height="4" fill="#8feaff" opacity="0.32"/>
+  <rect x="175" y="5" width="4" height="8" fill="#ffb15f" opacity="0.32"/>
+  <rect x="212" y="28" width="8" height="4" fill="#8feaff" opacity="0.32"/>
+  <rect x="249" y="19" width="12" height="8" fill="#ffb15f" opacity="0.32"/>
+  <rect x="30" y="10" width="4" height="4" fill="#8feaff" opacity="0.32"/>
+  <rect x="67" y="1" width="8" height="8" fill="#ffb15f" opacity="0.32"/>
+  <rect x="104" y="24" width="12" height="4" fill="#8feaff" opacity="0.32"/>
+  <rect x="141" y="15" width="4" height="8" fill="#ffb15f" opacity="0.32"/>
+  <rect x="178" y="6" width="8" height="4" fill="#8feaff" opacity="0.32"/>
+  <rect x="215" y="29" width="12" height="8" fill="#ffb15f" opacity="0.32"/>
+</svg>

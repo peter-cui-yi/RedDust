@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" width="96" height="96" shape-rendering="crispEdges">
+  <metadata>Generated pixel-art inspired game asset for Red Dust demo.</metadata>
+  
+  <rect x="0" y="0" width="96" height="96" fill="transparent"/>
+  <rect x="10" y="10" width="76" height="76" fill="#07090b" opacity="0.82"/>
+  <rect x="16" y="16" width="64" height="64" fill="#2b211b"/>
+  <rect x="24" y="24" width="48" height="48" fill="#3b4852"/><rect x="34" y="34" width="28" height="28" fill="#8feaff" opacity="0.85"/>
+  <line x1="16" y1="16" x2="80" y2="16" stroke="#8feaff" stroke-width="3" opacity="0.65"/>
+  <line x1="16" y1="80" x2="80" y2="80" stroke="#a8482a" stroke-width="3" opacity="0.65"/>
+
+</svg>

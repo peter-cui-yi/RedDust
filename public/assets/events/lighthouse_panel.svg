@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="28" fill="#10120d"/>
+  <rect x="84" y="70" width="344" height="318" rx="18" fill="#20271d" stroke="#78915e" stroke-width="13"/>
+  <g stroke="#8fc27b" stroke-width="14" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <path d="M126 160h78l40 78h72l70-118"/>
+    <path d="M128 272h88l48-48 44 84h78"/>
+    <path d="M128 334h112l38-42 74 38"/>
+  </g>
+  <g fill="#ffe2aa">
+    <circle cx="124" cy="160" r="17"/>
+    <circle cx="386" cy="120" r="17"/>
+    <circle cx="128" cy="272" r="17"/>
+    <circle cx="386" cy="308" r="17"/>
+    <circle cx="128" cy="334" r="17"/>
+    <circle cx="352" cy="330" r="17"/>
+  </g>
+  <path d="M182 430h148M210 458h92" stroke="#70c7c9" stroke-width="16" stroke-linecap="round"/>
+  <path d="M254 62l26 52h-52z" fill="#ffe2aa"/>
+  <text x="256" y="424" text-anchor="middle" font-family="monospace" font-size="30" fill="#f7ead3">LIGHTHOUSE</text>
+</svg>

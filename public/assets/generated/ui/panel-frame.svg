@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" width="320" height="180" shape-rendering="crispEdges">
+  <metadata>Generated pixel-art inspired game asset for Red Dust demo.</metadata>
+  
+  <rect x="0" y="0" width="320" height="180" fill="transparent"/>
+  <rect x="4" y="4" width="312" height="172" fill="#07090b" opacity="0.92"/>
+  <rect x="10" y="10" width="300" height="160" fill="#2b211b" opacity="0.94"/>
+  <line x1="12" y1="12" x2="308" y2="12" stroke="#ffb15f" stroke-width="4" opacity="0.75"/>
+  <line x1="12" y1="168" x2="308" y2="168" stroke="#a8482a" stroke-width="4" opacity="0.75"/>
+  <rect x="0" y="0" width="14" height="14" fill="#ffb15f" opacity="0.7"/>
+  <rect x="306" y="0" width="14" height="14" fill="#ffb15f" opacity="0.7"/>
+  <rect x="0" y="166" width="14" height="14" fill="#a8482a" opacity="0.7"/>
+  <rect x="306" y="166" width="14" height="14" fill="#a8482a" opacity="0.7"/>
+  <rect x="121" y="7" width="12" height="8" fill="#ffb15f" opacity="0.32"/>
+  <rect x="158" y="30" width="4" height="4" fill="#a8482a" opacity="0.32"/>
+  <rect x="195" y="53" width="8" height="8" fill="#71808a" opacity="0.32"/>
+  <rect x="232" y="76" width="12" height="4" fill="#ffb15f" opacity="0.32"/>
+  <rect x="269" y="99" width="4" height="8" fill="#a8482a" opacity="0.32"/>
+  <rect x="306" y="122" width="8" height="4" fill="#71808a" opacity="0.32"/>
+  <rect x="23" y="145" width="12" height="8" fill="#ffb15f" opacity="0.32"/>
+  <rect x="60" y="168" width="4" height="4" fill="#a8482a" opacity="0.32"/>
+  <rect x="97" y="11" width="8" height="8" fill="#71808a" opacity="0.32"/>
+  <rect x="134" y="34" width="12" height="4" fill="#ffb15f" opacity="0.32"/>
+  <rect x="171" y="57" width="4" height="8" fill="#a8482a" opacity="0.32"/>
+  <rect x="208" y="80" width="8" height="4" fill="#71808a" opacity="0.32"/>
+  <rect x="245" y="103" width="12" height="8" fill="#ffb15f" opacity="0.32"/>
+  <rect x="282" y="126" width="4" height="4" fill="#a8482a" opacity="0.32"/>
+  <rect x="319" y="149" width="8" height="8" fill="#71808a" opacity="0.32"/>
+  <rect x="36" y="172" width="12" height="4" fill="#ffb15f" opacity="0.32"/>
+  <rect x="73" y="15" width="4" height="8" fill="#a8482a" opacity="0.32"/>
+  <rect x="110" y="38" width="8" height="4" fill="#71808a" opacity="0.32"/>
+  <rect x="147" y="61" width="12" height="8" fill="#ffb15f" opacity="0.32"/>
+  <rect x="184" y="84" width="4" height="4" fill="#a8482a" opacity="0.32"/>
+  <rect x="221" y="107" width="8" height="8" fill="#71808a" opacity="0.32"/>
+
+</svg>

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="28" fill="#120d0a"/>
+  <path d="M92 458l84-320h160l84 320z" fill="#2a211b" stroke="#7c5533" stroke-width="12" stroke-linejoin="round"/>
+  <path d="M176 138L88 86M336 138l88-52M176 138v320M336 138v320" stroke="#5a3a26" stroke-width="11" stroke-linecap="round"/>
+  <path d="M114 396c54-28 89-14 132 4 53 22 92 25 152-8" fill="none" stroke="#c94d3f" stroke-width="20" stroke-linecap="round" opacity=".86"/>
+  <g fill="#e1b66c" opacity=".8">
+    <circle cx="180" cy="262" r="11"/>
+    <circle cx="306" cy="316" r="9"/>
+    <circle cx="236" cy="374" r="8"/>
+    <circle cx="366" cy="238" r="7"/>
+  </g>
+  <path d="M222 86h68l22 44H200z" fill="#70c7c9" opacity=".85"/>
+  <text x="256" y="474" text-anchor="middle" font-family="monospace" font-size="30" fill="#f7ead3">RED SAND</text>
+</svg>

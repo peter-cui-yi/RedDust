@@ -1,0 +1,78 @@
+import type { AgentRunState } from "../data/types";
+
+type AgentControlBarProps = {
+  runState: AgentRunState;
+  onStart: () => void;
+  onPause: () => void;
+  onStep: () => void;
+  onSpeed: (speed: 1 | 2 | 4) => void;
+  onReset: () => void;
+  onRunBoth: () => void;
+  onBenchmark: () => void;
+  onReplay: () => void;
+  onCredits: () => void;
+};
+
+export function AgentControlBar({
+  runState,
+  onStart,
+  onPause,
+  onStep,
+  onSpeed,
+  onReset,
+  onRunBoth,
+  onBenchmark,
+  onReplay,
+  onCredits
+}: AgentControlBarProps) {
+  return (
+    <section className="agent-control-bar" aria-label="Agent runner controls">
+      <div>
+        <p className="control-label">Agent Run Controls</p>
+        <div className="control-row">
+          <button onClick={onStart}>{runState.isRunning ? "Resume Run" : "Start Agent Run"}</button>
+          <button className="ghost" onClick={onPause}>
+            {runState.isPaused ? "Resume" : "Pause"}
+          </button>
+          <button className="ghost" onClick={onStep}>
+            Step
+          </button>
+          <button className="ghost" onClick={onReset}>
+            Reset Run
+          </button>
+          <button className="ghost" onClick={onRunBoth}>
+            Run Both Branches
+          </button>
+        </div>
+      </div>
+      <div>
+        <p className="control-label">Speed</p>
+        <div className="segmented-control">
+          {[1, 2, 4].map((speed) => (
+            <button
+              className={runState.speed === speed ? "active" : "ghost"}
+              key={speed}
+              onClick={() => onSpeed(speed as 1 | 2 | 4)}
+            >
+              x{speed}
+            </button>
+          ))}
+        </div>
+      </div>
+      <div>
+        <p className="control-label">View Panels</p>
+        <div className="control-row compact">
+          <button className="ghost" onClick={onBenchmark}>
+            Benchmark
+          </button>
+          <button className="ghost" onClick={onReplay}>
+            Replay
+          </button>
+          <button className="ghost" onClick={onCredits}>
+            Credits
+          </button>
+        </div>
+      </div>
+    </section>
+  );
+}

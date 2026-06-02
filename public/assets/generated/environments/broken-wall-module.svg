@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 128" width="192" height="128" shape-rendering="crispEdges">
+  <metadata>Generated pixel-art inspired game asset for Red Dust demo.</metadata>
+  
+  <rect x="0" y="0" width="192" height="128" fill="#2b211b"/>
+  <rect x="8" y="8" width="176" height="112" fill="#07090b" opacity="0.55"/>
+  <line x1="8" y1="8" x2="184" y2="8" stroke="#a8482a" stroke-width="4" opacity="0.72"/>
+  <line x1="8" y1="120" x2="184" y2="120" stroke="#4a382c" stroke-width="6" opacity="0.82"/>
+  <rect x="6" y="50" width="4" height="4" fill="#a8482a" opacity="0.32"/>
+  <rect x="43" y="73" width="8" height="8" fill="#71808a" opacity="0.32"/>
+  <rect x="80" y="96" width="12" height="4" fill="#c99058" opacity="0.32"/>
+  <rect x="117" y="119" width="4" height="8" fill="#a8482a" opacity="0.32"/>
+  <rect x="154" y="14" width="8" height="4" fill="#71808a" opacity="0.32"/>
+  <rect x="191" y="37" width="12" height="8" fill="#c99058" opacity="0.32"/>
+  <rect x="36" y="60" width="4" height="4" fill="#a8482a" opacity="0.32"/>
+  <rect x="73" y="83" width="8" height="8" fill="#71808a" opacity="0.32"/>
+  <rect x="110" y="106" width="12" height="4" fill="#c99058" opacity="0.32"/>
+  <rect x="147" y="1" width="4" height="8" fill="#a8482a" opacity="0.32"/>
+  <rect x="184" y="24" width="8" height="4" fill="#71808a" opacity="0.32"/>
+  <rect x="29" y="47" width="12" height="8" fill="#c99058" opacity="0.32"/>
+  <rect x="66" y="70" width="4" height="4" fill="#a8482a" opacity="0.32"/>
+  <rect x="103" y="93" width="8" height="8" fill="#71808a" opacity="0.32"/>
+  <rect x="140" y="116" width="12" height="4" fill="#c99058" opacity="0.32"/>
+  <rect x="177" y="11" width="4" height="8" fill="#a8482a" opacity="0.32"/>
+  <rect x="22" y="34" width="8" height="4" fill="#71808a" opacity="0.32"/>
+  <rect x="59" y="57" width="12" height="8" fill="#c99058" opacity="0.32"/>
+  <rect x="96" y="80" width="4" height="4" fill="#a8482a" opacity="0.32"/>
+  <rect x="133" y="103" width="8" height="8" fill="#71808a" opacity="0.32"/>
+  <rect x="170" y="126" width="12" height="4" fill="#c99058" opacity="0.32"/>
+  <rect x="15" y="21" width="4" height="8" fill="#a8482a" opacity="0.32"/>
+  <rect x="52" y="44" width="8" height="4" fill="#71808a" opacity="0.32"/>
+  <rect x="89" y="67" width="12" height="8" fill="#c99058" opacity="0.32"/>
+  <rect x="126" y="90" width="4" height="4" fill="#a8482a" opacity="0.32"/>
+  <rect x="163" y="113" width="8" height="8" fill="#71808a" opacity="0.32"/>
+  <rect x="8" y="8" width="12" height="4" fill="#c99058" opacity="0.32"/>
+  <rect x="45" y="31" width="4" height="8" fill="#a8482a" opacity="0.32"/>
+  <rect x="82" y="54" width="8" height="4" fill="#71808a" opacity="0.32"/>
+  <rect x="119" y="77" width="12" height="8" fill="#c99058" opacity="0.32"/>
+  <rect x="156" y="100" width="4" height="4" fill="#a8482a" opacity="0.32"/>
+  <rect x="1" y="123" width="8" height="8" fill="#71808a" opacity="0.32"/>
+  <rect x="38" y="18" width="12" height="4" fill="#c99058" opacity="0.32"/>
+  <rect x="75" y="41" width="4" height="8" fill="#a8482a" opacity="0.32"/>
+  <text x="14" y="24" fill="#a8482a" font-family="monospace" font-size="10" font-weight="700">BROKEN WALL MODULE</text>
+
+</svg>
