@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" role="img" aria-label="AURA DESTROYED">
+  <rect width="960" height="540" fill="#090b0d"/>
+  <defs>
+    <linearGradient id="bg12" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#211510"/>
+      <stop offset=".56" stop-color="#3a2116"/>
+      <stop offset="1" stop-color="#0b0d10"/>
+    </linearGradient>
+    <filter id="rough12">
+      <feTurbulence baseFrequency=".035" numOctaves="2" seed="29"/>
+      <feDisplacementMap in="SourceGraphic" scale="1.8"/>
+    </filter>
+  </defs>
+  <rect x="28" y="28" width="904" height="484" rx="12" fill="url(#bg12)" stroke="#c99058" stroke-width="4"/>
+  <path d="M28 360c160-42 260 26 406-30 154-60 284 52 498-26v208H28z" fill="#120f0d" opacity=".72"/>
+  <path d="M66 104h858M66 456h858" stroke="#ffd60a" stroke-dasharray="9 16" opacity=".18"/>
+  <path d="M80 122l112-44h132l44 78h-92l-36-38-82 60z" fill="#d05a2a" opacity=".17"/>
+  <path d="M272 444h24" stroke="#d05a2a" stroke-width="1" opacity="0.08"/><path d="M345 87h35" stroke="#d05a2a" stroke-width="2" opacity="0.115"/><path d="M418 128h46" stroke="#d05a2a" stroke-width="3" opacity="0.15000000000000002"/><path d="M491 169h57" stroke="#d05a2a" stroke-width="1" opacity="0.185"/><path d="M564 210h68" stroke="#d05a2a" stroke-width="2" opacity="0.08"/><path d="M637 251h79" stroke="#d05a2a" stroke-width="3" opacity="0.115"/><path d="M710 292h90" stroke="#d05a2a" stroke-width="1" opacity="0.15000000000000002"/><path d="M783 333h101" stroke="#d05a2a" stroke-width="2" opacity="0.185"/><path d="M856 374h26" stroke="#d05a2a" stroke-width="3" opacity="0.08"/><path d="M53 415h37" stroke="#d05a2a" stroke-width="1" opacity="0.115"/><path d="M126 456h48" stroke="#d05a2a" stroke-width="2" opacity="0.15000000000000002"/><path d="M199 99h59" stroke="#d05a2a" stroke-width="3" opacity="0.185"/><path d="M272 140h70" stroke="#d05a2a" stroke-width="1" opacity="0.08"/><path d="M345 181h81" stroke="#d05a2a" stroke-width="2" opacity="0.115"/><path d="M418 222h92" stroke="#d05a2a" stroke-width="3" opacity="0.15000000000000002"/><path d="M491 263h103" stroke="#d05a2a" stroke-width="1" opacity="0.185"/><path d="M564 304h28" stroke="#d05a2a" stroke-width="2" opacity="0.08"/><path d="M637 345h39" stroke="#d05a2a" stroke-width="3" opacity="0.115"/><path d="M710 386h50" stroke="#d05a2a" stroke-width="1" opacity="0.15000000000000002"/><path d="M783 427h61" stroke="#d05a2a" stroke-width="2" opacity="0.185"/><path d="M856 468h72" stroke="#d05a2a" stroke-width="3" opacity="0.08"/><path d="M53 111h83" stroke="#d05a2a" stroke-width="1" opacity="0.115"/><path d="M126 152h94" stroke="#d05a2a" stroke-width="2" opacity="0.15000000000000002"/><path d="M199 193h105" stroke="#d05a2a" stroke-width="3" opacity="0.185"/><path d="M272 234h30" stroke="#d05a2a" stroke-width="1" opacity="0.08"/><path d="M345 275h41" stroke="#d05a2a" stroke-width="2" opacity="0.115"/><path d="M418 316h52" stroke="#d05a2a" stroke-width="3" opacity="0.15000000000000002"/><path d="M491 357h63" stroke="#d05a2a" stroke-width="1" opacity="0.185"/><path d="M564 398h74" stroke="#d05a2a" stroke-width="2" opacity="0.08"/><path d="M637 439h85" stroke="#d05a2a" stroke-width="3" opacity="0.115"/><path d="M710 82h96" stroke="#d05a2a" stroke-width="1" opacity="0.15000000000000002"/><path d="M783 123h107" stroke="#d05a2a" stroke-width="2" opacity="0.185"/><path d="M856 164h32" stroke="#d05a2a" stroke-width="3" opacity="0.08"/><path d="M53 205h43" stroke="#d05a2a" stroke-width="1" opacity="0.115"/>
+  <rect x="70" y="76" width="160" height="90" rx="5" fill="#381a13" stroke="#d05a2a" stroke-width="4" opacity=".82"/>
+  <path d="M82 98l136 46M218 98L82 144" stroke="#d9c7ad" stroke-width="5" opacity=".36"/>
+  <path d="M44 44h868v448H44z" fill="none" stroke="#e84545" stroke-width="1.5" opacity=".35"/>
+  <g filter="url(#rough12)">
+        <g>
+    <rect x="380" y="168" width="180" height="150" rx="10" fill="#152328" stroke="#e84545" stroke-width="4"/>
+    <circle cx="470" cy="240" r="44" fill="#071216" stroke="#e84545" stroke-width="6"/>
+    <circle cx="470" cy="240" r="18" fill="#e84545" opacity=".65"/>
+    <path d="M416 188h108M416 300h108" stroke="#b7a083" stroke-width="5" opacity=".45"/>
+    <path d="M438 190l28-28 16 32 34-18-10 42 34 12-38 14 8 38-30-24-34 26 8-42-36-16 38-12z" fill="#e84545" opacity=".85"/>
+  </g>
+        <path d="M250 378l460-88" stroke="#e84545" stroke-width="18" stroke-linecap="round"/>
+        <path d="M220 418h560" stroke="#d05a2a" stroke-width="20" opacity=".35"/>
+        <g transform="translate(224 318)">
+    <rect x="13.299999999999999" y="0" width="26.599999999999998" height="6.6499999999999995" fill="#c0b090" />
+    <rect x="6.6499999999999995" y="6.6499999999999995" width="39.9" height="6.6499999999999995" fill="#c0b090" />
+    <rect x="6.6499999999999995" y="13.299999999999999" width="39.9" height="19.95" fill="#d4956a" />
+    <rect x="13.299999999999999" y="19.95" width="6.6499999999999995" height="6.6499999999999995" fill="#171717" />
+    <rect x="33.25" y="19.95" width="6.6499999999999995" height="6.6499999999999995" fill="#171717" />
+    <rect x="0" y="19.950000000000003" width="6.6499999999999995" height="19.95" fill="#d4956a" />
+    <rect x="46.55" y="33.25" width="6.6499999999999995" height="33.25" fill="#d4956a" />
+    <rect x="6.6499999999999995" y="33.25" width="39.9" height="26.599999999999998" fill="#6f5c3e" />
+    <rect x="13.299999999999999" y="59.849999999999994" width="13.299999999999999" height="19.95" fill="#34312d" />
+    <rect x="33.25" y="59.849999999999994" width="13.299999999999999" height="19.95" fill="#34312d" />
+    <rect x="6.6499999999999995" y="79.8" width="19.95" height="6.6499999999999995" fill="#111" />
+    <rect x="33.25" y="79.8" width="19.95" height="6.6499999999999995" fill="#111" />
+  </g>
+        <g transform="translate(660 322)">
+    <rect x="13.299999999999999" y="0" width="26.599999999999998" height="6.6499999999999995" fill="#3a2116" />
+    <rect x="6.6499999999999995" y="6.6499999999999995" width="39.9" height="6.6499999999999995" fill="#3a2116" />
+    <rect x="6.6499999999999995" y="13.299999999999999" width="39.9" height="19.95" fill="#d4956a" />
+    <rect x="13.299999999999999" y="19.95" width="6.6499999999999995" height="6.6499999999999995" fill="#171717" />
+    <rect x="33.25" y="19.95" width="6.6499999999999995" height="6.6499999999999995" fill="#171717" />
+    <rect x="0" y="26.6" width="6.6499999999999995" height="19.95" fill="#d4956a" />
+    <rect x="46.55" y="33.25" width="6.6499999999999995" height="26.599999999999998" fill="#d4956a" />
+    <rect x="6.6499999999999995" y="33.25" width="39.9" height="26.599999999999998" fill="#8a5a3a" />
+    <rect x="13.299999999999999" y="59.849999999999994" width="13.299999999999999" height="19.95" fill="#34312d" />
+    <rect x="33.25" y="59.849999999999994" width="13.299999999999999" height="19.95" fill="#34312d" />
+    <rect x="6.6499999999999995" y="79.8" width="19.95" height="6.6499999999999995" fill="#111" />
+    <rect x="33.25" y="79.8" width="19.95" height="6.6499999999999995" fill="#111" />
+  </g>
+        <text x="302" y="438" fill="#e84545" font-family="Courier New, monospace" font-size="20" font-weight="800" text-anchor="start">AUDIT TRAIL DAMAGED</text>
+      </g>
+  <g>
+    <rect x="70" y="58" width="424" height="84" rx="8" fill="#0b0d10" opacity=".7" stroke="#e84545" stroke-width="2"/>
+    <text x="92" y="91" fill="#e84545" font-family="Courier New, monospace" font-size="22" font-weight="800" text-anchor="start">FAILURE</text>
+    <text x="92" y="126" fill="#fff1dc" font-family="Georgia, serif" font-size="32" font-weight="700">AURA DESTROYED</text>
+    <rect x="70" y="462" width="820" height="40" rx="6" fill="#0b0d10" opacity=".68" stroke="#c99058" stroke-width="1.5"/>
+    <text x="92" y="488" fill="#b7a083" font-family="Courier New, monospace" font-size="18" font-weight="700" text-anchor="start">The speaker breaks after hidden risk becomes coercion.</text>
+  </g>
+</svg>

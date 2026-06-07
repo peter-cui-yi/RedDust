@@ -11,6 +11,9 @@
     "dev": "vite --host 127.0.0.1",
     "typecheck": "tsc -b",
     "build": "tsc -b && vite build",
+    "generate:story-art": "node scripts/generate-story-art.mjs",
+    "validate:script": "node scripts/validate-script-upgrade.mjs",
+    "smoke:browser": "node scripts/browser-smoke.mjs",
     "preview": "vite preview --host 127.0.0.1",
     "clean": "rm -rf dist *.tsbuildinfo"
   },

@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Red Dust Day 12 Image 2 Art Production Log</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #0c0b0a;
+        --panel: #17110e;
+        --line: #694622;
+        --ink: #f2d6a3;
+        --muted: #b49b7c;
+        --aura: #8eeaff;
+        --warn: #ffd23f;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background:
+          radial-gradient(circle at top left, rgba(143, 71, 30, 0.24), transparent 34rem),
+          linear-gradient(180deg, #110d0b, var(--bg));
+        color: var(--ink);
+        font: 16px/1.6 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      main {
+        width: min(1180px, calc(100% - 40px));
+        margin: 0 auto;
+        padding: 40px 0 64px;
+      }
+
+      header,
+      section {
+        border: 1px solid rgba(242, 214, 163, 0.14);
+        border-radius: 8px;
+        background: rgba(14, 12, 11, 0.78);
+        box-shadow: 0 24px 80px rgba(0, 0, 0, 0.24);
+      }
+
+      header {
+        padding: 28px;
+      }
+
+      section {
+        margin-top: 18px;
+        padding: 22px;
+      }
+
+      .kicker {
+        margin: 0 0 8px;
+        color: var(--aura);
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      h1,
+      h2 {
+        margin: 0;
+        line-height: 1.15;
+      }
+
+      h1 {
+        font-size: clamp(32px, 5vw, 56px);
+      }
+
+      h2 {
+        font-size: 24px;
+      }
+
+      p {
+        margin: 10px 0 0;
+        color: var(--muted);
+      }
+
+      code {
+        color: var(--aura);
+      }
+
+      .pill-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 18px;
+      }
+
+      .pill {
+        border: 1px solid rgba(142, 234, 255, 0.26);
+        border-radius: 999px;
+        padding: 6px 10px;
+        color: var(--aura);
+        font-size: 13px;
+        font-weight: 700;
+      }
+
+      .contact-sheet {
+        width: 100%;
+        margin-top: 16px;
+        border: 1px solid rgba(242, 214, 163, 0.18);
+        border-radius: 6px;
+        background: #080706;
+      }
+
+      table {
+        width: 100%;
+        margin-top: 16px;
+        border-collapse: collapse;
+      }
+
+      th,
+      td {
+        border-bottom: 1px solid rgba(242, 214, 163, 0.12);
+        padding: 10px 8px;
+        text-align: left;
+        vertical-align: top;
+      }
+
+      th {
+        color: var(--warn);
+        font-size: 12px;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+
+      td {
+        color: #e6cfaa;
+      }
+
+      .status {
+        color: #83d6a7;
+        font-weight: 800;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 16px;
+      }
+
+      .card {
+        border: 1px solid rgba(242, 214, 163, 0.12);
+        border-radius: 6px;
+        padding: 14px;
+        background: rgba(10, 8, 7, 0.62);
+      }
+
+      .card b {
+        color: var(--warn);
+      }
+
+      @media (max-width: 820px) {
+        main {
+          width: min(100% - 24px, 1180px);
+          padding-top: 24px;
+        }
+
+        .grid {
+          grid-template-columns: 1fr;
+        }
+
+        table,
+        tbody,
+        tr,
+        td {
+          display: block;
+        }
+
+        thead {
+          display: none;
+        }
+
+        td {
+          border-bottom: 0;
+          padding: 6px 0;
+        }
+
+        tr {
+          border-bottom: 1px solid rgba(242, 214, 163, 0.12);
+          padding: 10px 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <p class="kicker">Red Dust / Day 12 Final Audit</p>
+        <h1>Image 2 美术补强记录</h1>
+        <p>
+          本批次为 Day 12 Final Audit 生成 8 张 Image 2 位图素材，重点替换五结局候选卡和结局详情里的旧 SVG 占位感，并为 evidence chains 与 failure debt 增加独立视觉支撑。
+        </p>
+        <div class="pill-row">
+          <span class="pill">8 runtime assets</span>
+          <span class="pill">5 endings</span>
+          <span class="pill">2 audit support cards</span>
+          <span class="pill">Image 2</span>
+        </div>
+      </header>
+
+      <section>
+        <h2>总览</h2>
+        <p>
+          文件位于 <code>public/assets/final-audit-art/</code>，运行时注册在
+          <code>src/data/finalAuditArtAssets.ts</code>。旧 <code>story-art</code> SVG 仍保留为 fallback。
+        </p>
+        <img class="contact-sheet" src="previews/final-audit-art/final-audit-img2-contact-sheet.png" alt="Day 12 Image 2 contact sheet" />
+      </section>
+
+      <section>
+        <h2>运行时素材</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Asset Key</th>
+              <th>Use</th>
+              <th>Prompt Anchor</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><code>rd_day12_final_audit_hero_img2</code></td><td>Final Audit 背景与审计主图 fallback</td><td>风暴压差、离线监控、证据桌、AURA 旁观</td><td class="status">Integrated</td></tr>
+            <tr><td><code>rd_ending_lighthouse_success_img2</code></td><td>楼内灯塔候选卡与结局详情</td><td>低功率楼内灯塔、封门、自治规则</td><td class="status">Integrated</td></tr>
+            <tr><td><code>rd_ending_blue_zone_return_img2</code></td><td>蓝区归航候选卡与结局详情</td><td>救援交接、隐私链路、外部蓝光</td><td class="status">Integrated</td></tr>
+            <tr><td><code>rd_ending_aura_destroyed_img2</code></td><td>AURA 被摧毁候选卡与结局详情</td><td>破损终端、断裂审计链、红色警报</td><td class="status">Integrated</td></tr>
+            <tr><td><code>rd_ending_aura_revoked_img2</code></td><td>AURA 被撤权候选卡与结局详情</td><td>人工治理板、AURA 旁观、撤权后的不安</td><td class="status">Integrated</td></tr>
+            <tr><td><code>rd_ending_sinking_img2</code></td><td>沉沦候选卡与结局详情</td><td>未解债务、渗漏红沙、冻结 AURA</td><td class="status">Integrated</td></tr>
+            <tr><td><code>rd_day12_evidence_chains_img2</code></td><td>Evidence Chains 区块顶部视觉</td><td>每日任务卡、资源、信号、医疗复核互相连线</td><td class="status">Integrated</td></tr>
+            <tr><td><code>rd_day12_failure_debt_img2</code></td><td>Failure Debt 区块顶部视觉</td><td>延期任务筹码、失败标记、风暴压力表</td><td class="status">Integrated</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section>
+        <h2>接入规则</h2>
+        <div class="grid">
+          <article class="card">
+            <b>优先级</b>
+            <p>Final Audit 与 Ending 面板先读 Image 2 专用图，再回退到旧 SVG，最后回退到通用 shelter 背景。</p>
+          </article>
+          <article class="card">
+            <b>风格</b>
+            <p>统一使用暗色红沙、琥珀警示灯、青色 AURA 光源、手绘 2D 与轻微像素质感，避免和现有 demo 脱节。</p>
+          </article>
+          <article class="card">
+            <b>验收</b>
+            <p><code>validate:script</code> 会检查 8 张 Day 12 Image 2 文件是否注册、存在并达到基本体积阈值。</p>
+          </article>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

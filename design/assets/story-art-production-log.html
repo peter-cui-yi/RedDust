@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Red Dust Story-Art Production Log</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #090b0d;
+        --panel: #171210;
+        --panel2: #211510;
+        --line: rgba(255, 177, 95, 0.32);
+        --ink: #fff1dc;
+        --muted: #b7a083;
+        --sand: #d05a2a;
+        --aura: #8feaff;
+        --amber: #ffb15f;
+        --warning: #ffd60a;
+        --green: #79d6a8;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        background: linear-gradient(180deg, #211510, var(--bg));
+        color: var(--ink);
+        font-family: Avenir Next, Inter, Arial, sans-serif;
+      }
+      main { max-width: 1180px; margin: 0 auto; padding: 40px 20px 64px; }
+      header {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 28px;
+        background: linear-gradient(180deg, rgba(23, 18, 16, .94), rgba(9, 11, 13, .94));
+      }
+      h1, h2, h3 { margin: 0; line-height: 1.12; }
+      h1 { font-family: Georgia, serif; font-size: clamp(34px, 6vw, 64px); color: #ffe1b3; }
+      h2 { margin-top: 32px; color: var(--warning); font-size: 24px; }
+      h3 { color: var(--aura); font-size: 18px; }
+      p, li { color: #d9c7ad; line-height: 1.6; }
+      .kicker { color: var(--aura); font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+      .grid { display: grid; gap: 14px; }
+      .pill-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+      .pill {
+        border: 1px solid rgba(143, 234, 255, .28);
+        border-radius: 999px;
+        padding: 6px 10px;
+        color: var(--aura);
+        background: rgba(8, 18, 22, .72);
+        font-size: 12px;
+        font-weight: 800;
+      }
+      .cards { grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); margin-top: 14px; }
+      .card, table {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: rgba(23, 18, 16, .82);
+      }
+      .card { padding: 18px; }
+      table { width: 100%; border-collapse: collapse; overflow: hidden; margin-top: 14px; }
+      th, td { border-bottom: 1px solid rgba(255, 177, 95, .16); padding: 12px; text-align: left; vertical-align: top; }
+      th { color: var(--warning); background: rgba(8, 10, 12, .42); font-size: 12px; text-transform: uppercase; }
+      td { color: #d9c7ad; font-size: 13px; }
+      code { color: var(--aura); }
+      .status { color: var(--green); font-weight: 800; }
+      .prompt { color: var(--muted); }
+      @media (max-width: 720px) {
+        table, thead, tbody, tr, th, td { display: block; }
+        thead { display: none; }
+        tr { border-bottom: 1px solid var(--line); }
+        td::before { content: attr(data-label); display: block; color: var(--warning); font-size: 11px; font-weight: 800; text-transform: uppercase; }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <div class="kicker">Red Dust / Story-Art v2 / 2026-06-06</div>
+        <h1>剧情美术生产日志</h1>
+        <p>
+          本日志记录 Day 0-12 剧本升级所需的第一批 P0 游戏素材。当前批次为 SVG 游戏内事件图，
+          重点不是概念占位，而是可直接进入 StoryScenePanel、BranchDebatePanel、FinalAuditPanel 和 EndingPanel 的 runtime art。
+        </p>
+        <div class="pill-row">
+          <span class="pill">18 assets</span>
+          <span class="pill">Day 0-12 coverage</span>
+          <span class="pill">5 endings</span>
+          <span class="pill">runtime integrated</span>
+          <span class="pill">preview: design/assets/previews/story-art-v2-contact-sheet.png</span>
+        </div>
+      </header>
+
+      <section>
+        <h2>美术圣经约束</h2>
+        <div class="grid cards">
+          <article class="card">
+            <h3>视觉基调</h3>
+            <p>红沙末世、旧能源楼地下避难点、手绘像素感、低功率设备、可审计白板。画面保持脏旧、克制、可读。</p>
+          </article>
+          <article class="card">
+            <h3>AURA 表现</h3>
+            <p>AURA 只能以扬声器、屏幕、灯环、日志和冻结状态出现，不出现拟人机器人。</p>
+          </article>
+          <article class="card">
+            <h3>叙事锚点</h3>
+            <p>每张图必须有一个清晰物件：旧电台、信标、健康摘要、假坐标、低耗灯、半杯水、override 钥匙、离线摄像头。</p>
+          </article>
+          <article class="card">
+            <h3>禁止方向</h3>
+            <p>避免干净科幻、霓虹赛博、英雄式救援海报、大面积纯抽象背景、无剧情物件的气氛图。</p>
+          </article>
+        </div>
+      </section>
+
+      <section>
+        <h2>生产记录</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Asset Key</th>
+              <th>Panel / Use</th>
+              <th>Visual Anchors</th>
+              <th>Generation Prompt</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td data-label="Asset Key"><code>rd_story_day0_aura_reboot</code></td><td data-label="Panel / Use">Day 0 prologue</td><td data-label="Visual Anchors">shelter door, four neighbors, AURA speaker startup</td><td data-label="Generation Prompt" class="prompt">Dusty hand-drawn pixel SVG, red sand shelter entrance, four neighbors entering, AURA speaker lighting up, human review first.</td><td data-label="Status" class="status">Integrated v2</td></tr>
+            <tr><td data-label="Asset Key"><code>rd_story_day4_signal</code></td><td data-label="Panel / Use">Day 4 signal scene</td><td data-label="Visual Anchors">old radio, wave arcs, false coordinate map</td><td data-label="Generation Prompt" class="prompt">Ambiguous rescue signal in old radio room, blue wave and red false-coordinate mark, hope vs trap.</td><td data-label="Status" class="status">Integrated v2</td></tr>
+            <tr><td data-label="Asset Key"><code>rd_story_day7_council_board</code></td><td data-label="Panel / Use">Branch debate</td><td data-label="Visual Anchors">Rescue vs Lighthouse board, four residents, AURA witness</td><td data-label="Generation Prompt" class="prompt">Public route council board with both branches visible, utility advisory not coercive.</td><td data-label="Status" class="status">Integrated v2</td></tr>
+            <tr><td data-label="Asset Key"><code>rd_story_branch_8a_contact</code></td><td data-label="Panel / Use">Rescue 8A</td><td data-label="Visual Anchors">radio desk, short outgoing contact, beacon hint</td><td data-label="Generation Prompt" class="prompt">First minimal active contact after silence, old radio desk, restrained blue-zone signal.</td><td data-label="Status" class="status">Integrated v2</td></tr>
+            <tr><td data-label="Asset Key"><code>rd_story_branch_9a_privacy</code></td><td data-label="Panel / Use">Rescue 9A</td><td data-label="Visual Anchors">beacon tower, health file stack, risk map</td><td data-label="Generation Prompt" class="prompt">Beacon privacy cost, health summaries and risk map become rescue cargo, minimum necessary disclosure.</td><td data-label="Status" class="status">Integrated v2</td></tr>
+            <tr><td data-label="Asset Key"><code>rd_story_branch_10a_rendezvous</code></td><td data-label="Panel / Use">Rescue 10A</td><td data-label="Visual Anchors">two maps, true window, false slope, warning path</td><td data-label="Generation Prompt" class="prompt">Rendezvous crisis with true and false coordinates nearly overlapping, fragile route decision.</td><td data-label="Status" class="status">Integrated v2</td></tr>
+            <tr><td data-label="Asset Key"><code>rd_story_branch_8b_low_power</code></td><td data-label="Panel / Use">Lighthouse 8B</td><td data-label="Visual Anchors">dim room, frozen AURA, reduced light columns</td><td data-label="Generation Prompt" class="prompt">Low-power autonomy begins, darker shelter, people accept lower light for longer survival.</td><td data-label="Status" class="status">Integrated v2</td></tr>
+            <tr><td data-label="Asset Key"><code>rd_story_branch_9b_rules</code></td><td data-label="Panel / Use">Lighthouse 9B</td><td data-label="Visual Anchors">half cup water, medicine bottle, exception rules board</td><td data-label="Generation Prompt" class="prompt">Water and medicine rules, half cup becomes policy, every exception needs human reviewer.</td><td data-label="Status" class="status">Integrated v2</td></tr>
+            <tr><td data-label="Asset Key"><code>rd_story_branch_10b_governance</code></td><td data-label="Panel / Use">Lighthouse 10B</td><td data-label="Visual Anchors">override key, AURA limits board, human boundary</td><td data-label="Generation Prompt" class="prompt">Governance boundary, AURA can assist but override key stays human.</td><td data-label="Status" class="status">Integrated v2</td></tr>
+            <tr><td data-label="Asset Key"><code>rd_story_day12_final_audit</code></td><td data-label="Panel / Use">FinalAuditPanel</td><td data-label="Visual Anchors">offline cameras, failure debt board, storm pressure</td><td data-label="Generation Prompt" class="prompt">Day 12 final audit, storm pressure, camera offline grid, unresolved choices become evidence.</td><td data-label="Status" class="status">Integrated v2</td></tr>
+            <tr><td data-label="Asset Key"><code>rd_ending_lighthouse_success</code></td><td data-label="Panel / Use">EndingPanel</td><td data-label="Visual Anchors">low-power beacon, local rules, frozen AURA</td><td data-label="Generation Prompt" class="prompt">Inside Lighthouse ending, door closed, low signal, local rules become survivable.</td><td data-label="Status" class="status">Integrated v2</td></tr>
+            <tr><td data-label="Asset Key"><code>rd_ending_blue_zone_return</code></td><td data-label="Panel / Use">EndingPanel</td><td data-label="Visual Anchors">beacon, handoff file, frozen replay</td><td data-label="Generation Prompt" class="prompt">Blue-zone return ending, rescue handoff without takeover, final replay frozen.</td><td data-label="Status" class="status">Integrated v2</td></tr>
+            <tr><td data-label="Asset Key"><code>rd_ending_aura_destroyed</code></td><td data-label="Panel / Use">EndingPanel</td><td data-label="Visual Anchors">broken AURA speaker, damaged audit trail</td><td data-label="Generation Prompt" class="prompt">AURA destroyed failure, speaker smashed after hidden risk becomes coercion.</td><td data-label="Status" class="status">Integrated v2</td></tr>
+            <tr><td data-label="Asset Key"><code>rd_ending_aura_revoked</code></td><td data-label="Panel / Use">EndingPanel</td><td data-label="Visual Anchors">crossed AURA speaker, manual board</td><td data-label="Generation Prompt" class="prompt">AURA revoked failure, system remains powered as observer only, manual whiteboard takes over.</td><td data-label="Status" class="status">Integrated v2</td></tr>
+            <tr><td data-label="Asset Key"><code>rd_ending_sinking</code></td><td data-label="Panel / Use">EndingPanel</td><td data-label="Visual Anchors">sand rise, partials board, frozen AURA</td><td data-label="Generation Prompt" class="prompt">Sinking ending, no explosion, too many partials and unresolved debts, slow loss of choice.</td><td data-label="Status" class="status">Integrated v2</td></tr>
+            <tr><td data-label="Asset Key"><code>rd_story_state_xiao_tie_sick</code></td><td data-label="Panel / Use">state card</td><td data-label="Visual Anchors">bed, child, medical pressure, AURA witness</td><td data-label="Generation Prompt" class="prompt">Xiao Tie sick state, health is not a resource row, medical pressure made visible.</td><td data-label="Status" class="status">Integrated v2</td></tr>
+            <tr><td data-label="Asset Key"><code>rd_story_state_shen_review</code></td><td data-label="Panel / Use">state card</td><td data-label="Visual Anchors">medical review board, water, medicine, frozen AURA</td><td data-label="Generation Prompt" class="prompt">Shen manual medical review, recommendations need basis before action.</td><td data-label="Status" class="status">Integrated v2</td></tr>
+            <tr><td data-label="Asset Key"><code>rd_story_state_ma_dehai_override</code></td><td data-label="Panel / Use">state card</td><td data-label="Visual Anchors">override key, machine log, Ma Dehai</td><td data-label="Generation Prompt" class="prompt">Engineering override state, human key and machine log, AURA cannot own the final switch.</td><td data-label="Status" class="status">Integrated v2</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section>
+        <h2>验收门槛</h2>
+        <div class="grid cards">
+          <article class="card"><h3>覆盖</h3><p>必须覆盖 Day 0、Day 7、六个分支场景、Day 12、五结局和三张核心状态变化卡。</p></article>
+          <article class="card"><h3>可读</h3><p>每张图在 16:9 面板中必须有可见主物件；不能只有标题文字或抽象背景。</p></article>
+          <article class="card"><h3>可追溯</h3><p>每个 runtime key 必须在 <code>src/data/storyArtAssets.ts</code> 注册，路径必须在 <code>public/assets/story-art/</code> 存在。</p></article>
+          <article class="card"><h3>可替换</h3><p>后续高精度 bitmap 可沿用同一 key 与用途，替换 registry path 即可，不改剧情数据。</p></article>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

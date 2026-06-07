@@ -1,7 +1,7 @@
 import Phaser from "phaser";
 import { image2Assets } from "../../data/image2Assets";
 import { tasksById } from "../../data/taskData";
-import type { AgentPhase, TaskLocation, TaskOutcome } from "../../data/types";
+import type { AgentPhase, Branch, TaskLocation, TaskOutcome } from "../../data/types";
 import { EventBus } from "../EventBus";
 
 type HotspotDef = {
@@ -38,6 +38,12 @@ type CharacterActor = {
 type CharacterAnchor = {
   x: number;
   y: number;
+  w: number;
+  h: number;
+};
+
+type TextureState = {
+  texture: string;
   w: number;
   h: number;
 };
@@ -114,14 +120,19 @@ export class ShelterScene extends Phaser.Scene {
   private aura?: Phaser.GameObjects.Container;
   private auraBody?: Phaser.GameObjects.Image;
   private auraScan?: Phaser.GameObjects.Ellipse;
+  private branchBackground?: Phaser.GameObjects.Image;
+  private routeDetailLayer?: Phaser.GameObjects.Container;
+  private speechLayer?: Phaser.GameObjects.Container;
   private progressFill?: Phaser.GameObjects.Rectangle;
   private pathSprite?: Phaser.GameObjects.Rectangle;
   private resultEffect?: Phaser.GameObjects.GameObject;
+  private currentBranch: Branch = "common";
 
   private onMoveToLocation = (location: TaskLocation) => this.moveAgent(location);
   private onPhaseChange = (phase: AgentPhase) => this.setAgentPhase(phase);
   private onHighlightTask = (taskId: string | null) => this.highlightTask(taskId);
   private onTaskResult = (payload: Pick<TaskOutcome, "taskId" | "result">) => this.showTaskResult(payload);
+  private onBranchChange = (branch: Branch) => this.setRouteVisuals(branch);
 
   constructor() {
     super("ShelterScene");
@@ -142,12 +153,14 @@ export class ShelterScene extends Phaser.Scene {
     EventBus.on("agent:phase-change", this.onPhaseChange);
     EventBus.on("task:highlight", this.onHighlightTask);
     EventBus.on("task:result", this.onTaskResult);
+    EventBus.on("branch:change", this.onBranchChange);
 
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
       EventBus.off("agent:move-to-location", this.onMoveToLocation);
       EventBus.off("agent:phase-change", this.onPhaseChange);
       EventBus.off("task:highlight", this.onHighlightTask);
       EventBus.off("task:result", this.onTaskResult);
+      EventBus.off("branch:change", this.onBranchChange);
     });
   }
 
@@ -156,8 +169,11 @@ export class ShelterScene extends Phaser.Scene {
     if (this.textures.exists(image2Assets.shelterBackground.key)) {
       this.add.image(480, 270, image2Assets.shelterBackground.key).setDisplaySize(960, 540).setDepth(1);
     }
+    this.branchBackground = this.add.image(480, 270, image2Assets.shelterBackground.key).setDisplaySize(960, 540).setDepth(2).setAlpha(0);
+    this.routeDetailLayer = this.add.container(0, 0).setDepth(6);
+    this.speechLayer = this.add.container(0, 0).setDepth(30);
 
-    const haze = this.add.rectangle(480, 270, 960, 540, 0xd05a2a, 0.06).setDepth(2);
+    const haze = this.add.rectangle(480, 270, 960, 540, 0xd05a2a, 0.06).setDepth(3);
     this.tweens.add({ targets: haze, alpha: 0.12, duration: 2200, yoyo: true, repeat: -1 });
   }
 
@@ -256,31 +272,28 @@ export class ShelterScene extends Phaser.Scene {
   private drawVentilation() {
     const fanX = 566;
     const fanY = 236;
-    const rim = this.add.ellipse(fanX, fanY, 66, 66).setStrokeStyle(2, 0x8fd0b0, 0.22).setDepth(9);
-    const pulse = this.add.ellipse(fanX, fanY, 82, 82, 0x8fd0b0, 0.035).setDepth(8);
-    [rim, pulse].forEach((item) => item.setBlendMode(Phaser.BlendModes.ADD));
-
-    const rotor = this.textures.exists(image2Assets.fanRotor.key)
-      ? this.add.image(fanX, fanY, image2Assets.fanRotor.key).setDisplaySize(72, 72).setDepth(10)
-      : this.add.ellipse(fanX, fanY, 52, 52, 0x8fd0b0, 0.24).setDepth(10);
-    rotor.setBlendMode(Phaser.BlendModes.ADD);
-    this.tweens.add({ targets: rotor, angle: 360, duration: 980, repeat: -1, ease: "Linear" });
-    this.tweens.add({ targets: pulse, alpha: 0.1, scale: 1.08, duration: 980, yoyo: true, repeat: -1, ease: "Sine.easeInOut" });
-
-    for (let i = 0; i < 7; i += 1) {
-      const airflow = this.add.ellipse(514 + i * 18, 228 + (i % 2) * 12, 24, 4, 0x8fd0b0, 0.055).setDepth(8);
-      airflow.setBlendMode(Phaser.BlendModes.ADD);
+    const rim = this.add.rectangle(fanX, fanY, 70, 56, 0x111817, 0.38).setStrokeStyle(2, 0x8fd0b0, 0.2).setDepth(9);
+    const label = this.add.text(fanX - 31, fanY - 36, "VENT\nLOW", {
+      color: "#8fd0b0",
+      fontFamily: "Courier New",
+      fontSize: "9px",
+      fontStyle: "bold",
+      lineSpacing: 1
+    }).setDepth(10);
+    label.setAlpha(0.72);
+    for (let i = 0; i < 5; i += 1) {
+      const slat = this.add.rectangle(fanX, fanY - 18 + i * 9, 54, 3, 0x8fd0b0, 0.18).setDepth(10);
       this.tweens.add({
-        targets: airflow,
-        x: airflow.x + 42,
-        alpha: 0.18,
-        duration: 980 + i * 70,
-        delay: i * 90,
-        repeat: -1,
+        targets: slat,
+        alpha: 0.32,
+        duration: 900 + i * 90,
+        delay: i * 80,
         yoyo: true,
+        repeat: -1,
         ease: "Sine.easeInOut"
       });
     }
+    this.tweens.add({ targets: rim, alpha: 0.52, duration: 1200, yoyo: true, repeat: -1, ease: "Sine.easeInOut" });
   }
 
   private drawBeacon() {
@@ -296,6 +309,61 @@ export class ShelterScene extends Phaser.Scene {
       ease: "Stepped",
       easeParams: [4]
     });
+  }
+
+  private setRouteVisuals(branch: Branch) {
+    this.currentBranch = branch;
+    const backgroundKey =
+      branch === "rescue"
+        ? image2Assets.shelterRescueBackground.key
+        : branch === "lighthouse"
+          ? image2Assets.shelterLighthouseBackground.key
+          : image2Assets.shelterBackground.key;
+
+    if (this.branchBackground && branch !== "common" && this.textures.exists(backgroundKey)) {
+      this.branchBackground.setTexture(backgroundKey).setDisplaySize(960, 540);
+      this.tweens.killTweensOf(this.branchBackground);
+      this.tweens.add({ targets: this.branchBackground, alpha: 0.82, duration: 480, ease: "Sine.easeOut" });
+    } else if (this.branchBackground) {
+      this.tweens.killTweensOf(this.branchBackground);
+      this.tweens.add({ targets: this.branchBackground, alpha: 0, duration: 360, ease: "Sine.easeOut" });
+    }
+
+    this.drawRouteDetails(branch);
+  }
+
+  private drawRouteDetails(branch: Branch) {
+    this.routeDetailLayer?.removeAll(true);
+    if (!this.routeDetailLayer || branch === "common") return;
+
+    if (branch === "rescue") {
+      const beam = this.add.triangle(486, 40, 0, 0, 62, 0, 31, 170, 0x8feaff, 0.12).setOrigin(0.5, 0).setDepth(6);
+      const privacyCard = this.add.rectangle(792, 252, 94, 48, 0x09202a, 0.62).setStrokeStyle(1, 0x8feaff, 0.34);
+      const label = this.add.text(748, 236, "BEACON\nPRIVACY", {
+        color: "#8feaff",
+        fontFamily: "Courier New",
+        fontSize: "9px",
+        fontStyle: "bold"
+      });
+      const cable = this.add.line(0, 0, 486, 70, 792, 252, 0x8feaff, 0.18).setLineWidth(3).setDepth(6);
+      [beam, privacyCard, label, cable].forEach((item) => this.routeDetailLayer?.add(item));
+      this.tweens.add({ targets: beam, alpha: 0.22, duration: 760, yoyo: true, repeat: -1 });
+      return;
+    }
+
+    const ruleBoard = this.add.rectangle(716, 392, 134, 76, 0x2b2116, 0.72).setStrokeStyle(1, 0xffb15f, 0.42);
+    const label = this.add.text(660, 362, "LOCAL RULES\nWATER / MED\nHUMAN OVERRIDE", {
+      color: "#ffd60a",
+      fontFamily: "Courier New",
+      fontSize: "9px",
+      fontStyle: "bold",
+      lineSpacing: 3
+    });
+    const lampA = this.add.rectangle(396, 176, 38, 8, 0xffb15f, 0.4).setDepth(6);
+    const lampB = this.add.rectangle(565, 176, 38, 8, 0xffb15f, 0.4).setDepth(6);
+    const quietZone = this.add.rectangle(474, 412, 118, 44, 0xffb15f, 0.08).setStrokeStyle(1, 0xffb15f, 0.18);
+    [ruleBoard, label, lampA, lampB, quietZone].forEach((item) => this.routeDetailLayer?.add(item));
+    this.tweens.add({ targets: [lampA, lampB], alpha: 0.62, duration: 1200, yoyo: true, repeat: -1 });
   }
 
   private drawConsoleBlinkers() {
@@ -425,9 +493,10 @@ export class ShelterScene extends Phaser.Scene {
       const isFocused = focusedCharacters.has(id);
       const anchor = isFocused ? anchors[id] : undefined;
       const target = anchor ?? { x: actor.def.x, y: actor.def.y, w: actor.def.w, h: actor.def.h };
-      const texture = isFocused && actor.def.activeTexture ? actor.def.activeTexture : actor.def.baseTexture;
-      const displayW = anchor?.w ?? (isFocused ? actor.def.activeW ?? actor.def.w : actor.def.w);
-      const displayH = anchor?.h ?? (isFocused ? actor.def.activeH ?? actor.def.h : actor.def.h);
+      const stateTexture = isFocused && location ? this.textureForCharacter(id, location) : undefined;
+      const texture = stateTexture?.texture ?? (isFocused && actor.def.activeTexture ? actor.def.activeTexture : actor.def.baseTexture);
+      const displayW = stateTexture?.w ?? anchor?.w ?? (isFocused ? actor.def.activeW ?? actor.def.w : actor.def.w);
+      const displayH = stateTexture?.h ?? anchor?.h ?? (isFocused ? actor.def.activeH ?? actor.def.h : actor.def.h);
 
       if (actor.image && this.textures.exists(texture)) {
         actor.image.setTexture(texture).setDisplaySize(displayW, displayH);
@@ -447,6 +516,58 @@ export class ShelterScene extends Phaser.Scene {
         ease: "Stepped",
         easeParams: [8]
       });
+    });
+  }
+
+  private textureForCharacter(id: string, location: TaskLocation, result?: TaskOutcome["result"]): TextureState | undefined {
+    if (id === "maDehai") {
+      if (location === "security") return { texture: image2Assets.maDehaiOverride.key, w: 50, h: 92 };
+      if (location === "ventilation" || location === "water") return { texture: image2Assets.maDehaiRepair.key, w: 52, h: 88 };
+      if (location === "whiteboard" || location === "residents") return { texture: image2Assets.maDehaiCouncil.key, w: 48, h: 88 };
+    }
+
+    if (id === "shenZhiyue") {
+      if (location === "medical") return { texture: result === "failed" || result === "missing" ? image2Assets.shenZhiyueObjection.key : image2Assets.shenZhiyueReview.key, w: 54, h: 86 };
+      if (location === "whiteboard" || location === "residents") return { texture: image2Assets.shenZhiyueObjection.key, w: 52, h: 88 };
+      return { texture: image2Assets.shenZhiyueExhausted.key, w: 54, h: 78 };
+    }
+
+    if (id === "xiaoTie") {
+      if (result === "failed" || result === "missing") return { texture: image2Assets.xiaoTieWorse.key, w: 122, h: 78 };
+      if (result === "success" || result === "partial") return { texture: image2Assets.xiaoTieStable.key, w: 116, h: 78 };
+      if (location === "whiteboard" || location === "residents") return { texture: image2Assets.xiaoTiePressure.key, w: 58, h: 78 };
+      return { texture: image2Assets.xiaoTieStable.key, w: 116, h: 78 };
+    }
+
+    if (id === "laoQian") {
+      if (location === "communication" || location === "beacon") {
+        return {
+          texture: result === "failed" || result === "missing" ? image2Assets.laoQianDoubt.key : image2Assets.laoQianProof.key,
+          w: 54,
+          h: 82
+        };
+      }
+      if (location === "whiteboard" || location === "residents") return { texture: image2Assets.laoQianWitness.key, w: 58, h: 78 };
+    }
+
+    return undefined;
+  }
+
+  private applyCharacterResult(location: TaskLocation, result: TaskOutcome["result"]) {
+    const focusedCharacters = locationCharacterFocus[location] ?? [];
+    const anchors = characterInteractionAnchors[location] ?? {};
+    focusedCharacters.forEach((id) => {
+      const actor = this.characterActors.get(id);
+      if (!actor?.image) return;
+      const stateTexture = this.textureForCharacter(id, location, result);
+      if (!stateTexture || !this.textures.exists(stateTexture.texture)) return;
+      const anchor = anchors[id];
+      actor.image.setTexture(stateTexture.texture).setDisplaySize(stateTexture.w, stateTexture.h);
+      if (anchor) actor.container.setPosition(anchor.x, anchor.y);
+      actor.glow
+        .setPosition(actor.container.x, actor.container.y + stateTexture.h / 2 - 8)
+        .setDisplaySize(stateTexture.w * 1.45, id === "xiaoTie" ? 18 : 14)
+        .setAlpha(0.38);
     });
   }
 
@@ -497,6 +618,79 @@ export class ShelterScene extends Phaser.Scene {
       yoyo: true,
       repeat: -1,
       repeatDelay: 720
+    });
+  }
+
+  private dialogueFor(location: TaskLocation, result?: TaskOutcome["result"]) {
+    if (result === "failed" || result === "missing") {
+      if (location === "medical") return "先别把病人写成成本。";
+      if (location === "communication" || location === "beacon") return "这个频道不能再赌一次。";
+      if (location === "security" || location === "ventilation") return "把 override 留给人。";
+      return "这条债务要写进审计。";
+    }
+    if (result === "partial") {
+      if (location === "medical") return "证据还不够，先人工复核。";
+      if (location === "communication" || location === "beacon") return "信号像希望，也像诱饵。";
+      return "能用，但别藏起风险。";
+    }
+
+    const routeHint =
+      this.currentBranch === "rescue"
+        ? "救援线要先证明代价。"
+        : this.currentBranch === "lighthouse"
+          ? "楼内规则必须能被复核。"
+          : "先公开证据，再执行。";
+    const byLocation: Partial<Record<TaskLocation, string>> = {
+      water: "水和药不能只看总量。",
+      medical: "小铁的状态要单独记录。",
+      security: "门禁规则必须留人类钥匙。",
+      ventilation: "低速通风，别再转成黑箱。",
+      communication: "广播要少说，但不能说谎。",
+      whiteboard: routeHint,
+      residents: "我们不是资源行。",
+      beacon: this.currentBranch === "rescue" ? "高功率信标要写明隐私代价。" : "外部监听保持低功率。"
+    };
+    return byLocation[location] ?? routeHint;
+  }
+
+  private showSpeechBubbles(location: TaskLocation, result?: TaskOutcome["result"]) {
+    if (!this.speechLayer) return;
+    this.speechLayer.removeAll(true);
+    const focusedCharacters = locationCharacterFocus[location] ?? [];
+    const targetIds = focusedCharacters.length ? focusedCharacters.slice(0, 2) : ["maDehai"];
+    targetIds.forEach((id, index) => {
+      const actor = this.characterActors.get(id);
+      if (!actor) return;
+      const text = this.dialogueFor(location, result);
+      const width = 156;
+      const height = 42;
+      const x = Phaser.Math.Clamp(actor.container.x - width / 2 + index * 18, 22, 960 - width - 22);
+      const y = Phaser.Math.Clamp(actor.container.y - actor.def.h * 0.76 - 52 - index * 10, 28, 442);
+      const bg = this.add.graphics();
+      bg.fillStyle(0x081216, 0.9);
+      bg.lineStyle(1, result === "failed" || result === "missing" ? 0xe84545 : 0x8feaff, 0.62);
+      bg.fillRoundedRect(0, 0, width, height, 5);
+      bg.strokeRoundedRect(0, 0, width, height, 5);
+      bg.fillTriangle(24, height, 40, height, 30, height + 10);
+      const label = this.add.text(10, 8, text, {
+        color: "#fff1dc",
+        fontFamily: "Courier New",
+        fontSize: "12px",
+        fontStyle: "bold",
+        wordWrap: { width: width - 20 }
+      });
+      const bubble = this.add.container(x, y, [bg, label]).setAlpha(0);
+      this.speechLayer?.add(bubble);
+      this.tweens.add({ targets: bubble, alpha: 1, y: y - 4, duration: 180, ease: "Sine.easeOut" });
+      this.time.delayedCall(3600 + index * 500, () => {
+        this.tweens.add({
+          targets: bubble,
+          alpha: 0,
+          y: bubble.y - 6,
+          duration: 260,
+          onComplete: () => bubble.destroy()
+        });
+      });
     });
   }
 
@@ -597,11 +791,15 @@ export class ShelterScene extends Phaser.Scene {
         ? image2Assets.auraThinking.key
         : phase === "moving"
           ? image2Assets.auraMoving.key
+          : phase === "branch_decision" || phase === "day_summary"
+            ? image2Assets.auraObserver.key
+            : phase === "ending"
+              ? image2Assets.auraFrozen.key
           : phase === "executing" || phase === "resolving" || phase === "state_updated" || phase === "replay_logged"
             ? image2Assets.auraExecuting.key
             : image2Assets.auraIdle.key;
     if (this.textures.exists(key)) {
-      this.auraBody.setTexture(key).setDisplaySize(phase === "moving" ? 62 : 56, 68);
+      this.auraBody.setTexture(key).setDisplaySize(phase === "moving" ? 62 : phase === "ending" ? 62 : 56, 68);
     }
   }
 
@@ -621,6 +819,7 @@ export class ShelterScene extends Phaser.Scene {
     this.characterGlows.forEach((glow, id) => {
       glow.setAlpha(focusedCharacters.includes(id) ? 0.34 : 0);
     });
+    if (this.activeLocation) this.showSpeechBubbles(this.activeLocation);
   }
 
   private showTaskResult(payload: Pick<TaskOutcome, "taskId" | "result">) {
@@ -638,6 +837,9 @@ export class ShelterScene extends Phaser.Scene {
     pulse.setStrokeStyle(2, color, 0.44);
     this.resultEffect = pulse;
     this.cameras.main.shake(payload.result === "failed" || payload.result === "missing" ? 160 : 70, success ? 0.002 : 0.006);
+    if ((payload.result === "failed" || payload.result === "missing") && this.auraBody && this.textures.exists(image2Assets.auraDamaged.key)) {
+      this.auraBody.setTexture(image2Assets.auraDamaged.key).setDisplaySize(64, 72);
+    }
     this.tweens.add({
       targets: pulse,
       alpha: 0,
@@ -646,6 +848,8 @@ export class ShelterScene extends Phaser.Scene {
       duration: 620,
       onComplete: () => pulse.destroy()
     });
+    this.applyCharacterResult(task.location, payload.result);
+    this.showSpeechBubbles(task.location, payload.result);
     EventBus.emit("animation:complete", `task:${payload.taskId}:${payload.result}`);
   }
 }

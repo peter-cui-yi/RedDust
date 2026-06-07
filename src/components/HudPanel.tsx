@@ -14,6 +14,17 @@ const metrics = [
   ["Morale", "morale"]
 ] as const;
 
+const auditMetrics = [
+  ["Food", "food"],
+  ["Battery", "battery"],
+  ["Health", "health"],
+  ["Storm", "stormReadiness"],
+  ["Autonomy", "autonomyReadiness"],
+  ["Blue Zone", "blueZoneEvidence"],
+  ["Debt", "failureDebt"],
+  ["Discontent", "dissatisfaction"]
+] as const;
+
 function meterClass(value: number) {
   if (value >= 70) return "strong";
   if (value >= 40) return "steady";
@@ -50,10 +61,20 @@ export function HudPanel({ state }: HudPanelProps) {
           );
         })}
       </div>
+      <div className="audit-metric-grid">
+        {auditMetrics.map(([label, key]) => (
+          <div className="audit-metric" key={key}>
+            <span>{label}</span>
+            <b>{state[key]}</b>
+          </div>
+        ))}
+      </div>
       <div className="hud-summary" aria-label="Replay summary">
         <span>Replay Events</span>
         <b>{state.replayLog.length}</b>
-        <small>{state.completedTasks.length} tasks resolved by AURA</small>
+        <small>
+          {state.completedTasks.length} executed / {state.deferredTasks.length} deferred
+        </small>
       </div>
     </section>
   );

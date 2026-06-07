@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" role="img" aria-label="XIAO TIE MEDICAL PRESSURE">
+  <rect width="960" height="540" fill="#090b0d"/>
+  <defs>
+    <linearGradient id="bg15" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#211510"/>
+      <stop offset=".56" stop-color="#3a2116"/>
+      <stop offset="1" stop-color="#0b0d10"/>
+    </linearGradient>
+    <filter id="rough15">
+      <feTurbulence baseFrequency=".035" numOctaves="2" seed="32"/>
+      <feDisplacementMap in="SourceGraphic" scale="1.8"/>
+    </filter>
+  </defs>
+  <rect x="28" y="28" width="904" height="484" rx="12" fill="url(#bg15)" stroke="#c99058" stroke-width="4"/>
+  <path d="M28 360c160-42 260 26 406-30 154-60 284 52 498-26v208H28z" fill="#120f0d" opacity=".72"/>
+  <path d="M66 104h858M66 456h858" stroke="#ffd60a" stroke-dasharray="9 16" opacity=".18"/>
+  <path d="M80 122l112-44h132l44 78h-92l-36-38-82 60z" fill="#d05a2a" opacity=".17"/>
+  <path d="M329 139h24" stroke="#d05a2a" stroke-width="1" opacity="0.08"/><path d="M402 180h35" stroke="#d05a2a" stroke-width="2" opacity="0.115"/><path d="M475 221h46" stroke="#d05a2a" stroke-width="3" opacity="0.15000000000000002"/><path d="M548 262h57" stroke="#d05a2a" stroke-width="1" opacity="0.185"/><path d="M621 303h68" stroke="#d05a2a" stroke-width="2" opacity="0.08"/><path d="M694 344h79" stroke="#d05a2a" stroke-width="3" opacity="0.115"/><path d="M767 385h90" stroke="#d05a2a" stroke-width="1" opacity="0.15000000000000002"/><path d="M840 426h101" stroke="#d05a2a" stroke-width="2" opacity="0.185"/><path d="M913 467h26" stroke="#d05a2a" stroke-width="3" opacity="0.08"/><path d="M110 110h37" stroke="#d05a2a" stroke-width="1" opacity="0.115"/><path d="M183 151h48" stroke="#d05a2a" stroke-width="2" opacity="0.15000000000000002"/><path d="M256 192h59" stroke="#d05a2a" stroke-width="3" opacity="0.185"/><path d="M329 233h70" stroke="#d05a2a" stroke-width="1" opacity="0.08"/><path d="M402 274h81" stroke="#d05a2a" stroke-width="2" opacity="0.115"/><path d="M475 315h92" stroke="#d05a2a" stroke-width="3" opacity="0.15000000000000002"/><path d="M548 356h103" stroke="#d05a2a" stroke-width="1" opacity="0.185"/><path d="M621 397h28" stroke="#d05a2a" stroke-width="2" opacity="0.08"/><path d="M694 438h39" stroke="#d05a2a" stroke-width="3" opacity="0.115"/><path d="M767 81h50" stroke="#d05a2a" stroke-width="1" opacity="0.15000000000000002"/><path d="M840 122h61" stroke="#d05a2a" stroke-width="2" opacity="0.185"/><path d="M913 163h72" stroke="#d05a2a" stroke-width="3" opacity="0.08"/><path d="M110 204h83" stroke="#d05a2a" stroke-width="1" opacity="0.115"/><path d="M183 245h94" stroke="#d05a2a" stroke-width="2" opacity="0.15000000000000002"/><path d="M256 286h105" stroke="#d05a2a" stroke-width="3" opacity="0.185"/><path d="M329 327h30" stroke="#d05a2a" stroke-width="1" opacity="0.08"/><path d="M402 368h41" stroke="#d05a2a" stroke-width="2" opacity="0.115"/><path d="M475 409h52" stroke="#d05a2a" stroke-width="3" opacity="0.15000000000000002"/><path d="M548 450h63" stroke="#d05a2a" stroke-width="1" opacity="0.185"/><path d="M621 93h74" stroke="#d05a2a" stroke-width="2" opacity="0.08"/><path d="M694 134h85" stroke="#d05a2a" stroke-width="3" opacity="0.115"/><path d="M767 175h96" stroke="#d05a2a" stroke-width="1" opacity="0.15000000000000002"/><path d="M840 216h107" stroke="#d05a2a" stroke-width="2" opacity="0.185"/><path d="M913 257h32" stroke="#d05a2a" stroke-width="3" opacity="0.08"/><path d="M110 298h43" stroke="#d05a2a" stroke-width="1" opacity="0.115"/>
+  <rect x="70" y="76" width="160" height="90" rx="5" fill="#381a13" stroke="#d05a2a" stroke-width="4" opacity=".82"/>
+  <path d="M82 98l136 46M218 98L82 144" stroke="#d9c7ad" stroke-width="5" opacity=".36"/>
+  <path d="M44 44h868v448H44z" fill="none" stroke="#79d6a8" stroke-width="1.5" opacity=".35"/>
+  <g filter="url(#rough15)">
+        <rect x="216" y="286" width="326" height="72" rx="8" fill="#3a2116" stroke="#c99058" stroke-width="5"/>
+        <rect x="260" y="226" width="190" height="96" rx="10" fill="#15100d" stroke="#79d6a8" stroke-width="4"/>
+        <g transform="translate(326 252)">
+    <rect x="10.08" y="0" width="20.16" height="5.04" fill="#34312d" />
+    <rect x="5.04" y="5.04" width="30.240000000000002" height="5.04" fill="#34312d" />
+    <rect x="5.04" y="10.08" width="30.240000000000002" height="15.120000000000001" fill="#d4956a" />
+    <rect x="10.08" y="15.120000000000001" width="5.04" height="5.04" fill="#171717" />
+    <rect x="25.2" y="15.120000000000001" width="5.04" height="5.04" fill="#171717" />
+    <rect x="0" y="25.2" width="5.04" height="15.120000000000001" fill="#d4956a" />
+    <rect x="35.28" y="25.2" width="5.04" height="15.120000000000001" fill="#d4956a" />
+    <rect x="5.04" y="25.2" width="30.240000000000002" height="20.16" fill="#7d6a39" />
+    <rect x="10.08" y="45.36" width="10.08" height="15.120000000000001" fill="#34312d" />
+    <rect x="25.2" y="45.36" width="10.08" height="15.120000000000001" fill="#34312d" />
+    <rect x="5.04" y="60.480000000000004" width="15.120000000000001" height="5.04" fill="#111" />
+    <rect x="25.2" y="60.480000000000004" width="15.120000000000001" height="5.04" fill="#111" />
+  </g>
+        <g transform="translate(548 278)">
+    <rect x="13.719999999999999" y="0" width="27.439999999999998" height="6.859999999999999" fill="#211" />
+    <rect x="6.859999999999999" y="6.859999999999999" width="41.16" height="6.859999999999999" fill="#211" />
+    <rect x="6.859999999999999" y="13.719999999999999" width="41.16" height="20.58" fill="#d4956a" />
+    <rect x="13.719999999999999" y="20.58" width="6.859999999999999" height="6.859999999999999" fill="#171717" />
+    <rect x="34.3" y="20.58" width="6.859999999999999" height="6.859999999999999" fill="#171717" />
+    <rect x="0" y="20.58" width="6.859999999999999" height="20.58" fill="#d4956a" />
+    <rect x="48.019999999999996" y="34.3" width="6.859999999999999" height="34.3" fill="#d4956a" />
+    <rect x="6.859999999999999" y="34.3" width="41.16" height="27.439999999999998" fill="#5a6e74" />
+    <rect x="13.719999999999999" y="61.739999999999995" width="13.719999999999999" height="20.58" fill="#34312d" />
+    <rect x="34.3" y="61.739999999999995" width="13.719999999999999" height="20.58" fill="#34312d" />
+    <rect x="6.859999999999999" y="82.32" width="20.58" height="6.859999999999999" fill="#111" />
+    <rect x="34.3" y="82.32" width="20.58" height="6.859999999999999" fill="#111" />
+  </g>
+        <g>
+    <rect x="650" y="186" width="180" height="150" rx="10" fill="#152328" stroke="#79d6a8" stroke-width="4"/>
+    <circle cx="740" cy="258" r="44" fill="#071216" stroke="#79d6a8" stroke-width="6"/>
+    <circle cx="740" cy="258" r="18" fill="#79d6a8" opacity=".65"/>
+    <path d="M686 206h108M686 318h108" stroke="#b7a083" stroke-width="5" opacity=".45"/>
+    
+  </g>
+        <text x="222" y="404" fill="#79d6a8" font-family="Courier New, monospace" font-size="19" font-weight="800" text-anchor="start">HEALTH IS NOT A RESOURCE ROW</text>
+      </g>
+  <g>
+    <rect x="70" y="58" width="424" height="84" rx="8" fill="#0b0d10" opacity=".7" stroke="#79d6a8" stroke-width="2"/>
+    <text x="92" y="91" fill="#79d6a8" font-family="Courier New, monospace" font-size="22" font-weight="800" text-anchor="start">STATE</text>
+    <text x="92" y="126" fill="#fff1dc" font-family="Georgia, serif" font-size="32" font-weight="700">XIAO TIE MEDICAL PRESSURE</text>
+    <rect x="70" y="462" width="820" height="40" rx="6" fill="#0b0d10" opacity=".68" stroke="#c99058" stroke-width="1.5"/>
+    <text x="92" y="488" fill="#b7a083" font-family="Courier New, monospace" font-size="18" font-weight="700" text-anchor="start">Optimization becomes human when a child starts coughing.</text>
+  </g>
+</svg>

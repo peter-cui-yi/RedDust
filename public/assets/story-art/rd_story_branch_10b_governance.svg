@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" role="img" aria-label="GOVERNANCE BOUNDARY">
+  <rect width="960" height="540" fill="#090b0d"/>
+  <defs>
+    <linearGradient id="bg8" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#211510"/>
+      <stop offset=".56" stop-color="#3a2116"/>
+      <stop offset="1" stop-color="#0b0d10"/>
+    </linearGradient>
+    <filter id="rough8">
+      <feTurbulence baseFrequency=".035" numOctaves="2" seed="25"/>
+      <feDisplacementMap in="SourceGraphic" scale="1.8"/>
+    </filter>
+  </defs>
+  <rect x="28" y="28" width="904" height="484" rx="12" fill="url(#bg8)" stroke="#c99058" stroke-width="4"/>
+  <path d="M28 360c160-42 260 26 406-30 154-60 284 52 498-26v208H28z" fill="#120f0d" opacity=".72"/>
+  <path d="M66 104h858M66 456h858" stroke="#ffd60a" stroke-dasharray="9 16" opacity=".18"/>
+  <path d="M80 122l112-44h132l44 78h-92l-36-38-82 60z" fill="#d05a2a" opacity=".17"/>
+  <path d="M196 320h24" stroke="#d05a2a" stroke-width="1" opacity="0.08"/><path d="M269 361h35" stroke="#d05a2a" stroke-width="2" opacity="0.115"/><path d="M342 402h46" stroke="#d05a2a" stroke-width="3" opacity="0.15000000000000002"/><path d="M415 443h57" stroke="#d05a2a" stroke-width="1" opacity="0.185"/><path d="M488 86h68" stroke="#d05a2a" stroke-width="2" opacity="0.08"/><path d="M561 127h79" stroke="#d05a2a" stroke-width="3" opacity="0.115"/><path d="M634 168h90" stroke="#d05a2a" stroke-width="1" opacity="0.15000000000000002"/><path d="M707 209h101" stroke="#d05a2a" stroke-width="2" opacity="0.185"/><path d="M780 250h26" stroke="#d05a2a" stroke-width="3" opacity="0.08"/><path d="M853 291h37" stroke="#d05a2a" stroke-width="1" opacity="0.115"/><path d="M50 332h48" stroke="#d05a2a" stroke-width="2" opacity="0.15000000000000002"/><path d="M123 373h59" stroke="#d05a2a" stroke-width="3" opacity="0.185"/><path d="M196 414h70" stroke="#d05a2a" stroke-width="1" opacity="0.08"/><path d="M269 455h81" stroke="#d05a2a" stroke-width="2" opacity="0.115"/><path d="M342 98h92" stroke="#d05a2a" stroke-width="3" opacity="0.15000000000000002"/><path d="M415 139h103" stroke="#d05a2a" stroke-width="1" opacity="0.185"/><path d="M488 180h28" stroke="#d05a2a" stroke-width="2" opacity="0.08"/><path d="M561 221h39" stroke="#d05a2a" stroke-width="3" opacity="0.115"/><path d="M634 262h50" stroke="#d05a2a" stroke-width="1" opacity="0.15000000000000002"/><path d="M707 303h61" stroke="#d05a2a" stroke-width="2" opacity="0.185"/><path d="M780 344h72" stroke="#d05a2a" stroke-width="3" opacity="0.08"/><path d="M853 385h83" stroke="#d05a2a" stroke-width="1" opacity="0.115"/><path d="M50 426h94" stroke="#d05a2a" stroke-width="2" opacity="0.15000000000000002"/><path d="M123 467h105" stroke="#d05a2a" stroke-width="3" opacity="0.185"/><path d="M196 110h30" stroke="#d05a2a" stroke-width="1" opacity="0.08"/><path d="M269 151h41" stroke="#d05a2a" stroke-width="2" opacity="0.115"/><path d="M342 192h52" stroke="#d05a2a" stroke-width="3" opacity="0.15000000000000002"/><path d="M415 233h63" stroke="#d05a2a" stroke-width="1" opacity="0.185"/><path d="M488 274h74" stroke="#d05a2a" stroke-width="2" opacity="0.08"/><path d="M561 315h85" stroke="#d05a2a" stroke-width="3" opacity="0.115"/><path d="M634 356h96" stroke="#d05a2a" stroke-width="1" opacity="0.15000000000000002"/><path d="M707 397h107" stroke="#d05a2a" stroke-width="2" opacity="0.185"/><path d="M780 438h32" stroke="#d05a2a" stroke-width="3" opacity="0.08"/><path d="M853 81h43" stroke="#d05a2a" stroke-width="1" opacity="0.115"/>
+  <rect x="70" y="76" width="160" height="90" rx="5" fill="#381a13" stroke="#d05a2a" stroke-width="4" opacity=".82"/>
+  <path d="M82 98l136 46M218 98L82 144" stroke="#d9c7ad" stroke-width="5" opacity=".36"/>
+  <path d="M44 44h868v448H44z" fill="none" stroke="#ffd60a" stroke-width="1.5" opacity=".35"/>
+  <g filter="url(#rough8)">
+        <g>
+    <circle cx="188" cy="242" r="36" fill="none" stroke="#ffb15f" stroke-width="10"/>
+    <path d="M224 242h142M300 242v34M332 242v24" stroke="#ffb15f" stroke-width="14" stroke-linecap="round"/>
+    <rect x="392" y="212" width="170" height="110" rx="7" fill="#132126" stroke="#8feaff" stroke-width="4"/>
+    <path d="M414 246L536 246" stroke="#8feaff" stroke-width="7" stroke-linecap="round"/>
+    <path d="M414 278L500 278" stroke="#d9c7ad" stroke-width="5" stroke-linecap="round" opacity=".6"/>
+  </g>
+        <g>
+    <rect x="588" y="132" width="260" height="220" rx="8" fill="#d9c7ad" stroke="#c99058" stroke-width="5"/>
+    <text x="612" y="170" fill="#3a2116" font-family="Courier New, monospace" font-size="20" font-weight="800" text-anchor="start">AURA LIMITS</text>
+    <path d="M612 188L824 188" stroke="#6b4f3a" stroke-width="4" />
+    <path d="M624 224L812 224" stroke="#ffd60a" stroke-width="8" stroke-linecap="round" opacity=".72"/>
+    <path d="M624 262L762 262" stroke="#6b4f3a" stroke-width="6" stroke-linecap="round" opacity=".7"/>
+    <path d="M624 300L796 300" stroke="#6b4f3a" stroke-width="6" stroke-linecap="round" opacity=".7"/>
+    <circle cx="802" cy="258" r="18" fill="none" stroke="#ffd60a" stroke-width="6"/>
+  </g>
+        <g transform="translate(480 314)">
+    <rect x="13.299999999999999" y="0" width="26.599999999999998" height="6.6499999999999995" fill="#3a2116" />
+    <rect x="6.6499999999999995" y="6.6499999999999995" width="39.9" height="6.6499999999999995" fill="#3a2116" />
+    <rect x="6.6499999999999995" y="13.299999999999999" width="39.9" height="19.95" fill="#d4956a" />
+    <rect x="13.299999999999999" y="19.95" width="6.6499999999999995" height="6.6499999999999995" fill="#171717" />
+    <rect x="33.25" y="19.95" width="6.6499999999999995" height="6.6499999999999995" fill="#171717" />
+    <rect x="0" y="19.950000000000003" width="6.6499999999999995" height="19.95" fill="#d4956a" />
+    <rect x="46.55" y="33.25" width="6.6499999999999995" height="33.25" fill="#d4956a" />
+    <rect x="6.6499999999999995" y="33.25" width="39.9" height="26.599999999999998" fill="#8a5a3a" />
+    <rect x="13.299999999999999" y="59.849999999999994" width="13.299999999999999" height="19.95" fill="#34312d" />
+    <rect x="33.25" y="59.849999999999994" width="13.299999999999999" height="19.95" fill="#34312d" />
+    <rect x="6.6499999999999995" y="79.8" width="19.95" height="6.6499999999999995" fill="#111" />
+    <rect x="33.25" y="79.8" width="19.95" height="6.6499999999999995" fill="#111" />
+  </g>
+        <g transform="translate(526 328)">
+    <rect x="12.04" y="0" width="24.08" height="6.02" fill="#c0b090" />
+    <rect x="6.02" y="6.02" width="36.12" height="6.02" fill="#c0b090" />
+    <rect x="6.02" y="12.04" width="36.12" height="18.06" fill="#d4956a" />
+    <rect x="12.04" y="18.06" width="6.02" height="6.02" fill="#171717" />
+    <rect x="30.099999999999998" y="18.06" width="6.02" height="6.02" fill="#171717" />
+    <rect x="0" y="30.099999999999998" width="6.02" height="18.06" fill="#d4956a" />
+    <rect x="42.14" y="30.099999999999998" width="6.02" height="18.06" fill="#d4956a" />
+    <rect x="6.02" y="30.099999999999998" width="36.12" height="24.08" fill="#6f5c3e" />
+    <rect x="12.04" y="54.17999999999999" width="12.04" height="18.06" fill="#34312d" />
+    <rect x="30.099999999999998" y="54.17999999999999" width="12.04" height="18.06" fill="#34312d" />
+    <rect x="6.02" y="72.24" width="18.06" height="6.02" fill="#111" />
+    <rect x="30.099999999999998" y="72.24" width="18.06" height="6.02" fill="#111" />
+  </g>
+        <text x="180" y="390" fill="#ffb15f" font-family="Courier New, monospace" font-size="18" font-weight="800" text-anchor="start">OVERRIDE OUTSIDE AURA</text>
+      </g>
+  <g>
+    <rect x="70" y="58" width="424" height="84" rx="8" fill="#0b0d10" opacity=".7" stroke="#ffd60a" stroke-width="2"/>
+    <text x="92" y="91" fill="#ffd60a" font-family="Courier New, monospace" font-size="22" font-weight="800" text-anchor="start">10B</text>
+    <text x="92" y="126" fill="#fff1dc" font-family="Georgia, serif" font-size="32" font-weight="700">GOVERNANCE BOUNDARY</text>
+    <rect x="70" y="462" width="820" height="40" rx="6" fill="#0b0d10" opacity=".68" stroke="#c99058" stroke-width="1.5"/>
+    <text x="92" y="488" fill="#b7a083" font-family="Courier New, monospace" font-size="18" font-weight="700" text-anchor="start">AURA can assist, but the override remains human.</text>
+  </g>
+</svg>

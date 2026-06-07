@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" role="img" aria-label="SINKING">
+  <rect width="960" height="540" fill="#090b0d"/>
+  <defs>
+    <linearGradient id="bg14" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#211510"/>
+      <stop offset=".56" stop-color="#3a2116"/>
+      <stop offset="1" stop-color="#0b0d10"/>
+    </linearGradient>
+    <filter id="rough14">
+      <feTurbulence baseFrequency=".035" numOctaves="2" seed="31"/>
+      <feDisplacementMap in="SourceGraphic" scale="1.8"/>
+    </filter>
+  </defs>
+  <rect x="28" y="28" width="904" height="484" rx="12" fill="url(#bg14)" stroke="#c99058" stroke-width="4"/>
+  <path d="M28 360c160-42 260 26 406-30 154-60 284 52 498-26v208H28z" fill="#120f0d" opacity=".72"/>
+  <path d="M66 104h858M66 456h858" stroke="#ffd60a" stroke-dasharray="9 16" opacity=".18"/>
+  <path d="M80 122l112-44h132l44 78h-92l-36-38-82 60z" fill="#d05a2a" opacity=".17"/>
+  <path d="M310 108h24" stroke="#d05a2a" stroke-width="1" opacity="0.08"/><path d="M383 149h35" stroke="#d05a2a" stroke-width="2" opacity="0.115"/><path d="M456 190h46" stroke="#d05a2a" stroke-width="3" opacity="0.15000000000000002"/><path d="M529 231h57" stroke="#d05a2a" stroke-width="1" opacity="0.185"/><path d="M602 272h68" stroke="#d05a2a" stroke-width="2" opacity="0.08"/><path d="M675 313h79" stroke="#d05a2a" stroke-width="3" opacity="0.115"/><path d="M748 354h90" stroke="#d05a2a" stroke-width="1" opacity="0.15000000000000002"/><path d="M821 395h101" stroke="#d05a2a" stroke-width="2" opacity="0.185"/><path d="M894 436h26" stroke="#d05a2a" stroke-width="3" opacity="0.08"/><path d="M91 79h37" stroke="#d05a2a" stroke-width="1" opacity="0.115"/><path d="M164 120h48" stroke="#d05a2a" stroke-width="2" opacity="0.15000000000000002"/><path d="M237 161h59" stroke="#d05a2a" stroke-width="3" opacity="0.185"/><path d="M310 202h70" stroke="#d05a2a" stroke-width="1" opacity="0.08"/><path d="M383 243h81" stroke="#d05a2a" stroke-width="2" opacity="0.115"/><path d="M456 284h92" stroke="#d05a2a" stroke-width="3" opacity="0.15000000000000002"/><path d="M529 325h103" stroke="#d05a2a" stroke-width="1" opacity="0.185"/><path d="M602 366h28" stroke="#d05a2a" stroke-width="2" opacity="0.08"/><path d="M675 407h39" stroke="#d05a2a" stroke-width="3" opacity="0.115"/><path d="M748 448h50" stroke="#d05a2a" stroke-width="1" opacity="0.15000000000000002"/><path d="M821 91h61" stroke="#d05a2a" stroke-width="2" opacity="0.185"/><path d="M894 132h72" stroke="#d05a2a" stroke-width="3" opacity="0.08"/><path d="M91 173h83" stroke="#d05a2a" stroke-width="1" opacity="0.115"/><path d="M164 214h94" stroke="#d05a2a" stroke-width="2" opacity="0.15000000000000002"/><path d="M237 255h105" stroke="#d05a2a" stroke-width="3" opacity="0.185"/><path d="M310 296h30" stroke="#d05a2a" stroke-width="1" opacity="0.08"/><path d="M383 337h41" stroke="#d05a2a" stroke-width="2" opacity="0.115"/><path d="M456 378h52" stroke="#d05a2a" stroke-width="3" opacity="0.15000000000000002"/><path d="M529 419h63" stroke="#d05a2a" stroke-width="1" opacity="0.185"/><path d="M602 460h74" stroke="#d05a2a" stroke-width="2" opacity="0.08"/><path d="M675 103h85" stroke="#d05a2a" stroke-width="3" opacity="0.115"/><path d="M748 144h96" stroke="#d05a2a" stroke-width="1" opacity="0.15000000000000002"/><path d="M821 185h107" stroke="#d05a2a" stroke-width="2" opacity="0.185"/><path d="M894 226h32" stroke="#d05a2a" stroke-width="3" opacity="0.08"/><path d="M91 267h43" stroke="#d05a2a" stroke-width="1" opacity="0.115"/>
+  <rect x="70" y="76" width="160" height="90" rx="5" fill="#381a13" stroke="#d05a2a" stroke-width="4" opacity=".82"/>
+  <path d="M82 98l136 46M218 98L82 144" stroke="#d9c7ad" stroke-width="5" opacity=".36"/>
+  <path d="M44 44h868v448H44z" fill="none" stroke="#d05a2a" stroke-width="1.5" opacity=".35"/>
+  <g filter="url(#rough14)">
+        <path d="M120 170c140 60 240-60 388 24s236 20 356 70v210H120z" fill="#d05a2a" opacity=".36"/>
+        <g>
+    <rect x="150" y="122" width="300" height="240" rx="8" fill="#d9c7ad" stroke="#c99058" stroke-width="5"/>
+    <text x="174" y="160" fill="#3a2116" font-family="Courier New, monospace" font-size="20" font-weight="800" text-anchor="start">PARTIALS</text>
+    <path d="M174 178L426 178" stroke="#6b4f3a" stroke-width="4" />
+    <path d="M186 214L414 214" stroke="#d05a2a" stroke-width="8" stroke-linecap="round" opacity=".72"/>
+    <path d="M186 252L364 252" stroke="#6b4f3a" stroke-width="6" stroke-linecap="round" opacity=".7"/>
+    <path d="M186 290L398 290" stroke="#6b4f3a" stroke-width="6" stroke-linecap="round" opacity=".7"/>
+    <circle cx="404" cy="248" r="18" fill="none" stroke="#d05a2a" stroke-width="6"/>
+  </g>
+        <g>
+    <rect x="540" y="180" width="180" height="150" rx="10" fill="#152328" stroke="#d05a2a" stroke-width="4"/>
+    <circle cx="630" cy="252" r="44" fill="#071216" stroke="#d05a2a" stroke-width="6"/>
+    <circle cx="630" cy="252" r="18" fill="#d05a2a" opacity=".65"/>
+    <path d="M576 200h108M576 312h108" stroke="#b7a083" stroke-width="5" opacity=".45"/>
+    <path d="M558 212h144M558 252h144M558 292h144" stroke="#8feaff" stroke-width="4" opacity=".55"/>
+  </g>
+        <path d="M126 392h760" stroke="#d05a2a" stroke-width="34" opacity=".6"/>
+        <text x="250" y="430" fill="#d9c7ad" font-family="Courier New, monospace" font-size="20" font-weight="800" text-anchor="start">TOO MANY DEBTS, NO CLEAR CHOICE</text>
+      </g>
+  <g>
+    <rect x="70" y="58" width="424" height="84" rx="8" fill="#0b0d10" opacity=".7" stroke="#d05a2a" stroke-width="2"/>
+    <text x="92" y="91" fill="#d05a2a" font-family="Courier New, monospace" font-size="22" font-weight="800" text-anchor="start">FAILURE</text>
+    <text x="92" y="126" fill="#fff1dc" font-family="Georgia, serif" font-size="32" font-weight="700">SINKING</text>
+    <rect x="70" y="462" width="820" height="40" rx="6" fill="#0b0d10" opacity=".68" stroke="#c99058" stroke-width="1.5"/>
+    <text x="92" y="488" fill="#b7a083" font-family="Courier New, monospace" font-size="18" font-weight="700" text-anchor="start">No explosion, just too many unresolved debts.</text>
+  </g>
+</svg>

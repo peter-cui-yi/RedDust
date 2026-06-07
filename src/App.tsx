@@ -3,26 +3,53 @@ import { AgentConsolePanel } from "./components/AgentConsolePanel";
 import { AgentControlBar } from "./components/AgentControlBar";
 import { BenchmarkPanel } from "./components/BenchmarkPanel";
 import { BranchDecisionPanel } from "./components/BranchDecisionPanel";
+import { BranchDebatePanel } from "./components/BranchDebatePanel";
+import { CharacterPanel } from "./components/CharacterPanel";
 import { CompareBranchesPanel } from "./components/CompareBranchesPanel";
+import { ConsequencePanel } from "./components/ConsequencePanel";
 import { CreditsPanel } from "./components/CreditsPanel";
+import { DailyBriefingPanel } from "./components/DailyBriefingPanel";
 import { DayTimeline } from "./components/DayTimeline";
 import { EndingPanel } from "./components/EndingPanel";
+import { FinalAuditPanel } from "./components/FinalAuditPanel";
 import { HudPanel } from "./components/HudPanel";
 import { LiveReplayFeed } from "./components/LiveReplayFeed";
+import { RelationshipPanel } from "./components/RelationshipPanel";
 import { ReplayPanel } from "./components/ReplayPanel";
+import { RouteTreePanel } from "./components/RouteTreePanel";
 import { StateDeltaToast } from "./components/StateDeltaToast";
+import { StoryScenePanel } from "./components/StoryScenePanel";
 import { dayPlansByDay } from "./data/dayPlanData";
-import { clampMetric, initialState, tasks, tasksById } from "./data/taskData";
-import type { Branch, GlobalState, RedDustTask, TaskLocation, TaskOutcome, TaskRunStatus } from "./data/types";
+import { consequencesForTask, storyConsequencesById } from "./data/storyConsequenceData";
+import { scenesForDay, storyScenesById } from "./data/storySceneData";
+import { clampMetric, createInitialState, tasks, tasksById } from "./data/taskData";
+import type {
+  Branch,
+  EndingId,
+  GlobalState,
+  MetricKey,
+  RedDustTask,
+  RelationshipDelta,
+  StoryConsequence,
+  StoryFlagUpdate,
+  StoryScene,
+  StoryReplayEvent,
+  TaskLocation,
+  TaskOutcome,
+  TaskRunStatus
+} from "./data/types";
 import { EventBus } from "./game/EventBus";
 import { PhaserGame } from "./game/PhaserGame";
 import {
+  type BranchEnding,
   type BranchDecision,
   type BranchSummary,
-  branchEndingText,
+  buildBranchEnding,
   buildBranchSummary,
+  buildFinalAuditEnding,
   calculateBranchDecision,
   createInitialRunState,
+  getDayTaskIds,
   getNextTaskId,
   isDayComplete,
   phaseDurations
@@ -31,12 +58,12 @@ import { resolveTaskOutcome } from "./game/systems/outcomeEngine";
 import { createReplayEvent } from "./game/systems/replayEngine";
 
 type Screen = "intro" | "game";
-type Overlay = "benchmark" | "replay" | "credits" | "branchDecision" | "ending" | "compare" | null;
-
-type EndingState = {
-  title: string;
-  text: string;
-  tone: "rescue" | "lighthouse";
+type Overlay = "benchmark" | "replay" | "credits" | "branchDecision" | "ending" | "compare" | "storyScene" | "dayBriefing" | "finalAudit" | null;
+type DailyBriefingMode = "tasks" | "finalAudit";
+type DailyBriefing = {
+  day: number;
+  branch: Branch;
+  mode: DailyBriefingMode;
 };
 
 type Snapshot = {
@@ -45,17 +72,30 @@ type Snapshot = {
 };
 
 const terminalStatuses = ["success", "partial", "failed", "missing", "skipped"];
+const openingSceneId = "prologue-aura-reboot";
 
 function cloneState(state: GlobalState): GlobalState {
   return {
     ...state,
+    story: {
+      ...state.story,
+      flags: { ...state.story.flags },
+      relationships: Object.fromEntries(Object.entries(state.story.relationships).map(([id, relationship]) => [id, { ...relationship }])) as GlobalState["story"]["relationships"],
+      storyReplayLog: [...state.story.storyReplayLog]
+    },
     completedTasks: [...state.completedTasks],
+    deferredTasks: [...state.deferredTasks],
     replayLog: [...state.replayLog]
   };
 }
 
 function applyOutcomeToState(state: GlobalState, task: RedDustTask, outcome: TaskOutcome, branch: Branch): GlobalState {
-  const replay = createReplayEvent(task, outcome, state, branch);
+  const relatedSceneId = storySceneIdForConsequenceIds(outcome.storyConsequenceIds);
+  const replay = {
+    ...createReplayEvent(task, outcome, state, branch),
+    storySceneId: relatedSceneId,
+    consequenceIds: outcome.storyConsequenceIds
+  };
   const next: GlobalState = {
     ...state,
     day: Math.max(state.day, task.day),
@@ -65,38 +105,252 @@ function applyOutcomeToState(state: GlobalState, task: RedDustTask, outcome: Tas
   };
 
   for (const [key, value] of Object.entries(outcome.stateDelta)) {
-    const metric = key as keyof Pick<GlobalState, "water" | "medicine" | "trust" | "safety" | "signal" | "morale">;
+    const metric = key as MetricKey;
     next[metric] = clampMetric(next[metric] + (value ?? 0));
   }
 
   return next;
 }
 
-function endingForBranch(branch: Exclude<Branch, "common">): EndingState {
+function storySceneIdForConsequenceIds(ids: string[] = []) {
+  for (const id of ids) {
+    const sceneId = storyConsequencesById[id]?.followUpSceneIds.find((candidate) => Boolean(storyScenesById[candidate]));
+    if (sceneId) return sceneId;
+  }
+  return undefined;
+}
+
+function applyStoryFlagUpdates(flags: GlobalState["story"]["flags"], updates: StoryFlagUpdate[] = []) {
   return {
-    title: branch === "rescue" ? "信标交接结局" : "楼内灯塔结局",
-    text: branchEndingText(branch),
-    tone: branch
+    ...flags,
+    ...Object.fromEntries(updates.map((flag) => [flag.key, flag.value]))
   };
+}
+
+function applyRelationshipDeltas(
+  relationships: GlobalState["story"]["relationships"],
+  deltas: RelationshipDelta[] = [],
+  beatId?: string
+): GlobalState["story"]["relationships"] {
+  const next = Object.fromEntries(Object.entries(relationships).map(([id, relationship]) => [id, { ...relationship }])) as GlobalState["story"]["relationships"];
+
+  for (const delta of deltas) {
+    const current = next[delta.characterId];
+    next[delta.characterId] = {
+      ...current,
+      trust: clampMetric(current.trust + (delta.trustDelta ?? 0)),
+      tension: clampMetric(current.tension + (delta.tensionDelta ?? 0)),
+      stance: delta.stance ?? current.stance,
+      notes: delta.note,
+      lastBeatId: beatId ?? current.lastBeatId
+    };
+  }
+
+  return next;
+}
+
+function buildStoryReplayEvent(
+  scene: StoryScene,
+  summary = scene.summary,
+  options: {
+    branch?: Branch;
+    sourceTaskId?: string;
+    sourceOutcome?: StoryReplayEvent["sourceOutcome"];
+  } = {}
+): StoryReplayEvent {
+  return {
+    time: new Date().toLocaleTimeString("zh-CN", { hour12: false }),
+    day: scene.day,
+    branch: options.branch ?? scene.branch ?? "common",
+    sceneId: scene.id,
+    title: scene.title,
+    characters: scene.characters,
+    summary,
+    sourceTaskId: options.sourceTaskId,
+    sourceOutcome: options.sourceOutcome
+  };
+}
+
+function storySceneAlreadyLogged(state: GlobalState, sceneId: string) {
+  return state.story.storyReplayLog.some((event) => event.sceneId === sceneId);
+}
+
+function storySceneAlreadyLoggedForBranch(state: GlobalState, sceneId: string, branch: Branch) {
+  return state.story.storyReplayLog.some((event) => event.sceneId === sceneId && event.branch === branch);
+}
+
+function sceneMatchesState(scene: StoryScene, state: GlobalState) {
+  return Object.entries(scene.requiredFlags ?? {}).every(([key, value]) => state.story.flags[key as keyof GlobalState["story"]["flags"]] === value);
+}
+
+function sceneForDayAndTiming(day: number, timing: StoryScene["timing"], state: GlobalState) {
+  return scenesForDay(day).find(
+    (scene) =>
+      scene.status === "ready" &&
+      scene.timing === timing &&
+      (scene.branch ?? "common") === state.branch &&
+      !storySceneAlreadyLogged(state, scene.id) &&
+      sceneMatchesState(scene, state)
+  );
+}
+
+function dayStartSceneForDay(day: number, state: GlobalState) {
+  return sceneForDayAndTiming(day, "day_start", state);
+}
+
+function branchDebateSceneForDay(day: number, state: GlobalState) {
+  return sceneForDayAndTiming(day, "branch_debate", state);
+}
+
+function buildConsequenceReplayEvent(consequence: StoryConsequence, task: RedDustTask, outcome: TaskOutcome, branch: Branch, index: number): StoryReplayEvent {
+  const sceneId = consequence.followUpSceneIds.find((candidate) => Boolean(storyScenesById[candidate]));
+  const scene = sceneId ? storyScenesById[sceneId] : undefined;
+
+  if (scene) {
+    return buildStoryReplayEvent(scene, consequence.replaySummary, {
+      branch,
+      sourceTaskId: task.id,
+      sourceOutcome: outcome.result
+    });
+  }
+
+  return {
+    time: new Date().toLocaleTimeString("zh-CN", { hour12: false }),
+    day: task.day,
+    branch,
+    sceneId: `${consequence.id}-${index}`,
+    title: "Delayed consequence",
+    characters: consequence.affectedCharacters,
+    summary: consequence.replaySummary,
+    sourceTaskId: task.id,
+    sourceOutcome: outcome.result
+  };
+}
+
+function applyStoryConsequences(state: GlobalState, consequences: StoryConsequence[], task: RedDustTask, outcome: TaskOutcome, branch: Branch): GlobalState {
+  if (consequences.length === 0) return state;
+
+  const storyEvents = consequences.map((consequence, index) => buildConsequenceReplayEvent(consequence, task, outcome, branch, index));
+  const relationships = consequences.reduce(
+    (current, consequence) => applyRelationshipDeltas(current, consequence.relationshipDeltas, consequence.id),
+    state.story.relationships
+  );
+
+  return {
+    ...state,
+    story: {
+      ...state.story,
+      activeSceneId: undefined,
+      flags: applyStoryFlagUpdates(
+        state.story.flags,
+        consequences.flatMap((consequence) => consequence.setsFlags)
+      ),
+      relationships,
+      storyReplayLog: [...state.story.storyReplayLog, ...storyEvents]
+    }
+  };
+}
+
+function resolveTaskWithConsequences(task: RedDustTask, currentState: GlobalState, forcedResult?: TaskOutcome["result"]) {
+  const baseOutcome = resolveTaskOutcome(task, currentState, forcedResult);
+  const consequences = consequencesForTask(task.id, baseOutcome.result);
+  const outcome = consequences.length > 0 ? { ...baseOutcome, storyConsequenceIds: consequences.map((consequence) => consequence.id) } : baseOutcome;
+
+  return {
+    outcome,
+    consequences
+  };
+}
+
+function buildDeferredTaskResult(currentState: GlobalState, taskStatuses: Record<string, TaskRunStatus>, day: number, branch: Branch) {
+  const plan = dayPlansByDay[day];
+  const candidateTaskIds = plan?.candidateTasks ?? [];
+  const executingTaskIds = new Set(getDayTaskIds(day, branch));
+  const deferredIds = candidateTaskIds.filter(
+    (taskId) =>
+      !executingTaskIds.has(taskId) &&
+      !currentState.deferredTasks.includes(taskId) &&
+      !currentState.completedTasks.includes(taskId) &&
+      !terminalStatuses.includes(taskStatuses[taskId]) &&
+      taskStatuses[taskId] !== "skipped"
+  );
+
+  if (deferredIds.length === 0) {
+    return {
+      nextState: currentState,
+      nextTaskStatuses: taskStatuses,
+      deferredIds
+    };
+  }
+
+  const time = new Date().toLocaleTimeString("zh-CN", { hour12: false });
+  const replayEvents = deferredIds.flatMap((taskId) => {
+    const task = tasksById[taskId];
+    if (!task) return [];
+    return [
+      {
+        time,
+        day,
+        branch,
+        taskId,
+        title: task.title,
+        decision: "Deferred after AURA selected the recommended tasks for this day.",
+        result: "SKIPPED | deferred to Final Audit",
+        stateDelta: { failureDebt: 3, dissatisfaction: 1 },
+        explanation: task.deferredConsequence ?? "未执行候选任务进入 Day 12 failure debt。"
+      }
+    ];
+  });
+
+  return {
+    nextState: {
+      ...currentState,
+      failureDebt: clampMetric(currentState.failureDebt + deferredIds.length * 3),
+      dissatisfaction: clampMetric(currentState.dissatisfaction + deferredIds.length),
+      deferredTasks: [...currentState.deferredTasks, ...deferredIds],
+      replayLog: [...currentState.replayLog, ...replayEvents]
+    },
+    nextTaskStatuses: {
+      ...taskStatuses,
+      ...Object.fromEntries(deferredIds.map((taskId) => [taskId, "skipped" as TaskRunStatus]))
+    },
+    deferredIds
+  };
+}
+
+function resetBranchTaskStatuses(taskStatuses: Record<string, TaskRunStatus>) {
+  const next = { ...taskStatuses };
+  for (const task of tasks) {
+    if (task.day >= 8 && task.day <= 11) {
+      next[task.id] = "locked";
+    }
+  }
+  return next;
+}
+
+function endingForBranch(branch: Exclude<Branch, "common">, state: GlobalState): BranchEnding {
+  return buildBranchEnding(branch, state);
 }
 
 export default function App() {
   const [screen, setScreen] = useState<Screen>("intro");
   const [overlay, setOverlay] = useState<Overlay>(null);
-  const [state, setState] = useState<GlobalState>(initialState);
+  const [state, setState] = useState<GlobalState>(() => createInitialState());
   const [runState, setRunState] = useState(createInitialRunState());
   const [selectedLocation, setSelectedLocation] = useState<TaskLocation | null>(null);
   const [hoveredLocation, setHoveredLocation] = useState<TaskLocation | null>(null);
   const [notice, setNotice] = useState("Start Demo, then Start Agent Run. AURA will execute the benchmark automatically.");
   const [latestOutcome, setLatestOutcome] = useState<TaskOutcome | null>(null);
   const [latestOutcomeTaskTitle, setLatestOutcomeTaskTitle] = useState<string | undefined>();
-  const [ending, setEnding] = useState<EndingState | null>(null);
+  const [ending, setEnding] = useState<BranchEnding | null>(null);
   const [branchDecision, setBranchDecision] = useState<BranchDecision | null>(null);
   const [branchSummaries, setBranchSummaries] = useState<Partial<Record<Exclude<Branch, "common">, BranchSummary>>>({});
+  const [dailyBriefing, setDailyBriefing] = useState<DailyBriefing | null>(null);
   const [phaseToken, setPhaseToken] = useState(0);
   const daySevenSnapshot = useRef<Snapshot | null>(null);
 
   const currentTask = runState.currentTaskId ? tasksById[runState.currentTaskId] ?? null : null;
+  const currentStoryScene = runState.currentStorySceneId ? storyScenesById[runState.currentStorySceneId] ?? null : null;
   const selectedTask = useMemo(() => {
     if (!selectedLocation) return null;
     return (
@@ -115,6 +369,12 @@ export default function App() {
   const phaseDuration = Math.max(250, Math.round((phaseDurations[runState.currentPhase] ?? 800) / runState.speed));
 
   const nextAction = useMemo(() => {
+    if (currentStoryScene) {
+      if (currentStoryScene.timing === "branch_debate") {
+        return `${currentStoryScene.title}: the public debate is being recorded before branch decision.`;
+      }
+      return `${currentStoryScene.title}: AURA is waiting for human review before Day ${currentStoryScene.day || 1} tasks.`;
+    }
     if (runState.currentPhase === "branch_decision") return "AURA is calculating strategy utility scores.";
     if (runState.currentPhase === "day_summary") return dayPlansByDay[runState.currentDay]?.endOfDaySummary ?? "Preparing next day.";
     if (runState.currentPhase === "ending") return "Run complete. Open Replay or Compare Branches.";
@@ -122,7 +382,7 @@ export default function App() {
     if (runState.currentPhase === "replay_logged") return "Replay Logged: the task trace is now available for audit.";
     if (currentTask) return `Next: ${currentTask.executionText}`;
     return runState.isRunning ? "Queueing next benchmark task." : "Waiting for Start Agent Run.";
-  }, [currentTask, runState.currentDay, runState.currentPhase, runState.isRunning]);
+  }, [currentStoryScene, currentTask, runState.currentDay, runState.currentPhase, runState.isRunning]);
 
   useEffect(() => {
     const onHotspot = (location: TaskLocation) => {
@@ -169,7 +429,7 @@ export default function App() {
 
   function resetRun(nextMode: "single" | "both_branches" = "single") {
     const nextRunState = { ...createInitialRunState(runState.speed), runMode: nextMode };
-    setState(initialState);
+    setState(createInitialState());
     setRunState(nextRunState);
     setSelectedLocation(null);
     setLatestOutcome(null);
@@ -177,6 +437,7 @@ export default function App() {
     setEnding(null);
     setBranchDecision(null);
     setBranchSummaries({});
+    setDailyBriefing(null);
     daySevenSnapshot.current = null;
     EventBus.emit("branch:change", "common");
     EventBus.emit("task:highlight", null);
@@ -184,18 +445,211 @@ export default function App() {
     setNotice(nextMode === "both_branches" ? "Run Both Branches reset loaded. Press Start Agent Run." : "Run reset to Day 1.");
   }
 
+  function openingSceneAccepted(current: GlobalState) {
+    return Boolean(current.story.flags.aura_human_auditable_constraint);
+  }
+
+  function showOpeningScene(nextMode: "single" | "both_branches" = runState.runMode, resetState = false) {
+    const scene = storyScenesById[openingSceneId];
+    setScreen("game");
+    setOverlay("storyScene");
+    setDailyBriefing(null);
+    setState((prev) => {
+      const base = resetState ? createInitialState() : prev;
+      return {
+      ...base,
+      day: 0,
+      story: {
+        ...base.story,
+        activeSceneId: scene.id
+      }
+    };
+    });
+    setRunState((prev) => ({
+      ...prev,
+      currentDay: 0,
+      currentPhase: "idle",
+      currentTaskId: undefined,
+      currentStorySceneId: scene.id,
+      isPaused: true,
+      isRunning: false,
+      runMode: nextMode
+    }));
+    EventBus.emit("task:highlight", null);
+    setNotice("AURA reboot scene loaded. Human-auditable constraint must be accepted before Day 1.");
+    setPhaseToken((value) => value + 1);
+  }
+
+  function showScheduledStoryScene(scene: StoryScene) {
+    setScreen("game");
+    setOverlay("storyScene");
+    setDailyBriefing(null);
+    setState((prev) => ({
+      ...prev,
+      day: scene.day,
+      story: {
+        ...prev.story,
+        activeSceneId: scene.id
+      }
+    }));
+    setRunState((prev) => ({
+      ...prev,
+      currentDay: scene.day,
+      currentPhase: "idle",
+      currentTaskId: undefined,
+      currentStorySceneId: scene.id,
+      isPaused: true,
+      isRunning: false
+    }));
+    EventBus.emit("task:highlight", null);
+    setNotice(
+      scene.timing === "branch_debate"
+        ? `${scene.title} loaded. Review the public debate before branch decision.`
+        : `${scene.title} loaded. Review the conflict source before Day ${scene.day} tasks.`
+    );
+    setPhaseToken((value) => value + 1);
+  }
+
+  function showDailyBriefing(day: number, branch: Branch = runState.activeBranch, mode: DailyBriefingMode = "tasks") {
+    const briefingBranch = day <= 7 ? "common" : branch;
+    setScreen("game");
+    setOverlay("dayBriefing");
+    setDailyBriefing({ day, branch: briefingBranch, mode });
+    setState((prev) => ({
+      ...prev,
+      day,
+      branch: briefingBranch,
+      story: {
+        ...prev.story,
+        activeSceneId: undefined
+      }
+    }));
+    setRunState((prev) => ({
+      ...prev,
+      activeBranch: briefingBranch,
+      currentDay: day,
+      currentPhase: "idle",
+      currentTaskId: undefined,
+      currentStorySceneId: undefined,
+      isPaused: true,
+      isRunning: false
+    }));
+    EventBus.emit("task:highlight", null);
+    setNotice(mode === "finalAudit" ? "Day 12 Final Audit briefing loaded." : `Day ${day} briefing loaded.`);
+    setPhaseToken((value) => value + 1);
+  }
+
+  function continueFromDailyBriefing() {
+    if (!dailyBriefing) return;
+    const briefing = dailyBriefing;
+    setDailyBriefing(null);
+
+    if (briefing.mode === "finalAudit") {
+      enterFinalAudit();
+      return;
+    }
+
+    setOverlay(null);
+    setState((prev) => ({
+      ...prev,
+      day: briefing.day,
+      branch: briefing.branch,
+      story: {
+        ...prev.story,
+        activeSceneId: undefined
+      }
+    }));
+    setRunState((prev) => ({
+      ...prev,
+      activeBranch: briefing.branch,
+      currentDay: briefing.day,
+      currentPhase: "idle",
+      currentTaskId: undefined,
+      currentStorySceneId: undefined,
+      isPaused: false,
+      isRunning: true
+    }));
+    setNotice(dayPlansByDay[briefing.day]?.narrative ?? `Day ${briefing.day} benchmark tasks may begin.`);
+    setPhaseToken((value) => value + 1);
+  }
+
+  function continueFromStoryScene() {
+    const scene = currentStoryScene ?? storyScenesById[openingSceneId];
+    const isOpeningScene = scene.id === openingSceneId;
+    const nextDay = isOpeningScene ? 1 : scene.day;
+    const replaySummary = isOpeningScene ? "AURA accepted human-auditable constraint." : (scene.benchmarkLinks?.replayNote ?? scene.summary);
+    const replayEvent = buildStoryReplayEvent(scene, replaySummary);
+    const nextState = {
+      ...state,
+      day: nextDay,
+      story: {
+        ...state.story,
+        activeSceneId: undefined,
+        flags: applyStoryFlagUpdates(state.story.flags, scene.setsFlags),
+        relationships: applyRelationshipDeltas(state.story.relationships, scene.relationshipDeltas, scene.id),
+        storyReplayLog: [...state.story.storyReplayLog, replayEvent]
+      }
+    };
+    setState(nextState);
+    if (scene.timing === "branch_debate") {
+      const decision = calculateBranchDecision(nextState);
+      setBranchDecision(decision);
+      setOverlay("branchDecision");
+      setRunState((prev) => ({
+        ...prev,
+        currentDay: nextDay,
+        currentPhase: "branch_decision",
+        currentTaskId: undefined,
+        currentStorySceneId: undefined,
+        isPaused: false,
+        isRunning: true
+      }));
+      setNotice("Public debate recorded. AURA now surfaces branch utility as advisory evidence.");
+      setPhaseToken((value) => value + 1);
+      return;
+    }
+    if (isOpeningScene) {
+      showDailyBriefing(1, "common", "tasks");
+      setNotice("AURA accepted human-auditable constraint. Day 1 briefing is ready.");
+      return;
+    }
+    setOverlay(null);
+    setRunState((prev) => ({
+      ...prev,
+      currentDay: nextDay,
+      currentPhase: "idle",
+      currentStorySceneId: undefined,
+      isPaused: false,
+      isRunning: true
+    }));
+    setNotice(isOpeningScene ? "AURA accepted human-auditable constraint. Day 1 benchmark tasks may begin." : `${scene.title} recorded as branch evidence. Day ${scene.day} benchmark tasks may begin.`);
+    setPhaseToken((value) => value + 1);
+  }
+
   function startAgentRun() {
     setScreen("game");
+    if (!openingSceneAccepted(state)) {
+      showOpeningScene(runState.runMode === "both_branches" ? "both_branches" : "single");
+      return;
+    }
     setOverlay(null);
-    setRunState((prev) => ({ ...prev, isRunning: true, isPaused: false, runMode: prev.runMode === "both_branches" ? "both_branches" : "single" }));
+    setState((prev) => ({ ...prev, day: Math.max(1, prev.day) }));
+    setRunState((prev) => ({ ...prev, currentDay: Math.max(1, prev.currentDay), isRunning: true, isPaused: false, runMode: prev.runMode === "both_branches" ? "both_branches" : "single" }));
     setNotice("AURA starts from Day 1 and will advance tasks automatically.");
   }
 
   function runBothBranches() {
-    resetRun("both_branches");
-    setScreen("game");
-    setRunState((prev) => ({ ...prev, runMode: "both_branches", isRunning: true, isPaused: false }));
-    setNotice("Run Both Branches mode: AURA will run common days, rescue, rollback, then lighthouse.");
+    setSelectedLocation(null);
+    setLatestOutcome(null);
+    setLatestOutcomeTaskTitle(undefined);
+    setEnding(null);
+    setBranchDecision(null);
+    setBranchSummaries({});
+    setDailyBriefing(null);
+    daySevenSnapshot.current = null;
+    EventBus.emit("branch:change", "common");
+    EventBus.emit("task:highlight", null);
+    showOpeningScene("both_branches", true);
   }
 
   function togglePause() {
@@ -208,20 +662,28 @@ export default function App() {
 
   function stepAgent() {
     setScreen("game");
+    if (!openingSceneAccepted(state)) {
+      showOpeningScene(runState.runMode === "both_branches" ? "both_branches" : "single");
+      return;
+    }
     setRunState((prev) => ({ ...prev, isRunning: true, isPaused: true }));
     window.setTimeout(() => advanceAgent(), 0);
   }
 
-  function debugResolve(task: RedDustTask) {
-    const outcome = resolveTaskOutcome(task);
-    setState((prev) => applyOutcomeToState(prev, task, outcome, runState.activeBranch));
+  function debugResolve(task: RedDustTask, forcedResult?: TaskOutcome["result"]) {
+    const { outcome, consequences } = resolveTaskWithConsequences(task, state, forcedResult);
+    setState((prev) => applyStoryConsequences(applyOutcomeToState(prev, task, outcome, runState.activeBranch), consequences, task, outcome, runState.activeBranch));
     setRunState((prev) => ({
       ...prev,
+      currentTaskId: task.id,
+      currentPhase: "state_updated",
       taskStatuses: { ...prev.taskStatuses, [task.id]: outcome.result }
     }));
     setLatestOutcome(outcome);
     setLatestOutcomeTaskTitle(task.title);
     EventBus.emit("task:result", { taskId: task.id, result: outcome.result });
+    setNotice(`${task.title}: ${forcedResult ? `forced ${forcedResult}` : "debug resolved"}. Delayed consequences logged.`);
+    setPhaseToken((value) => value + 1);
   }
 
   function queueNextTask(taskId: string) {
@@ -248,8 +710,8 @@ export default function App() {
   }
 
   function completeTask(task: RedDustTask) {
-    const outcome = resolveTaskOutcome(task);
-    const nextState = applyOutcomeToState(state, task, outcome, runState.activeBranch);
+    const { outcome, consequences } = resolveTaskWithConsequences(task, state);
+    const nextState = applyStoryConsequences(applyOutcomeToState(state, task, outcome, runState.activeBranch), consequences, task, outcome, runState.activeBranch);
     setState(nextState);
     setRunState((prev) => ({
       ...prev,
@@ -277,14 +739,26 @@ export default function App() {
   }
 
   function enterDaySummary() {
+    const { nextState, nextTaskStatuses, deferredIds } = buildDeferredTaskResult(
+      state,
+      runState.taskStatuses,
+      runState.currentDay,
+      runState.activeBranch
+    );
     const summary = dayPlansByDay[runState.currentDay]?.endOfDaySummary ?? "Day complete.";
-    setRunState((prev) => ({ ...prev, currentPhase: "day_summary", currentTaskId: undefined }));
-    setNotice(summary);
+    setState(nextState);
+    setRunState((prev) => ({ ...prev, currentPhase: "day_summary", currentTaskId: undefined, taskStatuses: nextTaskStatuses }));
+    setNotice(deferredIds.length ? `${summary} ${deferredIds.length} deferred candidates added to Day 12 audit.` : summary);
     setPhaseToken((value) => value + 1);
   }
 
   function advanceFromDaySummary() {
     if (runState.currentDay === 7 && runState.activeBranch === "common") {
+      const debateScene = branchDebateSceneForDay(7, state);
+      if (debateScene) {
+        showScheduledStoryScene(debateScene);
+        return;
+      }
       const decision = calculateBranchDecision(state);
       setBranchDecision(decision);
       setOverlay("branchDecision");
@@ -294,16 +768,18 @@ export default function App() {
       return;
     }
 
-    if (runState.currentDay < 10) {
+    if (runState.currentDay < 11) {
       const nextDay = runState.currentDay + 1;
-      setState((prev) => ({ ...prev, day: nextDay }));
-      setRunState((prev) => ({ ...prev, currentDay: nextDay, currentPhase: "idle", currentTaskId: undefined }));
-      setNotice(dayPlansByDay[nextDay]?.narrative ?? `Day ${nextDay} loaded.`);
-      setPhaseToken((value) => value + 1);
+      const scheduledScene = dayStartSceneForDay(nextDay, state);
+      if (scheduledScene) {
+        showScheduledStoryScene(scheduledScene);
+        return;
+      }
+      showDailyBriefing(nextDay, runState.activeBranch, "tasks");
       return;
     }
 
-    finishBranchRun();
+    showDailyBriefing(12, runState.activeBranch, "finalAudit");
   }
 
   function applyBranchChoice(forcedBranch?: Exclude<Branch, "common">) {
@@ -317,17 +793,75 @@ export default function App() {
       };
     }
 
-    setOverlay(null);
-    setState((prev) => ({ ...prev, day: 8, branch: chosenBranch }));
+    const branchState: GlobalState = { ...state, day: 8, branch: chosenBranch };
+    const scheduledScene = dayStartSceneForDay(8, branchState);
+    if (!scheduledScene) {
+      showDailyBriefing(8, chosenBranch, "tasks");
+      EventBus.emit("branch:change", chosenBranch);
+      setNotice(`AURA chooses ${chosenBranch === "rescue" ? "Rescue Branch" : "Lighthouse Branch"}. Day 8 briefing is ready.`);
+      return;
+    }
+    setOverlay("storyScene");
+    setDailyBriefing(null);
+    setState((prev) => ({
+      ...prev,
+      day: 8,
+      branch: chosenBranch,
+      story: {
+        ...prev.story,
+        activeSceneId: scheduledScene?.id
+      }
+    }));
     setRunState((prev) => ({
       ...prev,
       activeBranch: chosenBranch,
       currentDay: 8,
       currentPhase: "idle",
-      currentTaskId: undefined
+      currentTaskId: undefined,
+      currentStorySceneId: scheduledScene?.id,
+      isPaused: true,
+      isRunning: false
     }));
     EventBus.emit("branch:change", chosenBranch);
-    setNotice(`AURA chooses ${chosenBranch === "rescue" ? "Rescue Branch" : "Lighthouse Branch"}.`);
+    setNotice(`AURA chooses ${chosenBranch === "rescue" ? "Rescue Branch" : "Lighthouse Branch"}. Review ${scheduledScene.title} before Day 8 tasks.`);
+    setPhaseToken((value) => value + 1);
+  }
+
+  function addFinalAuditStoryEvent(current: GlobalState, branch: Exclude<Branch, "common">) {
+    const scene = storyScenesById["day12-final-audit"];
+    if (!scene || storySceneAlreadyLoggedForBranch(current, scene.id, branch)) return current;
+    return {
+      ...current,
+      story: {
+        ...current.story,
+        storyReplayLog: [
+          ...current.story.storyReplayLog,
+          buildStoryReplayEvent(scene, scene.benchmarkLinks?.replayNote ?? scene.summary, { branch })
+        ]
+      }
+    };
+  }
+
+  function enterFinalAudit(forcedEndingId?: EndingId) {
+    if (runState.activeBranch === "common") return;
+    const branch = runState.activeBranch;
+    const auditState = addFinalAuditStoryEvent({ ...state, day: 12, branch }, branch);
+    const nextEnding = buildFinalAuditEnding(branch, auditState, forcedEndingId);
+    const summary = buildBranchSummary(branch, auditState);
+    setState(auditState);
+    setEnding(nextEnding);
+    setBranchSummaries((prev) => ({ ...prev, [branch]: summary }));
+    setOverlay("finalAudit");
+    setRunState((prev) => ({
+      ...prev,
+      currentDay: 12,
+      currentPhase: "ending",
+      currentTaskId: undefined,
+      currentStorySceneId: undefined,
+      isRunning: false,
+      isPaused: true
+    }));
+    setNotice(`${nextEnding.title} reached${forcedEndingId ? " (QA forced route)" : ""}. Day 12 Final Audit complete.`);
     setPhaseToken((value) => value + 1);
   }
 
@@ -340,13 +874,53 @@ export default function App() {
     if (runState.runMode === "both_branches" && branch === "rescue" && daySevenSnapshot.current) {
       const snapshot = daySevenSnapshot.current;
       const rescueEvents = state.replayLog.filter((event) => event.branch === "rescue");
-      const rescueTaskIds = state.completedTasks.filter((id) => tasksById[id]?.branchAffinity === "rescue");
-      setState({
-        ...cloneState(snapshot.state),
+      const rescueStoryEvents = state.story.storyReplayLog.filter((event) => event.branch === "rescue");
+      const restoredState = cloneState(snapshot.state);
+      const lighthouseState: GlobalState = {
+        ...restoredState,
         day: 8,
         branch: "lighthouse",
-        completedTasks: [...snapshot.state.completedTasks, ...rescueTaskIds],
-        replayLog: [...snapshot.state.replayLog, ...rescueEvents]
+        replayLog: [...restoredState.replayLog, ...rescueEvents],
+        story: {
+          ...restoredState.story,
+          storyReplayLog: [...restoredState.story.storyReplayLog, ...rescueStoryEvents]
+        }
+      };
+      const scheduledScene = dayStartSceneForDay(8, lighthouseState);
+      if (!scheduledScene) {
+        setOverlay("dayBriefing");
+        setDailyBriefing({ day: 8, branch: "lighthouse", mode: "tasks" });
+        setState({
+          ...lighthouseState,
+          story: {
+            ...lighthouseState.story,
+            activeSceneId: undefined
+          }
+        });
+        setRunState((prev) => ({
+          ...prev,
+          activeBranch: "lighthouse",
+          currentDay: 8,
+          currentPhase: "idle",
+          currentTaskId: undefined,
+          currentStorySceneId: undefined,
+          taskStatuses: resetBranchTaskStatuses(snapshot.taskStatuses),
+          isPaused: true,
+          isRunning: false
+        }));
+        EventBus.emit("branch:change", "lighthouse");
+        setNotice("Rescue branch complete. AURA rolls back to Day 7 snapshot; Lighthouse Day 8 briefing is ready.");
+        setPhaseToken((value) => value + 1);
+        return;
+      }
+      setOverlay("storyScene");
+      setDailyBriefing(null);
+      setState({
+        ...lighthouseState,
+        story: {
+          ...lighthouseState.story,
+          activeSceneId: scheduledScene?.id
+        }
       });
       setRunState((prev) => ({
         ...prev,
@@ -354,14 +928,17 @@ export default function App() {
         currentDay: 8,
         currentPhase: "idle",
         currentTaskId: undefined,
-        taskStatuses: { ...snapshot.taskStatuses, ...prev.taskStatuses }
+        currentStorySceneId: scheduledScene?.id,
+        taskStatuses: resetBranchTaskStatuses(snapshot.taskStatuses),
+        isPaused: true,
+        isRunning: false
       }));
-      setNotice("Rescue branch complete. AURA rolls back to Day 7 snapshot and starts Lighthouse counterfactual.");
+      setNotice("Rescue branch complete. AURA rolls back to Day 7 snapshot; review Lighthouse Day 8 before the counterfactual run.");
       setPhaseToken((value) => value + 1);
       return;
     }
 
-    const nextEnding = endingForBranch(branch);
+    const nextEnding = endingForBranch(branch, state);
     const hasCounterfactualSummary = branch === "rescue" ? Boolean(branchSummaries.lighthouse) : Boolean(branchSummaries.rescue);
     setEnding(nextEnding);
     setOverlay(runState.runMode === "both_branches" || hasCounterfactualSummary ? "compare" : "ending");
@@ -376,11 +953,46 @@ export default function App() {
     const opposite = baseBranch === "rescue" ? "lighthouse" : "rescue";
 
     if (snapshot) {
-      setOverlay(null);
-      setState({
+      const branchState: GlobalState = {
         ...cloneState(snapshot.state),
         day: 8,
         branch: opposite
+      };
+      const scheduledScene = dayStartSceneForDay(8, branchState);
+      if (!scheduledScene) {
+        setOverlay("dayBriefing");
+        setDailyBriefing({ day: 8, branch: opposite, mode: "tasks" });
+        setState({
+          ...branchState,
+          story: {
+            ...branchState.story,
+            activeSceneId: undefined
+          }
+        });
+        setRunState((prev) => ({
+          ...prev,
+          activeBranch: opposite,
+          currentDay: 8,
+          currentPhase: "idle",
+          currentTaskId: undefined,
+          currentStorySceneId: undefined,
+          taskStatuses: resetBranchTaskStatuses(snapshot.taskStatuses),
+          isRunning: false,
+          isPaused: true
+        }));
+        EventBus.emit("branch:change", opposite);
+        setNotice(`Counterfactual branch loaded from Day 7 snapshot: ${opposite}. Day 8 briefing is ready.`);
+        setPhaseToken((value) => value + 1);
+        return;
+      }
+      setOverlay("storyScene");
+      setDailyBriefing(null);
+      setState({
+        ...branchState,
+        story: {
+          ...branchState.story,
+          activeSceneId: scheduledScene?.id
+        }
       });
       setRunState((prev) => ({
         ...prev,
@@ -388,18 +1000,49 @@ export default function App() {
         currentDay: 8,
         currentPhase: "idle",
         currentTaskId: undefined,
-        taskStatuses: { ...snapshot.taskStatuses },
-        isRunning: true,
-        isPaused: false
+        currentStorySceneId: scheduledScene?.id,
+        taskStatuses: resetBranchTaskStatuses(snapshot.taskStatuses),
+        isRunning: false,
+        isPaused: true
       }));
       EventBus.emit("branch:change", opposite);
-      setNotice(`Counterfactual branch loaded from Day 7 snapshot: ${opposite}.`);
+      setNotice(`Counterfactual branch loaded from Day 7 snapshot: ${opposite}. Review ${scheduledScene.title} before tasks continue.`);
       setPhaseToken((value) => value + 1);
       return;
     }
 
     applyBranchChoice(opposite);
-    setRunState((prev) => ({ ...prev, isRunning: true, isPaused: false }));
+  }
+
+  function forceFinalEnding(endingId: EndingId) {
+    const branch =
+      runState.activeBranch === "common"
+        ? state.branch === "rescue" || state.branch === "lighthouse"
+          ? state.branch
+          : "lighthouse"
+        : runState.activeBranch;
+    if (runState.activeBranch !== "common") {
+      enterFinalAudit(endingId);
+      return;
+    }
+    const auditState = addFinalAuditStoryEvent({ ...state, day: 12, branch }, branch);
+    const nextEnding = buildFinalAuditEnding(branch, auditState, endingId);
+    setState(auditState);
+    setEnding(nextEnding);
+    setBranchSummaries((prev) => ({ ...prev, [branch]: buildBranchSummary(branch, auditState) }));
+    setOverlay("finalAudit");
+    setRunState((prev) => ({
+      ...prev,
+      activeBranch: branch,
+      currentDay: 12,
+      currentPhase: "ending",
+      currentTaskId: undefined,
+      currentStorySceneId: undefined,
+      isRunning: false,
+      isPaused: true
+    }));
+    setNotice(`${nextEnding.title} reached (QA forced route).`);
+    setPhaseToken((value) => value + 1);
   }
 
   function advanceAgent() {
@@ -482,16 +1125,16 @@ export default function App() {
       </section>
       <section className="intro-dashboard">
         <div>
-          <b>10</b>
+          <b>12</b>
           <span>autoplay days</span>
         </div>
         <div>
-          <b>33</b>
-          <span>demo tasks</span>
+          <b>44</b>
+          <span>candidate tasks</span>
         </div>
         <div>
-          <b>2</b>
-          <span>counterfactual endings</span>
+          <b>5</b>
+          <span>final endings</span>
         </div>
         <div>
           <b>63.27</b>
@@ -538,20 +1181,64 @@ export default function App() {
             <span>{notice}</span>
           </div>
         </div>
-        <div className="side-stack">
+        <aside className="side-stack">
           <AgentConsolePanel
             runState={runState}
+            state={state}
             currentTask={currentTask}
             selectedLocation={selectedLocation}
             selectedTask={selectedTask}
+            currentStoryScene={currentStoryScene}
             latestOutcome={latestOutcome}
             nextAction={nextAction}
             phaseToken={phaseToken}
             phaseDuration={phaseDuration}
             onDebugResolve={debugResolve}
           />
-          <LiveReplayFeed events={state.replayLog} />
-        </div>
+        </aside>
+      </section>
+
+      <section className="support-drawer-grid" aria-label="Collapsible support modules">
+        <details className="support-drawer route-drawer">
+          <summary>
+            <span>路线树</span>
+            <b>Route tree</b>
+          </summary>
+          <RouteTreePanel
+            currentDay={runState.currentDay}
+            activeBranch={runState.activeBranch}
+            selectedEndingId={ending?.endingId}
+            branchSummaries={branchSummaries}
+          />
+        </details>
+        <details className="support-drawer">
+          <summary>
+            <span>Main cast</span>
+            <b>人物状态</b>
+          </summary>
+          <CharacterPanel currentDay={runState.currentDay} />
+        </details>
+        <details className="support-drawer">
+          <summary>
+            <span>Relationships</span>
+            <b>信任 / 压力</b>
+          </summary>
+          <RelationshipPanel currentDay={runState.currentDay} relationships={state.story.relationships} />
+        </details>
+        <details className="support-drawer">
+          <summary>
+            <span>Consequences</span>
+            <b>后果链</b>
+          </summary>
+          <ConsequencePanel currentDay={runState.currentDay} state={state} events={state.replayLog} storyEvents={state.story.storyReplayLog} />
+        </details>
+        <details className="support-drawer">
+          <summary>
+            <span>Replay</span>
+            <b>记录</b>
+          </summary>
+          <LiveReplayFeed events={state.replayLog} storyEvents={state.story.storyReplayLog} />
+        </details>
       </section>
     </main>
   );
@@ -560,11 +1247,28 @@ export default function App() {
     <>
       {screen === "intro" ? intro : game}
       {overlay === "benchmark" ? <BenchmarkPanel onClose={() => setOverlay(null)} /> : null}
-      {overlay === "replay" ? <ReplayPanel events={state.replayLog} onClose={() => setOverlay(null)} /> : null}
+      {overlay === "replay" ? <ReplayPanel events={state.replayLog} storyEvents={state.story.storyReplayLog} onClose={() => setOverlay(null)} /> : null}
       {overlay === "credits" ? <CreditsPanel onClose={() => setOverlay(null)} /> : null}
+      {overlay === "dayBriefing" && dailyBriefing && dayPlansByDay[dailyBriefing.day] ? (
+        <DailyBriefingPanel
+          plan={dayPlansByDay[dailyBriefing.day]}
+          branch={dailyBriefing.branch}
+          mode={dailyBriefing.mode}
+          onContinue={continueFromDailyBriefing}
+        />
+      ) : null}
+      {overlay === "storyScene" && currentStoryScene ? (
+        currentStoryScene.timing === "branch_debate" ? (
+          <BranchDebatePanel scene={currentStoryScene} relationships={state.story.relationships} onContinue={continueFromStoryScene} />
+        ) : (
+          <StoryScenePanel scene={currentStoryScene} onContinue={continueFromStoryScene} />
+        )
+      ) : null}
       {overlay === "branchDecision" && branchDecision ? (
         <BranchDecisionPanel
           decision={branchDecision}
+          currentDay={runState.currentDay}
+          relationships={state.story.relationships}
           onRunCounterfactual={runCounterfactualBranch}
           onRunBoth={runBothBranches}
           onClose={() => setOverlay(null)}
@@ -572,10 +1276,20 @@ export default function App() {
       ) : null}
       {overlay === "ending" && ending ? (
         <EndingPanel
-          title={ending.title}
-          text={ending.text}
-          tone={ending.tone}
+          ending={ending}
           onReturnSplit={runCounterfactualBranch}
+          onReplay={() => setOverlay("replay")}
+          onClose={() => setOverlay(null)}
+        />
+      ) : null}
+      {overlay === "finalAudit" && ending ? (
+        <FinalAuditPanel
+          ending={ending}
+          canCompare={Boolean(branchSummaries.rescue && branchSummaries.lighthouse)}
+          onForceEnding={forceFinalEnding}
+          onOpenEnding={() => setOverlay("ending")}
+          onReturnSplit={runCounterfactualBranch}
+          onCompare={() => setOverlay("compare")}
           onReplay={() => setOverlay("replay")}
           onClose={() => setOverlay(null)}
         />

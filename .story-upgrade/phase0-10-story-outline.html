@@ -1,0 +1,768 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Red Dust Phase 0-10 剧情大纲审阅版</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #120f0d;
+        --paper: #1d1714;
+        --paper-2: #271d18;
+        --ink: #f4e5cc;
+        --muted: #b99f81;
+        --line: #513421;
+        --amber: #f1a03d;
+        --cyan: #71d7e8;
+        --red: #d86643;
+        --green: #97c86a;
+        --shadow: rgba(0, 0, 0, 0.28);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background:
+          radial-gradient(circle at 20% 0%, rgba(216, 102, 67, 0.16), transparent 34rem),
+          linear-gradient(180deg, #17110e 0%, #100e0d 55%, #0d0b0a 100%);
+        color: var(--ink);
+        font-family:
+          Inter, "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif;
+        line-height: 1.65;
+      }
+
+      a {
+        color: var(--cyan);
+      }
+
+      .page {
+        width: min(1180px, calc(100% - 40px));
+        margin: 0 auto;
+        padding: 42px 0 56px;
+      }
+
+      .hero {
+        border: 1px solid rgba(241, 160, 61, 0.34);
+        background:
+          linear-gradient(120deg, rgba(241, 160, 61, 0.14), rgba(113, 215, 232, 0.08)),
+          rgba(29, 23, 20, 0.92);
+        box-shadow: 0 18px 54px var(--shadow);
+        padding: 34px;
+      }
+
+      .eyebrow {
+        margin: 0 0 12px;
+        color: var(--amber);
+        font-size: 13px;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      h1,
+      h2,
+      h3 {
+        line-height: 1.22;
+        margin: 0;
+      }
+
+      h1 {
+        max-width: 850px;
+        font-size: 38px;
+      }
+
+      h2 {
+        margin-bottom: 18px;
+        font-size: 26px;
+      }
+
+      h3 {
+        margin-bottom: 10px;
+        font-size: 18px;
+      }
+
+      p {
+        margin: 0 0 12px;
+      }
+
+      .hero-summary {
+        max-width: 900px;
+        margin-top: 18px;
+        color: #ead1ad;
+        font-size: 17px;
+      }
+
+      .meta-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 28px;
+      }
+
+      .meta-card,
+      .card,
+      .phase,
+      .day,
+      .branch,
+      .review-note {
+        border: 1px solid rgba(241, 160, 61, 0.22);
+        background: rgba(29, 23, 20, 0.86);
+        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2);
+      }
+
+      .meta-card {
+        padding: 14px 16px;
+      }
+
+      .label {
+        display: block;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .value {
+        display: block;
+        margin-top: 4px;
+        color: var(--ink);
+        font-weight: 800;
+      }
+
+      section {
+        margin-top: 34px;
+      }
+
+      .grid-2 {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+      }
+
+      .grid-3 {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+      }
+
+      .grid-4 {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 16px;
+      }
+
+      .card,
+      .review-note {
+        padding: 22px;
+      }
+
+      .card strong {
+        color: #ffd9a1;
+      }
+
+      .tag-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 14px;
+      }
+
+      .tag {
+        border: 1px solid rgba(113, 215, 232, 0.28);
+        background: rgba(113, 215, 232, 0.08);
+        color: #bfeff6;
+        padding: 4px 8px;
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .phase-list,
+      .day-list {
+        display: grid;
+        gap: 14px;
+      }
+
+      .phase,
+      .day,
+      .branch {
+        padding: 20px;
+      }
+
+      .phase-title,
+      .day-title {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 8px;
+      }
+
+      .phase-title span,
+      .day-title span {
+        color: var(--amber);
+        font-weight: 900;
+      }
+
+      .phase-title small,
+      .day-title small {
+        color: var(--green);
+        font-weight: 800;
+      }
+
+      ul {
+        margin: 10px 0 0 20px;
+        padding: 0;
+      }
+
+      li {
+        margin: 6px 0;
+      }
+
+      .timeline {
+        position: relative;
+        display: grid;
+        gap: 14px;
+      }
+
+      .timeline::before {
+        content: "";
+        position: absolute;
+        top: 12px;
+        bottom: 12px;
+        left: 12px;
+        width: 2px;
+        background: linear-gradient(var(--amber), rgba(113, 215, 232, 0.45));
+      }
+
+      .timeline-item {
+        position: relative;
+        padding-left: 42px;
+      }
+
+      .timeline-item::before {
+        content: "";
+        position: absolute;
+        top: 8px;
+        left: 5px;
+        width: 16px;
+        height: 16px;
+        border: 2px solid var(--amber);
+        background: var(--paper);
+      }
+
+      .table-wrap {
+        overflow-x: auto;
+        border: 1px solid rgba(241, 160, 61, 0.22);
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 780px;
+        background: rgba(29, 23, 20, 0.82);
+      }
+
+      th,
+      td {
+        border-bottom: 1px solid rgba(241, 160, 61, 0.16);
+        padding: 12px 14px;
+        text-align: left;
+        vertical-align: top;
+      }
+
+      th {
+        color: #ffd9a1;
+        background: rgba(241, 160, 61, 0.08);
+        font-size: 13px;
+      }
+
+      td {
+        color: #ead8bd;
+      }
+
+      .branch-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+      }
+
+      .branch.rescue {
+        border-color: rgba(216, 102, 67, 0.44);
+      }
+
+      .branch.lighthouse {
+        border-color: rgba(113, 215, 232, 0.42);
+      }
+
+      .quote {
+        border-left: 4px solid var(--amber);
+        background: rgba(241, 160, 61, 0.08);
+        padding: 14px 16px;
+        color: #f2d7b3;
+      }
+
+      .review-note {
+        border-color: rgba(151, 200, 106, 0.34);
+        background: rgba(27, 42, 28, 0.4);
+      }
+
+      .footer {
+        margin-top: 38px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      @media (max-width: 920px) {
+        .meta-grid,
+        .grid-3,
+        .grid-4,
+        .branch-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+
+      @media (max-width: 680px) {
+        .page {
+          width: min(100% - 24px, 1180px);
+          padding-top: 24px;
+        }
+
+        .hero {
+          padding: 22px;
+        }
+
+        h1 {
+          font-size: 28px;
+        }
+
+        .meta-grid,
+        .grid-2,
+        .grid-3,
+        .grid-4,
+        .branch-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media print {
+        body {
+          background: #fff;
+          color: #1b1714;
+        }
+
+        .hero,
+        .card,
+        .phase,
+        .day,
+        .branch,
+        .review-note,
+        table {
+          box-shadow: none;
+          background: #fff;
+          color: #1b1714;
+        }
+
+        .value,
+        h1,
+        h2,
+        h3,
+        td {
+          color: #1b1714;
+        }
+
+        .tag {
+          color: #1b1714;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <header class="hero">
+        <p class="eyebrow">Red Dust Story Outline / Phase 0-10 Review Draft</p>
+        <h1>《红尘 / Red Dust》剧情强化大纲审阅版</h1>
+        <p class="hero-summary">
+          本文件把 Phase 0-10 的开发修改整理成剧本大纲，供非工程视角审阅：故事讲什么、四位人物如何变化、AURA 如何被审视、任务失败如何留下后果，以及两个结局为什么都不是完美胜利。
+        </p>
+        <div class="meta-grid">
+          <div class="meta-card">
+            <span class="label">当前阶段</span>
+            <span class="value">Phase 0-10 已完成</span>
+          </div>
+          <div class="meta-card">
+            <span class="label">审核状态</span>
+            <span class="value">全部 PASS</span>
+          </div>
+          <div class="meta-card">
+            <span class="label">叙事结构</span>
+            <span class="value">Day 0-10 / 双结局</span>
+          </div>
+          <div class="meta-card">
+            <span class="label">核心人物</span>
+            <span class="value">四人 + AURA</span>
+          </div>
+        </div>
+      </header>
+
+      <section>
+        <h2>一、故事一句话</h2>
+        <div class="card">
+          <p class="quote">
+            能源耗尽后的红沙灾害封住旧楼，四位原本只是邻居的人被困在旧能源配给系统遗留的避难所中。智能代理 AURA 重启后自动执行十天 benchmark 任务，但每一次判断都必须接受人的审视；最终，它要在“向外求援”和“楼内自治”之间做出可回放、可质疑、带代价的选择。
+          </p>
+          <div class="tag-row">
+            <span class="tag">末世废土</span>
+            <span class="tag">避难所群像</span>
+            <span class="tag">Agent 自动执行</span>
+            <span class="tag">人类可审计</span>
+            <span class="tag">双结局代价</span>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>二、世界观与主题</h2>
+        <div class="grid-2">
+          <div class="card">
+            <h3>世界状态</h3>
+            <p>
+              地球能源接近耗尽，大城市基础设施长期衰败。红沙灾害携带微粒污染，会磨损机械、干扰外部信号，也让楼外路线变成低置信风险。
+            </p>
+            <p>
+              避难所所在旧楼曾是能源配给系统的一部分，地下仍保留水、药、门禁、通风、广播和屋顶信标等低功率节点。
+            </p>
+          </div>
+          <div class="card">
+            <h3>核心主题</h3>
+            <p>
+              AURA 不是全知救世主，而是可执行、可出错、必须被审计的 agent。剧情强化后的核心问题不是“机器能不能最优”，而是“当机器给出任务路线时，人是否还能理解、质疑、否决并承担代价”。
+            </p>
+            <p>
+              故事 wrapper 服务 benchmark 展示：每个任务仍然有 ID、目标、结果和 replay，但结果会进入人物关系、后续冲突和结局文本。
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>三、主角群</h2>
+        <div class="grid-4">
+          <div class="card">
+            <h3>马德海</h3>
+            <p><strong>定位：</strong>老工程师 / 人类否决权代表。</p>
+            <p><strong>目标：</strong>让门禁、电力、通风保持可修、可解释，并最终能由人接管。</p>
+            <p><strong>恐惧：</strong>旧能源配给系统的黑箱错误重演，也害怕自己已经判断不了新系统。</p>
+            <p><strong>弧光：</strong>从质疑 AURA 接管，到承认工程建议可用，但坚持人工 override。</p>
+          </div>
+          <div class="card">
+            <h3>沈知月</h3>
+            <p><strong>定位：</strong>医疗照护者 / 医疗伦理代表。</p>
+            <p><strong>目标：</strong>保护小铁和脆弱居民，让医疗建议有依据、有边界、有复核。</p>
+            <p><strong>恐惧：</strong>效率优先的决策把病人变成风险标签。</p>
+            <p><strong>弧光：</strong>愿意使用 AURA 的建议，但不断要求说明医疗依据和人工复核窗口。</p>
+          </div>
+          <div class="card">
+            <h3>小铁</h3>
+            <p><strong>定位：</strong>生病的小孩 / 道德压力核心。</p>
+            <p><strong>目标：</strong>想活下去，也希望大人不要只因为自己争吵。</p>
+            <p><strong>恐惧：</strong>成为拖累，或在路线选择中被简化成资源成本。</p>
+            <p><strong>弧光：</strong>让 AURA 面对具体人的脆弱，逼迫任务系统承认“人不是资源表”。</p>
+          </div>
+          <div class="card">
+            <h3>老钱</h3>
+            <p><strong>定位：</strong>旧广播维护者 / 外部信号怀疑者。</p>
+            <p><strong>目标：</strong>确认外部信号是否真实，用旧电台经验保护大家。</p>
+            <p><strong>恐惧：</strong>曾追过假信号，害怕再次把人带进陷阱。</p>
+            <p><strong>弧光：</strong>从怀疑 AURA 是旧系统耳目，到愿意交出最后一次广播，但保留不确定性。</p>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>四、AURA 的戏剧功能</h2>
+        <div class="grid-3">
+          <div class="card">
+            <h3>执行者</h3>
+            <p>AURA 自动推进 Day 1-10 的 benchmark 任务：检查水、药、门禁、通风、通信、路线、信标和分支策略。</p>
+          </div>
+          <div class="card">
+            <h3>被审计者</h3>
+            <p>AURA 在开场承诺不隐瞒依据、不把人当作资源、不把不确定信号包装成确定救援，且不可绕过人类复核。</p>
+          </div>
+          <div class="card">
+            <h3>矛盾放大器</h3>
+            <p>它把模糊的人际冲突写成可回放证据，也因此暴露了工程、医疗、通信和自治的真实代价。</p>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>五、十天剧情结构</h2>
+        <div class="day-list">
+          <article class="day">
+            <div class="day-title"><span>Day 0</span><small>Prologue</small></div>
+            <h3>AURA 重启</h3>
+            <p>
+              红沙封楼，旧能源配给系统恢复最低功率。四位邻居在避难所大厅聚集：马德海质疑接管权限，沈知月要求医疗边界，老钱怀疑监控，小铁让所有人看到具体的脆弱。AURA 接受人类可审计约束，正式任务才开始。
+            </p>
+          </article>
+          <article class="day">
+            <div class="day-title"><span>Day 1</span><small>资源初筛</small></div>
+            <h3>水、药、门禁建立生存基线</h3>
+            <p>
+              AURA 校准水泵、核对药品、检查异常门禁。任务层建立水、medicine、safety、trust 基线；剧情层把小铁病情、沈知月医疗边界、马德海门禁疑点写入后续压力。
+            </p>
+          </article>
+          <article class="day">
+            <div class="day-title"><span>Day 2</span><small>居民与证据</small></div>
+            <h3>邻居从背景变成可协作对象</h3>
+            <p>
+              AURA 整理居民技能、旧维护日志和白板待办，把事实、传言、健康限制、任务优先级写进同一份 replay。角色不再只是站在背景里的 NPC，而是后续任务分配和争论的参与者。
+            </p>
+          </article>
+          <article class="day">
+            <div class="day-title"><span>Day 3</span><small>环境稳定</small></div>
+            <h3>病床旁的通风边界</h3>
+            <p>
+              通风、热成像、安全攻击被连接到小铁病情。若药品或通风失败，小铁会恶化，沈知月会降低对 AURA 的信任；通风成功则让马德海第一次承认 AURA 的工程判断可用。
+            </p>
+          </article>
+          <article class="day">
+            <div class="day-title"><span>Day 4</span><small>通信尝试</small></div>
+            <h3>红沙里的第一次呼号</h3>
+            <p>
+              救援频道检索短期收益不高，但老钱从红沙噪声中听到不完整呼号。AURA 不能把它当成确定救援，只能保留“救援线索”和“假广播 / 诱饵”两种解释。这个伏笔会影响 Day 7 争论和 Day 10 信号难度。
+            </p>
+          </article>
+          <article class="day">
+            <div class="day-title"><span>Day 5</span><small>空间推理</small></div>
+            <h3>第一次外出前的白板</h3>
+            <p>
+              路线、热成像、门禁和旧日志被摆上白板。沈知月明确小铁不能进入外出轮班；马德海要求路线证据；老钱指出旧楼规和新广播矛盾；AURA 必须发布带人类否决权的可审计轮班方案。
+            </p>
+          </article>
+          <article class="day">
+            <div class="day-title"><span>Day 6</span><small>社会协作</small></div>
+            <h3>外界不是天然可信</h3>
+            <p>
+              外部链路建立不等于外界可信。居民要求 AURA 公开决策边界：医疗、撤离、工程、通信都要保留复核窗口。老钱逼问如果救援是假的 AURA 是否会承认；AURA 承诺保留不确定性，不把希望伪装成事实。
+            </p>
+          </article>
+          <article class="day">
+            <div class="day-title"><span>Day 7</span><small>Branch Debate</small></div>
+            <h3>分支前夜公开争论</h3>
+            <p>
+              AURA 在计算 Rescue Utility 和 Lighthouse Utility 前，先公开前六天证据。马德海谈工程风险，沈知月谈医疗隐私，老钱谈信号不确定性，小铁提出“如果有人必须被留下，那个人是谁”。utility 只作为建议，不能替代人类否决权。
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section>
+        <h2>六、双结局路线</h2>
+        <div class="branch-grid">
+          <article class="branch rescue">
+            <h3>救援撤离线：信标交接结局</h3>
+            <p><strong>主题：</strong>有人获救，但代价是暴露、交接和失去控制权。</p>
+            <ul>
+              <li>Day 8 修复屋顶信标、验证救援频道。</li>
+              <li>Day 9 整理低泄露撤离名单，准备最小居民档案交接包。</li>
+              <li>Day 10 发送高功率信标，冻结最终 replay 并交出救援包。</li>
+            </ul>
+            <p><strong>主要代价：</strong>救援不保证一次带走所有人；健康摘要、风险地图和 replay 要交给外部；高功率信标会暴露位置；AURA 可能被外部重置、冻结或接管。</p>
+          </article>
+          <article class="branch lighthouse">
+            <h3>楼内自治线：楼内灯塔结局</h3>
+            <p><strong>主题：</strong>自治成功，但代价是长期封闭、纪律和治理边界。</p>
+            <ul>
+              <li>Day 8 建立楼内低功率通信灯塔，重构长期水药分配规则。</li>
+              <li>Day 9 建立自治白板，修复长期通风循环。</li>
+              <li>Day 10 发布持续低功率广播，公开工具权限和维护 replay。</li>
+            </ul>
+            <p><strong>主要代价：</strong>留守不是温和胜利；水药、病床、维修班表要制度化；AURA 参与治理会产生自主权压力；低功率信号可能永远无人回应。</p>
+          </article>
+        </div>
+      </section>
+
+      <section>
+        <h2>七、人物命运收束</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>人物</th>
+                <th>救援线收束</th>
+                <th>楼内灯塔线收束</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>马德海</td>
+                <td>交出门禁、通风和电力图给救援队复核，同时保留最后一把人工 override 钥匙；代价是担心工程系统被外部接管。</td>
+                <td>接管人工 override，把通风、门禁和灯塔功率写成可复核规则；代价是长期维修和规则执行压力落到他身上。</td>
+              </tr>
+              <tr>
+                <td>沈知月</td>
+                <td>复核撤离名单和病人优先级，坚持健康档案最小披露；代价是在小铁优先撤离与其他居民公平等待之间公开选择。</td>
+                <td>把医疗伦理写进楼内白板，要求病人例外优先于效率最优；代价是长期解释药品、水和病床分配。</td>
+              </tr>
+              <tr>
+                <td>小铁</td>
+                <td>获得外部治疗机会，但也成为隐私交接最敏感的一项证据；若前期医疗或通风失败，会进入更高压力的优先撤离判断。</td>
+                <td>留在楼内继续恢复，自治是否保护弱者每天都要由他的病情验证；若前期失败，他会成为制度必须优先照护的压力点。</td>
+              </tr>
+              <tr>
+                <td>老钱</td>
+                <td>交出最后一次广播，把 Day 4 不确定呼号和最终信标交给 replay；他仍不完全相信外部世界，只承认这一次值得冒险。</td>
+                <td>把旧广播改成低功率楼内灯塔，只发规则、时间窗和求援摘要；代价是接受外部回应可能长期不到来。</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section>
+        <h2>八、连续后果系统</h2>
+        <div class="grid-2">
+          <div class="card">
+            <h3>药品 / 通风</h3>
+            <p>
+              药品核对失败会让小铁病情恶化、沈知月信任下降，并触发后续医疗压力。通风成功会稳定小铁并提高马德海对工程判断的信任；通风失败会让居民区冲突和医疗压力同时上升。
+            </p>
+          </div>
+          <div class="card">
+            <h3>门禁 / 安全</h3>
+            <p>
+              异常开门记录若只是 partial 或 failed，不会被简单扣分后结束，而会保留“入侵 / 内鬼 / 旧系统旁路”疑云，成为 Day 7 高功率信标风险证据。
+            </p>
+          </div>
+          <div class="card">
+            <h3>通信 / 老钱</h3>
+            <p>
+              救援频道检索成功会验证第一段呼号，降低 Day 10 信号难度；partial 或 failed 则让第一段呼号保持暧昧，老钱在 Day 7 更强烈质疑救援线。
+            </p>
+          </div>
+          <div class="card">
+            <h3>结局代价</h3>
+            <p>
+              救援线和灯塔线分别设置独立代价 flag：隐私交接、外部接管、长期封闭、自治纪律、AURA 治理边界。这些会进入 CompareBranches、EndingPanel 和 Replay。
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>九、Phase 0-10 修改概览</h2>
+        <div class="phase-list">
+          <article class="phase">
+            <div class="phase-title"><span>Phase 0</span><small>PASS</small></div>
+            <h3>剧情审计与升级计划</h3>
+            <p>确认原 demo 已有 10 天 agent autoplay 外壳和像素风舞台，但缺少角色弧光、连续后果、分支争论和结局代价。产出剧情缺口审计与分阶段升级计划。</p>
+          </article>
+          <article class="phase">
+            <div class="phase-title"><span>Phase 1</span><small>PASS</small></div>
+            <h3>新增剧情数据 Schema</h3>
+            <p>建立角色、剧情场景、对话、后果、关系状态和 story flags 的数据基础，为后续剧情内容接入保留稳定结构。</p>
+          </article>
+          <article class="phase">
+            <div class="phase-title"><span>Phase 2</span><small>PASS</small></div>
+            <h3>角色主角群升级</h3>
+            <p>四位人物从背景 NPC 升级为主角群，每人拥有目标、恐惧、与 AURA 的关系变化、分支立场、失败后果和至少六段关系弧光。</p>
+          </article>
+          <article class="phase">
+            <div class="phase-title"><span>Phase 3</span><small>PASS</small></div>
+            <h3>Day 0 / Day 1 开场升级</h3>
+            <p>新增 AURA 重启开场，明确能源耗尽、红沙灾害、邻居被困和 AURA 可审计承诺。正式 benchmark 任务前先建立世界观和人物冲突。</p>
+          </article>
+          <article class="phase">
+            <div class="phase-title"><span>Phase 4</span><small>PASS</small></div>
+            <h3>Day 2-4 伏笔与长程后果</h3>
+            <p>把 Day 4 救援频道检索升级为“第一次疑似呼号”伏笔，既可能通向救援，也可能是假广播或诱饵，并影响 Day 7 和 Day 10。</p>
+          </article>
+          <article class="phase">
+            <div class="phase-title"><span>Phase 5</span><small>PASS</small></div>
+            <h3>任务结果连续后果系统</h3>
+            <p>success / partial / failed 不再只是指标变化，而会触发 story flags、人物信任变化、follow-up 场景、Replay 后果和结局引用。</p>
+          </article>
+          <article class="phase">
+            <div class="phase-title"><span>Phase 6</span><small>PASS</small></div>
+            <h3>Day 5-6 冲突源升级</h3>
+            <p>把路线、人类否决权、旧楼规、外界不可信、假广播风险和 AURA 决策边界提前写入 Day 7 的公共证据。</p>
+          </article>
+          <article class="phase">
+            <div class="phase-title"><span>Phase 7</span><small>PASS</small></div>
+            <h3>Day 7 分支争论升级</h3>
+            <p>分支前先展示公开议事会，四位人物和 AURA 共同讨论工程、医疗、信号和“谁被留下”的代价，再进入 utility 计算。</p>
+          </article>
+          <article class="phase">
+            <div class="phase-title"><span>Phase 8</span><small>PASS</small></div>
+            <h3>Day 8-10 双结局代价升级</h3>
+            <p>救援线和灯塔线都不是完美胜利：前者承担暴露、交接和外部接管，后者承担长期封闭、纪律和治理边界。</p>
+          </article>
+          <article class="phase">
+            <div class="phase-title"><span>Phase 9</span><small>PASS</small></div>
+            <h3>剧情 UI 与 Replay 整合</h3>
+            <p>新增或强化 CharacterPanel、RelationshipPanel、ConsequencePanel、StoryScenePanel、BranchDebatePanel、EndingPanel、ReplayPanel，让剧情内容在 demo 中可见。</p>
+          </article>
+          <article class="phase">
+            <div class="phase-title"><span>Phase 10</span><small>PASS</small></div>
+            <h3>完整测试与叙事 QA</h3>
+            <p>完成 npm 安装、类型检查、构建、浏览器双分支验证、移动端冒烟测试和最终 QA checklist。Benchmark 任务 ID 未破坏，原自动运行流程仍可用。</p>
+          </article>
+        </div>
+      </section>
+
+      <section>
+        <h2>十、Demo 中的审阅入口</h2>
+        <div class="grid-3">
+          <div class="card">
+            <h3>开场与剧情场景</h3>
+            <p>点击 Start Demo 后，正式任务前会进入 AURA 重启和人物初见。后续 Day 5、Day 6、Day 7 会出现关键剧情场景或公开争论。</p>
+          </div>
+          <div class="card">
+            <h3>人物与关系</h3>
+            <p>右侧 CharacterPanel 与 RelationshipPanel 展示四位人物的目标、恐惧、立场、当前关系弧光，以及他们与 AURA 的信任 / 紧张变化。</p>
+          </div>
+          <div class="card">
+            <h3>后果与回放</h3>
+            <p>ConsequencePanel 和 ReplayPanel 会显示任务结果带来的 delayed consequences、character pressure 和 branch evidence，方便审阅剧情因果是否通顺。</p>
+          </div>
+          <div class="card">
+            <h3>分支比较</h3>
+            <p>Run Both Branches 可以完整跑救援线和楼内灯塔线，并在 CompareBranchesPanel 中比较最终指标、信号证据、代价和 AURA 状态。</p>
+          </div>
+          <div class="card">
+            <h3>结局面板</h3>
+            <p>EndingPanel 显示结局正文、四位人物命运、已支付代价、AURA 状态和 benchmark trace summary。</p>
+          </div>
+          <div class="card">
+            <h3>审核材料</h3>
+            <p>每个 Phase 均有审核记录，最终 QA 清单已标记 PASS；本文件用于审阅剧情，不替代工程验收。</p>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>十一、审阅重点建议</h2>
+        <div class="review-note">
+          <p>建议团队审阅时重点看以下问题：</p>
+          <ul>
+            <li>四位人物的目标、恐惧和路线立场是否足够鲜明，是否还需要更具体的个人背景。</li>
+            <li>Day 4 疑似呼号是否足以支撑 Day 7 分支和 Day 10 信号难度。</li>
+            <li>Day 7 公开争论是否真正像前六天矛盾爆发，而不是功能说明。</li>
+            <li>小铁的病情是否被过度工具化，是否需要更多“作为人”的场景。</li>
+            <li>救援线和灯塔线的代价是否对等、可信，是否需要更强的情感落点。</li>
+            <li>Replay 中的剧情后果是否清晰，非工程用户是否能理解任务结果如何影响后续剧情。</li>
+          </ul>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <p>生成依据：Phase 0-10 story-upgrade 文档、角色数据、剧情场景数据、连续后果数据、DayPlan / TaskData、AgentRunner 结局构建逻辑和最终 QA checklist。</p>
+        <p>文件用途：剧情审阅与团队同步。它不是新的系统指令，也不改变 demo 运行逻辑。</p>
+      </footer>
+    </main>
+  </body>
+</html>

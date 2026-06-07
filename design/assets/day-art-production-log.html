@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Red Dust Image 2 Day-Art Production Log</title>
+    <style>
+      :root { color-scheme: dark; --bg:#090b0d; --panel:#171210; --line:rgba(255,177,95,.28); --ink:#fff1dc; --muted:#b7a083; --aura:#8feaff; --warning:#ffd60a; --green:#79d6a8; }
+      * { box-sizing: border-box; }
+      body { margin:0; background:linear-gradient(180deg,#211510,var(--bg)); color:var(--ink); font-family:Avenir Next, Inter, Arial, sans-serif; }
+      main { max-width:1180px; margin:0 auto; padding:40px 20px 64px; }
+      header, section, .card { border:1px solid var(--line); border-radius:8px; background:rgba(23,18,16,.86); }
+      header { padding:28px; }
+      section { margin-top:18px; padding:22px; }
+      h1 { margin:0; font-family:Georgia,serif; font-size:clamp(34px,6vw,62px); color:#ffe1b3; }
+      h2 { margin:0 0 14px; color:var(--warning); }
+      h3 { margin:0 0 8px; color:var(--aura); }
+      p, li, td { color:#d9c7ad; line-height:1.55; }
+      .kicker { color:var(--aura); font-size:12px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; }
+      .pill-row { display:flex; flex-wrap:wrap; gap:8px; margin-top:16px; }
+      .pill { border:1px solid rgba(143,234,255,.28); border-radius:999px; padding:6px 10px; color:var(--aura); background:rgba(8,18,22,.72); font-size:12px; font-weight:800; }
+      img { display:block; width:100%; border:1px solid var(--line); border-radius:8px; background:#090b0d; }
+      table { width:100%; border-collapse:collapse; }
+      th, td { border-bottom:1px solid rgba(255,177,95,.15); padding:10px; text-align:left; vertical-align:top; font-size:13px; }
+      th { color:var(--warning); font-size:12px; text-transform:uppercase; background:rgba(8,10,12,.36); }
+      code { color:var(--aura); }
+      .status { color:var(--green); font-weight:800; }
+      .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:12px; }
+      .card { padding:16px; }
+      @media (max-width:720px) { table, thead, tbody, tr, th, td { display:block; } thead { display:none; } td::before { content:attr(data-label); display:block; color:var(--warning); font-size:11px; font-weight:800; text-transform:uppercase; } }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <div class="kicker">Red Dust / Image 2 day-art / 2026-06-07</div>
+        <h1>逐日游戏素材生产日志</h1>
+        <p>本批次使用 Image 2 生成 16 张 16:9 位图素材，按 Day 0-12 和 Day 8-10 双分支接入 demo。素材已复制到 <code>public/assets/day-art/</code>，并通过 <code>src/data/dayArtAssets.ts</code> 注册。</p>
+        <div class="pill-row">
+          <span class="pill">16 Image 2 assets</span>
+          <span class="pill">Day 0-12 coverage</span>
+          <span class="pill">Day 8-10 branch pairs</span>
+          <span class="pill">runtime integrated</span>
+        </div>
+      </header>
+
+      <section>
+        <h2>总览预览</h2>
+        <img src="previews/day-art/day-art-img2-contact-sheet.png" alt="Image 2 day-art contact sheet" />
+      </section>
+
+      <section>
+        <h2>美术约束</h2>
+        <div class="grid">
+          <article class="card"><h3>风格</h3><p>红沙、旧公寓避难所、低电量、手绘 2D、生存剧，不使用干净科幻和霓虹赛博。</p></article>
+          <article class="card"><h3>AURA</h3><p>AURA 只以墙面板、扬声器、终端或青色灯环出现，不出现人形机器人。</p></article>
+          <article class="card"><h3>可读性</h3><p>每张图必须有明确日程物件：账本、滤芯、病床、电台、路线图、override、信标、证据链等。</p></article>
+        </div>
+      </section>
+
+      <section>
+        <h2>资产清单</h2>
+        <table>
+          <thead><tr><th>Day</th><th>Asset Key</th><th>Core Beat</th><th>Runtime Use</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td data-label="Day">0</td><td data-label="Asset Key"><code>rd_day00_aura_reboot_img2</code></td><td data-label="Core Beat">四人进入避难所，AURA 启动</td><td data-label="Runtime Use">StoryScenePanel override</td><td data-label="Status" class="status">Integrated</td></tr>
+            <tr><td data-label="Day">1</td><td data-label="Asset Key"><code>rd_day01_public_rules_img2</code></td><td data-label="Core Beat">资源账本、低泄露广播、门禁风险</td><td data-label="Runtime Use">AgentConsole Day Plan</td><td data-label="Status" class="status">Integrated</td></tr>
+            <tr><td data-label="Day">2</td><td data-label="Asset Key"><code>rd_day02_water_hygiene_img2</code></td><td data-label="Core Beat">净水滤芯、卫生分区、私人物品规则</td><td data-label="Runtime Use">AgentConsole Day Plan</td><td data-label="Status" class="status">Integrated</td></tr>
+            <tr><td data-label="Day">3</td><td data-label="Asset Key"><code>rd_day03_medical_ventilation_img2</code></td><td data-label="Core Beat">小铁病床、通风机、医疗复核</td><td data-label="Runtime Use">StoryScenePanel override</td><td data-label="Status" class="status">Integrated</td></tr>
+            <tr><td data-label="Day">4</td><td data-label="Asset Key"><code>rd_day04_signal_trap_img2</code></td><td data-label="Core Beat">旧电台、蓝区信号、假坐标</td><td data-label="Runtime Use">StoryScenePanel override</td><td data-label="Status" class="status">Integrated</td></tr>
+            <tr><td data-label="Day">5</td><td data-label="Asset Key"><code>rd_day05_route_care_img2</code></td><td data-label="Core Beat">路线图、照护包、外出排除规则</td><td data-label="Runtime Use">StoryScenePanel override</td><td data-label="Status" class="status">Integrated</td></tr>
+            <tr><td data-label="Day">6</td><td data-label="Asset Key"><code>rd_day06_authority_boundary_img2</code></td><td data-label="Core Beat">权限白板、备用电源、人工复核</td><td data-label="Runtime Use">StoryScenePanel override</td><td data-label="Status" class="status">Integrated</td></tr>
+            <tr><td data-label="Day">7</td><td data-label="Asset Key"><code>rd_day07_branch_council_img2</code></td><td data-label="Core Beat">Rescue vs Lighthouse 公共会议</td><td data-label="Runtime Use">BranchDebatePanel override</td><td data-label="Status" class="status">Integrated</td></tr>
+            <tr><td data-label="Day">8A</td><td data-label="Asset Key"><code>rd_day08a_rescue_contact_img2</code></td><td data-label="Core Beat">第一次主动外联</td><td data-label="Runtime Use">Rescue branch scene</td><td data-label="Status" class="status">Integrated</td></tr>
+            <tr><td data-label="Day">8B</td><td data-label="Asset Key"><code>rd_day08b_lighthouse_low_power_img2</code></td><td data-label="Core Beat">低耗自治启动</td><td data-label="Runtime Use">Lighthouse branch scene</td><td data-label="Status" class="status">Integrated</td></tr>
+            <tr><td data-label="Day">9A</td><td data-label="Asset Key"><code>rd_day09a_rescue_privacy_img2</code></td><td data-label="Core Beat">信标与隐私上传</td><td data-label="Runtime Use">Rescue branch scene</td><td data-label="Status" class="status">Integrated</td></tr>
+            <tr><td data-label="Day">9B</td><td data-label="Asset Key"><code>rd_day09b_lighthouse_rules_img2</code></td><td data-label="Core Beat">水药规则与例外复核</td><td data-label="Runtime Use">Lighthouse branch scene</td><td data-label="Status" class="status">Integrated</td></tr>
+            <tr><td data-label="Day">10A</td><td data-label="Asset Key"><code>rd_day10a_rescue_rendezvous_img2</code></td><td data-label="Core Beat">集合点危机</td><td data-label="Runtime Use">Rescue branch scene</td><td data-label="Status" class="status">Integrated</td></tr>
+            <tr><td data-label="Day">10B</td><td data-label="Asset Key"><code>rd_day10b_lighthouse_override_img2</code></td><td data-label="Core Beat">人工 override 与治理边界</td><td data-label="Runtime Use">Lighthouse branch scene</td><td data-label="Status" class="status">Integrated</td></tr>
+            <tr><td data-label="Day">11</td><td data-label="Asset Key"><code>rd_day11_storm_inventory_img2</code></td><td data-label="Core Beat">库存封存、补缝、风暴前夜</td><td data-label="Runtime Use">AgentConsole Day Plan</td><td data-label="Status" class="status">Integrated</td></tr>
+            <tr><td data-label="Day">12</td><td data-label="Asset Key"><code>rd_day12_final_audit_img2</code></td><td data-label="Core Beat">Final Audit、离线监控、failure debt</td><td data-label="Runtime Use">FinalAudit overlay background</td><td data-label="Status" class="status">Integrated</td></tr>
+          </tbody>
+        </table>
+      </section>
+    </main>
+  </body>
+</html>

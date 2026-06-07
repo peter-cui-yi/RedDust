@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" role="img" aria-label="ENGINEERING OVERRIDE">
+  <rect width="960" height="540" fill="#090b0d"/>
+  <defs>
+    <linearGradient id="bg17" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#211510"/>
+      <stop offset=".56" stop-color="#3a2116"/>
+      <stop offset="1" stop-color="#0b0d10"/>
+    </linearGradient>
+    <filter id="rough17">
+      <feTurbulence baseFrequency=".035" numOctaves="2" seed="34"/>
+      <feDisplacementMap in="SourceGraphic" scale="1.8"/>
+    </filter>
+  </defs>
+  <rect x="28" y="28" width="904" height="484" rx="12" fill="url(#bg17)" stroke="#c99058" stroke-width="4"/>
+  <path d="M28 360c160-42 260 26 406-30 154-60 284 52 498-26v208H28z" fill="#120f0d" opacity=".72"/>
+  <path d="M66 104h858M66 456h858" stroke="#ffd60a" stroke-dasharray="9 16" opacity=".18"/>
+  <path d="M80 122l112-44h132l44 78h-92l-36-38-82 60z" fill="#d05a2a" opacity=".17"/>
+  <path d="M367 201h24" stroke="#d05a2a" stroke-width="1" opacity="0.08"/><path d="M440 242h35" stroke="#d05a2a" stroke-width="2" opacity="0.115"/><path d="M513 283h46" stroke="#d05a2a" stroke-width="3" opacity="0.15000000000000002"/><path d="M586 324h57" stroke="#d05a2a" stroke-width="1" opacity="0.185"/><path d="M659 365h68" stroke="#d05a2a" stroke-width="2" opacity="0.08"/><path d="M732 406h79" stroke="#d05a2a" stroke-width="3" opacity="0.115"/><path d="M805 447h90" stroke="#d05a2a" stroke-width="1" opacity="0.15000000000000002"/><path d="M878 90h101" stroke="#d05a2a" stroke-width="2" opacity="0.185"/><path d="M75 131h26" stroke="#d05a2a" stroke-width="3" opacity="0.08"/><path d="M148 172h37" stroke="#d05a2a" stroke-width="1" opacity="0.115"/><path d="M221 213h48" stroke="#d05a2a" stroke-width="2" opacity="0.15000000000000002"/><path d="M294 254h59" stroke="#d05a2a" stroke-width="3" opacity="0.185"/><path d="M367 295h70" stroke="#d05a2a" stroke-width="1" opacity="0.08"/><path d="M440 336h81" stroke="#d05a2a" stroke-width="2" opacity="0.115"/><path d="M513 377h92" stroke="#d05a2a" stroke-width="3" opacity="0.15000000000000002"/><path d="M586 418h103" stroke="#d05a2a" stroke-width="1" opacity="0.185"/><path d="M659 459h28" stroke="#d05a2a" stroke-width="2" opacity="0.08"/><path d="M732 102h39" stroke="#d05a2a" stroke-width="3" opacity="0.115"/><path d="M805 143h50" stroke="#d05a2a" stroke-width="1" opacity="0.15000000000000002"/><path d="M878 184h61" stroke="#d05a2a" stroke-width="2" opacity="0.185"/><path d="M75 225h72" stroke="#d05a2a" stroke-width="3" opacity="0.08"/><path d="M148 266h83" stroke="#d05a2a" stroke-width="1" opacity="0.115"/><path d="M221 307h94" stroke="#d05a2a" stroke-width="2" opacity="0.15000000000000002"/><path d="M294 348h105" stroke="#d05a2a" stroke-width="3" opacity="0.185"/><path d="M367 389h30" stroke="#d05a2a" stroke-width="1" opacity="0.08"/><path d="M440 430h41" stroke="#d05a2a" stroke-width="2" opacity="0.115"/><path d="M513 73h52" stroke="#d05a2a" stroke-width="3" opacity="0.15000000000000002"/><path d="M586 114h63" stroke="#d05a2a" stroke-width="1" opacity="0.185"/><path d="M659 155h74" stroke="#d05a2a" stroke-width="2" opacity="0.08"/><path d="M732 196h85" stroke="#d05a2a" stroke-width="3" opacity="0.115"/><path d="M805 237h96" stroke="#d05a2a" stroke-width="1" opacity="0.15000000000000002"/><path d="M878 278h107" stroke="#d05a2a" stroke-width="2" opacity="0.185"/><path d="M75 319h32" stroke="#d05a2a" stroke-width="3" opacity="0.08"/><path d="M148 360h43" stroke="#d05a2a" stroke-width="1" opacity="0.115"/>
+  <rect x="70" y="76" width="160" height="90" rx="5" fill="#381a13" stroke="#d05a2a" stroke-width="4" opacity=".82"/>
+  <path d="M82 98l136 46M218 98L82 144" stroke="#d9c7ad" stroke-width="5" opacity=".36"/>
+  <path d="M44 44h868v448H44z" fill="none" stroke="#ffb15f" stroke-width="1.5" opacity=".35"/>
+  <g filter="url(#rough17)">
+        <g>
+    <circle cx="236" cy="236" r="36" fill="none" stroke="#ffb15f" stroke-width="10"/>
+    <path d="M272 236h142M348 236v34M380 236v24" stroke="#ffb15f" stroke-width="14" stroke-linecap="round"/>
+    <rect x="440" y="206" width="170" height="110" rx="7" fill="#132126" stroke="#8feaff" stroke-width="4"/>
+    <path d="M462 240L584 240" stroke="#8feaff" stroke-width="7" stroke-linecap="round"/>
+    <path d="M462 272L548 272" stroke="#d9c7ad" stroke-width="5" stroke-linecap="round" opacity=".6"/>
+  </g>
+        <path d="M610 180h160v176H610z" fill="#182026" stroke="#c99058" stroke-width="5"/>
+        <path d="M630 214h120M630 250h120M630 286h86" stroke="#8feaff" stroke-width="7" stroke-linecap="round" opacity=".65"/>
+        <g transform="translate(490 314)">
+    <rect x="14" y="0" width="28" height="7" fill="#3a2116" />
+    <rect x="7" y="7" width="42" height="7" fill="#3a2116" />
+    <rect x="7" y="14" width="42" height="21" fill="#d4956a" />
+    <rect x="14" y="21" width="7" height="7" fill="#171717" />
+    <rect x="35" y="21" width="7" height="7" fill="#171717" />
+    <rect x="0" y="28" width="7" height="21" fill="#d4956a" />
+    <rect x="49" y="35" width="7" height="28" fill="#d4956a" />
+    <rect x="7" y="35" width="42" height="28" fill="#8a5a3a" />
+    <rect x="14" y="63" width="14" height="21" fill="#34312d" />
+    <rect x="35" y="63" width="14" height="21" fill="#34312d" />
+    <rect x="7" y="84" width="21" height="7" fill="#111" />
+    <rect x="35" y="84" width="21" height="7" fill="#111" />
+  </g>
+        <text x="238" y="404" fill="#ffb15f" font-family="Courier New, monospace" font-size="19" font-weight="800" text-anchor="start">HUMAN KEY, MACHINE LOG</text>
+      </g>
+  <g>
+    <rect x="70" y="58" width="424" height="84" rx="8" fill="#0b0d10" opacity=".7" stroke="#ffb15f" stroke-width="2"/>
+    <text x="92" y="91" fill="#ffb15f" font-family="Courier New, monospace" font-size="22" font-weight="800" text-anchor="start">STATE</text>
+    <text x="92" y="126" fill="#fff1dc" font-family="Georgia, serif" font-size="32" font-weight="700">ENGINEERING OVERRIDE</text>
+    <rect x="70" y="462" width="820" height="40" rx="6" fill="#0b0d10" opacity=".68" stroke="#c99058" stroke-width="1.5"/>
+    <text x="92" y="488" fill="#b7a083" font-family="Courier New, monospace" font-size="18" font-weight="700" text-anchor="start">Ma keeps the last mechanical key out of AURA hands.</text>
+  </g>
+</svg>

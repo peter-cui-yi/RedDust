@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" role="img" aria-label="BEACON PRIVACY COST">
+  <rect width="960" height="540" fill="#090b0d"/>
+  <defs>
+    <linearGradient id="bg4" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#211510"/>
+      <stop offset=".56" stop-color="#3a2116"/>
+      <stop offset="1" stop-color="#0b0d10"/>
+    </linearGradient>
+    <filter id="rough4">
+      <feTurbulence baseFrequency=".035" numOctaves="2" seed="21"/>
+      <feDisplacementMap in="SourceGraphic" scale="1.8"/>
+    </filter>
+  </defs>
+  <rect x="28" y="28" width="904" height="484" rx="12" fill="url(#bg4)" stroke="#c99058" stroke-width="4"/>
+  <path d="M28 360c160-42 260 26 406-30 154-60 284 52 498-26v208H28z" fill="#120f0d" opacity=".72"/>
+  <path d="M66 104h858M66 456h858" stroke="#ffd60a" stroke-dasharray="9 16" opacity=".18"/>
+  <path d="M80 122l112-44h132l44 78h-92l-36-38-82 60z" fill="#d05a2a" opacity=".17"/>
+  <path d="M120 196h24" stroke="#d05a2a" stroke-width="1" opacity="0.08"/><path d="M193 237h35" stroke="#d05a2a" stroke-width="2" opacity="0.115"/><path d="M266 278h46" stroke="#d05a2a" stroke-width="3" opacity="0.15000000000000002"/><path d="M339 319h57" stroke="#d05a2a" stroke-width="1" opacity="0.185"/><path d="M412 360h68" stroke="#d05a2a" stroke-width="2" opacity="0.08"/><path d="M485 401h79" stroke="#d05a2a" stroke-width="3" opacity="0.115"/><path d="M558 442h90" stroke="#d05a2a" stroke-width="1" opacity="0.15000000000000002"/><path d="M631 85h101" stroke="#d05a2a" stroke-width="2" opacity="0.185"/><path d="M704 126h26" stroke="#d05a2a" stroke-width="3" opacity="0.08"/><path d="M777 167h37" stroke="#d05a2a" stroke-width="1" opacity="0.115"/><path d="M850 208h48" stroke="#d05a2a" stroke-width="2" opacity="0.15000000000000002"/><path d="M47 249h59" stroke="#d05a2a" stroke-width="3" opacity="0.185"/><path d="M120 290h70" stroke="#d05a2a" stroke-width="1" opacity="0.08"/><path d="M193 331h81" stroke="#d05a2a" stroke-width="2" opacity="0.115"/><path d="M266 372h92" stroke="#d05a2a" stroke-width="3" opacity="0.15000000000000002"/><path d="M339 413h103" stroke="#d05a2a" stroke-width="1" opacity="0.185"/><path d="M412 454h28" stroke="#d05a2a" stroke-width="2" opacity="0.08"/><path d="M485 97h39" stroke="#d05a2a" stroke-width="3" opacity="0.115"/><path d="M558 138h50" stroke="#d05a2a" stroke-width="1" opacity="0.15000000000000002"/><path d="M631 179h61" stroke="#d05a2a" stroke-width="2" opacity="0.185"/><path d="M704 220h72" stroke="#d05a2a" stroke-width="3" opacity="0.08"/><path d="M777 261h83" stroke="#d05a2a" stroke-width="1" opacity="0.115"/><path d="M850 302h94" stroke="#d05a2a" stroke-width="2" opacity="0.15000000000000002"/><path d="M47 343h105" stroke="#d05a2a" stroke-width="3" opacity="0.185"/><path d="M120 384h30" stroke="#d05a2a" stroke-width="1" opacity="0.08"/><path d="M193 425h41" stroke="#d05a2a" stroke-width="2" opacity="0.115"/><path d="M266 466h52" stroke="#d05a2a" stroke-width="3" opacity="0.15000000000000002"/><path d="M339 109h63" stroke="#d05a2a" stroke-width="1" opacity="0.185"/><path d="M412 150h74" stroke="#d05a2a" stroke-width="2" opacity="0.08"/><path d="M485 191h85" stroke="#d05a2a" stroke-width="3" opacity="0.115"/><path d="M558 232h96" stroke="#d05a2a" stroke-width="1" opacity="0.15000000000000002"/><path d="M631 273h107" stroke="#d05a2a" stroke-width="2" opacity="0.185"/><path d="M704 314h32" stroke="#d05a2a" stroke-width="3" opacity="0.08"/><path d="M777 355h43" stroke="#d05a2a" stroke-width="1" opacity="0.115"/>
+  <rect x="70" y="76" width="160" height="90" rx="5" fill="#381a13" stroke="#d05a2a" stroke-width="4" opacity=".82"/>
+  <path d="M82 98l136 46M218 98L82 144" stroke="#d9c7ad" stroke-width="5" opacity=".36"/>
+  <path d="M44 44h868v448H44z" fill="none" stroke="#5dbfd9" stroke-width="1.5" opacity=".35"/>
+  <g filter="url(#rough4)">
+        <g>
+    <rect x="190" y="308" width="92" height="22" fill="#3a2116" stroke="#c99058" stroke-width="4"/>
+    <path d="M214 308l22-116 22 116" fill="none" stroke="#71808a" stroke-width="6"/>
+    <circle cx="236" cy="184" r="24" fill="#5dbfd9" opacity=".8"/>
+    <path d="M236 184c-86 18-120 60-144 112M236 184c86 18 120 60 144 112" fill="none" stroke="#5dbfd9" stroke-width="8" stroke-linecap="round" opacity=".56"/>
+  </g>
+        <g>
+    <rect x="438" y="186" width="180" height="118" rx="5" fill="#efe0c7" stroke="#c99058" stroke-width="4"/>
+    <rect x="452" y="168" width="180" height="118" rx="5" fill="#d9c7ad" stroke="#c99058" stroke-width="4"/>
+    <text x="468" y="202" fill="#3a2116" font-family="Courier New, monospace" font-size="18" font-weight="800" text-anchor="start">HEALTH</text>
+    <path d="M468 226L586 226" stroke="#5dbfd9" stroke-width="6" stroke-linecap="round"/>
+    <path d="M468 250L612 250" stroke="#6b4f3a" stroke-width="5" stroke-linecap="round" opacity=".65"/>
+    <path d="M468 274L562 274" stroke="#6b4f3a" stroke-width="5" stroke-linecap="round" opacity=".65"/>
+  </g>
+        <g>
+    <rect x="660" y="174" width="220" height="160" rx="6" fill="#d9c7ad" stroke="#c99058" stroke-width="5"/>
+    <path d="M688 300C730 234,774 318,840 220" fill="none" stroke="#3a2116" stroke-width="7" stroke-linecap="round"/>
+    <path d="M702 216l146 104" stroke="#e84545" stroke-width="7" stroke-linecap="round" opacity=".75"/>
+    <circle cx="814" cy="240" r="18" fill="none" stroke="#5dbfd9" stroke-width="7"/>
+    <text x="684" y="204" fill="#3a2116" font-family="Courier New, monospace" font-size="16" font-weight="800" text-anchor="start">MAP</text>
+  </g>
+        <g transform="translate(358 306)">
+    <rect x="13.44" y="0" width="26.88" height="6.72" fill="#211" />
+    <rect x="6.72" y="6.72" width="40.32" height="6.72" fill="#211" />
+    <rect x="6.72" y="13.44" width="40.32" height="20.16" fill="#d4956a" />
+    <rect x="13.44" y="20.16" width="6.72" height="6.72" fill="#171717" />
+    <rect x="33.6" y="20.16" width="6.72" height="6.72" fill="#171717" />
+    <rect x="0" y="20.160000000000004" width="6.72" height="20.16" fill="#d4956a" />
+    <rect x="47.04" y="33.6" width="6.72" height="33.6" fill="#d4956a" />
+    <rect x="6.72" y="33.6" width="40.32" height="26.88" fill="#5a6e74" />
+    <rect x="13.44" y="60.48" width="13.44" height="20.16" fill="#34312d" />
+    <rect x="33.6" y="60.48" width="13.44" height="20.16" fill="#34312d" />
+    <rect x="6.72" y="80.64" width="20.16" height="6.72" fill="#111" />
+    <rect x="33.6" y="80.64" width="20.16" height="6.72" fill="#111" />
+  </g>
+        <g transform="translate(286 314)">
+    <rect x="13.44" y="0" width="26.88" height="6.72" fill="#3a2116" />
+    <rect x="6.72" y="6.72" width="40.32" height="6.72" fill="#3a2116" />
+    <rect x="6.72" y="13.44" width="40.32" height="20.16" fill="#d4956a" />
+    <rect x="13.44" y="20.16" width="6.72" height="6.72" fill="#171717" />
+    <rect x="33.6" y="20.16" width="6.72" height="6.72" fill="#171717" />
+    <rect x="0" y="33.6" width="6.72" height="20.16" fill="#d4956a" />
+    <rect x="47.04" y="33.6" width="6.72" height="20.16" fill="#d4956a" />
+    <rect x="6.72" y="33.6" width="40.32" height="26.88" fill="#8a5a3a" />
+    <rect x="13.44" y="60.48" width="13.44" height="20.16" fill="#34312d" />
+    <rect x="33.6" y="60.48" width="13.44" height="20.16" fill="#34312d" />
+    <rect x="6.72" y="80.64" width="20.16" height="6.72" fill="#111" />
+    <rect x="33.6" y="80.64" width="20.16" height="6.72" fill="#111" />
+  </g>
+        <text x="452" y="328" fill="#d9c7ad" font-family="Courier New, monospace" font-size="18" font-weight="800" text-anchor="start">MINIMUM NECESSARY DISCLOSURE</text>
+      </g>
+  <g>
+    <rect x="70" y="58" width="424" height="84" rx="8" fill="#0b0d10" opacity=".7" stroke="#5dbfd9" stroke-width="2"/>
+    <text x="92" y="91" fill="#5dbfd9" font-family="Courier New, monospace" font-size="22" font-weight="800" text-anchor="start">9A</text>
+    <text x="92" y="126" fill="#fff1dc" font-family="Georgia, serif" font-size="32" font-weight="700">BEACON PRIVACY COST</text>
+    <rect x="70" y="462" width="820" height="40" rx="6" fill="#0b0d10" opacity=".68" stroke="#c99058" stroke-width="1.5"/>
+    <text x="92" y="488" fill="#b7a083" font-family="Courier New, monospace" font-size="18" font-weight="700" text-anchor="start">Health summaries and risk maps become rescue cargo.</text>
+  </g>
+</svg>

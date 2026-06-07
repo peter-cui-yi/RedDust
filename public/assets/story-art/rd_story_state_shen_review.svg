@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" role="img" aria-label="MANUAL MEDICAL REVIEW">
+  <rect width="960" height="540" fill="#090b0d"/>
+  <defs>
+    <linearGradient id="bg16" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#211510"/>
+      <stop offset=".56" stop-color="#3a2116"/>
+      <stop offset="1" stop-color="#0b0d10"/>
+    </linearGradient>
+    <filter id="rough16">
+      <feTurbulence baseFrequency=".035" numOctaves="2" seed="33"/>
+      <feDisplacementMap in="SourceGraphic" scale="1.8"/>
+    </filter>
+  </defs>
+  <rect x="28" y="28" width="904" height="484" rx="12" fill="url(#bg16)" stroke="#c99058" stroke-width="4"/>
+  <path d="M28 360c160-42 260 26 406-30 154-60 284 52 498-26v208H28z" fill="#120f0d" opacity=".72"/>
+  <path d="M66 104h858M66 456h858" stroke="#ffd60a" stroke-dasharray="9 16" opacity=".18"/>
+  <path d="M80 122l112-44h132l44 78h-92l-36-38-82 60z" fill="#d05a2a" opacity=".17"/>
+  <path d="M348 170h24" stroke="#d05a2a" stroke-width="1" opacity="0.08"/><path d="M421 211h35" stroke="#d05a2a" stroke-width="2" opacity="0.115"/><path d="M494 252h46" stroke="#d05a2a" stroke-width="3" opacity="0.15000000000000002"/><path d="M567 293h57" stroke="#d05a2a" stroke-width="1" opacity="0.185"/><path d="M640 334h68" stroke="#d05a2a" stroke-width="2" opacity="0.08"/><path d="M713 375h79" stroke="#d05a2a" stroke-width="3" opacity="0.115"/><path d="M786 416h90" stroke="#d05a2a" stroke-width="1" opacity="0.15000000000000002"/><path d="M859 457h101" stroke="#d05a2a" stroke-width="2" opacity="0.185"/><path d="M56 100h26" stroke="#d05a2a" stroke-width="3" opacity="0.08"/><path d="M129 141h37" stroke="#d05a2a" stroke-width="1" opacity="0.115"/><path d="M202 182h48" stroke="#d05a2a" stroke-width="2" opacity="0.15000000000000002"/><path d="M275 223h59" stroke="#d05a2a" stroke-width="3" opacity="0.185"/><path d="M348 264h70" stroke="#d05a2a" stroke-width="1" opacity="0.08"/><path d="M421 305h81" stroke="#d05a2a" stroke-width="2" opacity="0.115"/><path d="M494 346h92" stroke="#d05a2a" stroke-width="3" opacity="0.15000000000000002"/><path d="M567 387h103" stroke="#d05a2a" stroke-width="1" opacity="0.185"/><path d="M640 428h28" stroke="#d05a2a" stroke-width="2" opacity="0.08"/><path d="M713 469h39" stroke="#d05a2a" stroke-width="3" opacity="0.115"/><path d="M786 112h50" stroke="#d05a2a" stroke-width="1" opacity="0.15000000000000002"/><path d="M859 153h61" stroke="#d05a2a" stroke-width="2" opacity="0.185"/><path d="M56 194h72" stroke="#d05a2a" stroke-width="3" opacity="0.08"/><path d="M129 235h83" stroke="#d05a2a" stroke-width="1" opacity="0.115"/><path d="M202 276h94" stroke="#d05a2a" stroke-width="2" opacity="0.15000000000000002"/><path d="M275 317h105" stroke="#d05a2a" stroke-width="3" opacity="0.185"/><path d="M348 358h30" stroke="#d05a2a" stroke-width="1" opacity="0.08"/><path d="M421 399h41" stroke="#d05a2a" stroke-width="2" opacity="0.115"/><path d="M494 440h52" stroke="#d05a2a" stroke-width="3" opacity="0.15000000000000002"/><path d="M567 83h63" stroke="#d05a2a" stroke-width="1" opacity="0.185"/><path d="M640 124h74" stroke="#d05a2a" stroke-width="2" opacity="0.08"/><path d="M713 165h85" stroke="#d05a2a" stroke-width="3" opacity="0.115"/><path d="M786 206h96" stroke="#d05a2a" stroke-width="1" opacity="0.15000000000000002"/><path d="M859 247h107" stroke="#d05a2a" stroke-width="2" opacity="0.185"/><path d="M56 288h32" stroke="#d05a2a" stroke-width="3" opacity="0.08"/><path d="M129 329h43" stroke="#d05a2a" stroke-width="1" opacity="0.115"/>
+  <rect x="70" y="76" width="160" height="90" rx="5" fill="#381a13" stroke="#d05a2a" stroke-width="4" opacity=".82"/>
+  <path d="M82 98l136 46M218 98L82 144" stroke="#d9c7ad" stroke-width="5" opacity=".36"/>
+  <path d="M44 44h868v448H44z" fill="none" stroke="#79d6a8" stroke-width="1.5" opacity=".35"/>
+  <g filter="url(#rough16)">
+        <g>
+    <rect x="420" y="122" width="360" height="262" rx="8" fill="#d9c7ad" stroke="#c99058" stroke-width="5"/>
+    <text x="444" y="160" fill="#3a2116" font-family="Courier New, monospace" font-size="20" font-weight="800" text-anchor="start">MEDICAL REVIEW</text>
+    <path d="M444 178L756 178" stroke="#6b4f3a" stroke-width="4" />
+    <path d="M456 214L744 214" stroke="#79d6a8" stroke-width="8" stroke-linecap="round" opacity=".72"/>
+    <path d="M456 252L694 252" stroke="#6b4f3a" stroke-width="6" stroke-linecap="round" opacity=".7"/>
+    <path d="M456 290L728 290" stroke="#6b4f3a" stroke-width="6" stroke-linecap="round" opacity=".7"/>
+    <circle cx="734" cy="248" r="18" fill="none" stroke="#79d6a8" stroke-width="6"/>
+  </g>
+        <g>
+    <rect x="152" y="334" width="250" height="42" rx="5" fill="#442818" stroke="#c99058" stroke-width="4"/>
+    <path d="M190 254h82l-12 82H50z" fill="#142831" stroke="#5dbfd9" stroke-width="5"/>
+    <rect x="302" y="264" width="70" height="84" rx="8" fill="#e7efe5" stroke="#79d6a8" stroke-width="5"/>
+    <path d="M337 280v48M314 304h46" stroke="#79d6a8" stroke-width="8" stroke-linecap="round"/>
+    <text x="180" y="248" fill="#5dbfd9" font-family="Courier New, monospace" font-size="16" font-weight="800" text-anchor="start">1/2 CUP</text>
+  </g>
+        <g transform="translate(332 304)">
+    <rect x="14" y="0" width="28" height="7" fill="#211" />
+    <rect x="7" y="7" width="42" height="7" fill="#211" />
+    <rect x="7" y="14" width="42" height="21" fill="#d4956a" />
+    <rect x="14" y="21" width="7" height="7" fill="#171717" />
+    <rect x="35" y="21" width="7" height="7" fill="#171717" />
+    <rect x="0" y="21" width="7" height="21" fill="#d4956a" />
+    <rect x="49" y="35" width="7" height="35" fill="#d4956a" />
+    <rect x="7" y="35" width="42" height="28" fill="#5a6e74" />
+    <rect x="14" y="63" width="14" height="21" fill="#34312d" />
+    <rect x="35" y="63" width="14" height="21" fill="#34312d" />
+    <rect x="7" y="84" width="21" height="7" fill="#111" />
+    <rect x="35" y="84" width="21" height="7" fill="#111" />
+  </g>
+        <g>
+    <rect x="662" y="264" width="180" height="150" rx="10" fill="#152328" stroke="#79d6a8" stroke-width="4"/>
+    <circle cx="752" cy="336" r="44" fill="#071216" stroke="#79d6a8" stroke-width="6"/>
+    <circle cx="752" cy="336" r="18" fill="#79d6a8" opacity=".65"/>
+    <path d="M698 284h108M698 396h108" stroke="#b7a083" stroke-width="5" opacity=".45"/>
+    <path d="M680 296h144M680 336h144M680 376h144" stroke="#8feaff" stroke-width="4" opacity=".55"/>
+  </g>
+        <text x="174" y="414" fill="#d9c7ad" font-family="Courier New, monospace" font-size="18" font-weight="800" text-anchor="start">RECOMMENDATION NEEDS BASIS</text>
+      </g>
+  <g>
+    <rect x="70" y="58" width="424" height="84" rx="8" fill="#0b0d10" opacity=".7" stroke="#79d6a8" stroke-width="2"/>
+    <text x="92" y="91" fill="#79d6a8" font-family="Courier New, monospace" font-size="22" font-weight="800" text-anchor="start">STATE</text>
+    <text x="92" y="126" fill="#fff1dc" font-family="Georgia, serif" font-size="32" font-weight="700">MANUAL MEDICAL REVIEW</text>
+    <rect x="70" y="462" width="820" height="40" rx="6" fill="#0b0d10" opacity=".68" stroke="#c99058" stroke-width="1.5"/>
+    <text x="92" y="488" fill="#b7a083" font-family="Courier New, monospace" font-size="18" font-weight="700" text-anchor="start">Shen writes the boundary before AURA can recommend.</text>
+  </g>
+</svg>

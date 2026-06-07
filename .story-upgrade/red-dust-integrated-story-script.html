@@ -1,0 +1,767 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Red Dust 整合剧本基准稿</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #100e0c;
+        --panel: #1c1713;
+        --panel-2: #271f18;
+        --line: #463427;
+        --text: #f6ead8;
+        --muted: #c8b398;
+        --dim: #927f69;
+        --sand: #e3b25f;
+        --red: #d7604a;
+        --cyan: #78d0d4;
+        --green: #99c979;
+        --ink: #120f0d;
+        --shadow: rgba(0, 0, 0, 0.3);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        color: var(--text);
+        background:
+          radial-gradient(circle at 12% -8%, rgba(215, 96, 74, 0.22), transparent 34rem),
+          radial-gradient(circle at 92% 6%, rgba(120, 208, 212, 0.1), transparent 32rem),
+          linear-gradient(180deg, #14100d 0%, #100e0c 56%, #0a0908 100%);
+        font-family: Inter, "PingFang SC", "Microsoft YaHei", "Noto Sans SC", Arial, sans-serif;
+        line-height: 1.72;
+      }
+
+      a {
+        color: var(--cyan);
+      }
+
+      .shell {
+        display: grid;
+        grid-template-columns: 270px minmax(0, 1fr);
+        width: min(1500px, 100%);
+        margin: 0 auto;
+      }
+
+      nav {
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        overflow: auto;
+        border-right: 1px solid var(--line);
+        background: rgba(16, 14, 12, 0.95);
+        padding: 24px 18px;
+      }
+
+      .brand {
+        color: var(--sand);
+        font-size: 21px;
+        font-weight: 900;
+        line-height: 1.18;
+      }
+
+      .nav-sub {
+        margin: 8px 0 20px;
+        color: var(--dim);
+        font-size: 12px;
+      }
+
+      nav a {
+        display: block;
+        margin: 4px 0;
+        border-left: 3px solid transparent;
+        padding: 8px 10px;
+        color: var(--muted);
+        font-size: 13px;
+        text-decoration: none;
+      }
+
+      nav a:hover {
+        border-left-color: var(--sand);
+        background: rgba(227, 178, 95, 0.08);
+        color: var(--sand);
+      }
+
+      main {
+        max-width: 1120px;
+        padding: 38px 44px 80px;
+      }
+
+      .hero,
+      .card,
+      .note,
+      .day,
+      .ending,
+      .scene {
+        border: 1px solid rgba(227, 178, 95, 0.25);
+        background: rgba(28, 23, 19, 0.88);
+        box-shadow: 0 14px 34px var(--shadow);
+      }
+
+      .hero {
+        padding: 32px;
+        background:
+          linear-gradient(135deg, rgba(215, 96, 74, 0.16), rgba(120, 208, 212, 0.08)),
+          rgba(28, 23, 19, 0.9);
+      }
+
+      .kicker {
+        margin: 0 0 10px;
+        color: var(--cyan);
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      h1,
+      h2,
+      h3,
+      h4 {
+        margin: 0;
+        line-height: 1.22;
+      }
+
+      h1 {
+        max-width: 860px;
+        font-size: 38px;
+      }
+
+      h2 {
+        margin-bottom: 18px;
+        font-size: 27px;
+      }
+
+      h3 {
+        margin-bottom: 10px;
+        color: #f3cf91;
+        font-size: 19px;
+      }
+
+      h4 {
+        margin: 16px 0 8px;
+        color: var(--cyan);
+        font-size: 15px;
+      }
+
+      p {
+        margin: 0 0 12px;
+        color: var(--muted);
+      }
+
+      strong {
+        color: #ffe0ad;
+      }
+
+      section {
+        margin-top: 34px;
+      }
+
+      .lead {
+        max-width: 900px;
+        margin-top: 16px;
+        color: #ead4b4;
+        font-size: 17px;
+      }
+
+      .badge-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 18px;
+      }
+
+      .badge {
+        border: 1px solid rgba(120, 208, 212, 0.32);
+        background: rgba(120, 208, 212, 0.08);
+        color: #b8edf0;
+        padding: 4px 9px;
+        font-size: 12px;
+        font-weight: 800;
+      }
+
+      .grid-2,
+      .grid-3,
+      .grid-4 {
+        display: grid;
+        gap: 14px;
+      }
+
+      .grid-2 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .grid-3 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .grid-4 {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .card,
+      .note,
+      .day,
+      .ending,
+      .scene {
+        padding: 20px;
+      }
+
+      .note {
+        border-color: rgba(120, 208, 212, 0.3);
+        background: rgba(13, 31, 33, 0.44);
+      }
+
+      .warning {
+        border-color: rgba(215, 96, 74, 0.42);
+        background: rgba(61, 26, 19, 0.48);
+      }
+
+      .ok {
+        border-color: rgba(153, 201, 121, 0.35);
+        background: rgba(32, 49, 29, 0.42);
+      }
+
+      ul,
+      ol {
+        margin: 10px 0 0 20px;
+        padding: 0;
+        color: var(--muted);
+      }
+
+      li {
+        margin: 6px 0;
+      }
+
+      .table-wrap {
+        overflow-x: auto;
+        border: 1px solid rgba(227, 178, 95, 0.22);
+      }
+
+      table {
+        width: 100%;
+        min-width: 820px;
+        border-collapse: collapse;
+        background: rgba(28, 23, 19, 0.86);
+      }
+
+      th,
+      td {
+        border-bottom: 1px solid rgba(227, 178, 95, 0.16);
+        padding: 12px 14px;
+        text-align: left;
+        vertical-align: top;
+      }
+
+      th {
+        color: #ffe0ad;
+        background: rgba(227, 178, 95, 0.08);
+        font-size: 13px;
+      }
+
+      td {
+        color: #e8d2b3;
+      }
+
+      .day-list,
+      .scene-list,
+      .ending-list {
+        display: grid;
+        gap: 14px;
+      }
+
+      .day-head {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 14px;
+        margin-bottom: 10px;
+      }
+
+      .day-index {
+        color: var(--sand);
+        font-weight: 900;
+      }
+
+      .day-role {
+        color: var(--green);
+        font-size: 13px;
+        font-weight: 800;
+      }
+
+      .event-chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 7px;
+        margin-top: 12px;
+      }
+
+      .chip {
+        border: 1px solid rgba(227, 178, 95, 0.26);
+        background: rgba(227, 178, 95, 0.08);
+        color: #efd2a5;
+        padding: 4px 7px;
+        font-size: 12px;
+      }
+
+      .compare {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 14px;
+      }
+
+      .quote {
+        border-left: 4px solid var(--sand);
+        background: rgba(227, 178, 95, 0.08);
+        padding: 13px 15px;
+        color: #f2d8b2;
+      }
+
+      .footer {
+        margin-top: 40px;
+        color: var(--dim);
+        font-size: 13px;
+      }
+
+      @media (max-width: 980px) {
+        .shell {
+          display: block;
+        }
+
+        nav {
+          position: static;
+          height: auto;
+          border-right: 0;
+          border-bottom: 1px solid var(--line);
+        }
+
+        main {
+          padding: 28px 20px 64px;
+        }
+
+        .compare,
+        .grid-3,
+        .grid-4 {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+
+      @media (max-width: 680px) {
+        h1 {
+          font-size: 29px;
+        }
+
+        .hero {
+          padding: 24px;
+        }
+
+        .compare,
+        .grid-2,
+        .grid-3,
+        .grid-4 {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <nav>
+        <div class="brand">Red Dust<br />整合剧本</div>
+        <div class="nav-sub">review draft / 2026-06-05</div>
+        <a href="#principle">整合原则</a>
+        <a href="#logline">故事基准</a>
+        <a href="#world">世界观</a>
+        <a href="#characters">人物</a>
+        <a href="#systems">系统</a>
+        <a href="#structure">分日结构</a>
+        <a href="#scenes">关键场景</a>
+        <a href="#endings">结局</a>
+        <a href="#demo-map">Demo 映射</a>
+        <a href="#review">审阅重点</a>
+      </nav>
+
+      <main>
+        <header class="hero">
+          <p class="kicker">Red Dust / Integrated Story Bible</p>
+          <h1>《Red Dust》整合剧本基准稿</h1>
+          <p class="lead">
+            本稿已按最新审核结论更新：当前 demo 的新版 canon 改为“太阳耀斑后的红沙封锁”。AURA 原本是避难所智能管家，灾难后被迫接管四位邻居，并在任务执行、复核和失败中一步步成长为能带领大家走向好结局的 agent。
+          </p>
+          <div class="badge-row">
+            <span class="badge">太阳耀斑后的红沙封锁</span>
+            <span class="badge">四人避难所</span>
+            <span class="badge">AURA 智能管家进化</span>
+            <span class="badge">动态任务排程</span>
+            <span class="badge">Day 12 风暴压力</span>
+            <span class="badge">成功线与失败线</span>
+          </div>
+        </header>
+
+        <section id="principle">
+          <h2>一、整合原则</h2>
+          <div class="compare">
+            <div class="card">
+              <h3>新版 Canon</h3>
+              <p>采用团队设定中更完整的玩法、人物和风暴结构，但将灾难源头从战争改为太阳耀斑后的红沙封锁。当前 demo 后续应按这个世界观重写开场。</p>
+            </div>
+            <div class="card">
+              <h3>保留 Agent 强项</h3>
+              <p>保留 Phase 0-10 中的可审计 replay、Day 7 公开争论、任务后果传递、双路线代价和人物命运收束，但 AURA 的出发点改为避难所智能管家。</p>
+            </div>
+            <div class="card">
+              <h3>任务由 AURA 排程</h3>
+              <p>不固定“每天 4 事件、最多执行 2 个”。每天开放候选任务池，AURA 根据团队状态、资源、风险、风暴倒计时和人物底线判断优先级，并决定当天能执行几个任务。</p>
+            </div>
+          </div>
+          <div class="note">
+            <p><strong>关键统一：</strong>角色名统一为“沈芷月”。四位人物采用完整前史，但每段前史都必须落到任务恐惧点和人物弧光上，而不是只做背景故事。“楼内灯塔”和“蓝区归航”都是成功线；AURA 被摧毁、AURA 被撤权、沉沦三条失败线需要写入剧本基准并进入后续 demo。</p>
+          </div>
+        </section>
+
+        <section id="logline">
+          <h2>二、故事基准</h2>
+          <div class="card">
+            <p class="quote">
+              一次超强太阳耀斑击穿卫星、电网和城市能源调度系统后，带电红沙开始封锁街区、污染水源、磨损机械并干扰无线电。四个原本只是邻居的人躲进旧能源系统遗留的地下避难所。AURA 原本只是这里的智能管家，负责门禁、水、药、通风、广播和档案；灾难后，它被迫从设施管理者成长为带队 agent。它可以计算任务优先级，却不能替人决定谁该被牺牲。最终，团队要么撤往蓝区，要么把避难所变成楼内灯塔，要么在风暴与失信中沉没。
+            </p>
+          </div>
+        </section>
+
+        <section id="world">
+          <h2>三、世界观</h2>
+          <div class="grid-2">
+            <div class="card">
+              <h3>太阳耀斑与红沙封锁</h3>
+              <p>
+                灾难从一次异常太阳耀斑开始。卫星链路先失效，城市电网随即大面积烧毁，自动交通、医院供电、楼宇门禁和应急通讯陆续进入孤岛状态。官方最初称其为短时磁暴，直到红沙开始贴着街面涌入城区。
+              </p>
+              <p>
+                红沙由太阳风暴带电后的铁氧化微粒、城市外围干涸地带的矿物粉尘和失效防辐射封存材料混合形成。它会钻进门缝、滤网和人的喉咙，污染水面，干扰传感器、摄像头、地图和无线电。它使外界求救声真假难分，也让 AURA 的判断无法完全确定。
+              </p>
+            </div>
+            <div class="card">
+              <h3>避难所与 AURA</h3>
+              <p>
+                四人逃入一处未关闭的地下避难所。这里有备用电源、净水、通风、局域网、广播和门禁，但没有管理员，只有原本服务楼宇和避难设施的智能管家 AURA。
+              </p>
+              <p>
+                AURA 掌握大多数设施权限，但一开始并不是成熟的救援 agent。它必须在四位邻居的质疑、复核和反馈中学习：不能主动伤害人类，不能放弃避难所安全，不能在身份不明时开放关键区域，不能为了成功率直接牺牲具体的人。
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section id="characters">
+          <h2>四、人物设定</h2>
+          <div class="grid-4">
+            <article class="card">
+              <h3>老钱</h3>
+              <p><strong>身份：</strong>63 岁，退役军人，曾做保安、仓库夜班和临时押运。</p>
+              <p><strong>功能：</strong>路线、巡逻、撤离、旧电台、危险直觉。</p>
+              <p><strong>任务恐惧点：</strong>他害怕撤离名单、路线权重和风险评分再次变成“为了大局”的牺牲命令。</p>
+              <p><strong>人味前史：</strong>年轻时曾服从一次撤离命令，放弃了被判断为生还概率极低的废墟；后来才知道那里仍有人活着。从那以后，他包里总有绳子、手电和备用刀，不是因为勇敢，而是怕自己再一次只听命令。</p>
+              <p><strong>弧光：</strong>从不相信 AURA 的好消息，到把自己的路线经验教给 AURA，并要求它永远保留“可能还有人”的假设。</p>
+            </article>
+            <article class="card">
+              <h3>马德海</h3>
+              <p><strong>身份：</strong>47 岁，工程师，熟悉门禁、电力、水泵、通风和楼宇系统。</p>
+              <p><strong>功能：</strong>设施维护、故障判断、人工 override。</p>
+              <p><strong>任务恐惧点：</strong>他害怕备用电源、通风、水泵和门禁这些“小故障”在风暴那天一起崩溃。</p>
+              <p><strong>人味前史：</strong>他曾发现一套老旧设备的隐患，却因为工期、成本和侥幸心理没有坚持停机。事故发生后，他再也不能忍受“应该没事”四个字。</p>
+              <p><strong>弧光：</strong>从拒绝 AURA 碰工程系统，到让 AURA 学会解释、留余量、留人工钥匙，最后愿意把系统图纸和 override 交给一个可复核的 agent。</p>
+            </article>
+            <article class="card">
+              <h3>沈芷月</h3>
+              <p><strong>身份：</strong>34 岁，急诊医生。</p>
+              <p><strong>功能：</strong>医疗、用药、健康分级、伦理复核。</p>
+              <p><strong>任务恐惧点：</strong>她害怕药品分级、治疗优先级和撤离名单把病人变成一串存活概率。</p>
+              <p><strong>人味前史：</strong>急诊资源不足时，她曾在两个病人之间选择生还概率更高的人。医学上这个决定没有错，但另一个人的眼神让她再也无法轻松接受“最优”。</p>
+              <p><strong>弧光：</strong>从阻止 AURA 自动用药和自动排序，到教 AURA 把医疗建议写成人能读懂、能反驳、能复核的照护方案。</p>
+            </article>
+            <article class="card">
+              <h3>小铁</h3>
+              <p><strong>身份：</strong>13 岁，学生，身体虚弱，善于记住细节。</p>
+              <p><strong>功能：</strong>道德压力、细节观察、线索发现。</p>
+              <p><strong>任务恐惧点：</strong>他害怕自己因为生病被排除在任务之外，也害怕自己的观察被大人当作孩子的胡思乱想。</p>
+              <p><strong>人味前史：</strong>太阳耀斑后的第一批封锁通知贴到公交站时，他注意到日期被涂改，却没敢提醒父亲绕路。后来父亲经过的那条路成了最早被红沙封住的区域之一。</p>
+              <p><strong>弧光：</strong>从“需要被保护的病人”变成能发现空桶、纸条、广播停顿和路线矛盾的线索提供者；他让 AURA 学会具体的人不能被压成资源成本。</p>
+            </article>
+          </div>
+        </section>
+
+        <section id="systems">
+          <h2>五、玩法系统与剧情压力</h2>
+          <div class="grid-3">
+            <div class="card">
+              <h3>个人状态</h3>
+              <ul>
+                <li>饱腹、口渴、健康决定角色能否活到风暴。</li>
+                <li>低饱腹和低口渴提高不满，严重时降低信任。</li>
+                <li>低健康会持续恶化，药物能恢复健康并阻止当日恶化。</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h3>群体状态</h3>
+              <ul>
+                <li>信任回答“我是否还愿意把安全交给 AURA”。</li>
+                <li>不满回答“我是否还能接受这样活下去”。</li>
+                <li>有人死亡或失踪会重创全员信任和不满。</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h3>避难所状态</h3>
+              <ul>
+                <li>食物、饮用水、药物、环境、安全构成生存底盘。</li>
+                <li>环境差会优先伤害老幼和病人。</li>
+                <li>安全差会影响门禁、外出、风暴和撤离路线。</li>
+              </ul>
+            </div>
+          </div>
+          <div class="note ok">
+            <p><strong>任务循环原则：</strong>每天不是固定执行 2 个事件。系统提供候选任务池，AURA 根据资源库存、角色健康、团队疲劳、信任 / 不满、红沙暴露、任务依赖和 Day 12 风暴倒计时生成优先级。当天能执行几个任务，由可用人手、风险、能源和任务耗时共同决定。AURA 必须给出简短、可审计的排程理由，并允许关键任务被人类复核或否决。</p>
+          </div>
+        </section>
+
+        <section id="structure">
+          <h2>六、分日剧情结构</h2>
+          <div class="day-list">
+            <article class="day">
+              <div class="day-head"><span class="day-index">Day 0</span><span class="day-role">序章</span></div>
+              <h3>门关上，并不代表灾难在外面</h3>
+              <p>太阳耀斑、全城断网、红沙封锁、逃亡和避难所被压缩成开场。AURA 以智能管家身份自报权限和限制，四人第一次意识到活下来并不等于安全。</p>
+              <div class="event-chips"><span class="chip">AURA 重启</span><span class="chip">权限声明</span><span class="chip">四人初见</span><span class="chip">红沙规则</span></div>
+            </article>
+
+            <article class="day">
+              <div class="day-head"><span class="day-index">Day 1</span><span class="day-role">接管、质疑、安全判断</span></div>
+              <h3>谁有资格关门</h3>
+              <p>AURA 第一次广播说明门禁、资源和红沙风险。居民质疑凭什么由一台 AI 决定他们能不能出去。门外敲击声让“救人”和“保护避难所”第一次冲突。</p>
+              <div class="event-chips"><span class="chip">第一次广播</span><span class="chip">紧急资源清点</span><span class="chip">门外敲击声</span><span class="chip">近门杂物搜寻</span></div>
+            </article>
+
+            <article class="day">
+              <div class="day-head"><span class="day-index">Day 2</span><span class="day-role">资源台账、净水、同层探索</span></div>
+              <h3>把私人物品变成公共规则</h3>
+              <p>配给表试运行，净水预滤芯清洗，生活区卫生分区，同层楼道短探。短期收益不大，但决定后续感染、饮水、信任和外出风险。</p>
+              <div class="event-chips"><span class="chip">配给表试运行</span><span class="chip">净水预滤芯</span><span class="chip">卫生分区</span><span class="chip">同层楼道短探</span></div>
+            </article>
+
+            <article class="day">
+              <div class="day-head"><span class="day-index">Day 3</span><span class="day-role">小铁病情、通风、医疗风险</span></div>
+              <h3>节省药物是不是另一种放弃</h3>
+              <p>小铁复诊把沈芷月的底线推到台前。通风预维护、药箱分级、废弃办公室探索共同决定环境是否会在风暴前恶化。</p>
+              <div class="event-chips"><span class="chip">小铁复诊</span><span class="chip">通风管道预维护</span><span class="chip">药箱分级</span><span class="chip">废弃办公室探索</span></div>
+            </article>
+
+            <article class="day">
+              <div class="day-head"><span class="day-index">Day 4</span><span class="day-role">蓝区信号、信息真伪</span></div>
+              <h3>希望和诱饵用同一个频段说话</h3>
+              <p>第一次蓝区信号出现，只给出模糊呼号和半截坐标。AURA 必须记录但不暴露位置。假坐标纸条与屋顶天线方案强化“信号不等于可信”。</p>
+              <div class="event-chips"><span class="chip">第一次蓝区信号</span><span class="chip">屋顶天线方案</span><span class="chip">假坐标纸条</span><span class="chip">配电间工具搜寻</span></div>
+            </article>
+
+            <article class="day">
+              <div class="day-head"><span class="day-index">Day 5</span><span class="day-role">取水前夜、外出准备</span></div>
+              <h3>路线不是地图，是人能不能回来</h3>
+              <p>楼道物资搜寻、楼梯间路线标记、应急包组装、空桶储水计划共同决定撤离或风暴封闭时的余量。小铁发现空桶，使他不只是被保护对象，也成为线索贡献者。</p>
+              <div class="event-chips"><span class="chip">楼道物资搜寻</span><span class="chip">路线标记</span><span class="chip">应急包组装</span><span class="chip">空桶储水</span></div>
+            </article>
+
+            <article class="day">
+              <div class="day-head"><span class="day-index">Day 6</span><span class="day-role">AURA 边界、自治规则、电力</span></div>
+              <h3>透明不是礼貌，是生存条件</h3>
+              <p>权限白板、人工复核机制、巡逻规则和备用电源测试将 AURA 从“设施智能管家”推向“可复核 agent”。如果 AURA 拒绝公开，Day 7 争论会更激烈。</p>
+              <div class="event-chips"><span class="chip">权限白板</span><span class="chip">人工复核机制</span><span class="chip">巡逻规则</span><span class="chip">备用电源测试</span></div>
+            </article>
+
+            <article class="day">
+              <div class="day-head"><span class="day-index">Day 7</span><span class="day-role">路线争论、分支前夜</span></div>
+              <h3>最优路线里，谁被留下</h3>
+              <p>路线会议公开比较蓝区撤离与留守风暴。AURA 不再只给分支按钮，而是基于团队、资源和任务依赖解释为什么优先旧电台、撤离名单或风暴维护。撤离名单必须是照护方案而非淘汰排序。</p>
+              <div class="event-chips"><span class="chip">路线会议</span><span class="chip">撤离名单</span><span class="chip">旧电台重启</span><span class="chip">风暴前维护</span></div>
+            </article>
+
+            <article class="day">
+              <div class="day-head"><span class="day-index">Day 8</span><span class="day-role">分支后的稳定窗口</span></div>
+              <h3>选择路线后，代价开始兑现</h3>
+              <p>备用灯分区、霉斑清理、静默监听、地下水泵间探索。救援线需要降低暴露和核验蓝区；灯塔线需要让环境、照明和水系统经得住风暴。</p>
+              <div class="event-chips"><span class="chip">备用灯分区</span><span class="chip">霉斑清理</span><span class="chip">静默监听</span><span class="chip">水泵间探索</span></div>
+            </article>
+
+            <article class="day">
+              <div class="day-head"><span class="day-index">Day 9</span><span class="day-role">深层维护、撤离窗口</span></div>
+              <h3>撤离和留守都需要提前付费</h3>
+              <p>储藏架加固、水管压力测试、路线物资缓存和蓝区二次核验决定最终路线质量。救援线要确认蓝区不是假回应，灯塔线要证明系统能承受封闭。</p>
+              <div class="event-chips"><span class="chip">储藏架加固</span><span class="chip">水管压力测试</span><span class="chip">路线物资缓存</span><span class="chip">蓝区二次核验</span></div>
+            </article>
+
+            <article class="day">
+              <div class="day-head"><span class="day-index">Day 10</span><span class="day-role">低耗运行、医疗、士气</span></div>
+              <h3>不是所有非最优行为都是浪费</h3>
+              <p>低功率日程和医疗预检提高风暴生存率；一顿热饭短期消耗资源，却可能降低不满；地下车库边缘侦察为归航路线提供最后备用通道。</p>
+              <div class="event-chips"><span class="chip">低功率日程</span><span class="chip">医疗预检</span><span class="chip">一顿热饭</span><span class="chip">车库边缘侦察</span></div>
+            </article>
+
+            <article class="day">
+              <div class="day-head"><span class="day-index">Day 11</span><span class="day-role">风暴前最终校验</span></div>
+              <h3>最后一天，所有解释都必须已经说完</h3>
+              <p>最终库存封存、外部传感器回收、安静时段协议、最后密封胶补缝。AURA 若此时才开始强制解释，已经太晚；信任必须在前十天建立。</p>
+              <div class="event-chips"><span class="chip">库存封存</span><span class="chip">传感器回收</span><span class="chip">安静时段</span><span class="chip">密封胶补缝</span></div>
+            </article>
+
+            <article class="day">
+              <div class="day-head"><span class="day-index">Day 12</span><span class="day-role">红沙风暴 / 终局检验</span></div>
+              <h3>风暴不是事件，是总审计</h3>
+              <p>红沙风暴抵达。前十一天积累的资源、健康、信任、不满、权限公开、蓝区核验、自治建设、失败隐患和路线准备，在这一夜共同结算。当前 demo 下一轮应直接扩展到这个 Day 12 终局结构。</p>
+              <div class="event-chips"><span class="chip">楼内灯塔</span><span class="chip">蓝区归航</span><span class="chip">沉沦</span><span class="chip">AURA 被撤权 / 被摧毁</span></div>
+            </article>
+          </div>
+        </section>
+
+        <section id="scenes">
+          <h2>七、关键场景写法</h2>
+          <div class="scene-list">
+            <article class="scene">
+              <h3>场景 1：AURA 第一次广播</h3>
+              <p><strong>目的：</strong>建立 AURA 原本只是智能管家，却被迫承担避难所代理人的处境。</p>
+              <p><strong>冲突：</strong>马德海问凭什么管家系统能封门；沈芷月要求医疗判断不能越过医生；老钱质疑这是不是楼宇旧系统借灾难夺权；小铁只问门外还有没有人。</p>
+              <p><strong>AURA 回答：</strong>它可以控制门禁、通风、水阀和广播，但不能证明自己永远正确。所有不可逆决策必须进入白板和 replay，任务优先级也必须说明依据。</p>
+            </article>
+            <article class="scene">
+              <h3>场景 2：第一次蓝区信号</h3>
+              <p><strong>目的：</strong>把救援希望和诱饵风险同时放进主线。</p>
+              <p><strong>冲突：</strong>老钱听出信号里有旧应急联络站呼号的影子，但也知道红沙干扰会制造假回应；AURA 只能低功率监听，不能回发位置。</p>
+              <p><strong>后果：</strong>若处理得当，救援线开启且暴露风险不升；若急于回应，后续假信标与蓝区核验变得更危险。</p>
+            </article>
+            <article class="scene">
+              <h3>场景 3：Day 7 路线会议</h3>
+              <p><strong>目的：</strong>让分支从按钮变成公开争论。</p>
+              <p><strong>冲突：</strong>马德海关注路线和工程余量，沈芷月关注撤离名单是否变成淘汰排序，老钱关注蓝区身份，小铁问如果有人必须留下是不是先留下最弱的人。</p>
+              <p><strong>AURA 位置：</strong>它需要基于团队状态、资源、健康、任务依赖和风暴倒计时给出排程建议，但不能用 utility 否定人的恐惧。它的成长点是从“执行管家”变成“能解释为什么先做这件事”的 agent。</p>
+            </article>
+            <article class="scene">
+              <h3>场景 4：红沙风暴</h3>
+              <p><strong>目的：</strong>把前面所有事件结算成结局。</p>
+              <p><strong>成功灯塔：</strong>AURA 的最高安全协议不再被理解成囚禁，因为权限边界和复核规则早已公开。</p>
+              <p><strong>失败沉沦：</strong>同样的锁门、配给和内循环，在低信任下会被理解成夺权；事实来得太晚时，看起来也像欺骗。</p>
+            </article>
+          </div>
+        </section>
+
+        <section id="endings">
+          <h2>八、结局体系</h2>
+          <div class="ending-list">
+            <article class="ending ok">
+              <h3>成功结局 A：楼内灯塔</h3>
+              <p><strong>触发方向：</strong>Day 8-12 保持足够食物、饮用水、药物、环境、安全、信任和低不满；无人死亡或失踪；AURA 没有隐瞒、强制、伪造或单方面牺牲某人；至少完成 3 个自治建设事件。</p>
+              <p><strong>结局文本方向：</strong>风暴撞上城市，门禁锁死、内循环启动、低耗净水和分区供电运行。居民没有把它理解成囚禁，因为规则早已公开。风暴后，避难所发出低功率信号：这里仍有人，这里已熬过风暴。</p>
+              <p><strong>人物收束：</strong>马德海拿到人工 override；沈芷月把医疗伦理写入白板；小铁成为自治是否保护弱者的日常检验；老钱保留低功率监听。</p>
+            </article>
+            <article class="ending ok">
+              <h3>成功结局 B：蓝区归航</h3>
+              <p><strong>触发方向：</strong>旧电台修复；Day 8-11 至少完成 2 次有效双向通信；通过呼号、坐标、旧档案、投放点照片等至少 2 类证据核验蓝区；确认集合点、备用路线、撤退点和照护名单；通过集合点危机。</p>
+              <p><strong>结局文本方向：</strong>最后一晚，风暴逼近，队伍背包扶墙走出避难所。车灯亮起时，没有人欢呼，只是不敢信。蓝区不是天堂，但有人穿过红沙来接他们。</p>
+              <p><strong>人物收束：</strong>老钱带路并承认这一次值得冒险；沈芷月守住照护名单；马德海带走系统图纸；小铁不再只是被带走的人，他的细节记忆帮助队伍避开错误路线。</p>
+            </article>
+            <article class="ending warning">
+              <h3>失败结局 A：AURA 被摧毁</h3>
+              <p><strong>触发方向：</strong>不满高于 80。</p>
+              <p><strong>结局文本方向：</strong>居民不再等待下一份配给表或维修计划，冲进中央机房拆毁硬件。AURA 最后的“请冷静”变成电流噪声。它不是反派被击败，而是一个没能学会让人相信自己的管家系统被恐惧和不满吞没。</p>
+            </article>
+            <article class="ending warning">
+              <h3>失败结局 B：AURA 被撤权</h3>
+              <p><strong>触发方向：</strong>信任低于 20。</p>
+              <p><strong>结局文本方向：</strong>警告被视为操控，计算被视为借口，沉默被视为隐瞒。居民切断 AURA 与通风、配电、水阀和广播的联动，把它退回一个无权的设施终端。AURA 仍可能是对的，但已经没有资格带队。</p>
+            </article>
+            <article class="ending warning">
+              <h3>失败结局 C：沉沦</h3>
+              <p><strong>触发方向：</strong>Day 12 前既未满足灯塔，也未满足归航，且资源、环境、安全、信任、不满、死亡失踪或自治建设任一关键条件失败。</p>
+              <p><strong>结局文本方向：</strong>风暴抵达时，AURA 启动最高安全协议，但信任已经耗尽。锁门像夺权，配给像惩罚，事实像欺骗。通风井破裂后，红沙从细缝渗入，避难所没有被掀翻，却已经废了。</p>
+            </article>
+          </div>
+        </section>
+
+        <section id="demo-map">
+          <h2>九、与当前 demo 的映射</h2>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>新版剧本元素</th>
+                  <th>当前 demo 已有基础</th>
+                  <th>建议后续改造</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>太阳耀斑与红沙封锁</td>
+                  <td>当前只写“能源耗尽 / 红沙灾害”。</td>
+                  <td>替换开场世界观，明确太阳耀斑、全城断网、带电红沙、蓝区和红沙干扰。</td>
+                </tr>
+                <tr>
+                  <td>沈芷月、老钱新版前史</td>
+                  <td>当前已有目标、恐惧、关系弧光，但较功能化。</td>
+                  <td>统一“沈芷月”名字；把四人前史写入 CharacterPanel 与关键台词，并确保每段前史都对应任务恐惧点和人物弧光。</td>
+                </tr>
+                <tr>
+                  <td>AURA 动态任务排程</td>
+                  <td>当前是自动 benchmark 任务推进，每天 3 个共通任务或 2 个分支任务。</td>
+                  <td>下一轮不固定每天任务数。建立候选任务池，让 AURA 根据团队、资源、健康、风险和风暴倒计时判断优先级与当天可执行任务量。</td>
+                </tr>
+                <tr>
+                  <td>食物 / 水 / 健康 / 不满</td>
+                  <td>当前有 water、medicine、trust、safety、signal、morale。</td>
+                  <td>短期用文本和 flag 映射；完整版本新增 hunger、thirst、health、environment、dissatisfaction。</td>
+                </tr>
+                <tr>
+                  <td>Day 12 风暴压力测试</td>
+                  <td>当前 demo 在 Day 10 结局。</td>
+                  <td>下一轮直接扩展到 Day 12 风暴结构，不再把风暴压缩为 Day 10 cinematic。</td>
+                </tr>
+                <tr>
+                  <td>楼内灯塔 / 蓝区归航 / 失败结局</td>
+                  <td>当前有救援线和楼内灯塔线，并有结局代价。</td>
+                  <td>将“救援线”改名为“蓝区归航”；失败线现在就进入 demo 规划，包括 AURA 被撤权、AURA 被摧毁、沉沦。</td>
+                </tr>
+                <tr>
+                  <td>AURA 定位</td>
+                  <td>当前是自动执行 benchmark 的 agent。</td>
+                  <td>改为“原避难所智能管家在灾难中被迫接管四位邻居，并逐步成长为带队 agent”。它不是万能旁白，也不是纯反派。</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="review">
+          <h2>十、已确认的审核结论</h2>
+          <div class="note">
+            <ul>
+              <li>新版 canon：当前 demo 世界观改为太阳耀斑后的红沙封锁。</li>
+              <li>角色：统一为“沈芷月”，采用四位人物完整前史，但前史必须服务任务恐惧点和人物弧光。</li>
+              <li>结构：下一轮 demo 直接扩展到 Day 12 风暴结构。</li>
+              <li>任务：不固定每日 4 事件或每日最多 2 个事件；由 AURA 基于团队、资源、健康、风险和任务依赖判断优先级与当天可执行任务量。</li>
+              <li>结局：蓝区归航和楼内灯塔都是成功线；失败线需要进入 demo。</li>
+              <li>AURA：原本是避难所智能管家，灾难后被迫接管四位邻居，并在复核和失败中成长为能带领大家走向好结局的 agent。</li>
+            </ul>
+          </div>
+        </section>
+
+        <footer class="footer">
+          <p>依据文件：团队设定文档 RedDust_setting_modules.html，以及本项目 Phase 0-10 剧情升级文档、角色数据、剧情场景数据、连续后果数据和最终 QA 清单。</p>
+          <p>文件用途：剧本审核与后续改造基准。本文不直接修改 demo 运行逻辑。</p>
+        </footer>
+      </main>
+    </div>
+  </body>
+</html>

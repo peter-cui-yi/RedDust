@@ -1,13 +1,39 @@
 import { generatedAssetByName } from "../data/asset-manifest.generated";
-import type { ReplayEvent } from "../data/types";
+import type { ReplayEvent, StoryReplayEvent } from "../data/types";
 import { summarizeReplayLine } from "../game/systems/replayEngine";
 
 type LiveReplayFeedProps = {
   events: ReplayEvent[];
+  storyEvents?: StoryReplayEvent[];
 };
 
-export function LiveReplayFeed({ events }: LiveReplayFeedProps) {
-  const recent = events.slice(-6).reverse();
+type FeedItem = {
+  id: string;
+  type: "story" | "task";
+  day: number;
+  time: string;
+  text: string;
+};
+
+export function LiveReplayFeed({ events, storyEvents = [] }: LiveReplayFeedProps) {
+  const taskItems: FeedItem[] = events.map((event) => ({
+    id: `${event.time}-${event.taskId}-${event.branch}`,
+    type: "task",
+    day: event.day,
+    time: event.time,
+    text: summarizeReplayLine(event)
+  }));
+  const storyItems: FeedItem[] = storyEvents.map((event) => ({
+    id: `${event.time}-${event.sceneId}-${event.branch}`,
+    type: "story",
+    day: event.day,
+    time: event.time,
+    text: `[D${event.day}] ${event.title} -> ${event.summary}`
+  }));
+  const recent = [...storyItems, ...taskItems]
+    .sort((a, b) => a.day - b.day || a.time.localeCompare(b.time) || (a.type === "task" ? -1 : 1))
+    .slice(-6)
+    .reverse();
 
   return (
     <section className="live-replay-feed">
@@ -20,9 +46,9 @@ export function LiveReplayFeed({ events }: LiveReplayFeedProps) {
       ) : (
         <div className="feed-list">
           {recent.map((event) => (
-            <div className="feed-item" key={`${event.time}-${event.taskId}-${event.branch}`}>
+            <div className={`feed-item ${event.type}`} key={event.id}>
               <img alt="" src={generatedAssetByName["replay-feed-icon"].uiPath} />
-              {summarizeReplayLine(event)}
+              {event.text}
             </div>
           ))}
         </div>

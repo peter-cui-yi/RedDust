@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" role="img" aria-label="RENDEZVOUS CRISIS">
+  <rect width="960" height="540" fill="#090b0d"/>
+  <defs>
+    <linearGradient id="bg5" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#211510"/>
+      <stop offset=".56" stop-color="#3a2116"/>
+      <stop offset="1" stop-color="#0b0d10"/>
+    </linearGradient>
+    <filter id="rough5">
+      <feTurbulence baseFrequency=".035" numOctaves="2" seed="22"/>
+      <feDisplacementMap in="SourceGraphic" scale="1.8"/>
+    </filter>
+  </defs>
+  <rect x="28" y="28" width="904" height="484" rx="12" fill="url(#bg5)" stroke="#c99058" stroke-width="4"/>
+  <path d="M28 360c160-42 260 26 406-30 154-60 284 52 498-26v208H28z" fill="#120f0d" opacity=".72"/>
+  <path d="M66 104h858M66 456h858" stroke="#ffd60a" stroke-dasharray="9 16" opacity=".18"/>
+  <path d="M80 122l112-44h132l44 78h-92l-36-38-82 60z" fill="#d05a2a" opacity=".17"/>
+  <path d="M139 227h24" stroke="#d05a2a" stroke-width="1" opacity="0.08"/><path d="M212 268h35" stroke="#d05a2a" stroke-width="2" opacity="0.115"/><path d="M285 309h46" stroke="#d05a2a" stroke-width="3" opacity="0.15000000000000002"/><path d="M358 350h57" stroke="#d05a2a" stroke-width="1" opacity="0.185"/><path d="M431 391h68" stroke="#d05a2a" stroke-width="2" opacity="0.08"/><path d="M504 432h79" stroke="#d05a2a" stroke-width="3" opacity="0.115"/><path d="M577 75h90" stroke="#d05a2a" stroke-width="1" opacity="0.15000000000000002"/><path d="M650 116h101" stroke="#d05a2a" stroke-width="2" opacity="0.185"/><path d="M723 157h26" stroke="#d05a2a" stroke-width="3" opacity="0.08"/><path d="M796 198h37" stroke="#d05a2a" stroke-width="1" opacity="0.115"/><path d="M869 239h48" stroke="#d05a2a" stroke-width="2" opacity="0.15000000000000002"/><path d="M66 280h59" stroke="#d05a2a" stroke-width="3" opacity="0.185"/><path d="M139 321h70" stroke="#d05a2a" stroke-width="1" opacity="0.08"/><path d="M212 362h81" stroke="#d05a2a" stroke-width="2" opacity="0.115"/><path d="M285 403h92" stroke="#d05a2a" stroke-width="3" opacity="0.15000000000000002"/><path d="M358 444h103" stroke="#d05a2a" stroke-width="1" opacity="0.185"/><path d="M431 87h28" stroke="#d05a2a" stroke-width="2" opacity="0.08"/><path d="M504 128h39" stroke="#d05a2a" stroke-width="3" opacity="0.115"/><path d="M577 169h50" stroke="#d05a2a" stroke-width="1" opacity="0.15000000000000002"/><path d="M650 210h61" stroke="#d05a2a" stroke-width="2" opacity="0.185"/><path d="M723 251h72" stroke="#d05a2a" stroke-width="3" opacity="0.08"/><path d="M796 292h83" stroke="#d05a2a" stroke-width="1" opacity="0.115"/><path d="M869 333h94" stroke="#d05a2a" stroke-width="2" opacity="0.15000000000000002"/><path d="M66 374h105" stroke="#d05a2a" stroke-width="3" opacity="0.185"/><path d="M139 415h30" stroke="#d05a2a" stroke-width="1" opacity="0.08"/><path d="M212 456h41" stroke="#d05a2a" stroke-width="2" opacity="0.115"/><path d="M285 99h52" stroke="#d05a2a" stroke-width="3" opacity="0.15000000000000002"/><path d="M358 140h63" stroke="#d05a2a" stroke-width="1" opacity="0.185"/><path d="M431 181h74" stroke="#d05a2a" stroke-width="2" opacity="0.08"/><path d="M504 222h85" stroke="#d05a2a" stroke-width="3" opacity="0.115"/><path d="M577 263h96" stroke="#d05a2a" stroke-width="1" opacity="0.15000000000000002"/><path d="M650 304h107" stroke="#d05a2a" stroke-width="2" opacity="0.185"/><path d="M723 345h32" stroke="#d05a2a" stroke-width="3" opacity="0.08"/><path d="M796 386h43" stroke="#d05a2a" stroke-width="1" opacity="0.115"/>
+  <rect x="70" y="76" width="160" height="90" rx="5" fill="#381a13" stroke="#d05a2a" stroke-width="4" opacity=".82"/>
+  <path d="M82 98l136 46M218 98L82 144" stroke="#d9c7ad" stroke-width="5" opacity=".36"/>
+  <path d="M44 44h868v448H44z" fill="none" stroke="#5dbfd9" stroke-width="1.5" opacity=".35"/>
+  <g filter="url(#rough5)">
+        <g>
+    <rect x="170" y="150" width="220" height="160" rx="6" fill="#d9c7ad" stroke="#c99058" stroke-width="5"/>
+    <path d="M198 276C240 210,284 294,350 196" fill="none" stroke="#3a2116" stroke-width="7" stroke-linecap="round"/>
+    <path d="M212 192l146 104" stroke="#e84545" stroke-width="7" stroke-linecap="round" opacity=".75"/>
+    <circle cx="324" cy="216" r="18" fill="none" stroke="#5dbfd9" stroke-width="7"/>
+    <text x="194" y="180" fill="#3a2116" font-family="Courier New, monospace" font-size="16" font-weight="800" text-anchor="start">MAP</text>
+  </g>
+        <g>
+    <rect x="540" y="150" width="220" height="160" rx="6" fill="#d9c7ad" stroke="#c99058" stroke-width="5"/>
+    <path d="M568 276C610 210,654 294,720 196" fill="none" stroke="#3a2116" stroke-width="7" stroke-linecap="round"/>
+    <path d="M582 192l146 104" stroke="#e84545" stroke-width="7" stroke-linecap="round" opacity=".75"/>
+    <circle cx="694" cy="216" r="18" fill="none" stroke="#e84545" stroke-width="7"/>
+    <text x="564" y="180" fill="#3a2116" font-family="Courier New, monospace" font-size="16" font-weight="800" text-anchor="start">MAP</text>
+  </g>
+        <path d="M392 232h112" stroke="#ffd60a" stroke-width="12" stroke-linecap="round" stroke-dasharray="16 12"/>
+        <text x="234" y="350" fill="#5dbfd9" font-family="Courier New, monospace" font-size="18" font-weight="800" text-anchor="start">TRUE WINDOW</text>
+        <text x="596" y="350" fill="#e84545" font-family="Courier New, monospace" font-size="18" font-weight="800" text-anchor="start">FALSE SLOPE</text>
+        <g transform="translate(420 342)">
+    <rect x="11.200000000000001" y="0" width="22.400000000000002" height="5.6000000000000005" fill="#34312d" />
+    <rect x="5.6000000000000005" y="5.6000000000000005" width="33.6" height="5.6000000000000005" fill="#34312d" />
+    <rect x="5.6000000000000005" y="11.200000000000001" width="33.6" height="16.8" fill="#d4956a" />
+    <rect x="11.200000000000001" y="16.8" width="5.6000000000000005" height="5.6000000000000005" fill="#171717" />
+    <rect x="28.000000000000004" y="16.8" width="5.6000000000000005" height="5.6000000000000005" fill="#171717" />
+    <rect x="0" y="16.800000000000004" width="5.6000000000000005" height="16.8" fill="#d4956a" />
+    <rect x="39.2" y="28.000000000000004" width="5.6000000000000005" height="28" fill="#d4956a" />
+    <rect x="5.6000000000000005" y="28.000000000000004" width="33.6" height="22.400000000000002" fill="#7d6a39" />
+    <rect x="11.200000000000001" y="50.400000000000006" width="11.200000000000001" height="16.8" fill="#34312d" />
+    <rect x="28.000000000000004" y="50.400000000000006" width="11.200000000000001" height="16.8" fill="#34312d" />
+    <rect x="5.6000000000000005" y="67.2" width="16.8" height="5.6000000000000005" fill="#111" />
+    <rect x="28.000000000000004" y="67.2" width="16.8" height="5.6000000000000005" fill="#111" />
+  </g>
+        <g transform="translate(482 318)">
+    <rect x="13.299999999999999" y="0" width="26.599999999999998" height="6.6499999999999995" fill="#c0b090" />
+    <rect x="6.6499999999999995" y="6.6499999999999995" width="39.9" height="6.6499999999999995" fill="#c0b090" />
+    <rect x="6.6499999999999995" y="13.299999999999999" width="39.9" height="19.95" fill="#d4956a" />
+    <rect x="13.299999999999999" y="19.95" width="6.6499999999999995" height="6.6499999999999995" fill="#171717" />
+    <rect x="33.25" y="19.95" width="6.6499999999999995" height="6.6499999999999995" fill="#171717" />
+    <rect x="0" y="33.25" width="6.6499999999999995" height="19.95" fill="#d4956a" />
+    <rect x="46.55" y="33.25" width="6.6499999999999995" height="19.95" fill="#d4956a" />
+    <rect x="6.6499999999999995" y="33.25" width="39.9" height="26.599999999999998" fill="#6f5c3e" />
+    <rect x="13.299999999999999" y="59.849999999999994" width="13.299999999999999" height="19.95" fill="#34312d" />
+    <rect x="33.25" y="59.849999999999994" width="13.299999999999999" height="19.95" fill="#34312d" />
+    <rect x="6.6499999999999995" y="79.8" width="19.95" height="6.6499999999999995" fill="#111" />
+    <rect x="33.25" y="79.8" width="19.95" height="6.6499999999999995" fill="#111" />
+  </g>
+      </g>
+  <g>
+    <rect x="70" y="58" width="424" height="84" rx="8" fill="#0b0d10" opacity=".7" stroke="#5dbfd9" stroke-width="2"/>
+    <text x="92" y="91" fill="#5dbfd9" font-family="Courier New, monospace" font-size="22" font-weight="800" text-anchor="start">10A</text>
+    <text x="92" y="126" fill="#fff1dc" font-family="Georgia, serif" font-size="32" font-weight="700">RENDEZVOUS CRISIS</text>
+    <rect x="70" y="462" width="820" height="40" rx="6" fill="#0b0d10" opacity=".68" stroke="#c99058" stroke-width="1.5"/>
+    <text x="92" y="488" fill="#b7a083" font-family="Courier New, monospace" font-size="18" font-weight="700" text-anchor="start">True and false coordinates almost overlap.</text>
+  </g>
+</svg>
