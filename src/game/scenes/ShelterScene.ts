@@ -48,6 +48,25 @@ type TextureState = {
   h: number;
 };
 
+type LampDef = [x: number, y: number, w: number, h: number, color: number, delay: number];
+type BlinkDef = [x: number, y: number, color: number];
+type WaterFxDef = {
+  streamStartX: number;
+  streamStartY: number;
+  streamCount: number;
+  streamGap: number;
+  rippleStartX: number;
+  rippleY: number;
+  rippleCount: number;
+};
+type AmbientFxConfig = {
+  lamps: LampDef[];
+  water: WaterFxDef;
+  vent: { x: number; y: number } | null;
+  beacon: { x: number; y: number; color: number; haloW: number; haloH: number };
+  blinkers: BlinkDef[];
+};
+
 const hotspots: HotspotDef[] = [
   { id: "water", label: "水处理区", x: 34, y: 154, w: 228, h: 146, accent: 0x5dbfd9 },
   { id: "medical", label: "医疗角", x: 288, y: 334, w: 238, h: 112, accent: 0xffd60a },
@@ -110,6 +129,84 @@ function spotCenter(location: TaskLocation) {
   };
 }
 
+const ambientFxByBranch: Record<Branch, AmbientFxConfig> = {
+  common: {
+    lamps: [
+      [154, 188, 86, 76, 0x5dbfd9, 0],
+      [424, 188, 78, 82, 0xffb15f, 220],
+      [575, 188, 78, 78, 0xffe0a0, 440],
+      [774, 196, 76, 76, 0x8feaff, 620],
+      [370, 330, 86, 86, 0xffb15f, 760],
+      [738, 330, 104, 92, 0xffb15f, 900]
+    ],
+    water: { streamStartX: 104, streamStartY: 282, streamCount: 8, streamGap: 9, rippleStartX: 116, rippleY: 306, rippleCount: 5 },
+    vent: { x: 577, y: 230 },
+    beacon: { x: 486, y: 60, color: 0x8feaff, haloW: 88, haloH: 62 },
+    blinkers: [
+      [708, 242, 0x8feaff],
+      [742, 244, 0x8feaff],
+      [784, 244, 0x8feaff],
+      [828, 246, 0xffd60a],
+      [424, 260, 0x79d6a8],
+      [560, 378, 0x79d6a8],
+      [758, 386, 0xffd60a],
+      [806, 388, 0xff8c42],
+      [112, 258, 0x5dbfd9],
+      [142, 274, 0x5dbfd9]
+    ]
+  },
+  rescue: {
+    lamps: [
+      [152, 188, 90, 76, 0x5dbfd9, 0],
+      [414, 188, 78, 82, 0xffb15f, 180],
+      [772, 198, 94, 82, 0x8feaff, 360],
+      [820, 198, 78, 72, 0x8feaff, 520],
+      [370, 334, 84, 88, 0xffb15f, 700],
+      [736, 336, 108, 92, 0xffb15f, 860]
+    ],
+    water: { streamStartX: 98, streamStartY: 282, streamCount: 7, streamGap: 10, rippleStartX: 114, rippleY: 306, rippleCount: 5 },
+    vent: null,
+    beacon: { x: 486, y: 54, color: 0x8feaff, haloW: 136, haloH: 86 },
+    blinkers: [
+      [714, 244, 0x8feaff],
+      [748, 244, 0x8feaff],
+      [792, 244, 0x8feaff],
+      [824, 392, 0x8feaff],
+      [438, 260, 0x79d6a8],
+      [584, 260, 0xffd60a],
+      [710, 386, 0xffd60a],
+      [764, 386, 0xff8c42],
+      [112, 260, 0x5dbfd9],
+      [146, 274, 0x5dbfd9]
+    ]
+  },
+  lighthouse: {
+    lamps: [
+      [154, 178, 84, 74, 0xffb15f, 0],
+      [424, 188, 82, 82, 0xffb15f, 180],
+      [578, 188, 86, 84, 0xffe0a0, 360],
+      [774, 196, 86, 76, 0xffb15f, 520],
+      [370, 332, 82, 84, 0xffb15f, 700],
+      [724, 332, 112, 94, 0xffb15f, 860]
+    ],
+    water: { streamStartX: 90, streamStartY: 282, streamCount: 6, streamGap: 11, rippleStartX: 104, rippleY: 304, rippleCount: 4 },
+    vent: { x: 760, y: 238 },
+    beacon: { x: 486, y: 62, color: 0xffb15f, haloW: 74, haloH: 48 },
+    blinkers: [
+      [700, 242, 0x79d6a8],
+      [738, 242, 0x8feaff],
+      [780, 244, 0x8feaff],
+      [816, 246, 0xffb15f],
+      [526, 258, 0xffd60a],
+      [590, 260, 0xffb15f],
+      [710, 388, 0xffd60a],
+      [774, 390, 0xff8c42],
+      [98, 258, 0x5dbfd9],
+      [136, 274, 0x5dbfd9]
+    ]
+  }
+};
+
 export class ShelterScene extends Phaser.Scene {
   private hotspotRects = new Map<TaskLocation, Phaser.GameObjects.Rectangle>();
   private hotspotGlows = new Map<TaskLocation, Phaser.GameObjects.Ellipse>();
@@ -121,6 +218,7 @@ export class ShelterScene extends Phaser.Scene {
   private auraBody?: Phaser.GameObjects.Image;
   private auraScan?: Phaser.GameObjects.Ellipse;
   private branchBackground?: Phaser.GameObjects.Image;
+  private ambientFxLayer?: Phaser.GameObjects.Container;
   private routeDetailLayer?: Phaser.GameObjects.Container;
   private speechLayer?: Phaser.GameObjects.Container;
   private progressFill?: Phaser.GameObjects.Rectangle;
@@ -170,6 +268,7 @@ export class ShelterScene extends Phaser.Scene {
       this.add.image(480, 270, image2Assets.shelterBackground.key).setDisplaySize(960, 540).setDepth(1);
     }
     this.branchBackground = this.add.image(480, 270, image2Assets.shelterBackground.key).setDisplaySize(960, 540).setDepth(2).setAlpha(0);
+    this.ambientFxLayer = this.add.container(0, 0).setDepth(7);
     this.routeDetailLayer = this.add.container(0, 0).setDepth(6);
     this.speechLayer = this.add.container(0, 0).setDepth(30);
 
@@ -179,11 +278,28 @@ export class ShelterScene extends Phaser.Scene {
 
   private drawAmbientLife() {
     this.drawDust();
-    this.drawLights();
-    this.drawWater();
-    this.drawVentilation();
-    this.drawBeacon();
-    this.drawConsoleBlinkers();
+    this.drawAmbientFxForBranch("common");
+  }
+
+  private addAmbientObject<T extends Phaser.GameObjects.GameObject>(object: T) {
+    this.ambientFxLayer?.add(object);
+    return object;
+  }
+
+  private clearFxLayer(layer?: Phaser.GameObjects.Container) {
+    if (!layer) return;
+    layer.getAll().forEach((child) => this.tweens.killTweensOf(child));
+    layer.removeAll(true);
+  }
+
+  private drawAmbientFxForBranch(branch: Branch) {
+    this.clearFxLayer(this.ambientFxLayer);
+    const config = ambientFxByBranch[branch];
+    this.drawLights(config.lamps);
+    this.drawWater(config.water);
+    this.drawVentilation(config.vent);
+    this.drawBeacon(config.beacon);
+    this.drawConsoleBlinkers(config.blinkers);
   }
 
   private drawDust() {
@@ -203,22 +319,13 @@ export class ShelterScene extends Phaser.Scene {
     }
   }
 
-  private drawLights() {
-    const lamps: Array<[number, number, number, number, number, number]> = [
-      [158, 174, 84, 74, 0x5dbfd9, 0],
-      [412, 180, 78, 82, 0xffb15f, 220],
-      [565, 178, 72, 72, 0xffe0a0, 440],
-      [778, 176, 72, 72, 0x8feaff, 620],
-      [364, 326, 84, 88, 0xffb15f, 760],
-      [756, 326, 98, 92, 0xffb15f, 900]
-    ];
-
+  private drawLights(lamps: LampDef[]) {
     lamps.forEach(([x, y, w, h, color, delay]) => {
-      const cone = this.add.triangle(x - w / 2, y + 4, 0, 0, w, 0, w / 2, h, color, 0.035).setOrigin(0, 0).setDepth(7);
-      const halo = this.add.ellipse(x, y + h * 0.34, w * 1.38, h * 0.98, color, 0.045).setDepth(7);
-      const lens = this.add.ellipse(x, y, w * 0.28, 8, color, 0.42).setDepth(8);
-      const core = this.add.circle(x, y + 1, 4, color, 0.72).setDepth(9);
-      const spark = this.add.circle(x + w * 0.13, y + 2, 2, 0xffffff, 0.22).setDepth(10);
+      const cone = this.addAmbientObject(this.add.triangle(x - w / 2, y + 4, 0, 0, w, 0, w / 2, h, color, 0.035).setOrigin(0, 0));
+      const halo = this.addAmbientObject(this.add.ellipse(x, y + h * 0.34, w * 1.38, h * 0.98, color, 0.045));
+      const lens = this.addAmbientObject(this.add.ellipse(x, y, w * 0.28, 8, color, 0.42));
+      const core = this.addAmbientObject(this.add.circle(x, y + 1, 4, color, 0.72));
+      const spark = this.addAmbientObject(this.add.circle(x + w * 0.13, y + 2, 2, 0xffffff, 0.22));
       [cone, halo, lens, core, spark].forEach((light) => light.setBlendMode(Phaser.BlendModes.ADD));
       this.tweens.add({
         targets: [cone, halo],
@@ -241,9 +348,11 @@ export class ShelterScene extends Phaser.Scene {
     });
   }
 
-  private drawWater() {
-    for (let i = 0; i < 8; i += 1) {
-      const stream = this.add.rectangle(104 + i * 9, 268 + (i % 3) * 10, 3, 38, 0x5dbfd9, 0.16).setDepth(8);
+  private drawWater(water: WaterFxDef) {
+    for (let i = 0; i < water.streamCount; i += 1) {
+      const stream = this.addAmbientObject(
+        this.add.rectangle(water.streamStartX + i * water.streamGap, water.streamStartY + (i % 3) * 10, 3, 38, 0x5dbfd9, 0.16)
+      );
       this.tweens.add({
         targets: stream,
         y: stream.y + 12,
@@ -256,8 +365,8 @@ export class ShelterScene extends Phaser.Scene {
       });
     }
 
-    for (let i = 0; i < 5; i += 1) {
-      const ripple = this.add.ellipse(118 + i * 16, 294, 16, 5, 0x8feaff, 0.18).setDepth(9);
+    for (let i = 0; i < water.rippleCount; i += 1) {
+      const ripple = this.addAmbientObject(this.add.ellipse(water.rippleStartX + i * 16, water.rippleY, 16, 5, 0x8feaff, 0.18));
       this.tweens.add({
         targets: ripple,
         scaleX: 1.9,
@@ -269,20 +378,21 @@ export class ShelterScene extends Phaser.Scene {
     }
   }
 
-  private drawVentilation() {
-    const fanX = 566;
-    const fanY = 236;
-    const rim = this.add.rectangle(fanX, fanY, 70, 56, 0x111817, 0.38).setStrokeStyle(2, 0x8fd0b0, 0.2).setDepth(9);
-    const label = this.add.text(fanX - 31, fanY - 36, "VENT\nLOW", {
+  private drawVentilation(vent: AmbientFxConfig["vent"]) {
+    if (!vent) return;
+    const fanX = vent.x;
+    const fanY = vent.y;
+    const rim = this.addAmbientObject(this.add.rectangle(fanX, fanY, 70, 56, 0x111817, 0.38).setStrokeStyle(2, 0x8fd0b0, 0.2));
+    const label = this.addAmbientObject(this.add.text(fanX - 31, fanY - 36, "VENT\nLOW", {
       color: "#8fd0b0",
       fontFamily: "Courier New",
       fontSize: "9px",
       fontStyle: "bold",
       lineSpacing: 1
-    }).setDepth(10);
+    }));
     label.setAlpha(0.72);
     for (let i = 0; i < 5; i += 1) {
-      const slat = this.add.rectangle(fanX, fanY - 18 + i * 9, 54, 3, 0x8fd0b0, 0.18).setDepth(10);
+      const slat = this.addAmbientObject(this.add.rectangle(fanX, fanY - 18 + i * 9, 54, 3, 0x8fd0b0, 0.18));
       this.tweens.add({
         targets: slat,
         alpha: 0.32,
@@ -296,11 +406,13 @@ export class ShelterScene extends Phaser.Scene {
     this.tweens.add({ targets: rim, alpha: 0.52, duration: 1200, yoyo: true, repeat: -1, ease: "Sine.easeInOut" });
   }
 
-  private drawBeacon() {
-    const beaconCore = this.add.rectangle(486, 60, 12, 16, 0x8feaff, 0.68).setDepth(10);
-    const beaconHalo = this.add.ellipse(486, 60, 88, 62, 0x8feaff, 0.08).setDepth(9);
+  private drawBeacon(beacon: AmbientFxConfig["beacon"]) {
+    const beaconCore = this.addAmbientObject(this.add.rectangle(beacon.x, beacon.y, 12, 16, beacon.color, 0.68));
+    const beaconHalo = this.addAmbientObject(this.add.ellipse(beacon.x, beacon.y, beacon.haloW, beacon.haloH, beacon.color, 0.08));
+    const beaconPin = this.addAmbientObject(this.add.circle(beacon.x, beacon.y - 10, 3, 0xffffff, 0.35));
+    [beaconCore, beaconHalo, beaconPin].forEach((item) => item.setBlendMode(Phaser.BlendModes.ADD));
     this.tweens.add({
-      targets: [beaconCore, beaconHalo],
+      targets: [beaconCore, beaconHalo, beaconPin],
       alpha: { from: 0.12, to: 0.86 },
       scaleX: { from: 0.8, to: 1.18 },
       duration: 760,
@@ -330,10 +442,11 @@ export class ShelterScene extends Phaser.Scene {
     }
 
     this.drawRouteDetails(branch);
+    this.drawAmbientFxForBranch(branch);
   }
 
   private drawRouteDetails(branch: Branch) {
-    this.routeDetailLayer?.removeAll(true);
+    this.clearFxLayer(this.routeDetailLayer);
     if (!this.routeDetailLayer || branch === "common") return;
 
     if (branch === "rescue") {
@@ -351,37 +464,17 @@ export class ShelterScene extends Phaser.Scene {
       return;
     }
 
-    const ruleBoard = this.add.rectangle(716, 392, 134, 76, 0x2b2116, 0.72).setStrokeStyle(1, 0xffb15f, 0.42);
-    const label = this.add.text(660, 362, "LOCAL RULES\nWATER / MED\nHUMAN OVERRIDE", {
-      color: "#ffd60a",
-      fontFamily: "Courier New",
-      fontSize: "9px",
-      fontStyle: "bold",
-      lineSpacing: 3
-    });
+    const ruleBoardGlow = this.add.rectangle(724, 388, 148, 70, 0xffb15f, 0.035).setStrokeStyle(1, 0xffb15f, 0.18);
     const lampA = this.add.rectangle(396, 176, 38, 8, 0xffb15f, 0.4).setDepth(6);
     const lampB = this.add.rectangle(565, 176, 38, 8, 0xffb15f, 0.4).setDepth(6);
-    const quietZone = this.add.rectangle(474, 412, 118, 44, 0xffb15f, 0.08).setStrokeStyle(1, 0xffb15f, 0.18);
-    [ruleBoard, label, lampA, lampB, quietZone].forEach((item) => this.routeDetailLayer?.add(item));
-    this.tweens.add({ targets: [lampA, lampB], alpha: 0.62, duration: 1200, yoyo: true, repeat: -1 });
+    const quietZone = this.add.rectangle(474, 412, 118, 44, 0xffb15f, 0.045).setStrokeStyle(1, 0xffb15f, 0.12);
+    [ruleBoardGlow, lampA, lampB, quietZone].forEach((item) => this.routeDetailLayer?.add(item));
+    this.tweens.add({ targets: [lampA, lampB, ruleBoardGlow], alpha: 0.12, duration: 1200, yoyo: true, repeat: -1 });
   }
 
-  private drawConsoleBlinkers() {
-    const points: Array<[number, number, number]> = [
-      [716, 236, 0x8feaff],
-      [748, 238, 0x8feaff],
-      [786, 238, 0x8feaff],
-      [826, 247, 0xffd60a],
-      [424, 232, 0x79d6a8],
-      [560, 374, 0x79d6a8],
-      [758, 386, 0xffd60a],
-      [806, 388, 0xff8c42],
-      [112, 236, 0x5dbfd9],
-      [142, 254, 0x5dbfd9]
-    ];
-
+  private drawConsoleBlinkers(points: BlinkDef[]) {
     points.forEach(([x, y, color], index) => {
-      const dot = this.add.rectangle(x, y, 5, 5, color, 0.32).setDepth(10);
+      const dot = this.addAmbientObject(this.add.rectangle(x, y, 5, 5, color, 0.32));
       this.tweens.add({
         targets: dot,
         alpha: 0.95,

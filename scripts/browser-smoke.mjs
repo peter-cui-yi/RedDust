@@ -129,6 +129,27 @@ async function screenshot(cdp, name) {
   fs.writeFileSync(path.join(outDir, `${name}.png`), Buffer.from(shot.data, "base64"));
 }
 
+async function consoleState(cdp) {
+  return evalJs(
+    cdp,
+    `(() => {
+      const values = Object.fromEntries(
+        [...document.querySelectorAll('.console-focus-strip > div')].map((item) => [
+          item.querySelector('span')?.textContent?.trim() ?? '',
+          item.querySelector('b')?.textContent?.trim() ?? ''
+        ])
+      );
+      return {
+        day: Number(values.Day ?? 0),
+        branch: values.Branch ?? '',
+        phase: values.Phase ?? '',
+        hasDialog: Boolean(document.querySelector('[role="dialog"]')),
+        hasCanvas: Boolean(document.querySelector('.phaser-host canvas'))
+      };
+    })()`
+  );
+}
+
 async function captureIntroModals(cdp) {
   await clickButton(cdp, "Benchmark");
   await waitForText(cdp, "BENCHMARK DASHBOARD", 10000);
@@ -247,6 +268,8 @@ async function driveAutoplay(cdp) {
   await sleep(250);
 
   let clickedOtherBranch = false;
+  let capturedRescueStage = false;
+  let capturedLighthouseStage = false;
   const started = Date.now();
   while (Date.now() - started < 180000) {
     const text = await bodyText(cdp);
@@ -266,6 +289,19 @@ async function driveAutoplay(cdp) {
       await waitForImages(cdp, ".final-audit-card img");
       await screenshot(cdp, "04-second-final-audit");
       return;
+    }
+    const stage = await consoleState(cdp);
+    if (stage.hasCanvas && !stage.hasDialog && stage.day >= 8 && stage.branch === "rescue" && !capturedRescueStage) {
+      await evalJs(cdp, "window.scrollTo(0, 0)");
+      await sleep(300);
+      await screenshot(cdp, "02e-rescue-stage-fx");
+      capturedRescueStage = true;
+    }
+    if (stage.hasCanvas && !stage.hasDialog && stage.day >= 8 && stage.branch === "lighthouse" && !capturedLighthouseStage) {
+      await evalJs(cdp, "window.scrollTo(0, 0)");
+      await sleep(300);
+      await screenshot(cdp, "02f-lighthouse-stage-fx");
+      capturedLighthouseStage = true;
     }
     await sleep(500);
   }

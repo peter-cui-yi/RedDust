@@ -249,7 +249,7 @@ img {
 
 .hud-primary {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: 58px minmax(0, 1fr);
   gap: 8px;
 }
 
@@ -280,8 +280,15 @@ img {
   display: block;
   margin-top: 7px;
   color: var(--warning);
-  font-size: 24px;
+  font-size: clamp(18px, 1.6vw, 24px);
+  line-height: 1.08;
   text-transform: capitalize;
+  overflow-wrap: anywhere;
+}
+
+.hud-primary div:last-child b {
+  font-size: clamp(17px, 1.25vw, 20px);
+  white-space: nowrap;
 }
 
 .metric-grid {
@@ -2670,7 +2677,7 @@ img {
 }
 
 .hud-panel {
-  grid-template-columns: minmax(148px, 172px) minmax(0, 1fr) minmax(156px, 190px);
+  grid-template-columns: minmax(198px, 220px) minmax(0, 1fr) minmax(156px, 190px);
   grid-template-areas:
     "primary metrics summary"
     "audit audit audit";
@@ -3301,7 +3308,7 @@ img {
   }
 
   .hud-primary {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: 64px minmax(0, 1fr);
   }
 
   .agent-control-bar,
