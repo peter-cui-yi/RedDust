@@ -56,6 +56,7 @@ import {
 } from "./game/systems/agentRunner";
 import { resolveTaskOutcome } from "./game/systems/outcomeEngine";
 import { createReplayEvent } from "./game/systems/replayEngine";
+import { applyDailyUpkeep, dailyUpkeepForDay, describeMetricDeltas, nonZeroMetricDeltas } from "./game/systems/resourceEconomy";
 
 type Screen = "intro" | "game";
 type Overlay = "benchmark" | "replay" | "credits" | "branchDecision" | "ending" | "compare" | "storyScene" | "dayBriefing" | "finalAudit" | null;
@@ -745,10 +746,13 @@ export default function App() {
       runState.currentDay,
       runState.activeBranch
     );
+    const stateAfterUpkeep = applyDailyUpkeep(nextState, runState.currentDay, runState.activeBranch);
+    const dailyUpkeep = dailyUpkeepForDay(runState.currentDay, runState.activeBranch);
+    const upkeepCopy = nonZeroMetricDeltas(dailyUpkeep).length ? ` Daily upkeep applied: ${describeMetricDeltas(dailyUpkeep)}.` : "";
     const summary = dayPlansByDay[runState.currentDay]?.endOfDaySummary ?? "Day complete.";
-    setState(nextState);
+    setState(stateAfterUpkeep);
     setRunState((prev) => ({ ...prev, currentPhase: "day_summary", currentTaskId: undefined, taskStatuses: nextTaskStatuses }));
-    setNotice(deferredIds.length ? `${summary} ${deferredIds.length} deferred candidates added to Day 12 audit.` : summary);
+    setNotice(`${deferredIds.length ? `${summary} ${deferredIds.length} deferred candidates added to Day 12 audit.` : summary}${upkeepCopy}`);
     setPhaseToken((value) => value + 1);
   }
 
@@ -1158,7 +1162,6 @@ export default function App() {
         </div>
       </header>
 
-      <HudPanel state={state} />
       <DayTimeline runState={runState} />
       <AgentControlBar
         runState={runState}
@@ -1176,6 +1179,14 @@ export default function App() {
       <section className="autoplay-layout">
         <div className="stage-wrap">
           <PhaserGame />
+          <HudPanel
+            state={state}
+            runState={runState}
+            currentTask={currentTask}
+            latestOutcome={latestOutcome}
+            latestOutcomeTaskTitle={latestOutcomeTaskTitle}
+            dailyUpkeep={dailyUpkeepForDay(runState.currentDay, runState.activeBranch)}
+          />
           <StateDeltaToast outcome={latestOutcome} taskTitle={latestOutcomeTaskTitle} />
           <div className="stage-caption">
             <span>{notice}</span>
