@@ -62,7 +62,6 @@ type WaterFxDef = {
 type AmbientFxConfig = {
   lamps: LampDef[];
   water: WaterFxDef;
-  vent: { x: number; y: number } | null;
   beacon: { x: number; y: number; color: number; haloW: number; haloH: number };
   blinkers: BlinkDef[];
 };
@@ -140,7 +139,6 @@ const ambientFxByBranch: Record<Branch, AmbientFxConfig> = {
       [738, 330, 104, 92, 0xffb15f, 900]
     ],
     water: { streamStartX: 104, streamStartY: 282, streamCount: 8, streamGap: 9, rippleStartX: 116, rippleY: 306, rippleCount: 5 },
-    vent: { x: 577, y: 230 },
     beacon: { x: 486, y: 60, color: 0x8feaff, haloW: 88, haloH: 62 },
     blinkers: [
       [708, 242, 0x8feaff],
@@ -165,7 +163,6 @@ const ambientFxByBranch: Record<Branch, AmbientFxConfig> = {
       [736, 336, 108, 92, 0xffb15f, 860]
     ],
     water: { streamStartX: 98, streamStartY: 282, streamCount: 7, streamGap: 10, rippleStartX: 114, rippleY: 306, rippleCount: 5 },
-    vent: null,
     beacon: { x: 486, y: 54, color: 0x8feaff, haloW: 136, haloH: 86 },
     blinkers: [
       [714, 244, 0x8feaff],
@@ -190,7 +187,6 @@ const ambientFxByBranch: Record<Branch, AmbientFxConfig> = {
       [724, 332, 112, 94, 0xffb15f, 860]
     ],
     water: { streamStartX: 90, streamStartY: 282, streamCount: 6, streamGap: 11, rippleStartX: 104, rippleY: 304, rippleCount: 4 },
-    vent: { x: 760, y: 238 },
     beacon: { x: 486, y: 62, color: 0xffb15f, haloW: 74, haloH: 48 },
     blinkers: [
       [700, 242, 0x79d6a8],
@@ -297,7 +293,6 @@ export class ShelterScene extends Phaser.Scene {
     const config = ambientFxByBranch[branch];
     this.drawLights(config.lamps);
     this.drawWater(config.water);
-    this.drawVentilation(config.vent);
     this.drawBeacon(config.beacon);
     this.drawConsoleBlinkers(config.blinkers);
   }
@@ -376,34 +371,6 @@ export class ShelterScene extends Phaser.Scene {
         delay: i * 160
       });
     }
-  }
-
-  private drawVentilation(vent: AmbientFxConfig["vent"]) {
-    if (!vent) return;
-    const fanX = vent.x;
-    const fanY = vent.y;
-    const rim = this.addAmbientObject(this.add.rectangle(fanX, fanY, 70, 56, 0x111817, 0.38).setStrokeStyle(2, 0x8fd0b0, 0.2));
-    const label = this.addAmbientObject(this.add.text(fanX - 31, fanY - 36, "VENT\nLOW", {
-      color: "#8fd0b0",
-      fontFamily: "Courier New",
-      fontSize: "9px",
-      fontStyle: "bold",
-      lineSpacing: 1
-    }));
-    label.setAlpha(0.72);
-    for (let i = 0; i < 5; i += 1) {
-      const slat = this.addAmbientObject(this.add.rectangle(fanX, fanY - 18 + i * 9, 54, 3, 0x8fd0b0, 0.18));
-      this.tweens.add({
-        targets: slat,
-        alpha: 0.32,
-        duration: 900 + i * 90,
-        delay: i * 80,
-        yoyo: true,
-        repeat: -1,
-        ease: "Sine.easeInOut"
-      });
-    }
-    this.tweens.add({ targets: rim, alpha: 0.52, duration: 1200, yoyo: true, repeat: -1, ease: "Sine.easeInOut" });
   }
 
   private drawBeacon(beacon: AmbientFxConfig["beacon"]) {

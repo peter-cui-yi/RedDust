@@ -15,11 +15,11 @@ export const resourceMetricLabels: Record<MetricKey, string> = {
   stormReadiness: "风暴",
   autonomyReadiness: "自治",
   blueZoneEvidence: "蓝区",
-  failureDebt: "债务"
+  failureDebt: "审计压力"
 };
 
 export const coreResourceKeys = ["water", "food", "medicine", "battery"] as const satisfies readonly MetricKey[];
-export const pressureMetricKeys = ["health", "morale", "trust", "safety", "failureDebt"] as const satisfies readonly MetricKey[];
+export const pressureMetricKeys = ["health", "morale", "trust", "safety"] as const satisfies readonly MetricKey[];
 
 export function nonZeroMetricDeltas(delta: Partial<Record<MetricKey, number>>) {
   return (Object.entries(delta) as Array<[MetricKey, number]>).filter(([, value]) => value !== 0);

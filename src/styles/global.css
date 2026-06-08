@@ -699,7 +699,7 @@ img {
 
 .resource-hud-panel {
   left: 10px;
-  width: min(258px, calc(50% - 16px));
+  width: min(238px, calc(50% - 16px));
 }
 
 .resource-action-panel {
@@ -715,7 +715,7 @@ img {
   display: flex;
   align-items: start;
   justify-content: space-between;
-  gap: 10px;
+  gap: 8px;
 }
 
 .resource-hud-header span,
@@ -729,18 +729,18 @@ img {
 
 .resource-hud-header b {
   display: block;
-  margin-top: 3px;
+  margin-top: 2px;
   color: var(--warning);
-  font-size: 15px;
+  font-size: 14px;
   line-height: 1;
 }
 
 .resource-hud-header em {
   border: 1px solid rgba(255, 214, 154, 0.16);
   border-radius: 3px;
-  padding: 4px 6px;
+  padding: 3px 5px;
   color: var(--aura);
-  font-size: 10px;
+  font-size: 9px;
   font-style: normal;
   font-weight: 800;
   background: rgba(8, 10, 12, 0.5);
@@ -749,47 +749,47 @@ img {
 .resource-core-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 5px;
+  gap: 4px;
 }
 
 .resource-meter {
   min-width: 0;
   border: 1px solid rgba(255, 214, 154, 0.13);
   border-radius: 3px;
-  padding: 6px;
+  padding: 5px;
   background: rgba(7, 10, 11, 0.56);
 }
 
 .resource-meter div {
   display: grid;
-  grid-template-columns: 16px minmax(0, 1fr) auto;
+  grid-template-columns: 14px minmax(0, 1fr) auto;
   align-items: center;
-  gap: 4px;
+  gap: 3px;
 }
 
 .resource-meter img {
-  width: 16px;
-  height: 16px;
+  width: 14px;
+  height: 14px;
   object-fit: contain;
 }
 
 .resource-meter span {
   min-width: 0;
   color: #d7c4aa;
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 800;
 }
 
 .resource-meter b {
   color: var(--ink);
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .resource-meter i {
   display: block;
-  height: 4px;
+  height: 3px;
   max-width: 100%;
-  margin-top: 7px;
+  margin-top: 5px;
   border-radius: 999px;
   background: var(--warning);
 }
@@ -859,16 +859,16 @@ img {
 .resource-pressure-strip {
   display: flex;
   flex-wrap: wrap;
-  gap: 4px;
+  gap: 3px;
 }
 
 .resource-pressure-strip span {
-  flex: 1 1 54px;
+  flex: 1 1 48px;
   border: 1px solid rgba(255, 214, 154, 0.12);
   border-radius: 3px;
-  padding: 3px 5px;
+  padding: 3px 4px;
   color: var(--muted);
-  font-size: 10px;
+  font-size: 9px;
   background: rgba(8, 10, 12, 0.36);
 }
 
@@ -3521,7 +3521,7 @@ img {
   }
 
   .resource-hud-panel {
-    width: min(258px, calc(50% - 14px));
+    width: min(238px, calc(50% - 14px));
   }
 
   .resource-action-panel {
