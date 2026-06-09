@@ -373,7 +373,10 @@ export default function App() {
     () => Object.values(runState.taskStatuses).filter((status) => terminalStatuses.includes(status)).length,
     [runState.taskStatuses]
   );
-  const phaseDuration = Math.max(250, Math.round((phaseDurations[runState.currentPhase] ?? 800) / runState.speed));
+  const basePhaseDuration = phaseDurations[runState.currentPhase] ?? 1600;
+  const phaseDuration = runState.currentPhase === "replay_logged"
+    ? basePhaseDuration
+    : Math.max(250, Math.round(basePhaseDuration / runState.speed));
 
   const nextAction = useMemo(() => {
     if (currentStoryScene) {

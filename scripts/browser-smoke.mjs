@@ -273,7 +273,7 @@ async function driveAutoplay(cdp) {
   let capturedRescueStage = false;
   let capturedLighthouseStage = false;
   const started = Date.now();
-  while (Date.now() - started < 180000) {
+  while (Date.now() - started < 360000) {
     const text = await bodyText(cdp);
     if (text.includes("Begin Day 1")) await clickButton(cdp, "Begin Day 1");
     if (text.includes("Continue Day")) await clickButton(cdp, "Continue Day");

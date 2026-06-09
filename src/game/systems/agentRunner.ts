@@ -15,17 +15,17 @@ import type {
 import { selectedAuraTaskIdsForDay, taskSelectionKey } from "./auraTaskSelection";
 
 export const phaseDurations: Record<AgentPhase, number> = {
-  idle: 500,
-  thinking: 800,
-  moving: 800,
-  executing: 1200,
-  resolving: 600,
-  state_updated: 500,
-  replay_logged: 500,
-  day_summary: 1000,
-  planning_complete: 900,
-  branch_decision: 1200,
-  ending: 1000
+  idle: 1000,
+  thinking: 1600,
+  moving: 1600,
+  executing: 2400,
+  resolving: 1200,
+  state_updated: 1200,
+  replay_logged: 5000,
+  day_summary: 2000,
+  planning_complete: 1800,
+  branch_decision: 2400,
+  ending: 2000
 };
 
 export type BranchDecision = {
