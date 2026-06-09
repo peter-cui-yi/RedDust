@@ -1,11 +1,15 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { dayArtFor } from "../data/dayArtAssets";
 import { tasksById } from "../data/taskData";
-import type { Branch, DayPlan } from "../data/types";
+import type { Branch, DayPlan, GlobalState, TaskRunStatus } from "../data/types";
+import { selectAuraTasksForDay } from "../game/systems/auraTaskSelection";
 
 type DailyBriefingPanelProps = {
   plan: DayPlan;
   branch: Branch;
+  state?: GlobalState;
+  taskStatuses?: Record<string, TaskRunStatus>;
+  selectedTaskIds?: string[];
   onContinue: () => void;
   autoCloseMs?: number;
   mode?: "tasks" | "finalAudit";
@@ -17,12 +21,15 @@ function branchLabel(branch: Branch) {
   return "Common Route";
 }
 
-export function DailyBriefingPanel({ plan, branch, onContinue, autoCloseMs = 10000, mode = "tasks" }: DailyBriefingPanelProps) {
+export function DailyBriefingPanel({ plan, branch, state, taskStatuses, selectedTaskIds, onContinue, autoCloseMs = 10000, mode = "tasks" }: DailyBriefingPanelProps) {
   const [remaining, setRemaining] = useState(Math.ceil(autoCloseMs / 1000));
   const continuedRef = useRef(false);
   const onContinueRef = useRef(onContinue);
   const dayArt = dayArtFor(plan.day, branch === "rescue" || branch === "lighthouse" ? branch : undefined);
-  const recommendedTasks = useMemo(() => (plan.recommendedTasks ?? []).map((taskId) => tasksById[taskId]).filter(Boolean), [plan.recommendedTasks]);
+  const recommendedTasks = useMemo(() => {
+    if (state && mode !== "finalAudit") return selectAuraTasksForDay(plan.day, branch, state, taskStatuses, selectedTaskIds).selected.map((decision) => decision.task);
+    return (plan.recommendedTasks ?? []).map((taskId) => tasksById[taskId]).filter(Boolean);
+  }, [branch, mode, plan.day, plan.recommendedTasks, selectedTaskIds, state, taskStatuses]);
 
   useEffect(() => {
     onContinueRef.current = onContinue;

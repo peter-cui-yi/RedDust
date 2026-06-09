@@ -137,11 +137,13 @@ async function consoleState(cdp) {
         [...document.querySelectorAll('.console-focus-strip > div')].map((item) => [
           item.querySelector('span')?.textContent?.trim() ?? '',
           item.querySelector('b')?.textContent?.trim() ?? ''
-        ])
-      );
+            ])
+          );
+      const auraHead = document.querySelector('.aura-console-head span')?.textContent?.trim() ?? '';
+      const auraMatch = auraHead.match(/Day\\s+(\\d+)\\s*\\/\\s*([a-z_]+)/i);
       return {
-        day: Number(values.Day ?? 0),
-        branch: values.Branch ?? '',
+        day: Number(values.Day ?? auraMatch?.[1] ?? 0),
+        branch: (values.Branch ?? auraMatch?.[2] ?? '').toLowerCase(),
         phase: values.Phase ?? '',
         hasDialog: Boolean(document.querySelector('[role="dialog"]')),
         hasCanvas: Boolean(document.querySelector('.phaser-host canvas'))

@@ -227,6 +227,7 @@ export type AgentPhase =
   | "state_updated"
   | "replay_logged"
   | "day_summary"
+  | "planning_complete"
   | "branch_decision"
   | "ending";
 
@@ -289,6 +290,7 @@ export type AgentRunState = {
   activeBranch: Branch;
   runMode: "single" | "both_branches";
   taskStatuses: Record<string, TaskRunStatus>;
+  dailyTaskSelections: Record<string, string[]>;
   currentStorySceneId?: string;
 };
 

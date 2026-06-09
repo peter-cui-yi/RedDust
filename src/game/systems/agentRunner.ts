@@ -12,6 +12,7 @@ import type {
   ReplayEvent,
   TaskRunStatus
 } from "../../data/types";
+import { selectedAuraTaskIdsForDay, taskSelectionKey } from "./auraTaskSelection";
 
 export const phaseDurations: Record<AgentPhase, number> = {
   idle: 500,
@@ -22,6 +23,7 @@ export const phaseDurations: Record<AgentPhase, number> = {
   state_updated: 500,
   replay_logged: 500,
   day_summary: 1000,
+  planning_complete: 900,
   branch_decision: 1200,
   ending: 1000
 };
@@ -110,28 +112,32 @@ export function createInitialRunState(speed: 1 | 2 | 4 = 1): AgentRunState {
     currentPhase: "idle",
     activeBranch: "common",
     runMode: "single",
-    taskStatuses: createInitialTaskStatuses()
+    taskStatuses: createInitialTaskStatuses(),
+    dailyTaskSelections: {}
   };
 }
 
-export function getDayTaskIds(day: number, branch: Branch) {
+export function getDayTaskIds(day: number, branch: Branch, state?: GlobalState, taskStatuses?: Record<string, TaskRunStatus>, lockedTaskIds?: string[]) {
   const plan = dayPlansByDay[day];
   if (!plan) return [];
+  if (state) return selectedAuraTaskIdsForDay(day, branch, state, taskStatuses, lockedTaskIds);
   if (plan.commonTasks?.length) return plan.commonTasks;
   if (branch === "rescue") return plan.rescueTasks ?? [];
   if (branch === "lighthouse") return plan.lighthouseTasks ?? [];
   return [];
 }
 
-export function getNextTaskId(runState: AgentRunState) {
-  return getDayTaskIds(runState.currentDay, runState.activeBranch).find((taskId) => {
+export function getNextTaskId(runState: AgentRunState, state?: GlobalState) {
+  const lockedTaskIds = runState.dailyTaskSelections[taskSelectionKey(runState.currentDay, runState.activeBranch)];
+  return getDayTaskIds(runState.currentDay, runState.activeBranch, state, runState.taskStatuses, lockedTaskIds).find((taskId) => {
     const status = runState.taskStatuses[taskId];
     return !["success", "partial", "failed", "missing", "skipped"].includes(status);
   });
 }
 
-export function isDayComplete(runState: AgentRunState) {
-  const ids = getDayTaskIds(runState.currentDay, runState.activeBranch);
+export function isDayComplete(runState: AgentRunState, state?: GlobalState) {
+  const lockedTaskIds = runState.dailyTaskSelections[taskSelectionKey(runState.currentDay, runState.activeBranch)];
+  const ids = getDayTaskIds(runState.currentDay, runState.activeBranch, state, runState.taskStatuses, lockedTaskIds);
   return ids.length > 0 && ids.every((id) => ["success", "partial", "failed", "missing", "skipped"].includes(runState.taskStatuses[id]));
 }
 

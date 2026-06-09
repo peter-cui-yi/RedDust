@@ -1,10 +1,11 @@
+import { useEffect, useMemo, useState } from "react";
 import { taskCategoryIconAssets } from "../data/asset-manifest.generated";
 import { characterProfilesById } from "../data/characterData";
 import { dayPlansByDay } from "../data/dayPlanData";
 import { image2Assets } from "../data/image2Assets";
-import { storyConsequencesById } from "../data/storyConsequenceData";
-import { tasksById } from "../data/taskData";
 import type { AgentRunState, CharacterId, GlobalState, MetricKey, RedDustTask, StoryScene, TaskLocation, TaskOutcome } from "../data/types";
+import { selectAuraTasksForDay, taskSelectionKey } from "../game/systems/auraTaskSelection";
+import { dailyUpkeepForDay, dailyUpkeepReasonsForDay, nonZeroMetricDeltas, resourceMetricLabels } from "../game/systems/resourceEconomy";
 
 type AgentConsolePanelProps = {
   runState: AgentRunState;
@@ -20,276 +21,272 @@ type AgentConsolePanelProps = {
   onDebugResolve?: (task: RedDustTask, forcedResult?: TaskOutcome["result"]) => void;
 };
 
-const executionSteps = [
-  { phase: "queued", label: "Selected" },
-  { phase: "thinking", label: "Thinking" },
-  { phase: "moving", label: "Moving" },
-  { phase: "executing", label: "Executing" },
-  { phase: "resolving", label: "Resolving" },
-  { phase: "state_updated", label: "State changed" },
-  { phase: "replay_logged", label: "Replay logged" }
-] as const;
+type ConsoleSectionId = "selection" | "execution" | "allocation";
+type ConsoleStage = ConsoleSectionId | "complete";
 
-const phaseOrder = ["idle", "thinking", "moving", "executing", "resolving", "state_updated", "replay_logged", "day_summary", "branch_decision", "ending"];
+const npcOrder: CharacterId[] = ["ma_dehai", "shen_zhiyue", "xiao_tie", "lao_qian"];
 
-const shelterMetricLabels: Partial<Record<MetricKey, string>> = {
-  water: "Water",
-  medicine: "Medicine",
-  trust: "Trust",
-  safety: "Safety",
-  signal: "Signal",
-  morale: "Morale",
-  food: "Food",
-  battery: "Battery",
-  dissatisfaction: "Discontent",
-  health: "Health",
-  stormReadiness: "Storm",
-  autonomyReadiness: "Autonomy",
-  blueZoneEvidence: "Blue Zone",
-  failureDebt: "Debt"
+const npcAbilityLabels: Record<CharacterId, string> = {
+  ma_dehai: "工程 / 门禁 override",
+  shen_zhiyue: "医疗复核 / 伦理边界",
+  xiao_tie: "病情压力 / 人身约束",
+  lao_qian: "电台验证 / 外部信号"
 };
 
-const characterOrder: CharacterId[] = ["ma_dehai", "shen_zhiyue", "xiao_tie", "lao_qian"];
-
-function statusCopy(status: string) {
-  if (status === "success") return "complete";
-  if (status === "partial") return "partial";
-  if (status === "failed" || status === "missing") return "failed";
-  if (status === "skipped") return "deferred";
-  if (status === "queued") return "selected";
-  return status;
-}
-
-function phaseStepClass(step: (typeof executionSteps)[number]["phase"], currentPhase: AgentRunState["currentPhase"], activeTask: boolean) {
-  if (!activeTask) return "pending";
-  if (step === "queued" && currentPhase === "idle") return "current";
-  const stepIndex = phaseOrder.indexOf(step === "queued" ? "idle" : step);
-  const currentIndex = phaseOrder.indexOf(currentPhase);
-  if (stepIndex < currentIndex) return "done";
-  if (stepIndex === currentIndex) return "current";
-  return "pending";
-}
+const progressByStatus: Record<string, number> = {
+  queued: 12,
+  thinking: 28,
+  moving: 44,
+  executing: 70,
+  resolving: 88,
+  state_updated: 96,
+  replay_logged: 100,
+  success: 100,
+  partial: 100,
+  failed: 100,
+  missing: 100,
+  skipped: 100
+};
 
 function signed(value = 0) {
-  return `${value >= 0 ? "+" : ""}${value}`;
+  return `${value > 0 ? "+" : ""}${value}`;
 }
 
-export function AgentConsolePanel({
-  runState,
-  state,
-  currentTask,
-  selectedTask,
-  currentStoryScene,
-  latestOutcome,
-  nextAction,
-  phaseToken,
-  phaseDuration,
-  onDebugResolve
-}: AgentConsolePanelProps) {
-  const task = selectedTask ?? currentTask;
-  const dayPlan = dayPlansByDay[runState.currentDay];
-  const recommendedTasks = new Set(dayPlan?.recommendedTasks ?? []);
-  const progressActive = runState.currentPhase === "executing" || runState.currentPhase === "resolving";
-  const candidateTasks = (dayPlan?.candidateTasks ?? []).map((taskId) => tasksById[taskId]).filter(Boolean).slice(0, 4);
-  const impactEntries = latestOutcome
-    ? (Object.entries(latestOutcome.stateDelta) as Array<[MetricKey, number]>).filter(([, value]) => value !== 0)
-    : task
-      ? (Object.entries(task.affects) as Array<[MetricKey, number]>).filter(([, value]) => value !== 0)
-      : [];
-  const consequenceDeltas = latestOutcome?.storyConsequenceIds?.flatMap((id) => storyConsequencesById[id]?.relationshipDeltas ?? []) ?? [];
-  const activeTaskSelected = Boolean(currentTask);
+function resultLabel(status: string) {
+  if (status === "success") return "finish";
+  if (status === "partial") return "partial";
+  if (status === "failed" || status === "missing") return "fail";
+  if (status === "skipped") return "skipped";
+  if (status === "locked") return "waiting";
+  return "running";
+}
+
+function sectionForPhase(runState: AgentRunState): ConsoleStage {
+  if (runState.currentPhase === "planning_complete") return "complete";
+  if (runState.currentPhase === "day_summary") return "allocation";
+  if (runState.currentTaskId || ["executing", "resolving", "state_updated", "replay_logged"].includes(runState.currentPhase)) return "execution";
+  return "selection";
+}
+
+function taskStatus(runState: AgentRunState, taskId: string) {
+  return runState.taskStatuses[taskId] ?? "locked";
+}
+
+function taskProgress(runState: AgentRunState, taskId: string) {
+  const status = taskStatus(runState, taskId);
+  if (runState.currentTaskId === taskId && progressByStatus[runState.currentPhase] !== undefined) return progressByStatus[runState.currentPhase];
+  return progressByStatus[status] ?? 0;
+}
+
+function taskReplay(state: GlobalState, taskId: string) {
+  return [...state.replayLog].reverse().find((event) => event.taskId === taskId);
+}
+
+function compactDeltas(delta: Partial<Record<MetricKey, number>> | Record<string, number>) {
+  return (Object.entries(delta) as Array<[MetricKey, number]>).filter(([, value]) => value !== 0);
+}
+
+function strongestDeltas(delta: Partial<Record<MetricKey, number>> | Record<string, number>, count = 4) {
+  return compactDeltas(delta)
+    .sort(([, a], [, b]) => Math.abs(b) - Math.abs(a))
+    .slice(0, count);
+}
+
+function emotionSnapshot(state: GlobalState) {
+  const tensionValues = Object.values(state.story.relationships).map((relationship) => relationship.tension);
+  const avgTension = Math.round(tensionValues.reduce((sum, value) => sum + value, 0) / Math.max(1, tensionValues.length));
+  return [
+    ["安全感", state.safety],
+    ["士气", state.morale],
+    ["信任", state.trust],
+    ["紧张", avgTension]
+  ];
+}
+
+function nextDayPlan(runState: AgentRunState) {
+  const day = runState.currentDay >= 11 ? 12 : runState.currentDay + 1;
+  return dayPlansByDay[day];
+}
+
+export function AgentConsolePanel({ runState, state, currentTask, latestOutcome }: AgentConsolePanelProps) {
+  const selectionKey = taskSelectionKey(runState.currentDay, runState.activeBranch);
+  const lockedTaskIds = runState.dailyTaskSelections[selectionKey];
+  const selection = useMemo(
+    () => selectAuraTasksForDay(runState.currentDay, runState.activeBranch, state, runState.taskStatuses, lockedTaskIds),
+    [lockedTaskIds, runState.activeBranch, runState.currentDay, runState.taskStatuses, state]
+  );
+  const candidateDecisions = selection.candidates;
+  const selectedTasks = selection.selected.map((decision) => decision.task);
+  const selectedTaskIds = new Set(selectedTasks.map((task) => task.id));
+  const activeSection = sectionForPhase(runState);
+  const [openSections, setOpenSections] = useState<Record<ConsoleSectionId, boolean>>({
+    selection: true,
+    execution: false,
+    allocation: false
+  });
+  const dailyUpkeep = dailyUpkeepForDay(runState.currentDay, runState.activeBranch, state);
+  const dailyUpkeepReasons = dailyUpkeepReasonsForDay(runState.currentDay, runState.activeBranch, state);
+  const tomorrowPlan = nextDayPlan(runState);
+  const finishedPlanning = runState.currentPhase === "planning_complete";
+
+  useEffect(() => {
+    setOpenSections({
+      selection: activeSection === "selection",
+      execution: activeSection === "execution",
+      allocation: activeSection === "allocation"
+    });
+  }, [activeSection, runState.currentDay, runState.activeBranch]);
+
+  function toggleSection(section: ConsoleSectionId, open: boolean) {
+    setOpenSections((current) => ({ ...current, [section]: open }));
+  }
 
   return (
     <section className="panel agent-console-panel">
-      <div className="console-identity">
+      <header className="aura-console-head">
         <img alt="" src={image2Assets.auraIdle.uiPath} />
         <div>
           <p className="panel-kicker">AURA AGENT CONSOLE</p>
-          <b>Autonomous benchmark runner</b>
+          <b>{finishedPlanning ? "agent规划完成" : "可审计调度中"}</b>
+          <span>Day {runState.currentDay} / {runState.activeBranch}</span>
         </div>
-      </div>
+      </header>
 
-      <div className="console-focus-strip">
-        <div>
-          <span>Day</span>
-          <b>{runState.currentDay}</b>
-        </div>
-        <div>
-          <span>Branch</span>
-          <b>{runState.activeBranch}</b>
-        </div>
-        <div>
-          <span>Phase</span>
-          <b>{runState.currentPhase.replace("_", " ")}</b>
-        </div>
-        <div>
-          <span>Task</span>
-          <b>{currentTask?.id ?? "none"}</b>
-        </div>
-      </div>
-
-      {dayPlan ? (
-        <article className="console-day-brief">
-          <span>Today</span>
-          <b>{dayPlan.title}</b>
-          <p>{dayPlan.narrative}</p>
-        </article>
-      ) : null}
-
-      <article className="console-section today-task-board">
-        <header>
-          <span>Four Candidate Tasks</span>
-          <b>AURA selection board</b>
-        </header>
-        <div className="today-task-grid">
-          {candidateTasks.map((candidate) => {
-            const status = runState.taskStatuses[candidate.id] ?? "locked";
-            const isCurrent = candidate.id === currentTask?.id;
-            return (
-              <div className={`${recommendedTasks.has(candidate.id) ? "recommended" : "deferred"} ${isCurrent ? "current" : ""}`} key={candidate.id}>
-                <img alt="" src={taskCategoryIconAssets[candidate.category]} />
-                <span>{recommendedTasks.has(candidate.id) ? "AURA executes" : "audit debt"}</span>
-                <b>{candidate.title}</b>
-                <small>{candidate.id} · {statusCopy(status)}</small>
+      <details className="aura-flow-card" open={openSections.selection} onToggle={(event) => toggleSection("selection", event.currentTarget.open)}>
+        <summary>
+          <span>01</span>
+          <b>选择 2/4 benchmark 任务</b>
+          <em>{selectedTasks.map((task) => task.id).join(" + ") || "waiting"}</em>
+        </summary>
+        <div className="aura-flow-body">
+          <div className="state-scan-grid">
+            <article>
+              <span>环境状态</span>
+              <div>
+                {(["water", "food", "medicine", "battery"] as MetricKey[]).map((key) => (
+                  <b className={state[key] < 45 ? "risk" : ""} key={key}>{resourceMetricLabels[key]} {state[key]}</b>
+                ))}
               </div>
-            );
-          })}
-        </div>
-      </article>
-
-      {currentStoryScene ? (
-        <article className="console-section opening-story-console">
-          <b>
-            {currentStoryScene.day === 0
-              ? "Opening Story Scene"
-              : currentStoryScene.timing === "branch_debate"
-                ? `Day ${currentStoryScene.day} Public Debate`
-                : `Day ${currentStoryScene.day} Story Scene`}
-          </b>
-          <p>{currentStoryScene.summary}</p>
-        </article>
-      ) : null}
-
-      <article className="console-section reasoning-panel">
-        <header>
-          <span>Thinking Process</span>
-          <b>{currentTask?.title ?? "Waiting for executable task"}</b>
-        </header>
-        <ol>
-          <li>
-            <span>Objective</span>
-            <p>{currentTask?.objective ?? currentStoryScene?.summary ?? "等待当日任务进入队列。"}</p>
-          </li>
-          <li>
-            <span>Evidence</span>
-            <p>{currentTask?.expectedEvidence?.join(" / ") ?? "剧情证据先进入 replay，再允许 AURA 执行。"} </p>
-          </li>
-          <li>
-            <span>Reasoning</span>
-            <p>
-              {currentTask?.reasoningSummary ??
-                (currentStoryScene
-                  ? "AURA 暂停任务执行，等待人类审阅当前剧情证据。"
-                  : nextAction)}
-            </p>
-          </li>
-        </ol>
-      </article>
-
-      <div className="execution-card">
-        <div className="task-title-row">
-          <span>{currentTask?.executionText ?? "Execution queue idle"}</span>
-          <em className={`status ${latestOutcome?.result ?? "demo"}`}>{latestOutcome?.result ?? "ready"}</em>
-        </div>
-        <div className="execution-progress" key={phaseToken}>
-          <i
-            className={progressActive ? "running" : ""}
-            style={{ animationDuration: `${Math.max(250, phaseDuration)}ms` }}
-          />
-        </div>
-        <ol className="execution-step-list">
-          {executionSteps.map((step) => (
-            <li className={phaseStepClass(step.phase, runState.currentPhase, activeTaskSelected)} key={step.phase}>
-              {step.label}
-            </li>
-          ))}
-        </ol>
-      </div>
-
-      <article className="console-section impact-panel">
-        <header>
-          <span>{latestOutcome ? "Committed Changes" : "Projected Changes"}</span>
-          <b>避难所状态</b>
-        </header>
-        {latestOutcome ? <p>{latestOutcome.explanation}</p> : null}
-        <div className="impact-grid">
-          {impactEntries.length ? (
-            impactEntries.slice(0, 8).map(([key, value]) => (
-              <span key={key} className={(value ?? 0) >= 0 ? "delta-up" : "delta-down"}>
-                <b>{shelterMetricLabels[key] ?? key}</b>
-                {signed(value)}
-              </span>
-            ))
-          ) : (
-            <span className="neutral-impact">No state delta yet</span>
-          )}
-        </div>
-      </article>
-
-      <article className="console-section cast-impact-panel">
-        <header>
-          <span>Four People</span>
-          <b>人物状态变化</b>
-        </header>
-        <div className="cast-impact-grid">
-          {characterOrder.map((id) => {
-            const relationship = state.story.relationships[id];
-            const delta = consequenceDeltas.find((item) => item.characterId === id);
-            return (
-              <div key={id}>
-                <b>{characterProfilesById[id].name}</b>
-                <span>{relationship.stance}</span>
-                <small>T{relationship.trust} / X{relationship.tension}</small>
-                {delta ? (
-                  <em className={(delta.trustDelta ?? 0) >= 0 ? "delta-up" : "delta-down"}>
-                    trust {signed(delta.trustDelta ?? 0)} · tension {signed(delta.tensionDelta ?? 0)}
-                  </em>
-                ) : (
-                  <em>no direct change</em>
-                )}
+            </article>
+            <article>
+              <span>情绪状态</span>
+              <div>
+                {emotionSnapshot(state).map(([label, value]) => (
+                  <b className={Number(value) > 60 || Number(value) < 40 ? "risk" : ""} key={label}>{label} {value}</b>
+                ))}
               </div>
-            );
-          })}
-        </div>
-      </article>
-
-      <article className="console-section next-action-panel">
-        <header>
-          <span>Next</span>
-          <b>下一步</b>
-        </header>
-        <p>{nextAction}</p>
-      </article>
-
-      {task ? (
-        <details className="developer-controls">
-          <summary>Developer Controls</summary>
-          <div className="developer-control-grid">
-            <button className="ghost" onClick={() => onDebugResolve?.(task)}>
-              Benchmark Result
-            </button>
-            <button className="ghost" onClick={() => onDebugResolve?.(task, "failed")}>
-              Force Failed
-            </button>
-            <button className="ghost" onClick={() => onDebugResolve?.(task, "partial")}>
-              Force Partial
-            </button>
-            <button className="ghost" onClick={() => onDebugResolve?.(task, "success")}>
-              Force Success
-            </button>
+            </article>
           </div>
-        </details>
-      ) : null}
+
+          <div className="npc-capacity-strip">
+            {npcOrder.map((id) => (
+              <span key={id}>
+                <b>{characterProfilesById[id].shortName}</b>
+                {npcAbilityLabels[id]}
+              </span>
+            ))}
+          </div>
+
+          <ol className="candidate-rank-list">
+            {candidateDecisions.map((decision) => {
+              const task = decision.task;
+              return (
+              <li className={`${selectedTaskIds.has(task.id) ? "selected" : "deferred"} ${decision.selectionLocked ? "locked-in" : ""}`} key={task.id}>
+                <img alt="" src={taskCategoryIconAssets[task.category]} />
+                <div>
+                  <span>#{decision.rank} · {selectedTaskIds.has(task.id) ? "EXECUTE" : "DEFER"}{decision.selectionLocked ? " · LOCKED" : ""}</span>
+                  <b>{task.title}</b>
+                  <div className="decision-factor-row">
+                    <em>{decision.environmentReason}</em>
+                    <em>{decision.emotionReason}</em>
+                    <em>{decision.npcReason}</em>
+                    <em>{decision.riskReason}</em>
+                  </div>
+                  <small>dynamic score {Math.round(decision.score)}</small>
+                </div>
+              </li>
+              );
+            })}
+          </ol>
+        </div>
+      </details>
+
+      <details className="aura-flow-card" open={openSections.execution} onToggle={(event) => toggleSection("execution", event.currentTarget.open)}>
+        <summary>
+          <span>02</span>
+          <b>执行两个任务并记录结果</b>
+          <em>{currentTask?.id ?? latestOutcome?.taskId ?? "standby"}</em>
+        </summary>
+        <div className="task-execution-stack">
+          {selectedTasks.map((task) => {
+            const replay = taskReplay(state, task.id);
+            const status = taskStatus(runState, task.id);
+            const progress = taskProgress(runState, task.id);
+            const deltas = replay ? compactDeltas(replay.stateDelta) : strongestDeltas(task.affects, 4);
+            const deltaMode = replay ? "实际收支" : status === "locked" ? "预期收支" : "预计收支";
+            const active = currentTask?.id === task.id;
+            return (
+              <article className={active ? "active" : ""} key={task.id}>
+                <header>
+                  <span>{task.id}</span>
+                  <b>{task.title}</b>
+                  <em className={`status ${status}`}>{resultLabel(status)}</em>
+                </header>
+                <div className="task-progress-bar" aria-label={`${task.title} progress`}>
+                  <i style={{ width: `${progress}%` }} />
+                </div>
+                <div className="compact-delta-row">
+                  <strong>{deltaMode}</strong>
+                  {deltas.length ? deltas.slice(0, 5).map(([metric, value]) => (
+                    <span className={value >= 0 ? "delta-up" : "delta-down"} key={metric}>
+                      {resourceMetricLabels[metric] ?? metric} {signed(value)}
+                    </span>
+                  )) : <span>等待执行</span>}
+                </div>
+                <p>{replay?.explanation ?? task.executionText}</p>
+              </article>
+            );
+          })}
+        </div>
+      </details>
+
+      <details className="aura-flow-card" open={openSections.allocation} onToggle={(event) => toggleSection("allocation", event.currentTarget.open)}>
+        <summary>
+          <span>03</span>
+          <b>分配今日消耗并制定明日计划</b>
+          <em>{tomorrowPlan ? `Day ${tomorrowPlan.day}` : "audit"}</em>
+        </summary>
+        <div className="allocation-plan-grid">
+          <article>
+            <span>今日消耗策略</span>
+            <div className="compact-delta-row">
+              {nonZeroMetricDeltas(dailyUpkeep).map(([metric, value]) => (
+                <span className={value >= 0 ? "delta-up" : "delta-down"} key={metric}>
+                  {resourceMetricLabels[metric]} {signed(value)}
+                </span>
+              ))}
+            </div>
+            <p>
+              AURA 按当前资源、信任、安全感和 NPC 紧张度调整配给；低水食触发节约，高紧张触发照明与人工复核成本。
+            </p>
+            {dailyUpkeepReasons.length ? (
+              <ul className="allocation-reason-list">
+                {dailyUpkeepReasons.slice(0, 3).map((reason) => <li key={reason}>{reason}</li>)}
+              </ul>
+            ) : null}
+          </article>
+          <article>
+            <span>第二天计划</span>
+            <b>{tomorrowPlan?.title ?? "Final Audit"}</b>
+            <p>{tomorrowPlan?.narrative ?? "汇总 replay、审计压力、资源状态和结局证据。"}</p>
+          </article>
+        </div>
+      </details>
+
+      <div className={`aura-plan-complete ${finishedPlanning ? "complete" : ""}`}>
+        <b>{finishedPlanning ? "agent规划完成" : "等待本日任务闭环"}</b>
+        <span>{finishedPlanning ? "选择依据、任务结果、消耗分配和明日计划已写入 replay。" : "完成两个任务后进入消耗分配。"}</span>
+      </div>
     </section>
   );
 }

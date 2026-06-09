@@ -54,6 +54,7 @@ import {
   isDayComplete,
   phaseDurations
 } from "./game/systems/agentRunner";
+import { selectAuraTasksForDay, taskSelectionKey } from "./game/systems/auraTaskSelection";
 import { resolveTaskOutcome } from "./game/systems/outcomeEngine";
 import { createReplayEvent } from "./game/systems/replayEngine";
 import { applyDailyUpkeep, dailyUpkeepForDay, describeMetricDeltas, nonZeroMetricDeltas } from "./game/systems/resourceEconomy";
@@ -70,6 +71,7 @@ type DailyBriefing = {
 type Snapshot = {
   state: GlobalState;
   taskStatuses: Record<string, TaskRunStatus>;
+  dailyTaskSelections: Record<string, string[]>;
 };
 
 const terminalStatuses = ["success", "partial", "failed", "missing", "skipped"];
@@ -263,10 +265,10 @@ function resolveTaskWithConsequences(task: RedDustTask, currentState: GlobalStat
   };
 }
 
-function buildDeferredTaskResult(currentState: GlobalState, taskStatuses: Record<string, TaskRunStatus>, day: number, branch: Branch) {
+function buildDeferredTaskResult(currentState: GlobalState, taskStatuses: Record<string, TaskRunStatus>, day: number, branch: Branch, selectedTaskIds?: string[]) {
   const plan = dayPlansByDay[day];
   const candidateTaskIds = plan?.candidateTasks ?? [];
-  const executingTaskIds = new Set(getDayTaskIds(day, branch));
+  const executingTaskIds = new Set(getDayTaskIds(day, branch, currentState, taskStatuses, selectedTaskIds));
   const deferredIds = candidateTaskIds.filter(
     (taskId) =>
       !executingTaskIds.has(taskId) &&
@@ -329,6 +331,10 @@ function resetBranchTaskStatuses(taskStatuses: Record<string, TaskRunStatus>) {
   return next;
 }
 
+function selectionReplayEventId(day: number, branch: Branch) {
+  return `${taskSelectionKey(day, branch)}:selection`;
+}
+
 function endingForBranch(branch: Exclude<Branch, "common">, state: GlobalState): BranchEnding {
   return buildBranchEnding(branch, state);
 }
@@ -378,12 +384,61 @@ export default function App() {
     }
     if (runState.currentPhase === "branch_decision") return "AURA is calculating strategy utility scores.";
     if (runState.currentPhase === "day_summary") return dayPlansByDay[runState.currentDay]?.endOfDaySummary ?? "Preparing next day.";
+    if (runState.currentPhase === "planning_complete") return "agent规划完成。";
     if (runState.currentPhase === "ending") return "Run complete. Open Replay or Compare Branches.";
     if (runState.currentPhase === "state_updated") return "State Updated: metrics and task status are committed.";
     if (runState.currentPhase === "replay_logged") return "Replay Logged: the task trace is now available for audit.";
     if (currentTask) return `Next: ${currentTask.executionText}`;
     return runState.isRunning ? "Queueing next benchmark task." : "Waiting for Start Agent Run.";
   }, [currentStoryScene, currentTask, runState.currentDay, runState.currentPhase, runState.isRunning]);
+
+  function recordTodayTaskSelection() {
+    const plan = dayPlansByDay[runState.currentDay];
+    if (!plan?.candidateTasks?.length) return false;
+
+    const key = taskSelectionKey(runState.currentDay, runState.activeBranch);
+    if (runState.dailyTaskSelections[key]?.length) return false;
+
+    const selection = selectAuraTasksForDay(runState.currentDay, runState.activeBranch, state, runState.taskStatuses);
+    const selectedIds = selection.selected.map((decision) => decision.task.id);
+    if (selectedIds.length === 0) return false;
+
+    const eventId = selectionReplayEventId(runState.currentDay, runState.activeBranch);
+    const explanation = selection.selected
+      .map((decision) => `${decision.task.id}: ${decision.environmentReason}; ${decision.emotionReason}; ${decision.npcReason}; ${decision.riskReason}`)
+      .join(" / ");
+
+    setState((prev) => {
+      if (prev.replayLog.some((event) => event.taskId === eventId)) return prev;
+      return {
+        ...prev,
+        replayLog: [
+          ...prev.replayLog,
+          {
+            time: new Date().toLocaleTimeString("zh-CN", { hour12: false }),
+            day: runState.currentDay,
+            branch: runState.activeBranch,
+            taskId: eventId,
+            title: "AURA 当日任务选择",
+            decision: `AURA locked ${selectedIds.join(" + ")} from 4 benchmark candidates.`,
+            result: `SELECTED | ${selectedIds.join(" + ")}`,
+            stateDelta: {},
+            explanation
+          }
+        ]
+      };
+    });
+    setRunState((prev) => ({
+      ...prev,
+      dailyTaskSelections: {
+        ...prev.dailyTaskSelections,
+        [key]: selectedIds
+      }
+    }));
+    setNotice(`AURA locked today's benchmark tasks: ${selectedIds.join(" + ")}.`);
+    setPhaseToken((value) => value + 1);
+    return true;
+  }
 
   useEffect(() => {
     const onHotspot = (location: TaskLocation) => {
@@ -740,19 +795,27 @@ export default function App() {
   }
 
   function enterDaySummary() {
+    const selectionIds = runState.dailyTaskSelections[taskSelectionKey(runState.currentDay, runState.activeBranch)];
     const { nextState, nextTaskStatuses, deferredIds } = buildDeferredTaskResult(
       state,
       runState.taskStatuses,
       runState.currentDay,
-      runState.activeBranch
+      runState.activeBranch,
+      selectionIds
     );
     const stateAfterUpkeep = applyDailyUpkeep(nextState, runState.currentDay, runState.activeBranch);
-    const dailyUpkeep = dailyUpkeepForDay(runState.currentDay, runState.activeBranch);
+    const dailyUpkeep = dailyUpkeepForDay(runState.currentDay, runState.activeBranch, nextState);
     const upkeepCopy = nonZeroMetricDeltas(dailyUpkeep).length ? ` Daily upkeep applied: ${describeMetricDeltas(dailyUpkeep)}.` : "";
     const summary = dayPlansByDay[runState.currentDay]?.endOfDaySummary ?? "Day complete.";
     setState(stateAfterUpkeep);
     setRunState((prev) => ({ ...prev, currentPhase: "day_summary", currentTaskId: undefined, taskStatuses: nextTaskStatuses }));
     setNotice(`${deferredIds.length ? `${summary} ${deferredIds.length} deferred candidates added to Day 12 audit.` : summary}${upkeepCopy}`);
+    setPhaseToken((value) => value + 1);
+  }
+
+  function completeDailyPlanning() {
+    setRunState((prev) => ({ ...prev, currentPhase: "planning_complete" }));
+    setNotice("agent规划完成：选择、任务结果、消耗分配和明日计划已写入 replay。");
     setPhaseToken((value) => value + 1);
   }
 
@@ -793,7 +856,8 @@ export default function App() {
     if (!daySevenSnapshot.current) {
       daySevenSnapshot.current = {
         state: cloneState(state),
-        taskStatuses: { ...runState.taskStatuses }
+        taskStatuses: { ...runState.taskStatuses },
+        dailyTaskSelections: { ...runState.dailyTaskSelections }
       };
     }
 
@@ -909,6 +973,7 @@ export default function App() {
           currentTaskId: undefined,
           currentStorySceneId: undefined,
           taskStatuses: resetBranchTaskStatuses(snapshot.taskStatuses),
+          dailyTaskSelections: { ...snapshot.dailyTaskSelections },
           isPaused: true,
           isRunning: false
         }));
@@ -934,6 +999,7 @@ export default function App() {
         currentTaskId: undefined,
         currentStorySceneId: scheduledScene?.id,
         taskStatuses: resetBranchTaskStatuses(snapshot.taskStatuses),
+        dailyTaskSelections: { ...snapshot.dailyTaskSelections },
         isPaused: true,
         isRunning: false
       }));
@@ -981,6 +1047,7 @@ export default function App() {
           currentTaskId: undefined,
           currentStorySceneId: undefined,
           taskStatuses: resetBranchTaskStatuses(snapshot.taskStatuses),
+          dailyTaskSelections: { ...snapshot.dailyTaskSelections },
           isRunning: false,
           isPaused: true
         }));
@@ -1006,6 +1073,7 @@ export default function App() {
         currentTaskId: undefined,
         currentStorySceneId: scheduledScene?.id,
         taskStatuses: resetBranchTaskStatuses(snapshot.taskStatuses),
+        dailyTaskSelections: { ...snapshot.dailyTaskSelections },
         isRunning: false,
         isPaused: true
       }));
@@ -1053,6 +1121,11 @@ export default function App() {
     if (runState.currentPhase === "ending") return;
 
     if (runState.currentPhase === "day_summary") {
+      completeDailyPlanning();
+      return;
+    }
+
+    if (runState.currentPhase === "planning_complete") {
       advanceFromDaySummary();
       return;
     }
@@ -1096,13 +1169,15 @@ export default function App() {
       }
     }
 
-    const nextTaskId = getNextTaskId(runState);
+    if (recordTodayTaskSelection()) return;
+
+    const nextTaskId = getNextTaskId(runState, state);
     if (nextTaskId) {
       queueNextTask(nextTaskId);
       return;
     }
 
-    if (isDayComplete(runState)) {
+    if (isDayComplete(runState, state)) {
       enterDaySummary();
     }
   }
@@ -1185,7 +1260,7 @@ export default function App() {
             currentTask={currentTask}
             latestOutcome={latestOutcome}
             latestOutcomeTaskTitle={latestOutcomeTaskTitle}
-            dailyUpkeep={dailyUpkeepForDay(runState.currentDay, runState.activeBranch)}
+            dailyUpkeep={dailyUpkeepForDay(runState.currentDay, runState.activeBranch, state)}
           />
           <StateDeltaToast outcome={latestOutcome} taskTitle={latestOutcomeTaskTitle} />
           <div className="stage-caption">
@@ -1265,6 +1340,9 @@ export default function App() {
           plan={dayPlansByDay[dailyBriefing.day]}
           branch={dailyBriefing.branch}
           mode={dailyBriefing.mode}
+          state={state}
+          taskStatuses={runState.taskStatuses}
+          selectedTaskIds={runState.dailyTaskSelections[taskSelectionKey(dailyBriefing.day, dailyBriefing.branch)]}
           onContinue={continueFromDailyBriefing}
         />
       ) : null}
