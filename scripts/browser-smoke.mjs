@@ -249,9 +249,23 @@ async function driveAutoplay(cdp) {
   await screenshot(cdp, "02b-day1-briefing");
   await clickButton(cdp, "Continue Day 1");
   await sleep(500);
-  await clickButton(cdp, "x4", { exact: true });
-  await waitForText(cdp, "AURA Agent Autoplay Console", 10000);
+  await waitForText(cdp, "Red Dust Agent Game Console", 10000);
   await screenshot(cdp, "02c-main-stage-console");
+  await evalJs(
+    cdp,
+    `(() => {
+      const drawer = document.querySelector('.demo-settings-drawer');
+      if (!drawer) return false;
+      drawer.open = true;
+      drawer.scrollIntoView({ block: 'center' });
+      return true;
+    })()`
+  );
+  await sleep(500);
+  await waitForText(cdp, "成功-灯塔线", 10000);
+  await clickButton(cdp, "x4", { exact: true });
+  await clickButton(cdp, "成功-蓝区线", { exact: true });
+  await screenshot(cdp, "02d-demo-settings");
   await evalJs(
     cdp,
     `(() => {
@@ -265,7 +279,7 @@ async function driveAutoplay(cdp) {
   await sleep(500);
   await waitForText(cdp, "ROUTE TREE", 10000);
   await waitForImages(cdp, ".route-tree-heading img", 30000);
-  await screenshot(cdp, "02d-gameplay-route-tree");
+  await screenshot(cdp, "02e-gameplay-route-tree");
   await evalJs(cdp, "window.scrollTo(0, 0)");
   await sleep(250);
 

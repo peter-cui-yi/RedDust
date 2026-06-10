@@ -5,6 +5,8 @@ import type { BranchSummary } from "../game/systems/agentRunner";
 type RouteTreePanelProps = {
   currentDay: number;
   activeBranch: Branch;
+  plannedBranch?: Exclude<Branch, "common">;
+  plannedEndingId?: EndingId;
   selectedEndingId?: EndingId;
   branchSummaries: Partial<Record<Exclude<Branch, "common">, BranchSummary>>;
 };
@@ -55,10 +57,18 @@ function commonNodeStatus(day: number, currentDay: number, activeBranch: Branch)
   return "locked";
 }
 
-function branchNodeStatus(branch: Exclude<Branch, "common">, day: number, currentDay: number, activeBranch: Branch, completed: boolean) {
+function branchNodeStatus(
+  branch: Exclude<Branch, "common">,
+  day: number,
+  currentDay: number,
+  activeBranch: Branch,
+  completed: boolean,
+  plannedBranch?: Exclude<Branch, "common">
+) {
   if (completed || (activeBranch === branch && currentDay > day)) return "complete";
   if (activeBranch === branch && currentDay === day) return "current";
   if (activeBranch === branch && currentDay < day) return "queued";
+  if (activeBranch === "common" && plannedBranch === branch) return "queued";
   return "locked";
 }
 
@@ -75,7 +85,14 @@ function branchTitle(branch: Exclude<Branch, "common">) {
   return branch === "rescue" ? "Rescue Route" : "Lighthouse Route";
 }
 
-export function RouteTreePanel({ currentDay, activeBranch, selectedEndingId, branchSummaries }: RouteTreePanelProps) {
+export function RouteTreePanel({
+  currentDay,
+  activeBranch,
+  plannedBranch,
+  plannedEndingId,
+  selectedEndingId,
+  branchSummaries
+}: RouteTreePanelProps) {
   const currentArt = dayArtFor(currentDay, activeBranch === "rescue" || activeBranch === "lighthouse" ? activeBranch : undefined) ?? dayArtFor(7);
   const rescueDone = Boolean(branchSummaries.rescue);
   const lighthouseDone = Boolean(branchSummaries.lighthouse);
@@ -106,18 +123,22 @@ export function RouteTreePanel({ currentDay, activeBranch, selectedEndingId, bra
           {(["rescue", "lighthouse"] as const).map((branch) => {
             const completed = branch === "rescue" ? rescueDone : lighthouseDone;
             const summary = branchSummaries[branch];
+            const planned = activeBranch === "common" && plannedBranch === branch;
             return (
-              <article key={branch} className={`route-tree-lane ${branch} ${activeBranch === branch ? "active" : ""} ${completed ? "complete" : ""}`}>
+              <article
+                key={branch}
+                className={`route-tree-lane ${branch} ${activeBranch === branch ? "active" : ""} ${planned ? "planned" : ""} ${completed ? "complete" : ""}`}
+              >
                 <div className="route-lane-title">
                   <b>{branchTitle(branch)}</b>
-                  <span>{completed ? summary?.ending ?? "Audited" : activeBranch === branch ? "active" : "counterfactual"}</span>
+                  <span>{completed ? summary?.ending ?? "Audited" : activeBranch === branch ? "active" : planned ? "selected route" : "counterfactual"}</span>
                 </div>
                 <ol>
                   {branchNodes[branch].map((node) => (
                     <NodePill
                       key={node.label}
                       node={node}
-                      status={branchNodeStatus(branch, node.day, currentDay, activeBranch, completed)}
+                      status={branchNodeStatus(branch, node.day, currentDay, activeBranch, completed, plannedBranch)}
                       branch={branch}
                     />
                   ))}
@@ -134,7 +155,7 @@ export function RouteTreePanel({ currentDay, activeBranch, selectedEndingId, bra
 
         <div className="route-tree-endings">
           {endingNodes.map((ending) => (
-            <span key={ending.id} className={`${ending.branch} ${selectedEndingId === ending.id ? "selected" : ""}`}>
+            <span key={ending.id} className={`${ending.branch} ${selectedEndingId === ending.id || (!selectedEndingId && plannedEndingId === ending.id) ? "selected" : ""}`}>
               {ending.label}
             </span>
           ))}

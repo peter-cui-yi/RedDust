@@ -363,7 +363,7 @@ function candidate(id: EndingId, title: string, artKey: string, triggered: boole
   };
 }
 
-export function buildFinalAuditResult(state: GlobalState, forcedEndingId?: EndingId): FinalAuditResult {
+export function buildFinalAuditResult(state: GlobalState, selectedEndingIdOverride?: EndingId, forced = Boolean(selectedEndingIdOverride)): FinalAuditResult {
   const failureDebt = buildFailureDebt(state);
   const highFailureDebt = state.failureDebt >= 45 || failureDebt.length >= 18;
   const auraDestroyed =
@@ -421,7 +421,7 @@ export function buildFinalAuditResult(state: GlobalState, forcedEndingId?: Endin
   ];
 
   const selectedEndingId =
-    forcedEndingId ??
+    selectedEndingIdOverride ??
     candidates.find((item) => item.id === "aura_destroyed" && item.status === "triggered")?.id ??
     candidates.find((item) => item.id === "aura_revoked" && item.status === "triggered")?.id ??
     candidates.find((item) => item.id === "blue_zone_return" && item.status === "triggered")?.id ??
@@ -440,7 +440,7 @@ export function buildFinalAuditResult(state: GlobalState, forcedEndingId?: Endin
       `Metrics: storm ${state.stormReadiness}, autonomy ${state.autonomyReadiness}, blue-zone ${state.blueZoneEvidence}, health ${state.health}, trust ${state.trust}, dissatisfaction ${state.dissatisfaction}`
     ],
     failureDebt,
-    forced: Boolean(forcedEndingId)
+    forced
   };
 }
 
@@ -620,8 +620,13 @@ export function buildBranchEnding(branch: Exclude<Branch, "common">, state: Glob
   return buildFinalAuditEnding(branch, state);
 }
 
-export function buildFinalAuditEnding(branch: Exclude<Branch, "common">, state: GlobalState, forcedEndingId?: EndingId): BranchEnding {
-  const finalAudit = buildFinalAuditResult(state, forcedEndingId);
+export function buildFinalAuditEnding(
+  branch: Exclude<Branch, "common">,
+  state: GlobalState,
+  selectedEndingIdOverride?: EndingId,
+  options: { forced?: boolean } = {}
+): BranchEnding {
+  const finalAudit = buildFinalAuditResult(state, selectedEndingIdOverride, options.forced ?? Boolean(selectedEndingIdOverride));
 
   if (finalAudit.selectedEndingId === "blue_zone_return") {
     return {

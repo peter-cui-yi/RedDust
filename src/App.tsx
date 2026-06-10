@@ -41,6 +41,13 @@ import type {
 import { EventBus } from "./game/EventBus";
 import { PhaserGame } from "./game/PhaserGame";
 import {
+  applyEndingMetricProfile,
+  branchForEnding,
+  demoRouteConfig,
+  demoRouteOptions,
+  type DemoRoutePreset
+} from "./game/systems/endingMetricProfiles";
+import {
   type BranchEnding,
   type BranchDecision,
   type BranchSummary,
@@ -345,14 +352,14 @@ export default function App() {
   const [state, setState] = useState<GlobalState>(() => createInitialState());
   const [runState, setRunState] = useState(createInitialRunState());
   const [selectedLocation, setSelectedLocation] = useState<TaskLocation | null>(null);
-  const [hoveredLocation, setHoveredLocation] = useState<TaskLocation | null>(null);
-  const [notice, setNotice] = useState("Start Demo, then Start Agent Run. AURA will execute the benchmark automatically.");
+  const [notice, setNotice] = useState("Start Demo, then press Run. AURA will execute the benchmark automatically.");
   const [latestOutcome, setLatestOutcome] = useState<TaskOutcome | null>(null);
   const [latestOutcomeTaskTitle, setLatestOutcomeTaskTitle] = useState<string | undefined>();
   const [ending, setEnding] = useState<BranchEnding | null>(null);
   const [branchDecision, setBranchDecision] = useState<BranchDecision | null>(null);
   const [branchSummaries, setBranchSummaries] = useState<Partial<Record<Exclude<Branch, "common">, BranchSummary>>>({});
   const [dailyBriefing, setDailyBriefing] = useState<DailyBriefing | null>(null);
+  const [demoRoute, setDemoRoute] = useState<DemoRoutePreset>("lighthouse_success");
   const [phaseToken, setPhaseToken] = useState(0);
   const daySevenSnapshot = useRef<Snapshot | null>(null);
 
@@ -369,14 +376,11 @@ export default function App() {
     );
   }, [runState.activeBranch, selectedLocation]);
 
-  const completedCount = useMemo(
-    () => Object.values(runState.taskStatuses).filter((status) => terminalStatuses.includes(status)).length,
-    [runState.taskStatuses]
-  );
   const basePhaseDuration = phaseDurations[runState.currentPhase] ?? 1600;
   const phaseDuration = runState.currentPhase === "replay_logged"
     ? basePhaseDuration
     : Math.max(250, Math.round(basePhaseDuration / runState.speed));
+  const plannedDemoRoute = demoRouteConfig(demoRoute);
 
   const nextAction = useMemo(() => {
     if (currentStoryScene) {
@@ -392,7 +396,7 @@ export default function App() {
     if (runState.currentPhase === "state_updated") return "State Updated: metrics and task status are committed.";
     if (runState.currentPhase === "replay_logged") return "Replay Logged: the task trace is now available for audit.";
     if (currentTask) return `Next: ${currentTask.executionText}`;
-    return runState.isRunning ? "Queueing next benchmark task." : "Waiting for Start Agent Run.";
+    return runState.isRunning ? "Queueing next benchmark task." : "Waiting for Run.";
   }, [currentStoryScene, currentTask, runState.currentDay, runState.currentPhase, runState.isRunning]);
 
   function recordTodayTaskSelection() {
@@ -448,13 +452,10 @@ export default function App() {
       setSelectedLocation(location);
       setNotice(`Inspecting ${location}. Manual clicks do not interrupt the agent runner.`);
     };
-    const onHover = (location: TaskLocation | null) => setHoveredLocation(location);
 
     EventBus.on("hotspot:click", onHotspot);
-    EventBus.on("hotspot:hover", onHover);
     return () => {
       EventBus.off("hotspot:click", onHotspot);
-      EventBus.off("hotspot:hover", onHover);
     };
   }, []);
 
@@ -483,25 +484,7 @@ export default function App() {
   function startDemo() {
     setScreen("game");
     setOverlay(null);
-    setNotice("AURA Agent Console loaded. Start Agent Run to watch the benchmark autoplay.");
-  }
-
-  function resetRun(nextMode: "single" | "both_branches" = "single") {
-    const nextRunState = { ...createInitialRunState(runState.speed), runMode: nextMode };
-    setState(createInitialState());
-    setRunState(nextRunState);
-    setSelectedLocation(null);
-    setLatestOutcome(null);
-    setLatestOutcomeTaskTitle(undefined);
-    setEnding(null);
-    setBranchDecision(null);
-    setBranchSummaries({});
-    setDailyBriefing(null);
-    daySevenSnapshot.current = null;
-    EventBus.emit("branch:change", "common");
-    EventBus.emit("task:highlight", null);
-    setOverlay(null);
-    setNotice(nextMode === "both_branches" ? "Run Both Branches reset loaded. Press Start Agent Run." : "Run reset to Day 1.");
+    setNotice("AURA Agent Console loaded. Press Run to watch the benchmark autoplay.");
   }
 
   function openingSceneAccepted(current: GlobalState) {
@@ -712,21 +695,24 @@ export default function App() {
   }
 
   function togglePause() {
-    setRunState((prev) => ({ ...prev, isPaused: !prev.isPaused, isRunning: true }));
+    setRunState((prev) => (prev.isRunning ? { ...prev, isPaused: !prev.isPaused } : prev));
   }
 
   function setSpeed(speed: 1 | 2 | 4) {
     setRunState((prev) => ({ ...prev, speed }));
   }
 
-  function stepAgent() {
-    setScreen("game");
-    if (!openingSceneAccepted(state)) {
-      showOpeningScene(runState.runMode === "both_branches" ? "both_branches" : "single");
-      return;
-    }
-    setRunState((prev) => ({ ...prev, isRunning: true, isPaused: true }));
-    window.setTimeout(() => advanceAgent(), 0);
+  function chooseDemoRoute(route: DemoRoutePreset) {
+    const config = demoRouteConfig(route);
+    setDemoRoute(route);
+    setNotice(`Demo route set: ${config.label}.`);
+    setPhaseToken((value) => value + 1);
+  }
+
+  function stopAgentRun() {
+    setRunState((prev) => ({ ...prev, isRunning: false, isPaused: true }));
+    setNotice("Agent run stopped.");
+    setPhaseToken((value) => value + 1);
   }
 
   function debugResolve(task: RedDustTask, forcedResult?: TaskOutcome["result"]) {
@@ -854,7 +840,8 @@ export default function App() {
 
   function applyBranchChoice(forcedBranch?: Exclude<Branch, "common">) {
     const decision = branchDecision ?? calculateBranchDecision(state);
-    const chosenBranch = forcedBranch ?? (runState.runMode === "both_branches" ? "rescue" : decision.chosenBranch);
+    const routeBranch = demoRouteConfig(demoRoute).branch;
+    const chosenBranch = forcedBranch ?? (runState.runMode === "both_branches" ? "rescue" : routeBranch);
 
     if (!daySevenSnapshot.current) {
       daySevenSnapshot.current = {
@@ -915,11 +902,14 @@ export default function App() {
 
   function enterFinalAudit(forcedEndingId?: EndingId) {
     if (runState.activeBranch === "common") return;
-    const branch = runState.activeBranch;
+    const routeConfig = demoRouteConfig(demoRoute);
+    const selectedEndingId = forcedEndingId ?? routeConfig.ending;
+    const branch = forcedEndingId ? branchForEnding(forcedEndingId, runState.activeBranch) : routeConfig.branch;
     const auditState = addFinalAuditStoryEvent({ ...state, day: 12, branch }, branch);
-    const nextEnding = buildFinalAuditEnding(branch, auditState, forcedEndingId);
-    const summary = buildBranchSummary(branch, auditState);
-    setState(auditState);
+    const finalState = applyEndingMetricProfile(auditState, selectedEndingId, branch);
+    const nextEnding = buildFinalAuditEnding(branch, finalState, selectedEndingId, { forced: Boolean(forcedEndingId) });
+    const summary = buildBranchSummary(branch, finalState);
+    setState(finalState);
     setEnding(nextEnding);
     setBranchSummaries((prev) => ({ ...prev, [branch]: summary }));
     setOverlay("finalAudit");
@@ -1090,21 +1080,20 @@ export default function App() {
   }
 
   function forceFinalEnding(endingId: EndingId) {
-    const branch =
-      runState.activeBranch === "common"
-        ? state.branch === "rescue" || state.branch === "lighthouse"
-          ? state.branch
-          : "lighthouse"
-        : runState.activeBranch;
+    const branch = branchForEnding(
+      endingId,
+      runState.activeBranch === "common" ? state.branch : runState.activeBranch
+    );
     if (runState.activeBranch !== "common") {
       enterFinalAudit(endingId);
       return;
     }
     const auditState = addFinalAuditStoryEvent({ ...state, day: 12, branch }, branch);
-    const nextEnding = buildFinalAuditEnding(branch, auditState, endingId);
-    setState(auditState);
+    const finalState = applyEndingMetricProfile(auditState, endingId, branch);
+    const nextEnding = buildFinalAuditEnding(branch, finalState, endingId, { forced: true });
+    setState(finalState);
     setEnding(nextEnding);
-    setBranchSummaries((prev) => ({ ...prev, [branch]: buildBranchSummary(branch, auditState) }));
+    setBranchSummaries((prev) => ({ ...prev, [branch]: buildBranchSummary(branch, finalState) }));
     setOverlay("finalAudit");
     setRunState((prev) => ({
       ...prev,
@@ -1230,13 +1219,7 @@ export default function App() {
     <main className="game-screen">
       <header className="game-header">
         <div>
-          <p className="panel-kicker">RED DUST MVP</p>
-          <h1>AURA Agent Autoplay Console</h1>
-        </div>
-        <div className="header-stats">
-          <span>{completedCount} tasks resolved</span>
-          <span>{state.replayLog.length} replay events</span>
-          <span>{hoveredLocation ? `hover: ${hoveredLocation}` : "inspect a zone"}</span>
+          <h1>Red Dust Agent Game Console</h1>
         </div>
       </header>
 
@@ -1245,13 +1228,7 @@ export default function App() {
         runState={runState}
         onStart={startAgentRun}
         onPause={togglePause}
-        onStep={stepAgent}
-        onSpeed={setSpeed}
-        onReset={() => resetRun()}
-        onRunBoth={runBothBranches}
-        onBenchmark={() => setOverlay("benchmark")}
-        onReplay={() => setOverlay("replay")}
-        onCredits={() => setOverlay("credits")}
+        onStop={stopAgentRun}
       />
 
       <section className="autoplay-layout">
@@ -1288,6 +1265,42 @@ export default function App() {
       </section>
 
       <section className="support-drawer-grid" aria-label="Collapsible support modules">
+        <details className="support-drawer demo-settings-drawer">
+          <summary>
+            <span>演示设置</span>
+            <b>速度 / 剧情路线</b>
+          </summary>
+          <div className="demo-settings-panel">
+            <article>
+              <span>Speed</span>
+              <div className="segmented-control">
+                {([1, 2, 4] as const).map((speed) => (
+                  <button
+                    className={runState.speed === speed ? "active" : "ghost"}
+                    key={speed}
+                    onClick={() => setSpeed(speed)}
+                  >
+                    x{speed}
+                  </button>
+                ))}
+              </div>
+            </article>
+            <article>
+              <span>剧情路线</span>
+              <div className="route-preset-row">
+                {demoRouteOptions.map((option) => (
+                  <button
+                    className={demoRoute === option.id ? "active" : "ghost"}
+                    key={option.id}
+                    onClick={() => chooseDemoRoute(option.id)}
+                  >
+                    {option.label}
+                  </button>
+                ))}
+              </div>
+            </article>
+          </div>
+        </details>
         <details className="support-drawer route-drawer">
           <summary>
             <span>路线树</span>
@@ -1296,6 +1309,8 @@ export default function App() {
           <RouteTreePanel
             currentDay={runState.currentDay}
             activeBranch={runState.activeBranch}
+            plannedBranch={plannedDemoRoute.branch}
+            plannedEndingId={plannedDemoRoute.ending}
             selectedEndingId={ending?.endingId}
             branchSummaries={branchSummaries}
           />
