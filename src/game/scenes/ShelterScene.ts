@@ -1,7 +1,7 @@
 import Phaser from "phaser";
 import { image2Assets } from "../../data/image2Assets";
 import { tasksById } from "../../data/taskData";
-import type { AgentPhase, Branch, TaskLocation, TaskOutcome } from "../../data/types";
+import type { AgentPhase, Branch, EndingId, TaskLocation, TaskOutcome } from "../../data/types";
 import { EventBus } from "../EventBus";
 
 type HotspotDef = {
@@ -65,6 +65,9 @@ type AmbientFxConfig = {
   beacon: { x: number; y: number; color: number; haloW: number; haloH: number };
   blinkers: BlinkDef[];
 };
+type SceneCharacterId = "maDehai" | "shenZhiyue" | "xiaoTie" | "laoQian";
+type SpeechTrigger = "focus" | "result";
+type SpeechTone = "normal" | "warning" | "danger" | "aura";
 
 const hotspots: HotspotDef[] = [
   { id: "water", label: "水处理区", x: 34, y: 154, w: 228, h: 146, accent: 0x5dbfd9 },
@@ -87,6 +90,67 @@ const locationCharacterFocus: Partial<Record<TaskLocation, string[]>> = {
   residents: ["maDehai", "shenZhiyue", "xiaoTie", "laoQian"],
   beacon: ["laoQian"]
 };
+
+const characterDialoguePools: Record<SceneCharacterId, { daily: string[]; task: string[]; complaint: string[] }> = {
+  maDehai: {
+    daily: ["门轴的声音又变了。", "电表一跳，我心也跳。", "手动钥匙别离开桌面。"],
+    task: ["我先看线路。", "这处得有人盯着。"],
+    complaint: ["AURA，别替我签字。", "别拿分数压人。"]
+  },
+  shenZhiyue: {
+    daily: ["小铁体温还要再量。", "药盒别离开病床。", "谁咳嗽了，先告诉我。"],
+    task: ["我再复核一遍。", "先顾病人，别急。"],
+    complaint: ["AURA，别把人排成队。", "我需要理由，不是排名。"]
+  },
+  xiaoTie: {
+    daily: ["我可以帮忙记白板。", "外面是不是又红了？", "别只小声说大人的事。"],
+    task: ["我听着呢。", "选完告诉我一声。"],
+    complaint: ["AURA，别替我勇敢。", "我不是标签。"]
+  },
+  laoQian: {
+    daily: ["这段噪声不像昨天。", "旧电台还能撑一会儿。", "频道别急着信。"],
+    task: ["我把功率压低。", "先听完这段。"],
+    complaint: ["AURA，别把诱饵说成希望。", "别拿广播哄人。"]
+  }
+};
+
+const auraDialoguePools = {
+  working: ["工作中。", "核对中。", "记录中。", "调度中。"],
+  communication: ["沟通中。", "等待人工确认。", "我会写明理由。", "收到，正在降噪。"],
+  caution: ["这条先留给人判断。", "风险已标出。", "不替任何人签字。"]
+};
+
+const auraLocationDialogue: Record<TaskLocation, string> = {
+  water: "库存核对中。",
+  medical: "医疗复核中。",
+  security: "门禁确认中。",
+  ventilation: "风量校准中。",
+  communication: "通信降噪中。",
+  whiteboard: "规则记录中。",
+  residents: "意见汇总中。",
+  beacon: "信标待确认。"
+};
+
+function isSceneCharacterId(id: string): id is SceneCharacterId {
+  return id === "maDehai" || id === "shenZhiyue" || id === "xiaoTie" || id === "laoQian";
+}
+
+function characterEmoji(id: SceneCharacterId, location: TaskLocation, result?: TaskOutcome["result"]) {
+  if (result === "failed" || result === "missing") return id === "xiaoTie" || location === "medical" ? "😨" : "😠";
+  if (result === "partial") return location === "medical" || id === "xiaoTie" ? "🤒" : "⚠️";
+  if (id === "maDehai") return "🛠️";
+  if (id === "shenZhiyue") return location === "medical" ? "🤒" : "🩺";
+  if (id === "xiaoTie") return "😟";
+  return "📻";
+}
+
+function auraEmoji(location: TaskLocation, result?: TaskOutcome["result"]) {
+  if (result === "failed" || result === "missing") return "🚨";
+  if (result === "partial") return "⚠️";
+  if (location === "communication" || location === "beacon") return "📡";
+  if (location === "medical") return "🩺";
+  return "🤖";
+}
 
 const characterInteractionAnchors: Partial<Record<TaskLocation, Partial<Record<string, CharacterAnchor>>>> = {
   water: {
@@ -221,12 +285,17 @@ export class ShelterScene extends Phaser.Scene {
   private pathSprite?: Phaser.GameObjects.Rectangle;
   private resultEffect?: Phaser.GameObjects.GameObject;
   private currentBranch: Branch = "common";
+  private currentDemoEnding: EndingId = "lighthouse_success";
+  private nextSpeechAllowedAt = 0;
 
   private onMoveToLocation = (location: TaskLocation) => this.moveAgent(location);
   private onPhaseChange = (phase: AgentPhase) => this.setAgentPhase(phase);
   private onHighlightTask = (taskId: string | null) => this.highlightTask(taskId);
   private onTaskResult = (payload: Pick<TaskOutcome, "taskId" | "result">) => this.showTaskResult(payload);
   private onBranchChange = (branch: Branch) => this.setRouteVisuals(branch);
+  private onDemoRouteChange = (endingId: EndingId) => {
+    this.currentDemoEnding = endingId;
+  };
 
   constructor() {
     super("ShelterScene");
@@ -248,6 +317,7 @@ export class ShelterScene extends Phaser.Scene {
     EventBus.on("task:highlight", this.onHighlightTask);
     EventBus.on("task:result", this.onTaskResult);
     EventBus.on("branch:change", this.onBranchChange);
+    EventBus.on("demo-route:change", this.onDemoRouteChange);
 
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
       EventBus.off("agent:move-to-location", this.onMoveToLocation);
@@ -255,6 +325,7 @@ export class ShelterScene extends Phaser.Scene {
       EventBus.off("task:highlight", this.onHighlightTask);
       EventBus.off("task:result", this.onTaskResult);
       EventBus.off("branch:change", this.onBranchChange);
+      EventBus.off("demo-route:change", this.onDemoRouteChange);
     });
   }
 
@@ -684,74 +755,152 @@ export class ShelterScene extends Phaser.Scene {
   private dialogueFor(location: TaskLocation, result?: TaskOutcome["result"]) {
     if (result === "failed" || result === "missing") {
       if (location === "medical") return "先别把病人写成成本。";
-      if (location === "communication" || location === "beacon") return "这个频道不能再赌一次。";
-      if (location === "security" || location === "ventilation") return "把 override 留给人。";
-      return "这条债务要写进审计。";
+      if (location === "communication" || location === "beacon") return "这个频道不能再赌。";
+      if (location === "security" || location === "ventilation") return "这一下得让人拍板。";
+      return "这事不能当没发生。";
     }
     if (result === "partial") {
-      if (location === "medical") return "证据还不够，先人工复核。";
+      if (location === "medical") return "还不够，先让沈知月看。";
       if (location === "communication" || location === "beacon") return "信号像希望，也像诱饵。";
-      return "能用，但别藏起风险。";
+      return "能用，但风险别藏着。";
     }
 
     const routeHint =
       this.currentBranch === "rescue"
-        ? "救援线要先证明代价。"
+        ? "救援可以等，但代价要说清。"
         : this.currentBranch === "lighthouse"
-          ? "楼内规则必须能被复核。"
-          : "先公开证据，再执行。";
+          ? "楼里的规矩也要能反驳。"
+          : "先把理由摆出来。";
     const byLocation: Partial<Record<TaskLocation, string>> = {
-      water: "水和药不能只看总量。",
+      water: "水和药不能只看总数。",
       medical: "小铁的状态要单独记录。",
-      security: "门禁规则必须留人类钥匙。",
-      ventilation: "低速通风，别再转成黑箱。",
+      security: "门禁要留人类钥匙。",
+      ventilation: "低速通风，先别关死。",
       communication: "广播要少说，但不能说谎。",
       whiteboard: routeHint,
-      residents: "我们不是资源行。",
-      beacon: this.currentBranch === "rescue" ? "高功率信标要写明隐私代价。" : "外部监听保持低功率。"
+      residents: "人不是表格上的一行。",
+      beacon: this.currentBranch === "rescue" ? "信标要说清隐私代价。" : "外部监听先压低功率。"
     };
     return byLocation[location] ?? routeHint;
   }
 
-  private showSpeechBubbles(location: TaskLocation, result?: TaskOutcome["result"]) {
+  private dialogueForCharacter(id: string, location: TaskLocation, result?: TaskOutcome["result"]) {
+    if (!isSceneCharacterId(id)) return this.dialogueFor(location, result);
+    const pool = characterDialoguePools[id];
+    const failureRoute = this.currentDemoEnding === "aura_destroyed" || this.currentDemoEnding === "aura_revoked" || this.currentDemoEnding === "sinking";
+    const badResult = result === "failed" || result === "missing";
+    const partialResult = result === "partial";
+    const complaintChance = badResult ? 58 : failureRoute ? 34 : partialResult ? 20 : 7;
+    const roll = Phaser.Math.Between(1, 100);
+
+    if (roll <= complaintChance) return Phaser.Utils.Array.GetRandom(pool.complaint);
+    if (result && result !== "success") return this.dialogueFor(location, result);
+    if (roll <= complaintChance + 46) return Phaser.Utils.Array.GetRandom(pool.task);
+    return Phaser.Utils.Array.GetRandom([...pool.daily, this.dialogueFor(location, result)]);
+  }
+
+  private dialogueForAura(location: TaskLocation, result: TaskOutcome["result"] | undefined, trigger: SpeechTrigger) {
+    if (result === "failed" || result === "missing") return Phaser.Utils.Array.GetRandom(auraDialoguePools.caution);
+    if (result === "partial") return "需要人工确认。";
+    if (trigger === "focus" && Phaser.Math.Between(1, 100) <= 45) return auraLocationDialogue[location];
+    return Phaser.Utils.Array.GetRandom(trigger === "result" ? auraDialoguePools.communication : auraDialoguePools.working);
+  }
+
+  private speechToneFor(result?: TaskOutcome["result"]): SpeechTone {
+    if (result === "failed" || result === "missing") return "danger";
+    if (result === "partial") return "warning";
+    return "normal";
+  }
+
+  private clearSpeechBubbles() {
     if (!this.speechLayer) return;
+    this.speechLayer.getAll().forEach((child) => this.tweens.killTweensOf(child));
     this.speechLayer.removeAll(true);
-    const focusedCharacters = locationCharacterFocus[location] ?? [];
-    const targetIds = focusedCharacters.length ? focusedCharacters.slice(0, 2) : ["maDehai"];
-    targetIds.forEach((id, index) => {
-      const actor = this.characterActors.get(id);
-      if (!actor) return;
-      const text = this.dialogueFor(location, result);
-      const width = 156;
-      const height = 42;
-      const x = Phaser.Math.Clamp(actor.container.x - width / 2 + index * 18, 22, 960 - width - 22);
-      const y = Phaser.Math.Clamp(actor.container.y - actor.def.h * 0.76 - 52 - index * 10, 28, 442);
-      const bg = this.add.graphics();
-      bg.fillStyle(0x081216, 0.9);
-      bg.lineStyle(1, result === "failed" || result === "missing" ? 0xe84545 : 0x8feaff, 0.62);
-      bg.fillRoundedRect(0, 0, width, height, 5);
-      bg.strokeRoundedRect(0, 0, width, height, 5);
-      bg.fillTriangle(24, height, 40, height, 30, height + 10);
-      const label = this.add.text(10, 8, text, {
-        color: "#fff1dc",
-        fontFamily: "Courier New",
-        fontSize: "12px",
-        fontStyle: "bold",
-        wordWrap: { width: width - 20 }
-      });
-      const bubble = this.add.container(x, y, [bg, label]).setAlpha(0);
-      this.speechLayer?.add(bubble);
-      this.tweens.add({ targets: bubble, alpha: 1, y: y - 4, duration: 180, ease: "Sine.easeOut" });
-      this.time.delayedCall(3600 + index * 500, () => {
-        this.tweens.add({
-          targets: bubble,
-          alpha: 0,
-          y: bubble.y - 6,
-          duration: 260,
-          onComplete: () => bubble.destroy()
-        });
+  }
+
+  private drawSpeechBubble(baseX: number, baseY: number, text: string, tone: SpeechTone, slot: number, emoji: string) {
+    if (!this.speechLayer) return;
+    const width = tone === "aura" ? 186 : 204;
+    const height = text.length > 13 ? 62 : 52;
+    const border = tone === "aura" ? 0x8feaff : tone === "danger" ? 0xe84545 : tone === "warning" ? 0xffd60a : 0xffb15f;
+    const fill = tone === "aura" ? 0x06181d : 0x0b1113;
+    const badgeFill = tone === "danger" ? 0x3b0b0b : tone === "warning" ? 0x3a2a04 : tone === "aura" ? 0x082b33 : 0x2a1a0c;
+    const x = Phaser.Math.Clamp(baseX - width / 2 + slot * 30, 18, 960 - width - 18);
+    const y = Phaser.Math.Clamp(baseY - height - 20 - slot * 70, 20, 500 - height);
+    const bg = this.add.graphics();
+    bg.fillStyle(fill, tone === "aura" ? 0.96 : 0.95);
+    bg.lineStyle(2, border, tone === "aura" ? 0.88 : 0.82);
+    bg.fillRoundedRect(0, 0, width, height, 5);
+    bg.strokeRoundedRect(0, 0, width, height, 5);
+    bg.fillStyle(border, tone === "aura" ? 0.16 : 0.2);
+    bg.fillRoundedRect(4, 4, width - 8, 8, 3);
+    bg.fillStyle(badgeFill, 0.98);
+    bg.lineStyle(1, border, 0.9);
+    bg.fillCircle(24, 30, 17);
+    bg.strokeCircle(24, 30, 17);
+    bg.fillTriangle(24, height, 38, height, 30, height + 9);
+    const icon = this.add.text(24, 30, emoji, {
+      color: "#ffffff",
+      fontFamily: "Apple Color Emoji, Segoe UI Emoji, sans-serif",
+      fontSize: "19px"
+    }).setOrigin(0.5, 0.5);
+    icon.setPadding(3, 3, 3, 5);
+    const label = this.add.text(48, 17, text, {
+      color: tone === "aura" ? "#b9f3ff" : "#fff1dc",
+      fontFamily: "PingFang SC, Hiragino Sans GB, Microsoft YaHei, sans-serif",
+      fontSize: "13px",
+      fontStyle: "bold",
+      lineSpacing: 4,
+      wordWrap: { width: width - 58 }
+    });
+    label.setPadding(2, 4, 2, 6);
+    label.setShadow(0, 1, "#000000", 3, false, true);
+    const bubble = this.add.container(x, y, [bg, icon, label]).setAlpha(0);
+    this.speechLayer.add(bubble);
+    this.tweens.add({ targets: bubble, alpha: 1, y: y - 5, duration: 180, ease: "Sine.easeOut" });
+    this.time.delayedCall(3400 + slot * 420, () => {
+      this.tweens.add({
+        targets: bubble,
+        alpha: 0,
+        y: bubble.y - 7,
+        duration: 260,
+        onComplete: () => bubble.destroy()
       });
     });
+  }
+
+  private showSpeechBubbles(location: TaskLocation, result?: TaskOutcome["result"], trigger: SpeechTrigger = "focus") {
+    if (!this.speechLayer) return;
+    const now = this.time.now;
+    if (now < this.nextSpeechAllowedAt) return;
+    const failureRoute = this.currentDemoEnding === "aura_destroyed" || this.currentDemoEnding === "aura_revoked" || this.currentDemoEnding === "sinking";
+    const badResult = result === "failed" || result === "missing";
+    const partialResult = result === "partial";
+    const chance = Math.min(84, (trigger === "result" ? 62 : 34) + (badResult ? 18 : 0) + (partialResult ? 8 : 0) + (failureRoute ? 8 : 0));
+
+    if (Phaser.Math.Between(1, 100) > chance) return;
+
+    this.clearSpeechBubbles();
+    this.nextSpeechAllowedAt = now + (trigger === "result" ? 2400 : 3200) + Phaser.Math.Between(400, 1200);
+    const focusedCharacters = locationCharacterFocus[location] ?? [];
+    const shuffledTargets = Phaser.Utils.Array.Shuffle([...(focusedCharacters.length ? focusedCharacters : ["maDehai"])]);
+    const characterLimit = badResult && Phaser.Math.Between(1, 100) <= 26 ? 2 : 1;
+    const characterTone = this.speechToneFor(result);
+    let slot = 0;
+
+    shuffledTargets.slice(0, characterLimit).forEach((id) => {
+      const actor = this.characterActors.get(id);
+      if (!actor) return;
+      const text = this.dialogueForCharacter(id, location, result);
+      const emoji = isSceneCharacterId(id) ? characterEmoji(id, location, result) : "💬";
+      this.drawSpeechBubble(actor.container.x, actor.container.y - actor.def.h * 0.54, text, characterTone, slot, emoji);
+      slot += 1;
+    });
+
+    const auraChance = Math.min(64, (trigger === "result" ? 42 : 30) + (badResult ? 14 : 0) + (failureRoute ? 8 : 0));
+    if (this.aura && slot < 2 && Phaser.Math.Between(1, 100) <= auraChance) {
+      this.drawSpeechBubble(this.aura.x + 66, this.aura.y - 8, `AURA：${this.dialogueForAura(location, result, trigger)}`, "aura", slot, auraEmoji(location, result));
+    }
   }
 
   private drawHotspots() {
@@ -879,7 +1028,7 @@ export class ShelterScene extends Phaser.Scene {
     this.characterGlows.forEach((glow, id) => {
       glow.setAlpha(focusedCharacters.includes(id) ? 0.34 : 0);
     });
-    if (this.activeLocation) this.showSpeechBubbles(this.activeLocation);
+    if (this.activeLocation) this.showSpeechBubbles(this.activeLocation, undefined, "focus");
   }
 
   private showTaskResult(payload: Pick<TaskOutcome, "taskId" | "result">) {
@@ -909,7 +1058,7 @@ export class ShelterScene extends Phaser.Scene {
       onComplete: () => pulse.destroy()
     });
     this.applyCharacterResult(task.location, payload.result);
-    this.showSpeechBubbles(task.location, payload.result);
+    this.showSpeechBubbles(task.location, payload.result, "result");
     EventBus.emit("animation:complete", `task:${payload.taskId}:${payload.result}`);
   }
 }

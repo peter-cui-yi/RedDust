@@ -119,6 +119,8 @@ export function AgentConsolePanel({ runState, state, currentTask, latestOutcome 
   const selectedTasks = selection.selected.map((decision) => decision.task);
   const selectedTaskIds = new Set(selectedTasks.map((task) => task.id));
   const activeSection = sectionForPhase(runState);
+  const selectionThinking = activeSection === "selection" && !lockedTaskIds?.length && candidateDecisions.length > 0;
+  const [scanIndex, setScanIndex] = useState(0);
   const [openSections, setOpenSections] = useState<Record<ConsoleSectionId, boolean>>({
     selection: true,
     execution: false,
@@ -136,6 +138,19 @@ export function AgentConsolePanel({ runState, state, currentTask, latestOutcome 
       allocation: activeSection === "allocation"
     });
   }, [activeSection, runState.currentDay, runState.activeBranch]);
+
+  useEffect(() => {
+    if (!selectionThinking) {
+      setScanIndex(0);
+      return;
+    }
+
+    const interval = window.setInterval(() => {
+      setScanIndex((value) => (value + 1) % candidateDecisions.length);
+    }, 620);
+
+    return () => window.clearInterval(interval);
+  }, [candidateDecisions.length, selectionThinking]);
 
   function toggleSection(section: ConsoleSectionId, open: boolean) {
     setOpenSections((current) => ({ ...current, [section]: open }));
@@ -155,10 +170,17 @@ export function AgentConsolePanel({ runState, state, currentTask, latestOutcome 
       <details className="aura-flow-card" open={openSections.selection} onToggle={(event) => toggleSection("selection", event.currentTarget.open)}>
         <summary>
           <span>01</span>
-          <b>选择 2/4 benchmark 任务</b>
-          <em>{selectedTasks.map((task) => task.id).join(" + ") || "waiting"}</em>
+          <b>任务抉择中（Thinking）</b>
+          <em>{selectionThinking ? candidateDecisions[scanIndex]?.task.id ?? "scanning" : selectedTasks.map((task) => task.id).join(" + ") || "waiting"}</em>
         </summary>
         <div className="aura-flow-body">
+          {selectionThinking ? (
+            <div className="selection-scanner" aria-label="AURA task selection scanner">
+              <span>正在扫描四个候选任务</span>
+              <b>{candidateDecisions[scanIndex]?.task.title ?? "等待候选任务"}</b>
+            </div>
+          ) : null}
+
           <div className="state-scan-grid">
             <article>
               <span>环境状态</span>
@@ -188,10 +210,10 @@ export function AgentConsolePanel({ runState, state, currentTask, latestOutcome 
           </div>
 
           <ol className="candidate-rank-list">
-            {candidateDecisions.map((decision) => {
+            {candidateDecisions.map((decision, index) => {
               const task = decision.task;
               return (
-              <li className={`${selectedTaskIds.has(task.id) ? "selected" : "deferred"} ${decision.selectionLocked ? "locked-in" : ""}`} key={task.id}>
+              <li className={`${selectedTaskIds.has(task.id) ? "selected" : "deferred"} ${decision.selectionLocked ? "locked-in" : ""} ${selectionThinking && index === scanIndex ? "thinking-focus" : ""}`} key={task.id}>
                 <img alt="" src={taskCategoryIconAssets[task.category]} />
                 <div>
                   <span>#{decision.rank} · {selectedTaskIds.has(task.id) ? "EXECUTE" : "DEFER"}{decision.selectionLocked ? " · LOCKED" : ""}</span>
@@ -267,7 +289,7 @@ export function AgentConsolePanel({ runState, state, currentTask, latestOutcome 
               ))}
             </div>
             <p>
-              AURA 按当前资源、信任、安全感和 NPC 紧张度调整配给；低水食触发节约，高紧张触发照明与人工复核成本。
+              AURA 每日扣除饮水、食物、药品、电力和照护成本；低库存不会自动补回，只会转化为健康、士气、信任和安全压力。
             </p>
             {dailyUpkeepReasons.length ? (
               <ul className="allocation-reason-list">

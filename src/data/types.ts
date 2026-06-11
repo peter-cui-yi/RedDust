@@ -167,6 +167,7 @@ export type FinalAuditCandidate = {
 export type FinalAuditResult = {
   selectedEndingId: EndingId;
   selectedTitle: string;
+  resolvedDay: number;
   candidates: FinalAuditCandidate[];
   evidenceChains: string[];
   failureDebt: string[];
@@ -272,6 +273,8 @@ export type DayPlan = {
   day: number;
   title: string;
   narrative: string;
+  briefing?: string;
+  taskIntro?: string;
   candidateTasks?: string[];
   recommendedTasks?: string[];
   commonTasks?: string[];
@@ -288,7 +291,7 @@ export type AgentRunState = {
   currentTaskId?: string;
   currentPhase: AgentPhase;
   activeBranch: Branch;
-  runMode: "single" | "both_branches";
+  runMode: "single" | "both_branches" | "showcase";
   taskStatuses: Record<string, TaskRunStatus>;
   dailyTaskSelections: Record<string, string[]>;
   currentStorySceneId?: string;

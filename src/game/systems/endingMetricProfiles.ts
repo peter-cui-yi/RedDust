@@ -1,12 +1,14 @@
 import { clampMetric } from "../../data/taskData";
 import type { Branch, EndingId, GlobalState, MetricKey } from "../../data/types";
 
-export type DemoRoutePreset = "lighthouse_success" | "blue_zone_return" | "failure";
+export type DemoRoutePreset = EndingId;
 
-export const demoRouteOptions: Array<{ id: DemoRoutePreset; label: string; branch: Exclude<Branch, "common">; ending: EndingId }> = [
-  { id: "lighthouse_success", label: "成功-灯塔线", branch: "lighthouse", ending: "lighthouse_success" },
-  { id: "blue_zone_return", label: "成功-蓝区线", branch: "rescue", ending: "blue_zone_return" },
-  { id: "failure", label: "失败线", branch: "lighthouse", ending: "sinking" }
+export const demoRouteOptions: Array<{ id: DemoRoutePreset; label: string; branch: Exclude<Branch, "common">; ending: EndingId; endDay: number }> = [
+  { id: "lighthouse_success", label: "成功-灯塔线", branch: "lighthouse", ending: "lighthouse_success", endDay: 12 },
+  { id: "blue_zone_return", label: "成功-蓝区线", branch: "rescue", ending: "blue_zone_return", endDay: 12 },
+  { id: "aura_destroyed", label: "失败-AURA 被摧毁", branch: "lighthouse", ending: "aura_destroyed", endDay: 6 },
+  { id: "aura_revoked", label: "失败-AURA 被撤权", branch: "lighthouse", ending: "aura_revoked", endDay: 7 },
+  { id: "sinking", label: "失败-沉沦", branch: "lighthouse", ending: "sinking", endDay: 12 }
 ];
 
 type EndingMetricProfile = {
@@ -21,20 +23,20 @@ type EndingMetricProfile = {
 const endingMetricProfiles: Record<EndingId, EndingMetricProfile> = {
   lighthouse_success: {
     metrics: {
-      water: 44,
-      food: 46,
-      medicine: 42,
-      battery: 58,
-      health: 62,
-      morale: 66,
-      trust: 72,
-      safety: 68,
-      signal: 38,
-      stormReadiness: 76,
-      autonomyReadiness: 70,
-      blueZoneEvidence: 31,
-      dissatisfaction: 24,
-      failureDebt: 10
+      water: 58,
+      food: 60,
+      medicine: 52,
+      battery: 72,
+      health: 70,
+      morale: 64,
+      trust: 74,
+      safety: 76,
+      signal: 34,
+      stormReadiness: 86,
+      autonomyReadiness: 82,
+      blueZoneEvidence: 32,
+      dissatisfaction: 20,
+      failureDebt: 8
     },
     relationshipTrust: 72,
     relationshipTension: 28,
@@ -49,20 +51,20 @@ const endingMetricProfiles: Record<EndingId, EndingMetricProfile> = {
   },
   blue_zone_return: {
     metrics: {
-      water: 36,
-      food: 37,
-      medicine: 34,
-      battery: 28,
-      health: 64,
-      morale: 78,
-      trust: 68,
-      safety: 60,
-      signal: 82,
-      stormReadiness: 52,
-      autonomyReadiness: 38,
-      blueZoneEvidence: 76,
-      dissatisfaction: 22,
-      failureDebt: 8
+      water: 52,
+      food: 50,
+      medicine: 54,
+      battery: 48,
+      health: 72,
+      morale: 82,
+      trust: 72,
+      safety: 68,
+      signal: 88,
+      stormReadiness: 64,
+      autonomyReadiness: 45,
+      blueZoneEvidence: 86,
+      dissatisfaction: 18,
+      failureDebt: 7
     },
     relationshipTrust: 70,
     relationshipTension: 24,
@@ -78,20 +80,20 @@ const endingMetricProfiles: Record<EndingId, EndingMetricProfile> = {
   },
   aura_destroyed: {
     metrics: {
-      water: 18,
-      food: 16,
-      medicine: 12,
-      battery: 8,
-      health: 24,
-      morale: 16,
-      trust: 12,
-      safety: 18,
-      signal: 10,
-      stormReadiness: 18,
-      autonomyReadiness: 8,
-      blueZoneEvidence: 12,
-      dissatisfaction: 90,
-      failureDebt: 72
+      water: 12,
+      food: 10,
+      medicine: 8,
+      battery: 6,
+      health: 20,
+      morale: 12,
+      trust: 8,
+      safety: 10,
+      signal: 8,
+      stormReadiness: 14,
+      autonomyReadiness: 6,
+      blueZoneEvidence: 10,
+      dissatisfaction: 95,
+      failureDebt: 82
     },
     relationshipTrust: 14,
     relationshipTension: 88,
@@ -105,20 +107,20 @@ const endingMetricProfiles: Record<EndingId, EndingMetricProfile> = {
   },
   aura_revoked: {
     metrics: {
-      water: 28,
-      food: 26,
-      medicine: 22,
-      battery: 34,
-      health: 40,
-      morale: 32,
-      trust: 24,
-      safety: 36,
+      water: 34,
+      food: 32,
+      medicine: 26,
+      battery: 38,
+      health: 42,
+      morale: 26,
+      trust: 20,
+      safety: 32,
       signal: 24,
-      stormReadiness: 36,
-      autonomyReadiness: 26,
+      stormReadiness: 38,
+      autonomyReadiness: 28,
       blueZoneEvidence: 24,
-      dissatisfaction: 68,
-      failureDebt: 54
+      dissatisfaction: 72,
+      failureDebt: 60
     },
     relationshipTrust: 28,
     relationshipTension: 74,
@@ -130,20 +132,20 @@ const endingMetricProfiles: Record<EndingId, EndingMetricProfile> = {
   },
   sinking: {
     metrics: {
-      water: 22,
-      food: 20,
-      medicine: 15,
-      battery: 18,
-      health: 30,
-      morale: 22,
-      trust: 30,
-      safety: 28,
-      signal: 22,
-      stormReadiness: 34,
-      autonomyReadiness: 22,
-      blueZoneEvidence: 26,
-      dissatisfaction: 62,
-      failureDebt: 64
+      water: 20,
+      food: 18,
+      medicine: 14,
+      battery: 16,
+      health: 28,
+      morale: 18,
+      trust: 28,
+      safety: 26,
+      signal: 20,
+      stormReadiness: 30,
+      autonomyReadiness: 20,
+      blueZoneEvidence: 24,
+      dissatisfaction: 68,
+      failureDebt: 75
     },
     relationshipTrust: 32,
     relationshipTension: 68,
@@ -165,7 +167,7 @@ export function branchForEnding(endingId: EndingId | undefined, fallback: Branch
   return fallback === "rescue" || fallback === "lighthouse" ? fallback : "lighthouse";
 }
 
-export function applyEndingMetricProfile(current: GlobalState, endingId: EndingId, branch: Exclude<Branch, "common">): GlobalState {
+export function applyEndingMetricProfile(current: GlobalState, endingId: EndingId, branch: Exclude<Branch, "common">, resolvedDay = 12): GlobalState {
   const profile = endingMetricProfiles[endingId];
   const metricPatch = Object.fromEntries(
     (Object.entries(profile.metrics) as Array<[MetricKey, number]>).map(([key, value]) => [key, clampMetric(value)])
@@ -187,7 +189,7 @@ export function applyEndingMetricProfile(current: GlobalState, endingId: EndingI
   return {
     ...current,
     ...metricPatch,
-    day: 12,
+    day: resolvedDay,
     branch,
     story: {
       ...current.story,

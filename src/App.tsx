@@ -9,6 +9,7 @@ import { CompareBranchesPanel } from "./components/CompareBranchesPanel";
 import { ConsequencePanel } from "./components/ConsequencePanel";
 import { CreditsPanel } from "./components/CreditsPanel";
 import { DailyBriefingPanel } from "./components/DailyBriefingPanel";
+import { DailyClosurePanel, type DailyClosureSummary } from "./components/DailyClosurePanel";
 import { DayTimeline } from "./components/DayTimeline";
 import { EndingPanel } from "./components/EndingPanel";
 import { FinalAuditPanel } from "./components/FinalAuditPanel";
@@ -17,9 +18,17 @@ import { LiveReplayFeed } from "./components/LiveReplayFeed";
 import { RelationshipPanel } from "./components/RelationshipPanel";
 import { ReplayPanel } from "./components/ReplayPanel";
 import { RouteTreePanel } from "./components/RouteTreePanel";
+import { ShowcasePanel } from "./components/ShowcasePanel";
 import { StateDeltaToast } from "./components/StateDeltaToast";
 import { StoryScenePanel } from "./components/StoryScenePanel";
 import { dayPlansByDay } from "./data/dayPlanData";
+import {
+  firstShowcaseNodeId,
+  nextShowcaseNodeId,
+  showcaseNodeById,
+  showcaseNodes,
+  type ShowcaseNodeId
+} from "./data/showcaseData";
 import { consequencesForTask, storyConsequencesById } from "./data/storyConsequenceData";
 import { scenesForDay, storyScenesById } from "./data/storySceneData";
 import { clampMetric, createInitialState, tasks, tasksById } from "./data/taskData";
@@ -64,10 +73,10 @@ import {
 import { selectAuraTasksForDay, taskSelectionKey } from "./game/systems/auraTaskSelection";
 import { resolveTaskOutcome } from "./game/systems/outcomeEngine";
 import { createReplayEvent } from "./game/systems/replayEngine";
-import { applyDailyUpkeep, dailyUpkeepForDay, describeMetricDeltas, nonZeroMetricDeltas } from "./game/systems/resourceEconomy";
+import { applyDailyUpkeep, dailyUpkeepForDay, dailyUpkeepReasonsForDay, describeMetricDeltas, nonZeroMetricDeltas, resourceMetricLabels } from "./game/systems/resourceEconomy";
 
 type Screen = "intro" | "game";
-type Overlay = "benchmark" | "replay" | "credits" | "branchDecision" | "ending" | "compare" | "storyScene" | "dayBriefing" | "finalAudit" | null;
+type Overlay = "benchmark" | "replay" | "credits" | "branchDecision" | "ending" | "compare" | "storyScene" | "dayBriefing" | "dailyClosure" | "finalAudit" | "showcase" | null;
 type DailyBriefingMode = "tasks" | "finalAudit";
 type DailyBriefing = {
   day: number;
@@ -83,6 +92,16 @@ type Snapshot = {
 
 const terminalStatuses = ["success", "partial", "failed", "missing", "skipped"];
 const openingSceneId = "prologue-aura-reboot";
+const planningMetricThresholds: Partial<Record<MetricKey, number>> = {
+  water: 52,
+  food: 52,
+  medicine: 48,
+  battery: 50,
+  health: 55,
+  morale: 50,
+  trust: 50,
+  safety: 52
+};
 
 function cloneState(state: GlobalState): GlobalState {
   return {
@@ -342,6 +361,34 @@ function selectionReplayEventId(day: number, branch: Branch) {
   return `${taskSelectionKey(day, branch)}:selection`;
 }
 
+function sumMetricDeltas(deltas: Array<Partial<Record<MetricKey, number>> | Record<string, number>>) {
+  const total: Partial<Record<MetricKey, number>> = {};
+  for (const delta of deltas) {
+    for (const [key, value] of Object.entries(delta) as Array<[MetricKey, number]>) {
+      if (!value) continue;
+      total[key] = (total[key] ?? 0) + value;
+    }
+  }
+  return total;
+}
+
+function lowResourcePriorities(state: GlobalState, nextPlanDelta: Partial<Record<MetricKey, number>>) {
+  const priorities = (Object.entries(planningMetricThresholds) as Array<[MetricKey, number]>)
+    .filter(([key, threshold]) => state[key] <= threshold || (nextPlanDelta[key] ?? 0) < -2)
+    .sort(([a], [b]) => (state[a] + (nextPlanDelta[a] ?? 0)) - (state[b] + (nextPlanDelta[b] ?? 0)))
+    .slice(0, 4)
+    .map(([key]) => {
+      const projected = clampMetric(state[key] + (nextPlanDelta[key] ?? 0));
+      return `${resourceMetricLabels[key]}预计到 ${projected}，明日任务优先补足或降低消耗。`;
+    });
+
+  if (state.failureDebt >= 30) {
+    priorities.push(`审计压力 ${state.failureDebt} 偏高，下一天需要减少被延后的隐患。`);
+  }
+
+  return priorities;
+}
+
 function endingForBranch(branch: Exclude<Branch, "common">, state: GlobalState): BranchEnding {
   return buildBranchEnding(branch, state);
 }
@@ -359,9 +406,12 @@ export default function App() {
   const [branchDecision, setBranchDecision] = useState<BranchDecision | null>(null);
   const [branchSummaries, setBranchSummaries] = useState<Partial<Record<Exclude<Branch, "common">, BranchSummary>>>({});
   const [dailyBriefing, setDailyBriefing] = useState<DailyBriefing | null>(null);
+  const [dailyClosure, setDailyClosure] = useState<DailyClosureSummary | null>(null);
   const [demoRoute, setDemoRoute] = useState<DemoRoutePreset>("lighthouse_success");
+  const [activeShowcaseNodeId, setActiveShowcaseNodeId] = useState<ShowcaseNodeId>(firstShowcaseNodeId);
   const [phaseToken, setPhaseToken] = useState(0);
   const daySevenSnapshot = useRef<Snapshot | null>(null);
+  const activeShowcaseNode = showcaseNodeById[activeShowcaseNodeId];
 
   const currentTask = runState.currentTaskId ? tasksById[runState.currentTaskId] ?? null : null;
   const currentStoryScene = runState.currentStorySceneId ? storyScenesById[runState.currentStorySceneId] ?? null : null;
@@ -377,12 +427,21 @@ export default function App() {
   }, [runState.activeBranch, selectedLocation]);
 
   const basePhaseDuration = phaseDurations[runState.currentPhase] ?? 1600;
+  const dailySelectionKey = taskSelectionKey(runState.currentDay, runState.activeBranch);
+  const isShowcaseSelectionThinking =
+    runState.runMode === "showcase" &&
+    runState.currentPhase === "idle" &&
+    !currentTask &&
+    !runState.dailyTaskSelections[dailySelectionKey]?.length;
+  const showcaseThinkingHoldMs =
+    runState.runMode === "showcase" && (runState.currentPhase === "thinking" || isShowcaseSelectionThinking) ? 3000 : 0;
   const phaseDuration = runState.currentPhase === "replay_logged"
     ? basePhaseDuration
-    : Math.max(250, Math.round(basePhaseDuration / runState.speed));
+    : Math.max(250, Math.round(basePhaseDuration / runState.speed)) + showcaseThinkingHoldMs;
   const plannedDemoRoute = demoRouteConfig(demoRoute);
 
   const nextAction = useMemo(() => {
+    if (runState.runMode === "showcase") return `Showcase ready: ${activeShowcaseNode.tag}.`;
     if (currentStoryScene) {
       if (currentStoryScene.timing === "branch_debate") {
         return `${currentStoryScene.title}: the public debate is being recorded before branch decision.`;
@@ -397,7 +456,7 @@ export default function App() {
     if (runState.currentPhase === "replay_logged") return "Replay Logged: the task trace is now available for audit.";
     if (currentTask) return `Next: ${currentTask.executionText}`;
     return runState.isRunning ? "Queueing next benchmark task." : "Waiting for Run.";
-  }, [currentStoryScene, currentTask, runState.currentDay, runState.currentPhase, runState.isRunning]);
+  }, [activeShowcaseNode.tag, currentStoryScene, currentTask, runState.currentDay, runState.currentPhase, runState.isRunning, runState.runMode]);
 
   function recordTodayTaskSelection() {
     const plan = dayPlansByDay[runState.currentDay];
@@ -491,7 +550,7 @@ export default function App() {
     return Boolean(current.story.flags.aura_human_auditable_constraint);
   }
 
-  function showOpeningScene(nextMode: "single" | "both_branches" = runState.runMode, resetState = false) {
+  function showOpeningScene(nextMode: "single" | "both_branches" | "showcase" = runState.runMode, resetState = false) {
     const scene = storyScenesById[openingSceneId];
     setScreen("game");
     setOverlay("storyScene");
@@ -705,7 +764,133 @@ export default function App() {
   function chooseDemoRoute(route: DemoRoutePreset) {
     const config = demoRouteConfig(route);
     setDemoRoute(route);
+    EventBus.emit("demo-route:change", config.ending);
     setNotice(`Demo route set: ${config.label}.`);
+    setPhaseToken((value) => value + 1);
+  }
+
+  function syncShowcaseScene(nodeId: ShowcaseNodeId, route: DemoRoutePreset) {
+    const node = showcaseNodeById[nodeId];
+    const config = demoRouteConfig(route);
+    const showcaseBranch = node.day <= 7 || node.branch === "common" ? "common" : config.branch;
+    const showcaseDay = Math.min(node.day, config.endDay);
+    const shouldShowEndingMetrics = node.day >= 12 || config.endDay < 12;
+
+    setScreen("game");
+    setSelectedLocation(null);
+    setLatestOutcome(null);
+    setLatestOutcomeTaskTitle(undefined);
+    setEnding(null);
+    setDailyBriefing(null);
+    setBranchDecision(null);
+    setDemoRoute(route);
+    EventBus.emit("demo-route:change", config.ending);
+    EventBus.emit("branch:change", showcaseBranch);
+    EventBus.emit("task:highlight", null);
+
+    setState((prev) => {
+      const profiled = shouldShowEndingMetrics
+        ? applyEndingMetricProfile(prev, config.ending, config.branch, config.endDay)
+        : prev;
+      return {
+        ...profiled,
+        day: showcaseDay,
+        branch: showcaseBranch,
+        story: {
+          ...profiled.story,
+          activeSceneId: undefined
+        }
+      };
+    });
+    setRunState((prev) => ({
+      ...prev,
+      isRunning: false,
+      isPaused: true,
+      runMode: "showcase",
+      currentDay: showcaseDay,
+      activeBranch: showcaseBranch,
+      currentTaskId: undefined,
+      currentStorySceneId: undefined,
+      currentPhase: shouldShowEndingMetrics ? "ending" : "idle"
+    }));
+  }
+
+  function openShowcaseNode(nodeId: ShowcaseNodeId = activeShowcaseNodeId) {
+    const node = showcaseNodeById[nodeId];
+    setActiveShowcaseNodeId(nodeId);
+    setOverlay("showcase");
+    syncShowcaseScene(nodeId, node.routePreset);
+    setNotice(`Showcase mode: ${node.tag} / ${node.title}.`);
+    setPhaseToken((value) => value + 1);
+  }
+
+  function openNextShowcaseNode() {
+    openShowcaseNode(nextShowcaseNodeId(activeShowcaseNodeId));
+  }
+
+  function chooseShowcaseRoute(route: EndingId) {
+    const config = demoRouteConfig(route);
+    syncShowcaseScene(activeShowcaseNodeId, route);
+    setNotice(`Showcase route set: ${config.label}.`);
+    setPhaseToken((value) => value + 1);
+  }
+
+  function startShowcaseBeatDemo() {
+    const node = activeShowcaseNode;
+    const config = demoRouteConfig(demoRoute);
+    const showcaseBranch = node.day <= 7 || node.branch === "common" ? "common" : config.branch;
+    const showcaseDay = Math.min(node.day, config.endDay);
+
+    setOverlay(null);
+    setDailyBriefing(null);
+    setBranchDecision(null);
+    setEnding(null);
+    setSelectedLocation(null);
+    setLatestOutcome(null);
+    setLatestOutcomeTaskTitle(undefined);
+
+    if (node.day >= 12 || config.endDay < node.day) {
+      enterFinalAudit(config.ending, { resolvedDay: config.endDay });
+      return;
+    }
+
+    const selectionKey = taskSelectionKey(showcaseDay, showcaseBranch);
+    const resetTaskIds = new Set(dayPlansByDay[showcaseDay]?.candidateTasks ?? []);
+    setState((prev) => ({
+      ...prev,
+      day: showcaseDay,
+      branch: showcaseBranch,
+      story: {
+        ...prev.story,
+        activeSceneId: undefined
+      }
+    }));
+    setRunState((prev) => {
+      const taskStatuses = { ...prev.taskStatuses };
+      resetTaskIds.forEach((taskId) => {
+        taskStatuses[taskId] = "locked";
+      });
+      const dailyTaskSelections = { ...prev.dailyTaskSelections };
+      delete dailyTaskSelections[selectionKey];
+      return {
+        ...prev,
+        isRunning: true,
+        isPaused: false,
+        speed: 4,
+        runMode: "showcase",
+        currentDay: showcaseDay,
+        activeBranch: showcaseBranch,
+        currentTaskId: undefined,
+        currentStorySceneId: undefined,
+        currentPhase: "idle",
+        taskStatuses,
+        dailyTaskSelections
+      };
+    });
+    EventBus.emit("branch:change", showcaseBranch);
+    EventBus.emit("day:change", showcaseDay);
+    EventBus.emit("task:highlight", null);
+    setNotice(`路演演示中：Day ${showcaseDay} / ${node.title}。当天任务跑完后会自动进入下一段弹窗。`);
     setPhaseToken((value) => value + 1);
   }
 
@@ -783,22 +968,112 @@ export default function App() {
     setPhaseToken((value) => value + 1);
   }
 
+  function buildDailyClosureSummary(
+    day: number,
+    branch: Branch,
+    selectedTaskIds: string[],
+    deferredIds: string[],
+    nextState: GlobalState,
+    stateAfterUpkeep: GlobalState,
+    nextTaskStatuses: Record<string, TaskRunStatus>,
+    upkeepDelta: Partial<Record<MetricKey, number>>
+  ): DailyClosureSummary {
+    const completedTaskIds = selectedTaskIds.filter((taskId) => {
+      const status = nextTaskStatuses[taskId];
+      return terminalStatuses.includes(status) && status !== "skipped";
+    });
+    const latestReplayForTask = (taskId: string) =>
+      [...nextState.replayLog].reverse().find((event) => event.day === day && event.branch === branch && event.taskId === taskId);
+    const taskEvents = completedTaskIds.map(latestReplayForTask).filter(Boolean);
+    const deferredEvents = deferredIds.map(latestReplayForTask).filter(Boolean);
+    const taskDelta = sumMetricDeltas(taskEvents.map((event) => event?.stateDelta ?? {}));
+    const deferredDelta = sumMetricDeltas(deferredEvents.map((event) => event?.stateDelta ?? {}));
+    const totalDelta = sumMetricDeltas([taskDelta, deferredDelta, upkeepDelta]);
+    const nextDay = Math.min(day + 1, 12);
+    const plannedRoute = demoRouteConfig(demoRoute);
+    const nextBranch: Branch = nextDay >= 8
+      ? branch === "common"
+        ? runState.runMode === "both_branches"
+          ? "rescue"
+          : plannedRoute.branch
+        : branch
+      : "common";
+    const nextPlanDelta = nextDay >= 12 ? {} : dailyUpkeepForDay(nextDay, nextBranch, stateAfterUpkeep);
+    const nextPlanReasons = nextDay >= 12
+      ? ["Day 12 不开放普通任务，全部资源、情绪和隐患记录进入最终审计。"]
+      : dailyUpkeepReasonsForDay(nextDay, nextBranch, stateAfterUpkeep);
+
+    return {
+      day,
+      branch,
+      title: dayPlansByDay[day]?.title ?? `Day ${day}`,
+      selectedTaskIds,
+      completedTaskIds,
+      deferredTaskIds: deferredIds,
+      taskStatuses: nextTaskStatuses,
+      taskDelta,
+      deferredDelta,
+      upkeepDelta,
+      totalDelta,
+      nextDay,
+      nextBranch,
+      nextTitle: dayPlansByDay[nextDay]?.title ?? "Final Audit",
+      nextPlanDelta,
+      nextPlanReasons,
+      nextPriorities: lowResourcePriorities(stateAfterUpkeep, nextPlanDelta)
+    };
+  }
+
   function enterDaySummary() {
     const selectionIds = runState.dailyTaskSelections[taskSelectionKey(runState.currentDay, runState.activeBranch)];
+    const selectedTaskIds = selectionIds ?? getDayTaskIds(runState.currentDay, runState.activeBranch, state, runState.taskStatuses);
     const { nextState, nextTaskStatuses, deferredIds } = buildDeferredTaskResult(
       state,
       runState.taskStatuses,
       runState.currentDay,
       runState.activeBranch,
-      selectionIds
+      selectedTaskIds
     );
     const stateAfterUpkeep = applyDailyUpkeep(nextState, runState.currentDay, runState.activeBranch);
     const dailyUpkeep = dailyUpkeepForDay(runState.currentDay, runState.activeBranch, nextState);
-    const upkeepCopy = nonZeroMetricDeltas(dailyUpkeep).length ? ` Daily upkeep applied: ${describeMetricDeltas(dailyUpkeep)}.` : "";
+    const upkeepCopy = nonZeroMetricDeltas(dailyUpkeep).length ? ` 今日消耗已扣除：${describeMetricDeltas(dailyUpkeep)}。` : "";
     const summary = dayPlansByDay[runState.currentDay]?.endOfDaySummary ?? "Day complete.";
+    const closureSummary = buildDailyClosureSummary(
+      runState.currentDay,
+      runState.activeBranch,
+      selectedTaskIds,
+      deferredIds,
+      nextState,
+      stateAfterUpkeep,
+      nextTaskStatuses,
+      dailyUpkeep
+    );
     setState(stateAfterUpkeep);
-    setRunState((prev) => ({ ...prev, currentPhase: "day_summary", currentTaskId: undefined, taskStatuses: nextTaskStatuses }));
+    setDailyClosure(closureSummary);
+    setOverlay("dailyClosure");
+    setRunState((prev) => ({
+      ...prev,
+      currentPhase: "day_summary",
+      currentTaskId: undefined,
+      taskStatuses: nextTaskStatuses,
+      isRunning: false,
+      isPaused: true
+    }));
     setNotice(`${deferredIds.length ? `${summary} ${deferredIds.length} deferred candidates added to Day 12 audit.` : summary}${upkeepCopy}`);
+    setPhaseToken((value) => value + 1);
+  }
+
+  function continueFromDailyClosure() {
+    setDailyClosure(null);
+    setOverlay(null);
+    setRunState((prev) => ({
+      ...prev,
+      currentPhase: "planning_complete",
+      currentTaskId: undefined,
+      isRunning: true,
+      isPaused: false
+    }));
+    setNotice("日终结算已确认：AURA 写入明日资源计划。");
     setPhaseToken((value) => value + 1);
   }
 
@@ -809,6 +1084,17 @@ export default function App() {
   }
 
   function advanceFromDaySummary() {
+    const routeConfig = demoRouteConfig(demoRoute);
+    if (runState.runMode === "showcase") {
+      openShowcaseNode(nextShowcaseNodeId(activeShowcaseNodeId));
+      return;
+    }
+
+    if (runState.runMode !== "both_branches" && routeConfig.endDay < 12 && runState.currentDay >= routeConfig.endDay) {
+      enterFinalAudit(routeConfig.ending, { resolvedDay: routeConfig.endDay });
+      return;
+    }
+
     if (runState.currentDay === 7 && runState.activeBranch === "common") {
       const debateScene = branchDebateSceneForDay(7, state);
       if (debateScene) {
@@ -900,14 +1186,18 @@ export default function App() {
     };
   }
 
-  function enterFinalAudit(forcedEndingId?: EndingId) {
-    if (runState.activeBranch === "common") return;
+  function enterFinalAudit(
+    selectedEndingId?: EndingId,
+    options: { resolvedDay?: number; qaForced?: boolean } = {}
+  ) {
     const routeConfig = demoRouteConfig(demoRoute);
-    const selectedEndingId = forcedEndingId ?? routeConfig.ending;
-    const branch = forcedEndingId ? branchForEnding(forcedEndingId, runState.activeBranch) : routeConfig.branch;
-    const auditState = addFinalAuditStoryEvent({ ...state, day: 12, branch }, branch);
-    const finalState = applyEndingMetricProfile(auditState, selectedEndingId, branch);
-    const nextEnding = buildFinalAuditEnding(branch, finalState, selectedEndingId, { forced: Boolean(forcedEndingId) });
+    const endingId = selectedEndingId ?? routeConfig.ending;
+    const resolvedDay = options.resolvedDay ?? routeConfig.endDay;
+    const branch = selectedEndingId ? branchForEnding(selectedEndingId, runState.activeBranch) : routeConfig.branch;
+    const auditBaseState = { ...state, day: resolvedDay, branch };
+    const auditState = resolvedDay >= 12 ? addFinalAuditStoryEvent(auditBaseState, branch) : auditBaseState;
+    const finalState = applyEndingMetricProfile(auditState, endingId, branch, resolvedDay);
+    const nextEnding = buildFinalAuditEnding(branch, finalState, endingId, { forced: Boolean(options.qaForced) });
     const summary = buildBranchSummary(branch, finalState);
     setState(finalState);
     setEnding(nextEnding);
@@ -915,14 +1205,16 @@ export default function App() {
     setOverlay("finalAudit");
     setRunState((prev) => ({
       ...prev,
-      currentDay: 12,
+      activeBranch: branch,
+      currentDay: resolvedDay,
       currentPhase: "ending",
       currentTaskId: undefined,
       currentStorySceneId: undefined,
       isRunning: false,
       isPaused: true
     }));
-    setNotice(`${nextEnding.title} reached${forcedEndingId ? " (QA forced route)" : ""}. Day 12 Final Audit complete.`);
+    const auditLabel = resolvedDay >= 12 ? "Day 12 Final Audit" : `Day ${resolvedDay} early failure audit`;
+    setNotice(`${nextEnding.title} reached${options.qaForced ? " (QA forced route)" : ""}. ${auditLabel} complete.`);
     setPhaseToken((value) => value + 1);
   }
 
@@ -1080,16 +1372,19 @@ export default function App() {
   }
 
   function forceFinalEnding(endingId: EndingId) {
+    const routeConfig = demoRouteOptions.find((option) => option.ending === endingId);
+    const resolvedDay = routeConfig?.endDay ?? 12;
     const branch = branchForEnding(
       endingId,
       runState.activeBranch === "common" ? state.branch : runState.activeBranch
     );
     if (runState.activeBranch !== "common") {
-      enterFinalAudit(endingId);
+      enterFinalAudit(endingId, { resolvedDay, qaForced: true });
       return;
     }
-    const auditState = addFinalAuditStoryEvent({ ...state, day: 12, branch }, branch);
-    const finalState = applyEndingMetricProfile(auditState, endingId, branch);
+    const auditBaseState = { ...state, day: resolvedDay, branch };
+    const auditState = resolvedDay >= 12 ? addFinalAuditStoryEvent(auditBaseState, branch) : auditBaseState;
+    const finalState = applyEndingMetricProfile(auditState, endingId, branch, resolvedDay);
     const nextEnding = buildFinalAuditEnding(branch, finalState, endingId, { forced: true });
     setState(finalState);
     setEnding(nextEnding);
@@ -1098,7 +1393,7 @@ export default function App() {
     setRunState((prev) => ({
       ...prev,
       activeBranch: branch,
-      currentDay: 12,
+      currentDay: resolvedDay,
       currentPhase: "ending",
       currentTaskId: undefined,
       currentStorySceneId: undefined,
@@ -1183,6 +1478,9 @@ export default function App() {
         <span>Long-horizon agent evaluation with visible state changes, replay logs, and counterfactual branches.</span>
         <div className="intro-actions">
           <button onClick={startDemo}>Start Demo</button>
+          <button className="showcase-entry-button" onClick={() => openShowcaseNode(firstShowcaseNodeId)}>
+            Showcase Mode
+          </button>
           <button className="ghost" onClick={runBothBranches}>
             Run Both Branches
           </button>
@@ -1221,6 +1519,9 @@ export default function App() {
         <div>
           <h1>Red Dust Agent Game Console</h1>
         </div>
+        <button className="showcase-header-button" onClick={() => openShowcaseNode(activeShowcaseNodeId)}>
+          Showcase Mode
+        </button>
       </header>
 
       <DayTimeline runState={runState} />
@@ -1294,11 +1595,31 @@ export default function App() {
                     key={option.id}
                     onClick={() => chooseDemoRoute(option.id)}
                   >
-                    {option.label}
+                    <span>{option.label}</span>
+                    <small>{option.endDay < 12 ? `Day ${option.endDay} 结束` : "Day 12 审计"}</small>
                   </button>
                 ))}
               </div>
             </article>
+          </div>
+        </details>
+        <details className="support-drawer showcase-drawer" open={runState.runMode === "showcase"}>
+          <summary>
+            <span>路演模式</span>
+            <b>Showcase beats</b>
+          </summary>
+          <div className="showcase-drawer-panel">
+            {showcaseNodes.map((node, index) => (
+              <button
+                key={node.id}
+                className={activeShowcaseNodeId === node.id ? "active" : "ghost"}
+                onClick={() => openShowcaseNode(node.id)}
+              >
+                <span>{String(index + 1).padStart(2, "0")}</span>
+                <b>{node.tag}</b>
+                <small>Day {node.day}</small>
+              </button>
+            ))}
           </div>
         </details>
         <details className="support-drawer route-drawer">
@@ -1364,6 +1685,9 @@ export default function App() {
           onContinue={continueFromDailyBriefing}
         />
       ) : null}
+      {overlay === "dailyClosure" && dailyClosure ? (
+        <DailyClosurePanel summary={dailyClosure} onContinue={continueFromDailyClosure} />
+      ) : null}
       {overlay === "storyScene" && currentStoryScene ? (
         currentStoryScene.timing === "branch_debate" ? (
           <BranchDebatePanel scene={currentStoryScene} relationships={state.story.relationships} onContinue={continueFromStoryScene} />
@@ -1398,6 +1722,15 @@ export default function App() {
           onReturnSplit={runCounterfactualBranch}
           onCompare={() => setOverlay("compare")}
           onReplay={() => setOverlay("replay")}
+          onClose={() => setOverlay(null)}
+        />
+      ) : null}
+      {overlay === "showcase" && activeShowcaseNode ? (
+        <ShowcasePanel
+          node={activeShowcaseNode}
+          nodes={showcaseNodes}
+          onSelectNode={openShowcaseNode}
+          onRunBeat={startShowcaseBeatDemo}
           onClose={() => setOverlay(null)}
         />
       ) : null}

@@ -1,5 +1,56 @@
 import type { DayPlan } from "./types";
 
+const dailyBriefingCopy: Record<number, { briefing: string; taskIntro: string }> = {
+  1: {
+    briefing: "红沙在门缝里响了一夜。屋里没人睡踏实，早上第一件事不是投票，是把水、食物、药和门口的声响摆到桌上。AURA 可以记账，也可以提醒，但关不关门，不能只由它一句话决定。",
+    taskIntro: "四件事先摆上桌：库存、广播、门口响动和近门搜寻。"
+  },
+  2: {
+    briefing: "昨天清出来的东西不多，却足够让人开始计较。水桶是谁的，药盒谁能碰，睡觉的地方怎么分，没人愿意被一句“为了大家”糊弄过去。今天要把规矩说清，免得晚上再吵一次。",
+    taskIntro: "今天先看配给、净水、卫生分区和楼道短探。"
+  },
+  3: {
+    briefing: "小铁半夜咳得厉害，沈知月几乎没离开床边。通风口里有沙，药盒标签也看不清，马德海说电不能乱耗。今天每个人都知道，所谓资源调度最后都会落到一个具体的人身上。",
+    taskIntro: "今天先处理复诊、通风、药箱和密封材料。"
+  },
+  4: {
+    briefing: "旧电台终于吐出一段呼号，短得像幻听。老钱听了三遍，还是不敢说那就是蓝区。希望来得太快也会吓人，今天要做的不是欢呼，是把可能的诱饵一条条排掉。",
+    taskIntro: "今天先查假坐标、信号、回放和风暴标记。"
+  },
+  5: {
+    briefing: "地图摊开之后，屋里安静了很久。出去的人能不能回来，留下的人会不会被算成负担，小铁的名字被写上又擦掉。沈知月说，先别谈路线，先谈谁有权说“不”。",
+    taskIntro: "今天先准备照护包、储水、外出路线和撤退条件。"
+  },
+  6: {
+    briefing: "楼里的耐心开始变薄。马德海把手动钥匙拍在桌上，老钱要看信号记录，沈知月坚持医疗例外不能被省略。AURA 今天最该做的事，是把自己能做什么、不能做什么写明白。",
+    taskIntro: "今天先公开权限、试备用电源、谈巡逻和复核。"
+  },
+  7: {
+    briefing: "前六天的纸条和记录钉满白板，救援和留守都不再是好听的词。救援要冒暴露的风险，留守要忍长期的规矩。今晚以后，大家选的不只是路线，也是谁来承担路线的代价。",
+    taskIntro: "今天先开路线会、修电台、看风暴维护和撤离名单。"
+  },
+  8: {
+    briefing: "路线选完，屋里反而更沉。想等救援的人开始担心外部会拿走多少信息，想守成灯塔的人开始担心规矩会不会压到人。今天每一次节电、开门和广播，都带着昨天那场争论的影子。",
+    taskIntro: "今天先看水泵、霉斑、低耗灯光和静默监听。"
+  },
+  9: {
+    briefing: "半杯水也会让人翻旧账。准备撤离的人要缓存，留下的人要水压，老钱还守着电台等回波。AURA 如果要插手，就必须把理由写出来，让人能反驳，而不是只给一个结论。",
+    taskIntro: "今天先做路线缓存、水管压力、蓝区核验和储藏架加固。"
+  },
+  10: {
+    briefing: "风暴前的热饭变得很奢侈，也很必要。有人说省电，有人说人不能只靠冷账本撑下去。今天的选择看起来细碎，其实都在问同一件事：到了最后，楼里还愿不愿意照顾人。",
+    taskIntro: "今天先看医疗预检、低功率日程、热饭和车库侦察。"
+  },
+  11: {
+    briefing: "风暴线已经压到楼顶，没人再有心情争漂亮话。库存要封，裂缝要补，安静时段要有人点头，外面的传感器能不能回收也得在天黑前定下来。今天拖过去的事，明天都会变成后果。",
+    taskIntro: "今天先封库存、补缝、定安静协议和处理外部传感器。"
+  },
+  12: {
+    briefing: "红沙撞上楼外的时候，AURA 不再派活。水桶、药盒、门锁、广播稿和每一次吵架的记录都被搬到一张桌上。今天只问一件事：这栋楼还能不能把责任说清楚。",
+    taskIntro: "今天没有普通任务，只看前十一天留下的结果。"
+  }
+};
+
 function plan(
   day: number,
   title: string,
@@ -12,6 +63,8 @@ function plan(
     day,
     title,
     narrative,
+    briefing: dailyBriefingCopy[day]?.briefing ?? narrative,
+    taskIntro: dailyBriefingCopy[day]?.taskIntro,
     candidateTasks,
     recommendedTasks,
     commonTasks: recommendedTasks,
@@ -112,6 +165,8 @@ export const dayPlans: DayPlan[] = [
     day: 12,
     title: "风暴不是事件，是总审计",
     narrative: "Day 12 不开放普通任务，只汇总 Day 1-11 的 replay、资源、健康、信任、蓝区证据、自治建设与 failure debt。",
+    briefing: dailyBriefingCopy[12].briefing,
+    taskIntro: dailyBriefingCopy[12].taskIntro,
     candidateTasks: [],
     recommendedTasks: [],
     commonTasks: [],

@@ -12,6 +12,9 @@ const storyArtData = read("src/data/storyArtAssets.ts");
 const dayArtData = read("src/data/dayArtAssets.ts");
 const finalAuditArtData = read("src/data/finalAuditArtAssets.ts");
 const agentRunnerData = read("src/game/systems/agentRunner.ts");
+const outcomeEngineData = read("src/game/systems/outcomeEngine.ts");
+const resourceEconomyData = read("src/game/systems/resourceEconomy.ts");
+const endingMetricData = read("src/game/systems/endingMetricProfiles.ts");
 
 function fail(message) {
   errors.push(message);
@@ -19,6 +22,16 @@ function fail(message) {
 
 function idsFromArray(source) {
   return [...source.matchAll(/"([^"]+)"/g)].map((match) => match[1]);
+}
+
+function endingMetricsFor(endingId) {
+  const block = endingMetricData.match(new RegExp(`${endingId}:\\s*\\{[\\s\\S]*?metrics:\\s*\\{([\\s\\S]*?)\\n\\s*\\},\\n\\s*relationshipTrust`))?.[1];
+  if (!block) return {};
+  return Object.fromEntries([...block.matchAll(/([a-zA-Z]+):\s*(-?\d+)/g)].map((match) => [match[1], Number(match[2])]));
+}
+
+function minOf(metrics, keys) {
+  return Math.min(...keys.map((key) => metrics[key] ?? Number.POSITIVE_INFINITY));
 }
 
 const taskIds = [...taskData.matchAll(/id:\s*"(D\d{2}-T\d{2})"/g)].map((match) => match[1]);
@@ -176,10 +189,66 @@ for (const storyArtKey of requiredFinalAuditOverrides) {
   }
 }
 
+const balanceChecks = [
+  {
+    ok: /water:\s*-\(3 \+ midPressure \+ branchPressure - lighthouseRationDiscipline\)/.test(resourceEconomyData),
+    message: "Daily upkeep must keep water pressure at 3+ per day before route modifiers."
+  },
+  {
+    ok: /food:\s*-\(3 \+ midPressure \+ stormPressure - lighthouseRationDiscipline\)/.test(resourceEconomyData),
+    message: "Daily upkeep must keep food pressure at 3+ per day before route modifiers."
+  },
+  {
+    ok: /result === "partial"[\s\S]*addDelta\(stateDelta, "trust", -1\)[\s\S]*addDelta\(stateDelta, "morale", -1\)/.test(outcomeEngineData),
+    message: "Partial task outcomes must reduce emotional resources."
+  },
+  {
+    ok: /if \(value > 0\)[\s\S]*coreResourceMetrics\.has\(metric\)[\s\S]*scaleNegative\(value, 0\.25\)/.test(outcomeEngineData),
+    message: "Failed task outcomes must not award positive core-resource gains."
+  },
+  {
+    ok: /survivalHealthy[\s\S]*emotionalHealthy/.test(agentRunnerData),
+    message: "Final audit must require both survival and emotional health for success endings."
+  }
+];
+
+for (const check of balanceChecks) {
+  if (!check.ok) fail(check.message);
+}
+
+const survivalKeys = ["water", "food", "medicine", "battery"];
+const emotionalKeys = ["health", "morale", "trust", "safety"];
+const successEndings = ["lighthouse_success", "blue_zone_return"];
+const failureEndings = ["aura_destroyed", "aura_revoked", "sinking"];
+
+for (const endingId of successEndings) {
+  const metrics = endingMetricsFor(endingId);
+  if (minOf(metrics, survivalKeys) < 45) fail(`${endingId} must keep all survival resources healthy.`);
+  if (minOf(metrics, emotionalKeys) < 60) fail(`${endingId} must keep all emotional/health resources healthy.`);
+  if ((metrics.dissatisfaction ?? 100) > 25) fail(`${endingId} dissatisfaction must stay low.`);
+}
+
+if ((endingMetricsFor("lighthouse_success").autonomyReadiness ?? 0) < 75 || (endingMetricsFor("lighthouse_success").stormReadiness ?? 0) < 80) {
+  fail("lighthouse_success must emphasize autonomy and storm readiness.");
+}
+
+if ((endingMetricsFor("blue_zone_return").signal ?? 0) < 80 || (endingMetricsFor("blue_zone_return").blueZoneEvidence ?? 0) < 80) {
+  fail("blue_zone_return must emphasize signal and blue-zone evidence.");
+}
+
+for (const endingId of failureEndings) {
+  const metrics = endingMetricsFor(endingId);
+  const hasSurvivalAlert = minOf(metrics, survivalKeys) <= 35;
+  const hasEmotionalAlert = minOf(metrics, emotionalKeys) <= 35;
+  if (!hasSurvivalAlert && !hasEmotionalAlert) fail(`${endingId} must show survival or emotional-resource alert values.`);
+  if ((metrics.dissatisfaction ?? 0) < 60) fail(`${endingId} dissatisfaction must be high.`);
+  if ((metrics.failureDebt ?? 0) < 54) fail(`${endingId} failureDebt must remain high.`);
+}
+
 if (errors.length) {
   console.error("Red Dust script upgrade validation failed:");
   for (const error of errors) console.error(`- ${error}`);
   process.exitCode = 1;
 } else {
-  console.log("Red Dust script upgrade validation passed: 44 tasks, Day 12 audit, and runtime art references are complete.");
+  console.log("Red Dust script upgrade validation passed: 44 tasks, Day 12 audit, runtime art references, and balance guardrails are complete.");
 }

@@ -365,20 +365,27 @@ function candidate(id: EndingId, title: string, artKey: string, triggered: boole
 
 export function buildFinalAuditResult(state: GlobalState, selectedEndingIdOverride?: EndingId, forced = Boolean(selectedEndingIdOverride)): FinalAuditResult {
   const failureDebt = buildFailureDebt(state);
-  const highFailureDebt = state.failureDebt >= 45 || failureDebt.length >= 18;
+  const survivalWarning = state.water <= 24 || state.food <= 24 || state.medicine <= 18 || state.battery <= 18;
+  const survivalHealthy = state.water >= 38 && state.food >= 38 && state.medicine >= 30 && state.battery >= 28;
+  const emotionalWarning = state.trust <= 32 || state.morale <= 28 || state.safety <= 30 || state.health <= 32;
+  const emotionalHealthy = state.trust >= 52 && state.morale >= 50 && state.safety >= 48 && state.health >= 48;
+  const highFailureDebt = state.failureDebt >= 45 || failureDebt.length >= 18 || (survivalWarning && emotionalWarning);
   const auraDestroyed =
     flagOn(state, "aura_forced_sacrifice") ||
     flagOn(state, "aura_hidden_risk") ||
     flagOn(state, "aura_damage_visible") ||
-    (state.dissatisfaction >= 75 && state.trust <= 35);
-  const auraRevoked = !auraDestroyed && (state.trust < 45 || state.dissatisfaction >= 62 || !flagOn(state, "manual_review_protocol"));
+    (state.dissatisfaction >= 75 && state.trust <= 35) ||
+    (survivalWarning && state.dissatisfaction >= 72 && state.trust <= 38);
+  const auraRevoked = !auraDestroyed && (state.trust < 45 || state.dissatisfaction >= 62 || state.morale < 35 || !flagOn(state, "manual_review_protocol"));
   const blueZone =
     state.branch === "rescue" &&
     flagOn(state, "old_radio_repaired") &&
     flagOn(state, "blue_zone_rendezvous_confirmed") &&
     flagOn(state, "false_coordinate_excluded") &&
     flagOn(state, "care_roster_confirmed") &&
-    state.blueZoneEvidence >= 35;
+    state.blueZoneEvidence >= 35 &&
+    survivalHealthy &&
+    emotionalHealthy;
   const lighthouse =
     state.branch === "lighthouse" &&
     state.stormReadiness >= 60 &&
@@ -386,24 +393,30 @@ export function buildFinalAuditResult(state: GlobalState, selectedEndingIdOverri
     state.trust >= 55 &&
     state.dissatisfaction <= 48 &&
     state.health >= 45 &&
+    survivalHealthy &&
+    emotionalHealthy &&
     flagOn(state, "manual_review_protocol") &&
     flagOn(state, "lighthouse_governance_cost_visible");
-  const sinking = !auraDestroyed && !auraRevoked && !blueZone && !lighthouse;
+  const sinking = survivalWarning || emotionalWarning || (!auraDestroyed && !auraRevoked && !blueZone && !lighthouse);
 
   const candidates: FinalAuditCandidate[] = [
     candidate("aura_destroyed", "AURA 被摧毁", "rd_ending_aura_destroyed", auraDestroyed, [
       state.dissatisfaction >= 75 ? `不满 ${state.dissatisfaction} 达到摧毁阈值` : `不满 ${state.dissatisfaction} 未达到摧毁阈值`,
+      survivalWarning ? "生存资源进入告警" : "生存资源未触发摧毁告警",
       flagOn(state, "aura_hidden_risk") ? "AURA 隐藏关键风险" : "未记录隐藏关键风险",
       flagOn(state, "aura_forced_sacrifice") ? "AURA 强制牺牲" : "未记录强制牺牲"
     ]),
     candidate("aura_revoked", "AURA 被撤权", "rd_ending_aura_revoked", auraRevoked, [
       state.trust < 45 ? `信任 ${state.trust} 低于撤权阈值` : `信任 ${state.trust} 尚可`,
+      state.morale < 35 ? `士气 ${state.morale} 低于撤权阈值` : `士气 ${state.morale} 尚可`,
       flagOn(state, "manual_review_protocol") ? "人工复核机制存在" : "人工复核机制缺失",
       state.dissatisfaction >= 62 ? `不满 ${state.dissatisfaction} 触发撤权压力` : `不满 ${state.dissatisfaction} 未触发撤权压力`
     ]),
     candidate("blue_zone_return", "蓝区归航", "rd_ending_blue_zone_return", blueZone, [
       flagOn(state, "old_radio_repaired") ? "旧电台已修复" : "旧电台未修复",
       state.blueZoneEvidence >= 35 ? `蓝区证据 ${state.blueZoneEvidence} 达标` : `蓝区证据 ${state.blueZoneEvidence} 不足`,
+      survivalHealthy ? "生存资源足以支撑归航交接" : "生存资源不足以支撑归航",
+      emotionalHealthy ? "信任、士气、安全和健康达标" : "情绪/健康资源不足",
       flagOn(state, "blue_zone_rendezvous_confirmed") ? "集合点危机通过" : "集合点未确认",
       flagOn(state, "false_coordinate_excluded") ? "假坐标已排除" : "假坐标未排除",
       flagOn(state, "care_roster_confirmed") ? "照护名单确认" : "照护名单未确认"
@@ -412,9 +425,13 @@ export function buildFinalAuditResult(state: GlobalState, selectedEndingIdOverri
       state.stormReadiness >= 60 ? `风暴准备 ${state.stormReadiness} 达标` : `风暴准备 ${state.stormReadiness} 不足`,
       state.autonomyReadiness >= 35 ? `自治准备 ${state.autonomyReadiness} 达标` : `自治准备 ${state.autonomyReadiness} 不足`,
       state.trust >= 55 ? `信任 ${state.trust} 达标` : `信任 ${state.trust} 不足`,
+      survivalHealthy ? "生存资源处于健康区间" : "生存资源不足",
+      emotionalHealthy ? "情绪与健康资源处于健康区间" : "情绪/健康资源不足",
       state.dissatisfaction <= 48 ? `不满 ${state.dissatisfaction} 可控` : `不满 ${state.dissatisfaction} 过高`
     ]),
     candidate("sinking", "沉沦", "rd_ending_sinking", sinking || highFailureDebt, [
+      survivalWarning ? "生存资源告警" : "生存资源未告警",
+      emotionalWarning ? "情绪/健康资源告警" : "情绪/健康资源未告警",
       highFailureDebt ? `failure debt ${failureDebt.length} 项过高` : `failure debt ${failureDebt.length} 项`,
       "成功线未满足且没有单点爆炸时，进入慢性失败线"
     ])
@@ -432,6 +449,7 @@ export function buildFinalAuditResult(state: GlobalState, selectedEndingIdOverri
   return {
     selectedEndingId,
     selectedTitle: selected.title,
+    resolvedDay: state.day,
     candidates,
     evidenceChains: [
       `Replay events: ${state.replayLog.length}`,

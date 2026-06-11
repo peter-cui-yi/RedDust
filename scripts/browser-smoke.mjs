@@ -263,8 +263,11 @@ async function driveAutoplay(cdp) {
   );
   await sleep(500);
   await waitForText(cdp, "成功-灯塔线", 10000);
+  await waitForText(cdp, "失败-AURA 被摧毁", 10000);
+  await waitForText(cdp, "失败-AURA 被撤权", 10000);
+  await waitForText(cdp, "失败-沉沦", 10000);
   await clickButton(cdp, "x4", { exact: true });
-  await clickButton(cdp, "成功-蓝区线", { exact: true });
+  await clickButton(cdp, "成功-蓝区线");
   await screenshot(cdp, "02d-demo-settings");
   await evalJs(
     cdp,

@@ -1,5 +1,5 @@
 import Phaser from "phaser";
-import type { AgentPhase, Branch, TaskLocation, TaskOutcome } from "../data/types";
+import type { AgentPhase, Branch, EndingId, TaskLocation, TaskOutcome } from "../data/types";
 
 type GameEvents = {
   "hotspot:click": TaskLocation;
@@ -10,6 +10,7 @@ type GameEvents = {
   "task:result": Pick<TaskOutcome, "taskId" | "result">;
   "day:change": number;
   "branch:change": Branch;
+  "demo-route:change": EndingId;
   "agent:arrived": TaskLocation;
   "animation:complete": string;
 };

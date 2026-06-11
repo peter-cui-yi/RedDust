@@ -34,6 +34,8 @@ export function FinalAuditPanel({
   onClose
 }: FinalAuditPanelProps) {
   const audit = ending.finalAudit;
+  const resolvedDay = audit?.resolvedDay ?? 12;
+  const auditLabel = resolvedDay >= 12 ? "FINAL AUDIT" : "EARLY FAILURE AUDIT";
   const auditHeroArt = finalAuditArtFor("rd_story_day12_final_audit")?.uiPath ?? storyArtByKey.rd_story_day12_final_audit?.uiPath;
   const endingArt = finalAuditArtFor(ending.artKey)?.uiPath ?? storyArtByKey[ending.artKey]?.uiPath ?? auditHeroArt ?? image2Assets.shelterBackground.uiPath;
 
@@ -42,7 +44,7 @@ export function FinalAuditPanel({
       <div className={`modal-card wide-card final-audit-card ${ending.tone}`}>
         <div className="modal-heading">
           <div>
-            <p className="panel-kicker">DAY 12 / FINAL AUDIT</p>
+            <p className="panel-kicker">DAY {resolvedDay} / {auditLabel}</p>
             <h2>{audit?.forced ? `${ending.title} · QA forced route` : ending.title}</h2>
           </div>
           <button className="ghost" onClick={onClose}>
