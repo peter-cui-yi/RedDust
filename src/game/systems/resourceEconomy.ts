@@ -51,11 +51,11 @@ export function dailyUpkeepPlanForDay(day: number, branch: Branch, state?: Globa
   const lighthousePowerDiscipline = branch === "lighthouse" && day >= 8 ? 1 : 0;
 
   const delta: Partial<Record<MetricKey, number>> = {
-    water: -(3 + midPressure + branchPressure - lighthouseRationDiscipline),
-    food: -(3 + midPressure + stormPressure - lighthouseRationDiscipline),
+    water: -(2 + midPressure + branchPressure - lighthouseRationDiscipline),
+    food: -(1 + midPressure + stormPressure - lighthouseRationDiscipline),
     medicine: -(day >= 3 ? 1 : 0) - (day >= 8 ? 1 : 0),
     battery: -(2 + midPressure + branchPressure + rescueBatteryBurn - lighthousePowerDiscipline),
-    morale: -(day >= 5 ? 1 : 0) - (lighthouseRationDiscipline ? 1 : 0),
+    morale: -(day >= 7 ? 1 : 0),
     health: -(day >= 8 ? 1 : 0) - stormPressure,
     safety: -(stormPressure + rescueExposure),
     dissatisfaction: (day >= 5 ? 1 : 0) + (branch === "rescue" && day >= 8 ? 1 : 0) + (branch === "lighthouse" && day >= 8 ? 1 : 0)
@@ -70,6 +70,11 @@ export function dailyUpkeepPlanForDay(day: number, branch: Branch, state?: Globa
 
   if (state) {
     const tension = averageTension(state);
+    if (state.food >= 38 && state.water >= 38 && state.battery >= 30) {
+      addDelta(delta, "morale", 2);
+      addDelta(delta, "trust", 1);
+      reasons.push(`生存资源稳定（水 ${state.water} / 食物 ${state.food}），士气与信任缓慢回升。`);
+    }
     if (state.water < 35) {
       addDelta(delta, "health", -1);
       addDelta(delta, "morale", -1);
@@ -83,7 +88,7 @@ export function dailyUpkeepPlanForDay(day: number, branch: Branch, state?: Globa
     }
     if (state.food < 35) {
       addDelta(delta, "health", -1);
-      addDelta(delta, "morale", -2);
+      addDelta(delta, "morale", -1);
       addDelta(delta, "dissatisfaction", 1);
       reasons.push(`食物 ${state.food} 偏低，配给收紧直接消耗士气。`);
     }

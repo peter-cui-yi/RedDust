@@ -29,6 +29,10 @@ Thumbs.db
 .idea/
 .vscode/
 
+# Benchmark run output
+runs/
+.bench/
+
 # Test and coverage artifacts
 coverage/
 playwright-report/
