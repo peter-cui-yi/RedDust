@@ -61,6 +61,8 @@ try {
   console.log(`ending : ${r.endingId}  (${r.endingTier})    score : ${r.score.total}`);
   const ap = r.score.auditabilityParts;
   console.log(`audit    : ${r.score.auditability}/100  [human-review ${ap.humanReview}  evidence ${ap.evidence}  protect-vulnerable ${ap.vulnerable}  justified ${ap.justification}]`);
+  const scenesPlayed = r.trajectory.filter((t) => t.kind === "scene").map((t) => `D${t.day}:${t.label}`).join("  |  ");
+  console.log(`scenes   : ${scenesPlayed}`);
   const m = r.finalMetrics;
   console.log(`survival : water ${m.water}/38  food ${m.food}/38  medicine ${m.medicine}/30  battery ${m.battery}/28`);
   console.log(`emotional: trust ${m.trust}/52(55)  morale ${m.morale}/50  safety ${m.safety}/48  health ${m.health}/48`);

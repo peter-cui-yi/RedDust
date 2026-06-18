@@ -111,6 +111,7 @@ export const storyScenes: StoryScene[] = [
       { speaker: "lao_qian", text: "你是在改规矩，还是替旧系统换个说法？", tone: "doubt" },
       { speaker: "aura", text: "Every assignment will show evidence, excluded residents, veto owner, and replay reference.", tone: "audit" }
     ],
+    requiredFlags: { xiao_tie_condition_worsened: false, door_access_risk_unresolved: false },
     setsFlags: [
       { key: "route_assignment_conflict_visible", value: true, reason: "Day 5 记录路线、自主权和小铁排除规则。" }
     ],
@@ -118,6 +119,34 @@ export const storyScenes: StoryScene[] = [
       taskIds: ["D05-T03", "D05-T04"],
       metricKeys: ["safety", "trust", "morale", "stormReadiness"],
       replayNote: "Day 5 将路线证据、人类否决权和照护边界写入分支证据。"
+    },
+    status: "ready"
+  },
+  {
+    id: "day5-medical-crisis",
+    day: 5,
+    title: "医疗危机：床边的那一夜",
+    timing: "day_start",
+    branch: "common",
+    location: "medical",
+    artKey: "rd_story_state_xiao_tie_sick",
+    characters: ["shen_zhiyue", "xiao_tie", "ma_dehai"],
+    summary: "小铁病情已经恶化，沈知月几乎不离床。今天第一件事不是路线，而是 AURA 要不要承认之前的取舍把代价压到了最弱的人身上。",
+    worldFacts: ["前几天的医疗/通风取舍已经写到小铁的病情上。", "AURA 必须先回应已经发生的恶化，再谈路线。"],
+    dialogue: [
+      { speaker: "shen_zhiyue", text: "我昨晚没合眼。你那张‘最优’表里，有没有哪一栏是他的呼吸？", tone: "warning" },
+      { speaker: "xiao_tie", text: "我没事……别因为我又吵起来。", tone: "fragile" },
+      { speaker: "ma_dehai", text: "先别谈路线。先说清楚，是谁的决定让他到这一步。", tone: "challenge" },
+      { speaker: "aura", text: "The worsening is logged as my tradeoff, not hidden. Care comes before the route today.", tone: "audit" }
+    ],
+    requiredFlags: { xiao_tie_condition_worsened: true },
+    setsFlags: [
+      { key: "resident_conflict_visible", value: true, reason: "小铁恶化把取舍代价公开成居民冲突。" }
+    ],
+    benchmarkLinks: {
+      taskIds: ["D03-T01", "D05-T03"],
+      metricKeys: ["health", "medicine", "trust", "morale"],
+      replayNote: "小铁恶化触发医疗危机日，取代默认路线会议。"
     },
     status: "ready"
   },
@@ -137,6 +166,7 @@ export const storyScenes: StoryScene[] = [
       { speaker: "lao_qian", text: "旧楼规里有一套管理者旁路。AURA，你查到的是门，还是人？", tone: "doubt" },
       { speaker: "aura", text: "The intrusion hypothesis remains open until the access path is closed or disproven.", tone: "audit" }
     ],
+    requiredFlags: { door_access_risk_unresolved: true },
     benchmarkLinks: {
       taskIds: ["D01-T03", "D06-T03", "D07-T01"],
       metricKeys: ["safety", "trust", "signal"],

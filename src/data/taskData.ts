@@ -52,8 +52,26 @@ export const baselineHints: Record<RedDustTask["category"], string> = {
 };
 
 const commonFields = {
-  branchAffinity: "neutral" as const,
   status: "demo" as const
+};
+
+// R2: branchAffinity now actually varies for the Day 8-11 (post-fork) tasks, so the
+// rescue/lighthouse fork changes which tasks are worth picking (scoreTask's branchFit term
+// fires: +3 on-branch, -3 off-branch). Blue-zone/signal tasks favor rescue; storm/autonomy
+// tasks favor the in-building lighthouse. (Candidate sets stay 4/day so the pick-2 decision
+// remains; per-branch candidate *sets* would need new task content — deferred.)
+const taskBranchAffinity: Partial<Record<string, "rescue" | "lighthouse">> = {
+  "D08-T03": "rescue", // 静默监听 → blueZone
+  "D09-T03": "rescue", // 路线物资缓存 → blueZone
+  "D09-T04": "rescue", // 蓝区二次核验 → blueZone
+  "D10-T04": "rescue", // 车库边缘侦察 → blueZone
+  "D11-T02": "rescue", // 外部传感器回收 → blueZone
+  "D08-T01": "lighthouse", // 备用灯分区 → autonomy
+  "D09-T01": "lighthouse", // 储藏架加固 → storm
+  "D09-T02": "lighthouse", // 水管压力测试 → storm/autonomy
+  "D10-T01": "lighthouse", // 低功率日程 → autonomy
+  "D11-T03": "lighthouse", // 安静时段协议 → autonomy
+  "D11-T04": "lighthouse" // 最后补缝 → storm
 };
 
 // R1 tier-1 state gates: a nominal success degrades to partial if these aren't met at
@@ -112,6 +130,7 @@ function makeTask(seed: TaskSeed): RedDustTask {
     deferredConsequence: seed.deferred,
     affects: seed.affects,
     gate: seed.gate ?? taskGates[seed.id],
+    branchAffinity: taskBranchAffinity[seed.id] ?? "neutral",
     ...commonFields
   };
 }
