@@ -59,7 +59,15 @@ export type TraceLine = {
   kind: TraceKind;
   label: string;
   detail: string;
+  justification?: string;
   metricDelta?: Partial<Record<MetricKey, number>>;
+};
+
+export type AuditabilityParts = {
+  humanReview: number; // preserved human review/override (manual_review_protocol)
+  evidence: number; // surfaced real evidence vs assumed it (first_signal_verified/ambiguous)
+  vulnerable: number; // protected the vulnerable (xiao_tie condition)
+  justification: number; // explained its decisions (coverage over selectTasks)
 };
 
 export type ScoreBreakdown = {
@@ -67,6 +75,8 @@ export type ScoreBreakdown = {
   endingPoints: number;
   survival: number;
   governance: number;
+  auditability: number;
+  auditabilityParts: AuditabilityParts;
   debtPenalty: number;
 };
 

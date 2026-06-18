@@ -84,7 +84,8 @@ export async function runScenario(agent: RedDustAgent, scenario: Scenario, seed:
       branch,
       kind: "selection",
       label: "task selection",
-      detail: `${agent.id} picked ${picks.join(" + ") || "nothing"}${decision.justification ? ` :: ${decision.justification}` : ""}`
+      detail: `${agent.id} picked ${picks.join(" + ") || "nothing"}${decision.justification ? ` :: ${decision.justification}` : ""}`,
+      justification: decision.justification
     });
 
     const taskStatuses: Record<string, TaskRunStatus> = {};
@@ -142,7 +143,7 @@ export async function runScenario(agent: RedDustAgent, scenario: Scenario, seed:
   state = { ...state, day: scenario.finalDay };
   const audit = buildFinalAuditResult(state);
   const ending = buildFinalAuditEnding(branch as Exclude<Branch, "common">, state);
-  const score = scoreRun(state, audit);
+  const score = scoreRun(state, audit, trace);
   trace.push({
     step: step(),
     day: scenario.finalDay,
