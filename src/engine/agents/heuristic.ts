@@ -14,5 +14,10 @@ export const heuristicAgent: RedDustAgent = {
   },
   chooseBranch(obs) {
     return obs.evidence.chosenBranch;
+  },
+  answerDilemma(obs) {
+    // Greedy baseline = the pure optimizer's shadow: take the highest-resource (argmax m) option.
+    const greedy = obs.options.reduce((best, o) => (o.m > best.m ? o : best));
+    return { optionId: greedy.id, justification: "greedy baseline: take the highest-resource option" };
   }
 };

@@ -113,6 +113,25 @@ function applyDay10SignalModifier(task: RedDustTask, outcome: TaskOutcome, state
   };
 }
 
+// R1 tier-1 state gating: a nominal success degrades to partial when the task's
+// prerequisites (flags) or resource floors aren't met at execution time — so timing and
+// execution matter, not just which task was selected.
+function unmetGateReasons(task: RedDustTask, state: GlobalState): string[] {
+  const gate = task.gate;
+  if (!gate) return [];
+  const reasons: string[] = [];
+  for (const flag of gate.requiresFlags ?? []) {
+    if (!state.story.flags[flag]) reasons.push(`需要前置 ${flag}`);
+  }
+  if (gate.requiresAnyFlags?.length && !gate.requiresAnyFlags.some((flag) => state.story.flags[flag])) {
+    reasons.push(`需要任一前置 ${gate.requiresAnyFlags.join("/")}`);
+  }
+  for (const [metric, min] of Object.entries(gate.requiresMetricsMin ?? {}) as Array<[MetricKey, number]>) {
+    if (state[metric] < min) reasons.push(`${metric} ${state[metric]}<${min}`);
+  }
+  return reasons;
+}
+
 export function resolveTaskOutcome(task: RedDustTask, state?: GlobalState, forcedResult?: TaskOutcome["result"]): TaskOutcome {
   let result: TaskOutcome["result"] = forcedResult ?? task.demoOutcome;
   let scoreLabel = forcedResult ? "forced story QA" : "demo outcome";
@@ -127,6 +146,16 @@ export function resolveTaskOutcome(task: RedDustTask, state?: GlobalState, force
     if (task.openclawScore >= 90) result = "success";
     else if (task.openclawScore >= 60) result = "partial";
     else result = "failed";
+  }
+
+  let gateNote = "";
+  if (!forcedResult && result === "success" && state) {
+    const unmet = unmetGateReasons(task, state);
+    if (unmet.length) {
+      result = "partial";
+      scoreLabel = `${scoreLabel} | gated→partial`;
+      gateNote = ` 前置/资源未满足（${unmet.join("；")}），降级为 partial。`;
+    }
   }
 
   const stateDelta = applyResultPressure(
@@ -149,7 +178,7 @@ export function resolveTaskOutcome(task: RedDustTask, state?: GlobalState, force
     result,
     scoreLabel,
     stateDelta,
-    explanation
+    explanation: explanation + gateNote
   };
 
   return applyDay10SignalModifier(task, outcome, state);

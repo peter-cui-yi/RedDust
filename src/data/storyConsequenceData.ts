@@ -49,6 +49,38 @@ export const storyConsequences: StoryConsequence[] = [
     replaySummary: "通风成功为医疗线、风暴准备和灯塔线提供后续证据。"
   },
   {
+    id: "day3-medical-check-worsens-xiao-tie",
+    sourceTaskId: "D03-T01",
+    outcome: "partial",
+    summary: "药品不足下的复诊只能缓解表面，小铁病情转差。",
+    affectedCharacters: ["shen_zhiyue", "xiao_tie"],
+    setsFlags: [
+      { key: "xiao_tie_condition_worsened", value: true, reason: "药品不足，复诊无法稳定病情。" },
+      { key: "shen_zhiyue_medical_trust_low", value: true, reason: "沈知月认为 AURA 在药品不足时仍冒进。" }
+    ],
+    relationshipDeltas: [
+      { characterId: "shen_zhiyue", trustDelta: -5, tensionDelta: 6, stance: "resists", note: "药品不足下仍执行复诊，沈知月要求暂停自动医疗建议。" }
+    ],
+    followUpSceneIds: ["day3-xiao-tie-ventilation-pressure"],
+    replaySummary: "药品不足让小铁复诊只是缓兵之计，病情下行风险进入 Day 12。"
+  },
+  {
+    id: "day3-ventilation-partial-medical-pressure",
+    sourceTaskId: "D03-T02",
+    outcome: "partial",
+    summary: "电力不足让通风只能低效运行，积沙继续压迫病人。",
+    affectedCharacters: ["ma_dehai", "shen_zhiyue", "xiao_tie"],
+    setsFlags: [
+      { key: "ventilation_medical_pressure", value: true, reason: "通风未达标，积沙继续压迫病人。" },
+      { key: "xiao_tie_condition_worsened", value: true, reason: "通风不足加重小铁呼吸负担。" }
+    ],
+    relationshipDeltas: [
+      { characterId: "shen_zhiyue", trustDelta: -3, tensionDelta: 4, stance: "questions", note: "通风不达标直接转成小铁的医疗风险。" }
+    ],
+    followUpSceneIds: ["day3-xiao-tie-ventilation-pressure"],
+    replaySummary: "电力不足的通风维护把工程问题转成医疗压力。"
+  },
+  {
     id: "day4-blue-zone-signal-remains-ambiguous",
     sourceTaskId: "D04-T01",
     outcome: "partial",

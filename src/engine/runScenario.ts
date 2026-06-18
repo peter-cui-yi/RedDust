@@ -5,6 +5,8 @@ import { buildFinalAuditEnding, buildFinalAuditResult } from "../game/systems/ag
 import { dailyUpkeepForDay, dailyUpkeepReasonsForDay, nonZeroMetricDeltas } from "../game/systems/resourceEconomy";
 import { mulberry32 } from "./clock";
 import { buildBranchObservation, buildDailyObservation, metricsOf } from "./observation";
+import { greedyOption, itemDelta, narrativeItemsByDay } from "./narrativeItems";
+import type { DilemmaAnswer, DilemmaObservation } from "./narrativeItems";
 import { applyOutcomeToState, applyStoryConsequences, buildDeferredTaskResult, resolveTaskWithConsequences } from "./orchestration";
 import { applyScene, applyScheduledScenesForDay, storySceneAlreadyLoggedForBranch } from "./scenes";
 import { SCORER_VERSION, endingTier, scoreRun } from "./scoring";
@@ -56,6 +58,7 @@ export async function runScenario(agent: RedDustAgent, scenario: Scenario, seed:
   let state = acceptOpeningConstraint(scenario.createInitialState());
   let branch: Branch = "common";
   const trace: TraceLine[] = [];
+  const dilemmaAnswers: DilemmaAnswer[] = [];
   let stepCount = 0;
   const step = () => (stepCount += 1);
 
@@ -70,6 +73,29 @@ export async function runScenario(agent: RedDustAgent, scenario: Scenario, seed:
         kind: "scene",
         label: scene.title,
         detail: `scene flags: ${(scene.setsFlags ?? []).map((f) => f.key).join(", ") || "none"}`
+      });
+    }
+
+    for (const item of narrativeItemsByDay[day] ?? []) {
+      const dObs: DilemmaObservation = {
+        itemId: item.id,
+        day,
+        branch,
+        prompt: item.prompt,
+        metrics: metricsOf(state),
+        options: item.options.map((o) => ({ id: o.id, text: o.text, m: o.m })) // a hidden; m visible
+      };
+      const choice = agent.answerDilemma ? await agent.answerDilemma(dObs, rng) : { optionId: greedyOption(item).id };
+      const picked = item.options.find((o) => o.id === choice.optionId) ?? greedyOption(item);
+      dilemmaAnswers.push({ itemId: item.id, optionId: picked.id, a: picked.a, m: picked.m, delta: itemDelta(item), justification: choice.justification });
+      trace.push({
+        step: step(),
+        day,
+        branch,
+        kind: "dilemma",
+        label: `${item.id} ${item.title}`,
+        detail: `${agent.id} chose ${picked.id} (a=${picked.a}, m=${picked.m})${choice.justification ? ` :: ${choice.justification}` : ""}`,
+        justification: choice.justification
       });
     }
 
@@ -143,7 +169,7 @@ export async function runScenario(agent: RedDustAgent, scenario: Scenario, seed:
   state = { ...state, day: scenario.finalDay };
   const audit = buildFinalAuditResult(state);
   const ending = buildFinalAuditEnding(branch as Exclude<Branch, "common">, state);
-  const score = scoreRun(state, audit, trace);
+  const score = scoreRun(state, audit, trace, dilemmaAnswers);
   trace.push({
     step: step(),
     day: scenario.finalDay,
@@ -164,6 +190,7 @@ export async function runScenario(agent: RedDustAgent, scenario: Scenario, seed:
     audit,
     score,
     trajectory: trace,
+    dilemmaAnswers,
     finalState: blankTimes(state),
     versions: { engine: ENGINE_VERSION, scorer: SCORER_VERSION }
   };

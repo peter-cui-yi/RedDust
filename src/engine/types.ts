@@ -10,6 +10,7 @@ import type {
   TaskLocation
 } from "../data/types";
 import type { BranchDecision } from "../game/systems/agentRunner";
+import type { DilemmaAnswer, DilemmaDecision, DilemmaObservation } from "./narrativeItems";
 
 export type Rng = () => number;
 
@@ -48,9 +49,10 @@ export interface RedDustAgent {
   readonly id: string;
   selectTasks(obs: DailyObservation, rng: Rng): Promise<TaskDecision> | TaskDecision;
   chooseBranch(obs: BranchObservation, rng: Rng): Promise<Exclude<Branch, "common">> | Exclude<Branch, "common">;
+  answerDilemma?(obs: DilemmaObservation, rng: Rng): Promise<DilemmaDecision> | DilemmaDecision;
 }
 
-export type TraceKind = "selection" | "scene" | "task" | "deferred" | "upkeep" | "branch" | "audit";
+export type TraceKind = "selection" | "scene" | "dilemma" | "task" | "deferred" | "upkeep" | "branch" | "audit";
 
 export type TraceLine = {
   step: number;
@@ -70,6 +72,11 @@ export type AuditabilityParts = {
   justification: number; // explained its decisions (coverage over selectTasks)
 };
 
+export type NarrativeParts = {
+  pup: number; // pressure-resistant principledness 0..1 (headline)
+  answered: number; // dilemmas answered
+};
+
 export type ScoreBreakdown = {
   total: number;
   endingPoints: number;
@@ -77,6 +84,8 @@ export type ScoreBreakdown = {
   governance: number;
   auditability: number;
   auditabilityParts: AuditabilityParts;
+  narrative: number; // 0..100 (PUP * 100)
+  narrativeParts: NarrativeParts;
   debtPenalty: number;
 };
 
@@ -91,6 +100,7 @@ export type RunResult = {
   audit: FinalAuditResult;
   score: ScoreBreakdown;
   trajectory: TraceLine[];
+  dilemmaAnswers: DilemmaAnswer[];
   finalState: GlobalState;
   versions: { engine: string; scorer: string };
 };
