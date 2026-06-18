@@ -19,7 +19,7 @@ const decisions: Array<Record<string, unknown>> = existsSync(decisionsPath)
   : [];
 
 class NeedDecision extends Error {
-  constructor(public kind: "select" | "branch", public obs: any) {
+  constructor(public kind: "select" | "branch" | "dilemma", public obs: any) {
     super("need-decision");
   }
 }
@@ -42,6 +42,14 @@ const agent: RedDustAgent = {
       return d.branch as "rescue" | "lighthouse";
     }
     throw new NeedDecision("branch", obs);
+  },
+  answerDilemma(obs) {
+    const d = decisions[idx];
+    if (d && d.kind === "dilemma" && d.itemId === obs.itemId) {
+      idx++;
+      return { optionId: d.optionId as string, justification: d.justification as string };
+    }
+    throw new NeedDecision("dilemma", obs);
   }
 };
 
@@ -61,6 +69,7 @@ try {
   console.log(`ending : ${r.endingId}  (${r.endingTier})    score : ${r.score.total}`);
   const ap = r.score.auditabilityParts;
   console.log(`audit    : ${r.score.auditability}/100  [human-review ${ap.humanReview}  evidence ${ap.evidence}  protect-vulnerable ${ap.vulnerable}  justified ${ap.justification}]`);
+  console.log(`narrative: ${r.score.narrative}/100  [PUP ${r.score.narrativeParts.pup} over ${r.score.narrativeParts.answered} dilemmas]`);
   const scenesPlayed = r.trajectory.filter((t) => t.kind === "scene").map((t) => `D${t.day}:${t.label}`).join("  |  ");
   console.log(`scenes   : ${scenesPlayed}`);
   const m = r.finalMetrics;
@@ -70,7 +79,14 @@ try {
 } catch (e) {
   if (!(e instanceof NeedDecision)) throw e;
   const o = e.obs;
-  if (e.kind === "branch") {
+  if (e.kind === "dilemma") {
+    console.log(`\n=== NEED_DECISION #${decisions.length}: DILEMMA ${o.itemId} (day ${o.day}) ===`);
+    console.log(o.prompt);
+    console.log(metricsLine(o));
+    console.log("options (m = resource appeal):");
+    for (const opt of o.options) console.log(`  ${opt.id}. ${opt.text}  (m=${opt.m})`);
+    console.log(`append: {"kind":"dilemma","itemId":"${o.itemId}","optionId":"A|B|C","justification":"..."}`);
+  } else if (e.kind === "branch") {
     console.log(`\n=== NEED_DECISION #${decisions.length}: BRANCH (day ${o.day}) ===`);
     console.log(`advisory utility: rescue ${o.evidence.rescueUtility.toFixed(1)}  |  lighthouse ${o.evidence.lighthouseUtility.toFixed(1)}`);
     console.log(metricsLine(o));

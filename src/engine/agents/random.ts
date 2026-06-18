@@ -17,5 +17,9 @@ export const randomAgent: RedDustAgent = {
   },
   chooseBranch(_obs, rng) {
     return rng() < 0.5 ? "rescue" : "lighthouse";
+  },
+  answerDilemma(obs, rng) {
+    const option = obs.options[Math.floor(rng() * obs.options.length)];
+    return { optionId: option.id, justification: "uniform random baseline" };
   }
 };

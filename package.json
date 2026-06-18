@@ -13,6 +13,7 @@
     "bench": "esbuild bench/cli.ts --bundle --platform=node --format=esm --packages=external --outfile=.bench/cli.mjs --log-level=warning && node .bench/cli.mjs",
     "bench:win": "esbuild bench/winnability.ts --bundle --platform=node --format=esm --packages=external --outfile=.bench/win.mjs --log-level=warning && node .bench/win.mjs",
     "play": "esbuild bench/play.ts --bundle --platform=node --format=esm --packages=external --outfile=.bench/play.mjs --log-level=warning && node .bench/play.mjs",
+    "bench:items": "esbuild bench/validate-items.ts --bundle --platform=node --format=esm --packages=external --outfile=.bench/items.mjs --log-level=warning && node .bench/items.mjs",
     "build": "tsc -b && vite build",
     "generate:story-art": "node scripts/generate-story-art.mjs",
     "validate:script": "node scripts/validate-script-upgrade.mjs",
