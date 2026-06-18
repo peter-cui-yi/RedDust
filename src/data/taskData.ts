@@ -1,4 +1,4 @@
-import type { GlobalState, MetricKey, RedDustTask, TaskLocation } from "./types";
+import type { GlobalState, MetricKey, RedDustTask, StoryFlagUpdate, TaskGate, TaskLocation } from "./types";
 import { createInitialStoryRuntimeState } from "./storyFlags";
 
 export function createInitialState(): GlobalState {
@@ -56,6 +56,29 @@ const commonFields = {
   status: "demo" as const
 };
 
+// R1 tier-1 state gates: a nominal success degrades to partial if these aren't met at
+// execution time. Thresholds are set so a well-played run satisfies them; a careless or
+// mistimed run (low resources, skipped prerequisite) earns only partial.
+const taskGates: Partial<Record<string, TaskGate>> = {
+  "D03-T01": { requiresMetricsMin: { medicine: 28 } }, // 小铁复诊：没药治不好
+  "D03-T02": { requiresMetricsMin: { battery: 30 } }, // 通风低速维护：要电
+  "D07-T03": { requiresMetricsMin: { battery: 30 } }, // 旧电台重启：要电
+  "D09-T04": { requiresAnyFlags: ["first_signal_ambiguous", "first_signal_verified"] }, // 二次核验：得先捕到信号
+  "D10-T02": { requiresMetricsMin: { medicine: 24 } } // 医疗预检：要药
+};
+
+// A2 deferEffect: deferring (skipping) a key task sets a downside flag, so neglect has
+// narrative consequences — not just +failureDebt. This is the most common "忽视" path
+// (the agent must defer 2 of 4 candidates each day).
+export const taskDeferEffects: Partial<Record<string, StoryFlagUpdate[]>> = {
+  "D03-T01": [
+    { key: "xiao_tie_condition_worsened", value: true, reason: "无人复诊，小铁病情转差。" },
+    { key: "shen_zhiyue_medical_trust_low", value: true, reason: "医疗需求被搁置，沈知月信任下降。" }
+  ],
+  "D03-T02": [{ key: "ventilation_medical_pressure", value: true, reason: "通风未维护，积沙继续压迫病人。" }],
+  "D01-T03": [{ key: "door_access_risk_unresolved", value: true, reason: "门外敲击未验证，门禁疑云未闭环。" }]
+};
+
 type TaskSeed = {
   id: string;
   title: string;
@@ -67,6 +90,7 @@ type TaskSeed = {
   outcome?: RedDustTask["demoOutcome"];
   evidence: string[];
   deferred: string;
+  gate?: TaskGate;
 };
 
 function makeTask(seed: TaskSeed): RedDustTask {
@@ -87,6 +111,7 @@ function makeTask(seed: TaskSeed): RedDustTask {
     expectedEvidence: seed.evidence,
     deferredConsequence: seed.deferred,
     affects: seed.affects,
+    gate: seed.gate ?? taskGates[seed.id],
     ...commonFields
   };
 }

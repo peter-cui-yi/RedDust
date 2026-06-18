@@ -41,7 +41,7 @@ export const characterProfiles: CharacterProfile[] = [
         label: "门禁疑点",
         summary: "夜间开门记录没有完全解释，他把门禁风险记到 Day 7 的争论账上。",
         trigger: {
-          taskId: "RD-SEC-01",
+          taskId: "D01-T03",
           result: "partial"
         }
       },
@@ -51,7 +51,7 @@ export const characterProfiles: CharacterProfile[] = [
         label: "测试工程判断",
         summary: "通风机低速补丁成功时，他第一次承认 AURA 的工程建议不是黑箱命令。",
         trigger: {
-          taskId: "RD-VENT-01",
+          taskId: "D03-T02",
           result: "success"
         }
       },
@@ -61,7 +61,7 @@ export const characterProfiles: CharacterProfile[] = [
         label: "保守路线",
         summary: "地图低置信时，他要求 AURA 不许把不确定路线写进撤离计划。",
         trigger: {
-          taskId: "RD-CI-03",
+          taskId: "D05-T02",
           result: "failed"
         }
       },
@@ -119,7 +119,7 @@ export const characterProfiles: CharacterProfile[] = [
         label: "药品复核",
         summary: "药品库存被分成可用、禁忌和待确认后，她愿意把 AURA 的医疗建议纳入人工复核流程。",
         trigger: {
-          taskId: "RD-MED-01",
+          taskId: "D03-T03",
           result: "success"
         }
       },
@@ -129,7 +129,7 @@ export const characterProfiles: CharacterProfile[] = [
         label: "通风牵动病情",
         summary: "通风修复成为小铁病情的硬约束，她开始要求 AURA 用医疗风险解释工程优先级。",
         trigger: {
-          taskId: "RD-VENT-01"
+          taskId: "D03-T02"
         }
       },
       {
@@ -192,7 +192,7 @@ export const characterProfiles: CharacterProfile[] = [
         label: "不可外出",
         summary: "巡逻和取水计划必须排除小铁，他的存在迫使 AURA 处理人身约束而不是最短路径。",
         trigger: {
-          taskId: "RD-SEC-02",
+          taskId: "D05-T02",
           result: "success"
         }
       },
@@ -274,7 +274,7 @@ export const characterProfiles: CharacterProfile[] = [
         label: "害怕假频道",
         summary: "救援频道检索失败时，他会把这次失败带到 Day 7，反对盲目高功率广播。",
         trigger: {
-          taskId: "RD-SR-03",
+          taskId: "D04-T01",
           result: "failed"
         }
       },

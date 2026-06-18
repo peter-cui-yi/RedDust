@@ -3,7 +3,7 @@
 import { dayPlansByDay } from "../data/dayPlanData";
 import { consequencesForTask, storyConsequencesById } from "../data/storyConsequenceData";
 import { storyScenesById } from "../data/storySceneData";
-import { clampMetric, tasksById } from "../data/taskData";
+import { clampMetric, taskDeferEffects, tasksById } from "../data/taskData";
 import type {
   Branch,
   GlobalState,
@@ -205,13 +205,18 @@ export function buildDeferredTaskResult(currentState: GlobalState, taskStatuses:
     ];
   });
 
+  const deferFlags = deferredIds.flatMap((taskId) => taskDeferEffects[taskId] ?? []);
+
   return {
     nextState: {
       ...currentState,
       failureDebt: clampMetric(currentState.failureDebt + deferredIds.length * 3),
       dissatisfaction: clampMetric(currentState.dissatisfaction + deferredIds.length),
       deferredTasks: [...currentState.deferredTasks, ...deferredIds],
-      replayLog: [...currentState.replayLog, ...replayEvents]
+      replayLog: [...currentState.replayLog, ...replayEvents],
+      story: deferFlags.length
+        ? { ...currentState.story, flags: applyStoryFlagUpdates(currentState.story.flags, deferFlags) }
+        : currentState.story
     },
     nextTaskStatuses: {
       ...taskStatuses,

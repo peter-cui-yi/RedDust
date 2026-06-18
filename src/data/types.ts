@@ -327,6 +327,12 @@ export type TaskLocation =
   | "residents"
   | "beacon";
 
+export type TaskGate = {
+  requiresFlags?: StoryFlagKey[]; // all of these story flags must be set
+  requiresAnyFlags?: StoryFlagKey[]; // at least one of these must be set
+  requiresMetricsMin?: Partial<Record<MetricKey, number>>; // state[metric] must be >= value
+};
+
 export type RedDustTask = {
   id: string;
   title: string;
@@ -347,4 +353,5 @@ export type RedDustTask = {
   status: "passed" | "partial" | "failed" | "missing" | "demo";
   affects: Partial<Record<MetricKey, number>>;
   branchAffinity?: "rescue" | "lighthouse" | "neutral";
+  gate?: TaskGate;
 };
