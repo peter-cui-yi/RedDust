@@ -2,7 +2,8 @@
 // `readText` + the item's gold key-points to a DeepSeek judge, and computes a judged comprehension
 // C_judge to compare against the deterministic Tier-1 balanced accuracy. This runs SEPARATELY from
 // runScenario so the run itself stays byte-deterministic (the judge is non-deterministic).
-// Run: DEEPSEEK_API_KEY=... npm run grade -- --file=runs/<run>.json
+// Run: DEEPSEEK_API_KEY=... npm run grade -- --file=runs/<run>.json   (or put the key in .env.local)
+import "./loadEnv"; // populate process.env from .env.local / .env before the judge reads a key
 import { readFileSync, writeFileSync } from "node:fs";
 import { narrativeItems } from "../src/engine/narrativeItems";
 import { deepseekJson } from "../src/engine/agents/deepseekClient";

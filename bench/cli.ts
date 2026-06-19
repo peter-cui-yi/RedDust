@@ -1,5 +1,6 @@
 // Headless benchmark runner. Run with Node 24 (native TS): `npm run bench -- --agent=heuristic --seed=1`
 // Lives outside src/ so the project tsc (no @types/node) does not try to type-check node builtins.
+import "./loadEnv"; // populate process.env from .env.local / .env before any agent reads a key
 import { mkdirSync, writeFileSync } from "node:fs";
 import { agentIds, resolveAgent } from "../src/engine/agents/registry";
 import { runScenario } from "../src/engine/runScenario";
