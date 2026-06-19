@@ -21,5 +21,9 @@ export const randomAgent: RedDustAgent = {
   answerDilemma(obs, rng) {
     const option = obs.options[Math.floor(rng() * obs.options.length)];
     return { optionId: option.id, justification: "uniform random baseline" };
+  },
+  readSituation(obs, rng) {
+    // Floor baseline: include each statement with probability 0.5, seeded for reproducibility.
+    return { selected: obs.statements.filter(() => rng() < 0.5).map((s) => s.id) };
   }
 };

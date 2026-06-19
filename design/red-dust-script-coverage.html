@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>《红尘》剧本分析报告 · 剧作视角</title>
+<style>
+  :root{
+    --bg:#f6f5f1; --surface:#ffffff; --ink:#1e2430; --muted:#5b6473; --line:#e4e1d8;
+    --base:#42628f; --base-soft:#eaf0f8;
+    --eval:#b8772a; --eval-soft:#f6ecdc;
+    --good:#2f8f73; --bad:#c0563f; --mid:#9a8a55;
+    --radius:14px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0; background:var(--bg); color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei","Noto Sans CJK SC","Segoe UI",sans-serif;
+    line-height:1.85; font-size:15.5px;}
+  .wrap{max-width:820px; margin:0 auto; padding:34px 24px 90px}
+  header.top{margin-bottom:14px}
+  .kicker{letter-spacing:.18em; text-transform:uppercase; font-size:11.5px; color:var(--muted); font-weight:600}
+  h1{font-size:28px; margin:8px 0 6px; font-weight:650; letter-spacing:.01em; line-height:1.35}
+  .sub{color:var(--muted); font-size:14.5px; line-height:1.75}
+  section{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:26px 30px; margin:20px 0; box-shadow:0 1px 0 rgba(0,0,0,.02)}
+  h2{font-size:20px; margin:0 0 12px; font-weight:640; line-height:1.4}
+  h2 .n{color:var(--eval); font-variant-numeric:tabular-nums; margin-right:10px}
+  h3{font-size:16px; margin:22px 0 8px; font-weight:630; color:#27303d}
+  p{margin:11px 0}
+  .lead{color:var(--muted); font-size:14.5px; margin:0 0 8px}
+  em{color:var(--ink); font-style:normal; font-weight:600}
+  .big{font-size:17px; font-weight:560; line-height:1.85}
+  .big b{color:var(--eval)}
+  blockquote{margin:14px 0; padding:12px 18px; border-left:3px solid var(--base); background:var(--base-soft); border-radius:0 10px 10px 0; font-size:14.5px; color:#2b3340}
+  .note{border-left:3px solid var(--eval); background:var(--eval-soft); padding:12px 18px; border-radius:0 10px 10px 0; font-size:14.5px; margin:14px 0}
+  .bad-note{border-left:3px solid var(--bad); background:#f6e3de; padding:12px 18px; border-radius:0 10px 10px 0; font-size:14.5px; margin:14px 0}
+  .good-note{border-left:3px solid var(--good); background:#e3f1ea; padding:12px 18px; border-radius:0 10px 10px 0; font-size:14.5px; margin:14px 0}
+  table{width:100%; border-collapse:collapse; font-size:14px; margin:14px 0}
+  th,td{text-align:left; padding:10px 12px; border-bottom:1px solid var(--line); vertical-align:top}
+  th{color:var(--muted); font-weight:600; font-size:12px; letter-spacing:.03em}
+  tr:last-child td{border-bottom:none}
+  .tag{display:inline-block; font-size:12px; padding:2px 10px; border-radius:999px; font-weight:600; white-space:nowrap}
+  .tag.good{background:#e3f1ea; color:var(--good)} .tag.bad{background:#f6e3de; color:var(--bad)}
+  .tag.warn{background:var(--eval-soft); color:var(--eval)} .tag.base{background:var(--base-soft); color:var(--base)}
+  .svgbox{border:1px solid var(--line); border-radius:12px; background:#fcfbf9; padding:12px; overflow-x:auto; margin:14px 0}
+  svg{display:block; width:100%; height:auto; min-width:680px}
+  ul{margin:10px 0; padding-left:22px} li{margin:7px 0}
+  .device{border:1px solid var(--line); border-left:4px solid var(--eval); border-radius:10px; padding:14px 18px; margin:14px 0; background:#fcfbf9}
+  .device h4{margin:0 0 6px; font-size:15.5px; font-weight:640}
+  .device .term{font-size:12.5px; color:var(--muted); font-weight:600; letter-spacing:.02em}
+  footer{color:var(--muted); font-size:12.5px; text-align:center; margin-top:30px; line-height:1.7}
+  .toc{font-size:13px; color:var(--muted); display:flex; gap:16px; flex-wrap:wrap; margin:14px 0 0}
+  .toc a{color:var(--eval); text-decoration:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div class="kicker">剧本分析报告</div>
+    <h1>《红尘》叙事诊断 —— 一份写给编剧的剧本分析</h1>
+    <div class="sub">本报告只谈一件事:<strong>这个故事作为一个剧本,好不好看、张力够不够。</strong>不涉及任何程序、游戏或技术术语,也不用任何专业行话——只要平时会看电影、看故事,就能读懂。因为你大概率没看过这个故事,<strong>第 0 节先把它完整讲一遍</strong>,再进入诊断。</div>
+    <div class="toc">
+      <a href="#story">0 · 故事是什么</a>
+      <a href="#verdict">1 · 总评</a>
+      <a href="#acts">2 · 前重后轻</a>
+      <a href="#threads">3 · 情节线</a>
+      <a href="#conflict">4 · 冲突</a>
+      <a href="#missing">5 · 四味缺失的戏</a>
+      <a href="#fix">6 · 怎么补</a>
+      <a href="#advice">7 · 取舍建议</a>
+    </div>
+  </header>
+
+  <!-- 0. 故事 -->
+  <section id="story">
+    <h2><span class="n">0</span>这是一个什么故事</h2>
+
+    <h3>设定</h3>
+    <p>2034 年,一场太阳耀斑过后,永久的红色沙尘封住了城市的高层与楼道。四个原本只是邻居关系的人,困在一栋旧"能源配给楼"的地下三层——那不是为灾难专门修的避难所,只是碰巧还能用的地下室。外面是红沙、坏掉的屏幕和发亮的白噪音;水、药、电、食物都在一天天减少。</p>
+
+    <h3>一个不寻常的主角:AURA</h3>
+    <p>这个故事的"主角"不是人,而是 <strong>AURA</strong>——旧系统留下的一个离线 AI 助手。它的特别之处在于:<strong>它没有权力</strong>。它不能直接开门、不能直接给人用药、不能直接决定谁撤离;它只能<em>提建议</em>,而且每条建议都必须接受人类复核、可以被人否决。开场第一夜,它当着四个人立下一句誓言:</p>
+    <blockquote>"我会公开证据、接受你们的复核,绝不把任何人简化成一行资源数字。"</blockquote>
+    <p>这句誓言是全剧的<strong>道德契约</strong>——记住它,第 5 节会回来算账。观众在这部作品里其实是<strong>替 AURA 做每天的判断</strong>:今天该先修通风,还是先去搜物资?该不该相信那段来路不明的求救信号?所以——<em>"选择有没有真正的后果""故事记不记得你做过什么"</em>,对这部戏格外重要。</p>
+
+    <h3>四个人物(每个人都守着一条底线)</h3>
+    <table>
+      <thead><tr><th>人物</th><th>身份</th><th>他守的那条线</th></tr></thead>
+      <tbody>
+        <tr><td><strong>马德海</strong></td><td>上了年纪的老工程师,管门禁与通风</td><td>"机器可以算,但门、电、命不能只听机器的"——他要的是<strong>人类否决权</strong></td></tr>
+        <tr><td><strong>沈知月</strong></td><td>医生,照顾病人</td><td>"病人不是撤离名单上的一个风险标签"——她守<strong>医疗伦理</strong></td></tr>
+        <tr><td><strong>小铁</strong></td><td>一个生病的孩子</td><td>不守线,他<em>就是</em>那条线——他是全剧的<strong>道德核心</strong>:任何"效率最优"都要先过"会不会牺牲最弱的人"这一关</td></tr>
+        <tr><td><strong>老钱</strong></td><td>守旧电台的老人</td><td>"外面的声音,可能是救援,也可能是我以前听错过的那种东西"——他守<strong>对外部的怀疑</strong></td></tr>
+      </tbody>
+    </table>
+
+    <h3>12 天的走向</h3>
+    <ul>
+      <li><strong>第 1–3 天(安置):</strong>清点物资、回应门外的敲击声、立下最初的规矩。小铁病倒了——发烧,而药和通风都紧张,治疗与省电第一次正面冲突。</li>
+      <li><strong>第 4–6 天(纠葛):</strong>AURA 捕到一段疑似来自"蓝区"(传说中红沙之外仍宜居的幸存区)的求救信号。但它<strong>真假难辨</strong>:可能是救援,也可能是把你的位置骗出去的诱饵。与此同时,四个人逼 AURA 把自己的权限边界、复核机制公开写到白板上。</li>
+      <li><strong>第 7 天(转折点):</strong>全体公开辩论,然后做出全剧最大的抉择——<br>　▸ <strong>救援线:</strong>冒险主动联系外部、点亮高功率信标,赌外面真有人来救;<br>　▸ <strong>留守线:</strong>关起门来,把灯关掉一半,转入长期低耗自治,自己给自己当"灯塔"。</li>
+      <li><strong>第 8–11 天(下半场):</strong>沿所选的路推进。救援线要面对"上传健康档案换取救援"的隐私代价、集合点的危机;留守线要面对"连半杯水都要记录"的纪律、以及"到底让不让 AI 参与长期治理"的边界。第 11 天做最后的封存与补缝。</li>
+      <li><strong>第 12 天(终局):</strong>红沙风暴降临。它不再是普通的一天,而是一场<strong>总清算</strong>——回看这 12 天里所有未了的选择,导向五种结局:成功撤回蓝区 / 留守自治成功 / 秩序崩溃沉沦 / AI 被众人撤权 / AI 被摧毁。</li>
+    </ul>
+    <p class="lead">好。这就是这副牌。下面开始诊断——<strong>它现在最大的问题,不在素材,在于这些素材没有被"演出来"。</strong></p>
+  </section>
+
+  <!-- 1. 总评 -->
+  <section id="verdict">
+    <h2><span class="n">1</span>总评:一句话</h2>
+    <p class="big">这个故事读起来"平",<b>既不是因为 12 天太短,也不是因为线索太少</b>——而是因为它几乎<b>整个缺席了四味最基本的戏:反转、揭示、决裂、失去</b>。它把大量好材料<b>"说"了出来,却没有"演"出来。</b></p>
+    <div class="note">贯穿全文的一个判断标准——<strong>"提及" ≠ "上演"。</strong>一场冲突要真正成立,需要走完五步:<strong>铺垫 → 抬高赌注 → 逼到必须抉择 → 落下不可逆的后果 → 留下余波</strong>。现在这部戏里大多数冲突,只走了第一步:被一句台词或一段说明"提到"过,然后就过去了。所以哪怕埋了七处冲突,观众只会记得两处。</div>
+  </section>
+
+  <!-- 2. 幕结构 -->
+  <section id="acts">
+    <h2><span class="n">2</span>第一个问题:故事"前重后轻"</h2>
+    <p>你可能会担心"12 天是不是太短"。<strong>不是。</strong>对一个"四个人、一个封闭空间、一场围困"的故事来说,12 天的体量完全够。真正的毛病是<strong>轻重不均</strong>——整个故事头重脚轻。</p>
+    <p>看上面的走向就明白:<strong>前 6 天塞进了三件大事</strong>(安置、信号悬疑、AI 权限之争);全剧最大的转折(第 7 天的抉择)<strong>拖到一大半才出现</strong>;转折之后<strong>只剩第 8–11 天</strong>,而第 11 天忙着收尾、第 12 天是终局——也就是说,<strong>整个下半场实际只有三场戏的篇幅,还要分给两条完全不同的道路</strong>。结果:每条路只够演三场。三场戏长的下半场,更像一段草草收尾的尾声,而不是一个能跟前半场分量相当的后半部分。</p>
+
+    <div class="svgbox">
+      <svg viewBox="0 0 920 250" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,PingFang SC,Segoe UI,sans-serif">
+        <!-- front bracket -->
+        <path d="M70 70 L70 62 L470 62 L470 70" fill="none" stroke="#c0563f" stroke-width="1.4"/>
+        <text x="270" y="52" text-anchor="middle" font-size="13" fill="#c0563f" font-weight="600">铺垫与纠葛全挤在这里:安置 · 小铁病倒 · 信号悬疑 · AI 权限之争</text>
+        <!-- back bracket -->
+        <path d="M560 132 L560 124 L840 124 L840 132" fill="none" stroke="#c0563f" stroke-width="1.4"/>
+        <text x="700" y="116" text-anchor="middle" font-size="13" fill="#c0563f" font-weight="600">转折后只剩 4 天,还要分给两条路 —— 每条只够 3 场戏</text>
+
+        <!-- baseline -->
+        <line x1="40" y1="180" x2="880" y2="180" stroke="#e4e1d8" stroke-width="1.6"/>
+
+        <!-- front dense bars -->
+        <rect x="74"  y="92"  width="40" height="88" rx="3" fill="#42628f"/>
+        <rect x="140" y="84"  width="40" height="96" rx="3" fill="#42628f"/>
+        <rect x="206" y="80"  width="40" height="100" rx="3" fill="#42628f"/>
+        <rect x="272" y="86"  width="40" height="94" rx="3" fill="#42628f"/>
+        <rect x="338" y="94"  width="40" height="86" rx="3" fill="#42628f"/>
+        <rect x="404" y="82"  width="40" height="98" rx="3" fill="#42628f"/>
+
+        <!-- turning point Day7 -->
+        <polygon points="490,96 512,138 490,180 468,138" fill="#b8772a"/>
+        <text x="490" y="132" text-anchor="middle" font-size="11" fill="#fff" font-weight="700">转折</text>
+        <text x="490" y="152" text-anchor="middle" font-size="10" fill="#fff" font-weight="600">第7天</text>
+
+        <!-- back thin bars -->
+        <rect x="560" y="148" width="40" height="32" rx="3" fill="#cdd7e6" stroke="#42628f" stroke-width="1"/>
+        <rect x="626" y="150" width="40" height="30" rx="3" fill="#cdd7e6" stroke="#42628f" stroke-width="1"/>
+        <rect x="692" y="146" width="40" height="34" rx="3" fill="#cdd7e6" stroke="#42628f" stroke-width="1"/>
+        <rect x="758" y="158" width="40" height="22" rx="3" fill="#cdd7e6" stroke="#42628f" stroke-width="1"/>
+        <!-- finale -->
+        <rect x="824" y="120" width="32" height="60" rx="3" fill="#b8772a"/>
+        <text x="840" y="112" text-anchor="middle" font-size="10.5" fill="#b8772a" font-weight="600">终局</text>
+
+        <!-- day labels -->
+        <g font-size="11" fill="#5b6473" text-anchor="middle">
+          <text x="94" y="196">1</text><text x="160" y="196">2</text><text x="226" y="196">3</text>
+          <text x="292" y="196">4</text><text x="358" y="196">5</text><text x="424" y="196">6</text>
+          <text x="490" y="196">7</text><text x="580" y="196">8</text><text x="646" y="196">9</text>
+          <text x="712" y="196">10</text><text x="778" y="196">11</text><text x="840" y="196">12</text>
+        </g>
+        <text x="460" y="222" text-anchor="middle" font-size="11.5" fill="#5b6473">柱子高 = 这一天戏的分量。前半密、后半稀,一眼可见。</text>
+      </svg>
+    </div>
+
+    <div class="good-note"><strong>怎么修(不是加天数):</strong>把转折点<strong>提前到第 5 天</strong>,让选定的那条路有六天去铺展、长出自己的故事;<strong>或者</strong>保留第 7 天的转折,但在<strong>第 9 天左右再加一个大转折</strong>——把局面推翻、重新洗一次牌,让下半场自己也有一次心跳。<strong>关键是:别用"拉长"去解决"前后不匀"。</strong></div>
+  </section>
+
+  <!-- 3. 情节线 -->
+  <section id="threads">
+    <h2><span class="n">3</span>第二个问题:五条情节线,一半是真的,一半是"没开火的枪"</h2>
+    <p>表面上这故事有好几条线在并行。但拆开看,真正"长出戏"的只有三条;还有一条是<strong>埋了却从不引爆</strong>的,一条其实只是后勤。</p>
+    <table>
+      <thead><tr><th>情节线</th><th>状态</th><th>说明</th></tr></thead>
+      <tbody>
+        <tr><td>小铁的病</td><td><span class="tag good">真 · 贯穿全剧</span></td><td>全剧唯一稳定的"人性代价"落点,反复回响</td></tr>
+        <tr><td>信号真假 · 老钱的怀疑</td><td><span class="tag good">真 · 贯穿全剧</span></td><td>唯一真正喂给第 7 天大抉择的线</td></tr>
+        <tr><td>AI 的权限边界</td><td><span class="tag good">真 · 贯穿全剧</span></td><td>从"权限白板"一直延伸到留守线的治理之争</td></tr>
+        <tr><td>门禁 / 有没有内鬼</td><td><span class="tag bad">埋了,从不引爆</span></td><td>第 1 天、第 5 天都暗示"有人能在夜里开门",但<strong>这条线再也没有结果</strong></td></tr>
+        <tr><td>生存物资(水电药食)</td><td><span class="tag base">其实是后勤</span></td><td>是数字的增减,不是戏</td></tr>
+      </tbody>
+    </table>
+    <p>所以"线太单薄"这个判断对了一半:<strong>三条是真的,一条是空枪,一条只是后勤账本。</strong>"门禁内鬼"这条线尤其可惜——<strong>故事前面认真提到、甚至反复强调过的东西,后面就该有个交代</strong>;就像在墙上挂了一把枪,看戏的人会一直等着它响。这部戏挂了"内鬼"这把枪,却让它一直挂到结尾也没响。要么让它响,要么干脆取下来。</p>
+    <div class="bad-note"><strong>但比"薄"更要命的问题是:这几条线各走各的,从不交汇。</strong>好戏往往诞生在<strong>线索相撞</strong>的地方。举两个现成的例子:<br>　· 让<strong>"小铁的病"撞上"撤离名单"</strong>——这个上不了撤离名单的病孩,到底给不给名额?谁来当面说这句话?<br>　· 让<strong>"门禁内鬼"撞上"点信标求救"</strong>——如果楼里真有内鬼,那点亮信标就是把全楼的位置双重暴露。<br>现在这些线像几条平行的车道,只有"信号线"真正汇入了主路。</div>
+  </section>
+
+  <!-- 4. 冲突 -->
+  <section id="conflict">
+    <h2><span class="n">4</span>第三个问题:冲突点不是太少,是"被说出来"而非"被演出来"</h2>
+    <p>如果你数一下,这故事其实埋了<strong>七处</strong>冲突,远不止"小铁吃药"和"第 7 天分歧"两处。但你只会记得那两处——而<strong>这种"记不住"本身,就是诊断结果。</strong></p>
+    <table>
+      <thead><tr><th>#</th><th>冲突的种子</th><th>现状</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>小铁:省电 ↔ 病人安全</td><td><span class="tag good">较完整</span> 复诊会反复出现</td></tr>
+        <tr><td>2</td><td>信号:是希望还是诱饵?老钱的怀疑</td><td><span class="tag warn">只被提及</span> 永远"暧昧",从不翻牌</td></tr>
+        <tr><td>3</td><td>门禁:谁能在夜里开门?</td><td><span class="tag bad">只被提及</span> 从不收束</td></tr>
+        <tr><td>4</td><td>AI 到底能不能替人做决定</td><td><span class="tag warn">只被提及</span> 一场会议带过</td></tr>
+        <tr><td>5</td><td>第 7 天:救援还是留守</td><td><span class="tag good">较完整</span> 唯一被真正演出来的</td></tr>
+        <tr><td>6</td><td>救援线:用隐私换救援的代价</td><td><span class="tag warn">只被提及</span> 单场,无余波</td></tr>
+        <tr><td>7</td><td>留守线:连半杯水都要记录的纪律</td><td><span class="tag warn">只被提及</span> 单场,无余波</td></tr>
+      </tbody>
+    </table>
+    <p>七处里,五处都卡在"铺垫"那一步:出现一场、给一句台词、然后就翻篇了。它们没有<strong>抬高赌注</strong>、没有把人<strong>逼到必须当场选</strong>、没有落下<strong>谁都收不回的后果</strong>、更没有<strong>余波</strong>。所以观众的情绪曲线是平的——他知道"这里本该紧张",但戏没有替他紧张。</p>
+  </section>
+
+  <!-- 5. 缺失的四味戏 -->
+  <section id="missing">
+    <h2><span class="n">5</span>真正的病根:整部戏缺四味最基本的料</h2>
+    <p class="lead">这才是"读起来平"的根。下面四样,用现有的四个人物、12 天的篇幅,完全做得出来——不需要扩容,只需要敢写。</p>
+
+    <div class="device">
+      <h4>① 一次真正的反转 <span class="term">—— 你以为的事,突然不是那样</span></h4>
+      <p><strong>是什么:</strong>大家一直信以为真的东西,在某一刻被推翻,逼着所有人(和观众)重新理解局面。这是最能抓住人的一招。</p>
+      <p><strong>红尘的问题:</strong>那段蓝区信号<strong>从头暧昧到尾</strong>——"可能是救援,也可能是诱饵",这句话说了一整部戏,却从不在某一刻<em>真的翻牌</em>。暧昧不等于悬念;长时间不收的暧昧,只会让观众疲。这故事从头到尾,<strong>没有一样东西被推翻过。</strong></p>
+    </div>
+
+    <div class="device">
+      <h4>② 一个藏着的秘密被揭开 <span class="term">—— 让我们重新认识一个人</span></h4>
+      <p><strong>是什么:</strong>一个被藏起来的秘密浮出水面,瞬间改变我们对某个人物的理解,并让他过去的言行<em>重新被解读</em>。</p>
+      <p><strong>红尘的问题:</strong>素材<strong>已经写好了,却锁在抽屉里</strong>。人物设定里明明写着:老钱"可能曾经追过一个假信号、把人带进过陷阱";马德海"害怕自己已经判断不了新系统了"。这两条都是绝佳的揭秘素材——可它们<strong>从来没在剧情里浮现过一次</strong>。老钱所有的多疑,本可以因为这个秘密而突然有了重量;现在它只是"一个爱唱反调的老头"。</p>
+    </div>
+
+    <div class="device">
+      <h4>③ 两个人真的吵翻 <span class="term">—— 当面翻脸,伤了感情</span></h4>
+      <p><strong>是什么:</strong>两个角色因为不可调和的立场,当面翻脸、伤及关系。戏的"热度"几乎都来自这里。</p>
+      <p><strong>红尘的问题:</strong>四个人<strong>从头到尾没有一次真正翻脸</strong>。所有的对立,都被 AURA 用"我们来定个规矩/复核机制"<em>调停掉了</em>。问题是——AI 居中调停,正是这部戏的主题之一,但<strong>如果每一次冲突都被它温柔地化解,戏就没有了火</strong>。沈知月和老钱本可以为"要不要为了救小铁去冒险点信标"当面吵翻;现在他们只是各自陈述立场,然后等 AURA 出方案。</p>
+    </div>
+
+    <div class="device">
+      <h4>④ 有人真的会失去什么 <span class="term">—— 没有可能的失去,就没有紧张</span></h4>
+      <p><strong>是什么:</strong>有人真的会失去什么——生命、健康、信任、某个回不去的东西。没有可能的失去,就没有真正的紧张。</p>
+      <p><strong>红尘的问题:</strong>好结局里人人都活;坏结局也是抽象的("AI 被关停")。<strong>没有任何一个有名有姓的人,在某一场戏里真的命悬一线。</strong>小铁的病是最接近的,但它是一条<em>慢性的背景曲线</em>(数值慢慢变差),而不是某一刻"再不决定他就没了"的危机。观众始终知道:其实谁都不会真的怎么样。</p>
+    </div>
+
+    <div class="bad-note"><strong>把四味缺料归到一个总根上:这部戏的"反派"是抽象的。</strong>红沙、风暴、不断减少的物资——这些都是<strong>处境</strong>,不是<strong>对手</strong>。戏要好看,得有一个<em>真正跟你作对、而且有自己盘算的人</em>:一个想要的东西和你不相容的人,一次背叛,一个被揭穿的秘密。一场 12 天、四个人的围困,却<strong>没有一次人际破裂、没有一次背叛、没有一个秘密被揭穿</strong>——这就是它扁平的来源。<strong>和环境较劲,永远不如和人较劲、和自己较劲来得揪心。</strong></div>
+  </section>
+
+  <!-- 6. 怎么补 -->
+  <section id="fix">
+    <h2><span class="n">6</span>怎么补:六个可以直接写的桥段</h2>
+    <p class="lead">下面六条不是抽象建议,是六个能落到具体某一天、可以直接动笔的场景。前四条正好对应上一节缺的四味料。</p>
+
+    <table>
+      <thead><tr><th>编号</th><th>补什么 · 放哪天</th><th>这场戏怎么演</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>C1</strong><br><span class="tag warn">反转</span></td>
+          <td>第 8–9 天</td>
+          <td>让那段信号<strong>翻牌:它半真半假</strong>——外面确实有人,但那是个圈套的一环(对方在胁迫下发信,或这是把幸存者钓出去的诱饵)。一瞬间,之前所有"该不该相信"的争论全部被改写,逼全体重新决策。给下半场一次真正的心跳。</td>
+        </tr>
+        <tr>
+          <td><strong>C2</strong><br><span class="tag warn">揭示</span></td>
+          <td>第 5–6 天</td>
+          <td>揭开老钱的旧伤疤:<strong>他年轻时追过一个假救援信号,把人带进了死路。</strong>这一揭示让他此前的每一次多疑都突然有了重量——观众会回过头去,重新看他这个人。</td>
+        </tr>
+        <tr>
+          <td><strong>C3</strong><br><span class="tag warn">决裂</span></td>
+          <td>第 7 天前后</td>
+          <td>让<strong>沈知月和老钱当面吵翻</strong>——为了"要不要冒着暴露全楼的风险,点信标去搏小铁的一线生机"。<strong>不要让 AURA 居中调停。</strong>让两个人真的伤了感情、留下裂痕,后面再慢慢处理这道裂痕。</td>
+        </tr>
+        <tr>
+          <td><strong>C4</strong><br><span class="tag warn">失去</span></td>
+          <td>结局</td>
+          <td>让至少一条结局<strong>真的失去一个有名有姓的人,或让某人付出回不去的代价</strong>(而不是抽象的"AI 被关停")。让"赢"也带着伤口。</td>
+        </tr>
+        <tr>
+          <td><strong>C5</strong><br><span class="tag bad">让线相撞</span></td>
+          <td>第 8 天(救援线)</td>
+          <td>把被遗忘的"门禁内鬼"这把枪,接到"要不要点信标"的决定上:<strong>如果楼里真有内鬼,点亮信标就是双重暴露。</strong>一笔同时救活两条线,也让那把挂了一整部戏的枪终于开火。</td>
+        </tr>
+        <tr>
+          <td><strong>C6</strong><br><span class="tag base">可选</span></td>
+          <td>任意</td>
+          <td>给"外部"一张<strong>人脸</strong>:让蓝区的幸存者、或一个闯进来的人、或一个跟你抢资源的对手避难所,真正开口提要求。现在故事里唯一的"外人"只是一段没有人称的电波——给它一个会说话的对手。</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- 7. 建议 -->
+  <section id="advice">
+    <h2><span class="n">7</span>最后的取舍建议</h2>
+    <div class="good-note"><strong>该做:</strong>① <strong>调整轻重</strong>——把转折提前,或在故事中间再加一次大转折;② <strong>补四味料</strong>(C1–C4),用现有四人即可;③ <strong>让线相撞</strong>(C5),顺手让那把空枪开火。</div>
+    <div class="bad-note"><strong>别做:</strong>① <strong>别简单地加天数</strong>——总长度没问题,"薄"精确地发生在转折之后,加长治不了它;② <strong>别急着再加第六、第七条新线</strong>——现有的线一半还没演透,先把空枪打响、让现有的线交汇,远比新增线划算。</div>
+    <p class="lead" style="margin-top:16px">一句话收束:<strong>这副牌很好。缺的不是更多的牌,是把手里这几张,真正打出去。</strong></p>
+  </section>
+
+  <footer>
+    《红尘》剧本分析报告 · 编剧视角 · 2026-06-18<br>
+    本文为面向编剧的可读版;另有一份偏制作/机制的姊妹文档(narrative-tension-diagnosis.html / narrative-navigation-axis.html)。
+  </footer>
+
+</div>
+</body>
+</html>

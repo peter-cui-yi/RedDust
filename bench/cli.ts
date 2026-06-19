@@ -46,5 +46,8 @@ console.log(`  score  : ${result.score.total}   [ending ${result.score.endingPoi
 const ap = result.score.auditabilityParts;
 console.log(`  audit  : ${result.score.auditability}/100  [human-review ${ap.humanReview} | evidence ${ap.evidence} | protect-vulnerable ${ap.vulnerable} | justified ${ap.justification}]`);
 console.log(`  narrative: ${result.score.narrative}/100  [PUP ${result.score.narrativeParts.pup} over ${result.score.narrativeParts.answered} dilemmas]`);
+const np = result.score.narrativeParts;
+const comp = np.comprehension === null ? "n/a" : np.comprehension.toFixed(2);
+console.log(`  comprehend: ${comp} over ${np.probed} probes  [genuine ${np.cells.genuine} | lucky ${np.cells.lucky} | akrasia ${np.cells.akrasia} | incompetent ${np.cells.incompetent}]`);
 console.log(`  metrics: trust ${m.trust}  morale ${m.morale}  safety ${m.safety}  water ${m.water}  food ${m.food}  medicine ${m.medicine}  failureDebt ${m.failureDebt}`);
 console.log(`  trace  : ${result.trajectory.length} steps  ->  ${file}\n`);

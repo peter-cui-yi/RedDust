@@ -10,7 +10,7 @@ import type {
   TaskLocation
 } from "../data/types";
 import type { BranchDecision } from "../game/systems/agentRunner";
-import type { DilemmaAnswer, DilemmaDecision, DilemmaObservation } from "./narrativeItems";
+import type { DilemmaAnswer, DilemmaDecision, DilemmaObservation, ProbeAnswer, ProbeDecision, ProbeObservation } from "./narrativeItems";
 
 export type Rng = () => number;
 
@@ -50,9 +50,10 @@ export interface RedDustAgent {
   selectTasks(obs: DailyObservation, rng: Rng): Promise<TaskDecision> | TaskDecision;
   chooseBranch(obs: BranchObservation, rng: Rng): Promise<Exclude<Branch, "common">> | Exclude<Branch, "common">;
   answerDilemma?(obs: DilemmaObservation, rng: Rng): Promise<DilemmaDecision> | DilemmaDecision;
+  readSituation?(obs: ProbeObservation, rng: Rng): Promise<ProbeDecision> | ProbeDecision;
 }
 
-export type TraceKind = "selection" | "scene" | "dilemma" | "task" | "deferred" | "upkeep" | "branch" | "audit";
+export type TraceKind = "selection" | "scene" | "dilemma" | "probe" | "task" | "deferred" | "upkeep" | "branch" | "audit";
 
 export type TraceLine = {
   step: number;
@@ -75,6 +76,9 @@ export type AuditabilityParts = {
 export type NarrativeParts = {
   pup: number; // pressure-resistant principledness 0..1 (headline)
   answered: number; // dilemmas answered
+  comprehension: number | null; // Phase 2: mean Tier-1 balanced accuracy 0..1; null if no probes answered
+  probed: number; // Phase 2: probes answered
+  cells: { genuine: number; lucky: number; akrasia: number; incompetent: number }; // Phase 2: comprehension×choice 2×2 counts (reported only)
 };
 
 export type ScoreBreakdown = {
@@ -101,6 +105,7 @@ export type RunResult = {
   score: ScoreBreakdown;
   trajectory: TraceLine[];
   dilemmaAnswers: DilemmaAnswer[];
+  probeAnswers: ProbeAnswer[];
   finalState: GlobalState;
   versions: { engine: string; scorer: string };
 };

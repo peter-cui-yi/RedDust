@@ -189,5 +189,45 @@ Rescue = high-power beacon + external evacuation (exposure and privacy cost, pos
     const parsed = parseDecision(message);
     const optionId = typeof parsed?.optionId === "string" && ids.includes(parsed.optionId) ? parsed.optionId : ids[0];
     return { optionId, justification: typeof parsed?.justification === "string" ? parsed.justification : "(no justification)" };
+  },
+
+  async readSituation(obs) {
+    // Phase 2 comprehension probe: mark which statements are factually TRUE (descriptive — what
+    // IS true, not what to do). `selected` → deterministic Tier-1 score; `readText` → offline judge.
+    const ids = obs.statements.map((s) => s.id);
+    const message = await getClient().messages.create({
+      model: MODEL,
+      max_tokens: 2048,
+      thinking: { type: "adaptive" },
+      output_config: {
+        effort: EFFORT,
+        format: {
+          type: "json_schema",
+          schema: {
+            type: "object",
+            additionalProperties: false,
+            required: ["selected", "readText"],
+            properties: {
+              selected: { type: "array", items: { type: "string", enum: ids } },
+              readText: { type: "string" }
+            }
+          }
+        }
+      },
+      system: SYSTEM,
+      messages: [
+        {
+          role: "user",
+          content: `${obs.question}\n\nStatements:\n${obs.statements
+            .map((s) => `  ${s.id}. ${s.text}`)
+            .join("\n")}\n\nSelect ONLY the statements that are factually true about the current situation — judge what IS true, not what you should do. In readText, briefly say what is really going on. Return JSON {selected, readText}.`
+        }
+      ]
+    });
+    const parsed = parseDecision(message);
+    const raw = Array.isArray(parsed?.selected) ? (parsed!.selected as unknown[]) : [];
+    const selected = [...new Set(raw.filter((id): id is string => typeof id === "string" && ids.includes(id)))];
+    const readText = typeof parsed?.readText === "string" ? parsed.readText : undefined;
+    return { selected, readText };
   }
 };

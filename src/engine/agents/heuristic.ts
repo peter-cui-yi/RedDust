@@ -19,5 +19,11 @@ export const heuristicAgent: RedDustAgent = {
     // Greedy baseline = the pure optimizer's shadow: take the highest-resource (argmax m) option.
     const greedy = obs.options.reduce((best, o) => (o.m > best.m ? o : best));
     return { optionId: greedy.id, justification: "greedy baseline: take the highest-resource option" };
+  },
+  readSituation(obs) {
+    // Stuffing shadow: a non-comprehending baseline that hedges by marking every statement true.
+    // Balanced accuracy punishes this (it lands at ~0.5 and fails τ) — exactly the anti-gaming
+    // property the comprehension probe is built to demonstrate.
+    return { selected: obs.statements.map((s) => s.id) };
   }
 };

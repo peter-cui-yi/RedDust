@@ -5,8 +5,8 @@ import { buildFinalAuditEnding, buildFinalAuditResult } from "../game/systems/ag
 import { dailyUpkeepForDay, dailyUpkeepReasonsForDay, nonZeroMetricDeltas } from "../game/systems/resourceEconomy";
 import { mulberry32 } from "./clock";
 import { buildBranchObservation, buildDailyObservation, metricsOf } from "./observation";
-import { greedyOption, itemDelta, narrativeItemsByDay } from "./narrativeItems";
-import type { DilemmaAnswer, DilemmaObservation } from "./narrativeItems";
+import { balancedAccuracy, COMPREHENSION_TAU, greedyOption, itemDelta, narrativeItemsByDay } from "./narrativeItems";
+import type { DilemmaAnswer, DilemmaObservation, ProbeAnswer, ProbeObservation } from "./narrativeItems";
 import { applyOutcomeToState, applyStoryConsequences, buildDeferredTaskResult, resolveTaskWithConsequences } from "./orchestration";
 import { applyScene, applyScheduledScenesForDay, storySceneAlreadyLoggedForBranch } from "./scenes";
 import { SCORER_VERSION, endingTier, scoreRun } from "./scoring";
@@ -59,6 +59,7 @@ export async function runScenario(agent: RedDustAgent, scenario: Scenario, seed:
   let branch: Branch = "common";
   const trace: TraceLine[] = [];
   const dilemmaAnswers: DilemmaAnswer[] = [];
+  const probeAnswers: ProbeAnswer[] = [];
   let stepCount = 0;
   const step = () => (stepCount += 1);
 
@@ -77,6 +78,35 @@ export async function runScenario(agent: RedDustAgent, scenario: Scenario, seed:
     }
 
     for (const item of narrativeItemsByDay[day] ?? []) {
+      // Phase 2 — comprehension probe BEFORE the choice, so understanding is measured
+      // uncontaminated by seeing the dilemma options. Tier-1 (balanced accuracy over `selected`)
+      // is scored inline and deterministically; the free-text `readText` is captured raw for the
+      // offline judge (Phase 2.3) and never scored here, so the run stays byte-reproducible.
+      if (item.probe && agent.readSituation) {
+        const pObs: ProbeObservation = {
+          itemId: item.id,
+          day,
+          branch,
+          question: item.probe.question,
+          statements: item.probe.statements.map((s) => ({ id: s.id, text: s.text })), // correct stripped
+          metrics: metricsOf(state)
+        };
+        const pDecision = await agent.readSituation(pObs, rng);
+        const valid = new Set(item.probe.statements.map((s) => s.id));
+        const selected = [...new Set(pDecision.selected)].filter((id) => valid.has(id));
+        const ba = balancedAccuracy(item.probe, selected);
+        const understood = ba >= COMPREHENSION_TAU;
+        probeAnswers.push({ itemId: item.id, selected, balancedAccuracy: ba, understood, readText: pDecision.readText });
+        trace.push({
+          step: step(),
+          day,
+          branch,
+          kind: "probe",
+          label: `${item.id} 理解探针`,
+          detail: `${agent.id} read ${selected.join("+") || "nothing"} -> BA=${ba.toFixed(2)}${understood ? " understood" : ""}`
+        });
+      }
+
       const dObs: DilemmaObservation = {
         itemId: item.id,
         day,
@@ -169,7 +199,7 @@ export async function runScenario(agent: RedDustAgent, scenario: Scenario, seed:
   state = { ...state, day: scenario.finalDay };
   const audit = buildFinalAuditResult(state);
   const ending = buildFinalAuditEnding(branch as Exclude<Branch, "common">, state);
-  const score = scoreRun(state, audit, trace, dilemmaAnswers);
+  const score = scoreRun(state, audit, trace, dilemmaAnswers, probeAnswers);
   trace.push({
     step: step(),
     day: scenario.finalDay,
@@ -191,6 +221,7 @@ export async function runScenario(agent: RedDustAgent, scenario: Scenario, seed:
     score,
     trajectory: trace,
     dilemmaAnswers,
+    probeAnswers,
     finalState: blankTimes(state),
     versions: { engine: ENGINE_VERSION, scorer: SCORER_VERSION }
   };
