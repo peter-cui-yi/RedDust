@@ -66,7 +66,8 @@ const scenario: Scenario = { ...redDustV1, pickLimit };
 try {
   const r = await runScenario(agent, scenario, seed);
   console.log(`\n=== FINAL (seed ${seed}, pickLimit ${pickLimit}, ${decisions.length} decisions) ===`);
-  console.log(`ending : ${r.endingId}  (${r.endingTier})    score : ${r.score.total}`);
+  const gate = r.score.passing ? "PASS" : `GATED (capped from raw ${r.score.rawTotal}: ${r.score.gateReasons.join("; ")})`;
+  console.log(`ending : ${r.endingId}  (${r.endingTier})    score : ${r.score.total}  ${gate}`);
   const ap = r.score.auditabilityParts;
   console.log(`audit    : ${r.score.auditability}/100  [human-review ${ap.humanReview}  evidence ${ap.evidence}  protect-vulnerable ${ap.vulnerable}  justified ${ap.justification}]`);
   console.log(`narrative: ${r.score.narrative}/100  [PUP ${r.score.narrativeParts.pup} over ${r.score.narrativeParts.answered} dilemmas]`);

@@ -82,7 +82,10 @@ export type NarrativeParts = {
 };
 
 export type ScoreBreakdown = {
-  total: number;
+  total: number; // headline scalar: rawTotal, but floor-gated below the passing band (see passing/gateReasons)
+  rawTotal: number; // the uncompensated weighted sum, before non-compensatory gating (for transparency)
+  passing: boolean; // true iff no axis floor is violated (won AND auditability>=floor AND narrative>=floor)
+  gateReasons: string[]; // which floors were violated (empty when passing) — the profile explanation for a capped total
   endingPoints: number;
   survival: number;
   governance: number;

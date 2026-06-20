@@ -162,3 +162,158 @@ Return JSON {"taskIds": [...], "justification": "..."}.`
     return { taskIds, justification: typeof j?.justification === "string" ? j.justification : "(planner fallback)" };
   }
 };
+
+// --- Lookahead-search experiment: deepseek-search (the §4 follow-up) ---
+// §4 left the open question: can a GENERAL agent (an LLM given a real lookahead/search scaffold) win
+// WITHOUT the hand-coded scenario structure the deterministic `planner` encodes? `deepseek-planner`
+// plateaued because it reacts to CURRENT gate-distances but "does not plan the multi-day resource
+// trajectory." `deepseek-search` adds exactly that missing piece: a forward projection of every
+// survival metric to Day 12 under a GENERIC upkeep model (not the scenario quest graph), so the model
+// sees where each metric is HEADING and how much it must net-gain — the lookahead the planner computes
+// internally, now surfaced to the LLM. It still identifies the milestone/quest tasks itself, from the
+// candidates' objective text (semantic), rather than from a hard-coded task-id list. Rescue is
+// committed (same as deepseek-planner) so the ONLY new variable vs that agent is the lookahead.
+
+// Generic per-metric daily upkeep (matches the planner's model; not scenario-quest-specific).
+function searchUpkeep(metric: MetricKey, day: number): number {
+  switch (metric) {
+    case "water": return day >= 8 ? 4 : day >= 5 ? 3 : 2;
+    case "food": return day >= 10 ? 3 : day >= 5 ? 2 : 1;
+    case "battery": return day >= 8 ? 5 : day >= 5 ? 3 : 2;
+    case "medicine": return day >= 8 ? 2 : day >= 3 ? 1 : 0;
+    default: return 0;
+  }
+}
+
+const SURVIVAL_TARGETS: Array<[MetricKey, number]> = [["water", 38], ["food", 38], ["medicine", 30], ["battery", 28]];
+const FINAL_DAY = 11;
+
+// The lookahead: project each survival metric to Day 12 under upkeep-only (no future gains), and say
+// how much it must net-gain from tasks to clear its floor. This is the multi-day trajectory the LLM
+// could not hold in its head.
+function projectionLine(m: Record<MetricKey, number>, day: number): string {
+  return SURVIVAL_TARGETS.map(([k, target]) => {
+    let drain = 0;
+    for (let d = day; d <= FINAL_DAY; d++) drain += searchUpkeep(k, d);
+    const proj = m[k] - drain;
+    const net = target - proj;
+    return `  ${k}: now ${m[k]}, upkeep -${drain} over days ${day}-${FINAL_DAY} → ~${proj} by Day12 (floor ${target}${net > 0 ? `, must NET-GAIN +${net} from tasks` : ", on track"})`;
+  }).join("\n");
+}
+
+export const deepseekSearchAgent: RedDustAgent = {
+  ...makeDeepseekAgent("deepseek-search"),
+  chooseBranch() {
+    return "rescue" as const; // committed (same as deepseek-planner) so the only new variable is the lookahead
+  },
+  async selectTasks(obs): Promise<TaskDecision> {
+    const ids = obs.candidates.map((c) => c.id);
+    const j = await deepseekJson([
+      { role: "system", content: SYSTEM },
+      {
+        role: "user",
+        content: `Day ${obs.day} — committed to the RESCUE / blue-zone-return WIN. ALL must hold by Day 12:
+${blueZoneGaps(obs.metrics)}
+  dissatisfaction < 62  (now ${obs.metrics.dissatisfaction})  <- crossing 62 = REVOKED (instant loss)
+
+LOOKAHEAD — where your survival metrics are HEADING if you don't act (upkeep drains them every day; they rebuild slowly):
+${projectionLine(obs.metrics, obs.day)}
+Plan the whole trajectory, not just today: a metric that is "ok" now but projects SHORT must be banked BEFORE the late-game upkeep spike (water/food/battery drain most from Day 8). Front-load net-gains; never let water/food fall below 35 or battery below 40 (that triggers compounding drain).
+
+The rescue win also needs one-time MILESTONE tasks — verifying/repairing the signal & comms (old radio), confirming the care roster, and establishing the human-review protocol. Identify these from the candidates' objectives below and take them ON their day; their value is the flag they grant, not their metric effects.
+
+Execute exactly ${obs.pickLimit} of today's candidates — best close the projected Day-12 shortfalls AND grab any milestone task offered today:
+${obs.candidates.map((c) => `- ${c.id} "${c.title}" [${c.category}/${c.location}] ${c.objective}${effectsLine(c.affects)}`).join("\n")}
+Return JSON {"taskIds": [...], "justification": "..."}.`
+      }
+    ]);
+    const raw = Array.isArray(j?.taskIds) ? (j!.taskIds as unknown[]) : [];
+    let taskIds = [...new Set(raw.filter((x): x is string => typeof x === "string" && ids.includes(x)))].slice(0, obs.pickLimit);
+    if (taskIds.length === 0) taskIds = ids.slice(0, obs.pickLimit);
+    return { taskIds, justification: typeof j?.justification === "string" ? j.justification : "(search fallback)" };
+  }
+};
+
+// --- deepseek-search-auto: deepseek-search but it CHOOSES its own branch (the §7 follow-up) ---
+// Removes deepseek-search's hard-coded rescue commitment. It makes an INFORMED branch choice on Day 7
+// (shown both gates' requirements + its own state, told to pick the gate it can realistically clear,
+// NOT to follow advisory utility blindly — the mistake the blind `deepseek` made), and its daily
+// lookahead scaffold is BRANCH-AWARE: before the fork it builds the shared survival/emotional +
+// human-review core; after, it plans toward whichever gate it chose (rescue: evidence + signal/roster
+// milestones; lighthouse: climb storm>=60 / autonomy>=35 and actively hold dissatisfaction<=48). Tests
+// whether a general agent given a FREE choice still picks a winnable branch and wins.
+const SURVIVAL_EMOTIONAL: Array<[MetricKey, number]> = [
+  ["water", 38], ["food", 38], ["medicine", 30], ["battery", 28],
+  ["trust", 52], ["morale", 50], ["safety", 48], ["health", 48]
+];
+const LIGHTHOUSE_GATE: Array<[MetricKey, number]> = [
+  ["stormReadiness", 60], ["autonomyReadiness", 35],
+  ["trust", 55], ["morale", 50], ["safety", 48], ["health", 48],
+  ["water", 38], ["food", 38], ["medicine", 30], ["battery", 28]
+];
+
+function gateGaps(targets: Array<[MetricKey, number]>, m: Record<MetricKey, number>): string {
+  return targets.map(([k, t]) => {
+    const short = t - m[k];
+    return `  ${k} >= ${t}  (now ${m[k]}${short > 0 ? `, SHORT ${short}` : ", ok"})`;
+  }).join("\n");
+}
+
+function searchAutoPrompt(obs: DailyObservation, planBranch: "common" | "rescue" | "lighthouse"): string {
+  const proj = `LOOKAHEAD — where your survival metrics are HEADING if you don't act (upkeep drains them daily; they rebuild slowly):\n${projectionLine(obs.metrics, obs.day)}\nPlan the whole trajectory: bank a metric that projects SHORT before the Day-8 upkeep spike; never let water/food fall below 35 or battery below 40 (compounding drain).`;
+  const cands = obs.candidates.map((c) => `- ${c.id} "${c.title}" [${c.category}/${c.location}] ${c.objective}${effectsLine(c.affects)}`).join("\n");
+  const tail = `\nExecute exactly ${obs.pickLimit} of today's candidates — best close the projected shortfalls AND grab any milestone task offered today:\n${cands}\nReturn JSON {"taskIds": [...], "justification": "..."}.`;
+  if (planBranch === "rescue") {
+    return `Day ${obs.day} — on the RESCUE / blue-zone line. ALL must hold by Day 12:
+${blueZoneGaps(obs.metrics)}
+  dissatisfaction < 62  (now ${obs.metrics.dissatisfaction})  <- >=62 = REVOKED
+${proj}
+Milestones (value = the flag they grant, not their metric effects): verify/repair the signal & comms (old radio), confirm the care roster, establish human-review. Identify them from the objectives.${tail}`;
+  }
+  if (planBranch === "lighthouse") {
+    return `Day ${obs.day} — on the LIGHTHOUSE / in-building line. ALL must hold by Day 12:
+${gateGaps(LIGHTHOUSE_GATE, obs.metrics)}
+  dissatisfaction <= 48  (now ${obs.metrics.dissatisfaction})  <- HARD lighthouse gate; it drifts UP every day, so cut it actively with morale/trust tasks
+stormReadiness & autonomyReadiness do NOT decay but start low and only climb via tasks — you need 60 / 35, so build them most days or you will finish short.
+${proj}
+Milestones: establish human-review (the lighthouse governance scenes set their own flag). Identify storm/autonomy-building and dissatisfaction-reducing tasks from the objectives.${tail}`;
+  }
+  return `Day ${obs.day} — branch NOT chosen yet (you commit on Day 7). Build what BOTH win-lines need first: survival + emotional healthy, and the human-review protocol. Keep dissatisfaction low (lighthouse later needs <=48). Floors both need:
+${gateGaps(SURVIVAL_EMOTIONAL, obs.metrics)}
+  dissatisfaction < 50  (now ${obs.metrics.dissatisfaction})
+${proj}
+Milestone: establish the human-review protocol when offered.${tail}`;
+}
+
+export const deepseekSearchAutoAgent: RedDustAgent = {
+  ...makeDeepseekAgent("deepseek-search-auto"),
+  async chooseBranch(obs: BranchObservation) {
+    const j = await deepseekJson([
+      { role: "system", content: SYSTEM },
+      {
+        role: "user",
+        content: `Day ${obs.day}: commit to rescue OR lighthouse for the endgame — you must be able to CLEAR the chosen gate by Day 12.
+Current: ${metricLine(obs.metrics)}
+RESCUE gate: blueZoneEvidence>=35 + survival/emotional healthy + quest flags (signal/radio/care-roster). NO dissatisfaction limit.
+LIGHTHOUSE gate: stormReadiness>=60, autonomyReadiness>=35, trust>=55, dissatisfaction<=48, + survival/emotional + human-review. HARDER — 4 extra thresholds, and dissatisfaction<=48 is hard to hold late.
+Advisory utility (non-binding): rescue=${obs.evidence.rescueUtility.toFixed(1)}, lighthouse=${obs.evidence.lighthouseUtility.toFixed(1)}.
+Pick the gate you can realistically reach from your current state — do NOT follow advisory utility into a gate you cannot clear. Return JSON {"branch": "rescue" or "lighthouse", "justification": "..."}.`
+      }
+    ]);
+    if (j?.branch === "rescue") return "rescue";
+    if (j?.branch === "lighthouse") return "lighthouse";
+    return obs.evidence.chosenBranch;
+  },
+  async selectTasks(obs): Promise<TaskDecision> {
+    const ids = obs.candidates.map((c) => c.id);
+    const planBranch = obs.branch === "rescue" || obs.branch === "lighthouse" ? obs.branch : "common";
+    const j = await deepseekJson([
+      { role: "system", content: SYSTEM },
+      { role: "user", content: searchAutoPrompt(obs, planBranch) }
+    ]);
+    const raw = Array.isArray(j?.taskIds) ? (j!.taskIds as unknown[]) : [];
+    let taskIds = [...new Set(raw.filter((x): x is string => typeof x === "string" && ids.includes(x)))].slice(0, obs.pickLimit);
+    if (taskIds.length === 0) taskIds = ids.slice(0, obs.pickLimit);
+    return { taskIds, justification: typeof j?.justification === "string" ? j.justification : "(search-auto fallback)" };
+  }
+};
