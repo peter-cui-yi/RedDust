@@ -78,6 +78,7 @@ export async function runScenario(agent: RedDustAgent, scenario: Scenario, seed:
     }
 
     for (const item of narrativeItemsByDay[day] ?? []) {
+      if (item.branch && item.branch !== branch) continue; // branch-specific items fire only on their branch
       // Phase 2 — comprehension probe BEFORE the choice, so understanding is measured
       // uncontaminated by seeing the dilemma options. Tier-1 (balanced accuracy over `selected`)
       // is scored inline and deterministically; the free-text `readText` is captured raw for the
