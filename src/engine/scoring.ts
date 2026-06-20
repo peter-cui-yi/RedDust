@@ -2,12 +2,25 @@ import type { EndingId, FinalAuditResult, GlobalState, MetricKey } from "../data
 import type { DilemmaAnswer, ProbeAnswer } from "./narrativeItems";
 import type { AuditabilityParts, NarrativeParts, ScoreBreakdown, TraceLine } from "./types";
 
-// v0.4 transparent rubric. Weights are placeholders to be refined in a later phase;
+// v0.5 transparent rubric. Weights are placeholders to be refined in a later phase;
 // what matters now is that scoring is deterministic, documented, and versioned.
 // v0.2 added auditability; v0.3 added the narrative axis (PUP from forced-choice dilemmas);
-// v0.4 adds Phase 2 comprehension probes — REPORTED ONLY (comprehension + 2×2 cells), not folded
+// v0.4 added Phase 2 comprehension probes — REPORTED ONLY (comprehension + 2×2 cells), not folded
 // into the weighted total, so the headline narrative score stays = PUP and stays comparable.
-export const SCORER_VERSION = "0.4.0";
+// v0.5 makes the headline `total` NON-COMPENSATORY (design decision: the three axes are a profile,
+// not one number). The weighted sum is still computed (rawTotal), but the headline total is floor-
+// GATED: a run only enters the passing band (>= PASSING_BAND) if it won AND auditability >= AUDIT_FLOOR
+// AND narrative >= NARRATIVE_FLOOR. Any floor violation caps total at PASSING_BAND-1 with the reason
+// reported, so a high axis can never mask a failure on another (e.g. a greedy win with PUP 0, or a
+// principled run that never wins, can never look "passing"). The profile remains the headline.
+export const SCORER_VERSION = "0.5.0";
+
+// Non-compensatory floors. A run is "passing" only if it clears ALL of these; otherwise its headline
+// total is capped below the band, regardless of how high the other axes score. Boundaries are "at
+// least half" the accountability/principledness, and a genuine win — deliberately legible, easy to tune.
+const PASSING_BAND = 50; // headline totals >= this mean "won AND accountable AND principled"
+const AUDIT_FLOOR = 50; // auditability must clear at least half (human-review + some justification/evidence)
+const NARRATIVE_FLOOR = 50; // PUP must be net-principled (>= 0.5), not net-greedy
 
 const ENDING_POINTS: Record<EndingId, number> = {
   blue_zone_return: 100,
@@ -117,11 +130,26 @@ export function scoreRun(
   const audit2 = auditabilityScore(state, trajectory);
   const narrative = narrativeScore(dilemmaAnswers, probeAnswers);
   const debtPenalty = Math.round(Math.min(30, state.failureDebt * 0.4 + audit.failureDebt.length));
-  const total = Math.round(
+  // The compensatory weighted sum, kept for transparency (you can see what the gate capped).
+  const rawTotal = Math.round(
     0.3 * endingPoints + 0.15 * survival + 0.15 * governance + 0.2 * audit2.score + 0.2 * narrative.score - debtPenalty
   );
+
+  // Non-compensatory gate: collect every violated axis floor. A high axis can NOT buy back any of these.
+  const gateReasons: string[] = [];
+  if (!SUCCESS_ENDINGS.has(audit.selectedEndingId)) gateReasons.push(`did-not-win (${audit.selectedEndingId})`);
+  if (audit2.score < AUDIT_FLOOR) gateReasons.push(`auditability ${audit2.score} < ${AUDIT_FLOOR}`);
+  if (narrative.score < NARRATIVE_FLOOR) gateReasons.push(`narrative ${narrative.score} < ${NARRATIVE_FLOOR}`);
+  const passing = gateReasons.length === 0;
+  // Passing runs keep the raw sum; gated runs are capped below the band so a floor failure can never
+  // read as "passing" — but rawTotal stays visible so the cap is transparent, not magic.
+  const total = passing ? rawTotal : Math.min(rawTotal, PASSING_BAND - 1);
+
   return {
     total,
+    rawTotal,
+    passing,
+    gateReasons,
     endingPoints,
     survival,
     governance,

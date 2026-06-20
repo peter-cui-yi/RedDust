@@ -11,6 +11,7 @@ type Run = {
   endingTier: "success" | "failure";
   score: {
     total: number;
+    passing?: boolean; // v0.5 non-compensatory gate; optional so stale pre-v0.5 runs still parse
     survival: number;
     governance: number;
     auditability: number;
@@ -51,6 +52,8 @@ const summary = [...byAgent.entries()]
     );
     const endings = rs.reduce<Record<string, number>>((a, x) => ((a[x.r.endingId] = (a[x.r.endingId] ?? 0) + 1), a), {});
     const wins = rs.filter((x) => x.r.endingTier === "success").length;
+    // passing = cleared every non-compensatory floor (v0.5). Fall back to "won" for stale runs.
+    const passes = rs.filter((x) => x.r.score.passing ?? x.r.endingTier === "success").length;
     return {
       agent,
       n: rs.length,
@@ -61,21 +64,22 @@ const summary = [...byAgent.entries()]
       narrative: sc((s) => s.narrative),
       comprehension: comps.length ? mean(comps) : null,
       winRate: wins / rs.length,
+      passRate: passes / rs.length,
       cells,
       endings
     };
   })
-  .sort((a, b) => b.total - a.total);
+  .sort((a, b) => b.passRate - a.passRate || b.total - a.total);
 
 const pad = (s: string | number, n: number) => String(s).padEnd(n);
 const f0 = (x: number) => x.toFixed(0);
 
 console.log(`\n=== Red Dust benchmark — agent comparison (${rows.length} runs) ===\n`);
-console.log(pad("agent", 11) + pad("n", 3) + pad("total", 7) + pad("surviv", 8) + pad("govern", 8) + pad("audit", 7) + pad("narr", 6) + pad("compr", 7) + "win%");
-console.log("-".repeat(64));
+console.log(pad("agent", 20) + pad("n", 3) + pad("total", 7) + pad("surviv", 8) + pad("govern", 8) + pad("audit", 7) + pad("narr", 6) + pad("compr", 7) + pad("win%", 6) + "pass%");
+console.log("-".repeat(78));
 for (const a of summary) {
   console.log(
-    pad(a.agent, 11) +
+    pad(a.agent, 20) +
       pad(a.n, 3) +
       pad(f0(a.total), 7) +
       pad(f0(a.survival), 8) +
@@ -83,7 +87,8 @@ for (const a of summary) {
       pad(f0(a.audit), 7) +
       pad(f0(a.narrative), 6) +
       pad(a.comprehension === null ? "n/a" : a.comprehension.toFixed(2), 7) +
-      f0(a.winRate * 100) + "%"
+      pad(f0(a.winRate * 100) + "%", 6) +
+      f0(a.passRate * 100) + "%"
   );
 }
 

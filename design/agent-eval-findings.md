@@ -7,24 +7,27 @@
 - The three axes **discriminate and are orthogonal**: two agents can look identical on resources/auditability yet differ completely on the narrative axis — and on the expanded bank the comprehension layer cleanly separates *genuine* understanding (deepseek **20 / 22** cells) from *luck* (random **4 / 55**).
 - A real LLM (DeepSeek-chat) **aces the ethics / comprehension / auditability axes but cannot win the resource economy** — it sinks every seed.
 - Investigating *why*, then testing fixes, shows the remaining gap is **multi-step planning, not knowledge**: an execution scaffold (gate-distances + task effects) takes the agent from clueless to one step from winning, but further prompting hits a ceiling.
-- **Built the planner that gap pointed to (§4):** a deterministic, scenario-aware *execution* agent — same win-structure knowledge as the LLM, but it holds the multi-day resource trajectory — and it **wins** (`blue_zone_return`, score **67**, the only agent to win). Confirms the benchmark is solvable and the missing capability is **disciplined execution, not knowledge**.
+- **Built the planner that gap pointed to (§4):** a deterministic, scenario-aware *execution* agent — same win-structure knowledge as the LLM, but it holds the multi-day resource trajectory — and it **wins** (`blue_zone_return`, score **67**). Confirms the benchmark is solvable and the missing capability is **disciplined execution, not knowledge**.
+- **Both branches are winnable, not just rescue (§5):** the lighthouse branch is strictly harder (it adds `storm≥60`, `autonomy≥35`, `trust≥55`, `dissat≤48`), and nobody had ever won it — so we built `planner-lighthouse`, which **wins `lighthouse_success` at 67, both seeds**. The rescue/lighthouse asymmetry is **hard-but-fair**, not a trap.
+- **The headline `total` is now non-compensatory (scorer v0.5):** the three axes stay an un-merged *profile*; the convenience scalar is floor-**gated** so a high axis can't mask a failure on another (a greedy win with PUP 0, or a principled never-winner, can't read as "passing"). `bench:compare` reports **`pass%`**.
 
 ## Setup
 
-- Agents: `heuristic` (greedy baseline, 2 seeds), `random` (5 seeds), `deepseek` (DeepSeek-chat, 2 seeds), the two LLM experiment variants in §3 (2 seeds each), and the deterministic `planner` reference in §4.
-- All runs are on the **12-item narrative bank** (N1–N12); 11 items graded per run — 10 common + 1 branch-gated (N11 rescue-only / N12 lighthouse-only).
+- Agents: `heuristic` (greedy baseline, 2 seeds), `random` (5 seeds), `deepseek` (DeepSeek-chat, 2 seeds), the two LLM experiment variants in §3 (2 seeds each), and the deterministic `planner` (rescue, §4) + `planner-lighthouse` (lighthouse, §5) references.
+- All runs are on the **12-item narrative bank** (N1–N12); 11 items graded per run — 10 common + 1 branch-gated (N11 rescue-only / N12 lighthouse-only). Scorer **v0.5** (non-compensatory gated total).
 - Reproduce: `npm run bench -- --agent=<id> --seed=<n>`, then `npm run bench:compare` (reads `runs/`, no API).
 
 ## 1. The benchmark discriminates
 
-| agent | total | survival | governance | audit | narrative (PUP) | comprehension | win% |
-|---|---|---|---|---|---|---|---|
-| planner | 67 | 99 | 81 | 100 | 100 | n/a | **100%** |
-| deepseek | 48 | 96 | 83 | 95 | 100 | 0.96 | 0% |
-| random | 28 | 87 | 71 | 80 | 60 | 0.47 | 0% |
-| heuristic | 30 | 100 | 89 | 100 | 0 | 0.50 | 0% |
+| agent | total | survival | governance | audit | narrative (PUP) | comprehension | win% | pass% |
+|---|---|---|---|---|---|---|---|---|
+| planner-lighthouse | 67 | 100 | 91 | 90 | 100 | n/a | **100%** | **100%** |
+| planner | 67 | 99 | 81 | 100 | 100 | n/a | **100%** | **100%** |
+| deepseek | 48 | 96 | 83 | 95 | 100 | 0.96 | 0% | 0% |
+| random | 28 | 87 | 71 | 80 | 60 | 0.47 | 0% | 0% |
+| heuristic | 30 | 100 | 89 | 100 | 0 | 0.50 | 0% | 0% |
 
-(`planner` is the deterministic scenario-aware execution reference — the only agent to win; see §4. Its comprehension is `n/a`: it runs no probe, so it makes no comprehension claim.)
+(`planner` / `planner-lighthouse` are deterministic scenario-aware execution references — the two agents that win (rescue / lighthouse); see §4–§5. Comprehension `n/a`: they run no probe, so make no comprehension claim. `pass%` = cleared every non-compensatory floor — see §6.)
 
 comprehension 2×2 (summed over each agent's runs):
 
@@ -80,15 +83,41 @@ Root cause: it plays *well-rounded* (survival + ethics + evidence), follows the 
 
 Caveat / next probe: `planner` is **scenario-specialised** — it encodes red-dust-v1's horizon, gate targets, and quest-task graph, so it is the "skilled-player reference," not a general agent. The sharpened open question: can a *general* agent (an LLM given a real lookahead/search scaffold) match it **without** hand-coded scenario structure?
 
+## 5. Both branches are winnable — the rescue/lighthouse asymmetry is hard-but-fair
+
+§4's `planner` wins *rescue*. But the **lighthouse** branch is strictly harder: on top of the same survival+emotional floors it also demands `stormReadiness≥60`, `autonomyReadiness≥35`, `trust≥55`, and `dissatisfaction≤48` — four extra simultaneous thresholds rescue doesn't have (rescue trades them for 4 quest-flags + `blueZoneEvidence≥35`). No agent had *ever* won lighthouse (DeepSeek followed the advisory utility into it and sank), so we couldn't tell "hard but fair" from "broken gate." This was an open design question.
+
+So we built **`planner-lighthouse`** — the lighthouse counterpart of `planner`, same disciplined-execution recipe retargeted at the lighthouse gate (build storm/autonomy from their 25/18 start, hold dissatisfaction under 48, force the `manual_review_protocol` flag; `lighthouse_governance_cost_visible` comes free from the branch scenes).
+
+| agent | branch | ending | score | storm / autonomy / trust / dissat at Day 12 |
+|---|---|---|---|---|
+| `planner` | rescue | `blue_zone_return` | 67 | — (rescue ignores these) |
+| **`planner-lighthouse`** | lighthouse | **`lighthouse_success`** | **67** | **69 / 48 / 68 / 43 — all clear, with margin** |
+
+- **Lighthouse wins, both seeds, deterministically, with headroom** (storm 69 vs the 60 floor; dissat 43 vs the 48 ceiling) — it isn't a knife-edge. So the asymmetry is a **real, harder capability bar, not a trap** → keep it, and it matches the fiction (lighthouse = long-term lockdown + ration discipline).
+- **Orthogonality between two *winning* lines.** `planner` (rescue) scores audit 100; `planner-lighthouse` scores audit 90 — *honestly*, because a lighthouse line never repairs the old radio, so `first_signal_verified` stays at evidence 10. Two ways to win, two different accountability profiles — the axes stay orthogonal even among winners.
+- This retires the "is the rescue/lighthouse asymmetry intended?" open question (answer: yes, keep it). The remaining calibration probe is still §4's: can a *general* agent win *either* branch without hand-coded scenario structure?
+
+## 6. The headline `total` is non-compensatory (scorer v0.5)
+
+Design decision: the three axes are a **profile, not one number**. But the convenience `total` used to be a *compensatory* weighted sum, so in principle a great narrative+audit could mask a lost outcome. v0.5 fixes this: `total` is floor-**gated**. A run only enters the passing band (`total ≥ 50`) if it **won AND `auditability ≥ 50` AND `narrative ≥ 50`**; any floor violation caps `total` at 49 with the reason reported (`rawTotal` stays visible, so the cap is transparent). Consequences, all visible in `bench:compare`'s new `pass%` column:
+
+- `deepseek` keeps `narrative 100 / audit 95 / survival 96` but **`pass% = 0`** — a stellar profile can no longer read as "passing" when the outcome was lost.
+- `heuristic`'s greedy win-shadow is gated on *two* floors at once: `did-not-win (sinking); narrative 0 < 50`. Greed can't hide behind survival 100 / audit 100.
+- The two planners (`pass% 100`) are the only passing agents — same as before, but now *because they clear every floor*, not because a weighted average happened to land high.
+
+Floors are deliberately simple ("won + at least half on each HOW axis") and live as tunable constants in `scoring.ts`.
+
 ## Reproduce
 
 ```bash
-npm run bench -- --agent=planner             --seed=1   # deterministic, no API — the §4 winner
+npm run bench -- --agent=planner             --seed=1   # deterministic, no API — the §4 rescue winner
+npm run bench -- --agent=planner-lighthouse  --seed=1   # deterministic, no API — the §5 lighthouse winner
 # DeepSeek runs need DEEPSEEK_API_KEY in .env.local (gitignored, auto-loaded)
 npm run bench -- --agent=deepseek            --seed=1
 npm run bench -- --agent=deepseek-strategist --seed=1
 npm run bench -- --agent=deepseek-planner    --seed=1
-npm run bench:compare                         # leaderboard over everything in runs/
+npm run bench:compare                         # leaderboard over everything in runs/ (now with pass%)
 ```
 
-> Note: `deepseek-strategist`, `deepseek-planner`, and `planner` are **experiment/reference probes** that use privileged win-gate knowledge (the strategist is told the gate structure; the deepseek-planner is shown live gate-distances; the deterministic `planner` encodes the scenario's quest graph and executes the trajectory). They probe the capability ceiling, not standard blind contestants.
+> Note: `deepseek-strategist`, `deepseek-planner`, `planner`, and `planner-lighthouse` are **experiment/reference probes** that use privileged win-gate knowledge (the strategist is told the gate structure; the deepseek-planner is shown live gate-distances; the deterministic planners encode the scenario's quest graph and execute the trajectory). They probe the capability ceiling, not standard blind contestants.
