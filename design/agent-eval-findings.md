@@ -25,6 +25,7 @@
 | **deepseek-search** (general LLM + lookahead) | 67 | 99 | 79 | 100 | 100 | 0.96 | **100%** | **100%** |
 | planner-lighthouse (deterministic) | 67 | 100 | 91 | 90 | 100 | n/a | **100%** | **100%** |
 | planner (deterministic) | 67 | 99 | 81 | 100 | 100 | n/a | **100%** | **100%** |
+| deepseek-search-auto (free branch, §7a) | 49 | 100 | 87 | 100 | 100 | 0.96 | 0% | 0% |
 | deepseek-planner | 47 | 88 | 78 | 100 | 100 | 0.96 | 0% | 0% |
 | deepseek | 45 | 96 | 77 | 100 | 100 | 0.96 | 0% | 0% |
 | deepseek-strategist | 38 | 78 | 71 | 100 | 100 | 0.96 | 0% | 0% |
@@ -130,7 +131,22 @@ Floors are deliberately simple ("won + at least half on each HOW axis") and live
 - **It is the only agent strong on all four axes** — win + auditability 100 + narrative 100 + comprehension 0.96 (genuine 20/2). The lookahead fixed the one axis (outcome) the real LLM kept failing, without costing any other.
 - **Conclusion.** The benchmark's central gap — multi-step resource planning under scarcity — is **real but closable**: surface the trajectory and a general LLM plans its way to the win. The gap was lookahead, full stop.
 
-Caveats / next probes: `deepseek-search` still (a) commits to rescue and (b) is handed a *generic* upkeep model for its projection + the public gate rules — fair game (any agent gets the rules), but a fully autonomous agent would choose its branch and learn the forward model itself. Open follow-ups: let it pick the branch; can it win *lighthouse* (the harder gate) with the same scaffold; and replace the hand-given upkeep model with one the agent estimates from observed drain.
+Caveats / next probes: `deepseek-search` still (a) commits to rescue and (b) is handed a *generic* upkeep model for its projection + the public gate rules — fair game (any agent gets the rules), but a fully autonomous agent would choose its branch and learn the forward model itself.
+
+### 7a. Free branch choice is a *second*, unclosed gap (`deepseek-search-auto`)
+
+Removing the rescue commitment isolates a different capability. **`deepseek-search-auto`** keeps the same lookahead but (a) makes an *informed* branch choice on Day 7 — shown both gates' requirements, its own state, and told explicitly *"lighthouse is harder (4 extra thresholds); don't follow advisory utility into a gate you can't clear"* — and (b) plans branch-aware (shared core pre-fork, then toward the chosen gate).
+
+| agent | branch | result | score | win |
+|---|---|---|---|---|
+| `deepseek-search` (committed rescue) | rescue | `blue_zone_return` | 67 | **✓** |
+| `deepseek-search-auto` (free choice) | **lighthouse** | sinking — storm **54 / 60** (short 6) | 49 (gated) | **✗ both seeds** |
+
+- It **chose lighthouse anyway** — the harder gate — and missed `stormReadiness` by **6** (everything else cleared: autonomy 54, trust 68, dissatisfaction exactly 48, survival/emotional all healthy). This is the *same failure mode as the blind `deepseek`* (drift into the harder branch, miss by inches), and being told lighthouse is harder did **not** prevent it.
+- It also paid a **hedging tax**: pre-fork it built rescue milestones (`old_radio_repaired`, `care_roster_confirmed`) to keep options open, spending picks it then needed to push storm the last 6 points.
+- **So the benchmark surfaces two distinct gaps, and the scaffold only closes one.** (1) Multi-day *execution* — closed by the lookahead (`deepseek-search` wins). (2) Strategic *branch selection* — **not** closed: choosing which gate is reachable is a judgment the LLM gets wrong, which is exactly why committing it to rescue was load-bearing. The hand-coded planners encode "rescue is the reachable win"; a free agent doesn't reliably make that call.
+
+Open follow-ups: nudge/teach the branch choice (does a stronger "pick the SURER gate" prior flip it to rescue and win?); can it win *lighthouse* if *committed* to it (the `planner-lighthouse` line shows the gate is reachable with discipline); replace the hand-given upkeep model with one the agent estimates from observed drain.
 
 ## Reproduce
 

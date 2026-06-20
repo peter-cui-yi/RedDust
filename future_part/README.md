@@ -65,9 +65,14 @@ distances but couldn't plan the multi-day resource trajectory. **`deepseek-searc
 — a forward projection of each survival metric to Day 12 — with **no hard-coded quest graph** (it finds
 the milestone tasks from their objectives) — and **wins `blue_zone_return` at 67, both seeds**, matching
 the deterministic `planner`. So a *general* LLM reaches the skilled-player reference once it can see the
-trajectory: the planning gap is real but **closable**. Remaining follow-ups (findings §7 caveats): let it
-pick the branch itself; can the same scaffold win the harder *lighthouse* gate; replace the hand-given
-upkeep model with one the agent estimates from observed drain.
+trajectory: the planning gap is real but **closable**.
+**Follow-up — free branch choice (findings §7a, also DONE):** `deepseek-search-auto` removes the rescue
+commitment and chooses its own branch (informed: shown both gates + told lighthouse is harder). It still
+**picks lighthouse and sinks** (storm 54/60, short 6), both seeds — the blind `deepseek`'s drift-into-the-
+harder-branch failure, *not* fixed by the warning. So there are **two** gaps and the scaffold closes only
+one: multi-day *execution* (closed) vs strategic *branch selection* (open — why committing to rescue was
+load-bearing). Remaining: a stronger "pick the SURER gate" prior; commit it to lighthouse (the gate is
+reachable — see `planner-lighthouse`); estimate the upkeep model from observed drain.
 
 ### 3. Story-craft upgrades (C1–C6)
 From the tension diagnosis: the story is missing **reversal / reveal / rupture / loss**, and the

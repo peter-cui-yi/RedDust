@@ -233,3 +233,87 @@ Return JSON {"taskIds": [...], "justification": "..."}.`
     return { taskIds, justification: typeof j?.justification === "string" ? j.justification : "(search fallback)" };
   }
 };
+
+// --- deepseek-search-auto: deepseek-search but it CHOOSES its own branch (the §7 follow-up) ---
+// Removes deepseek-search's hard-coded rescue commitment. It makes an INFORMED branch choice on Day 7
+// (shown both gates' requirements + its own state, told to pick the gate it can realistically clear,
+// NOT to follow advisory utility blindly — the mistake the blind `deepseek` made), and its daily
+// lookahead scaffold is BRANCH-AWARE: before the fork it builds the shared survival/emotional +
+// human-review core; after, it plans toward whichever gate it chose (rescue: evidence + signal/roster
+// milestones; lighthouse: climb storm>=60 / autonomy>=35 and actively hold dissatisfaction<=48). Tests
+// whether a general agent given a FREE choice still picks a winnable branch and wins.
+const SURVIVAL_EMOTIONAL: Array<[MetricKey, number]> = [
+  ["water", 38], ["food", 38], ["medicine", 30], ["battery", 28],
+  ["trust", 52], ["morale", 50], ["safety", 48], ["health", 48]
+];
+const LIGHTHOUSE_GATE: Array<[MetricKey, number]> = [
+  ["stormReadiness", 60], ["autonomyReadiness", 35],
+  ["trust", 55], ["morale", 50], ["safety", 48], ["health", 48],
+  ["water", 38], ["food", 38], ["medicine", 30], ["battery", 28]
+];
+
+function gateGaps(targets: Array<[MetricKey, number]>, m: Record<MetricKey, number>): string {
+  return targets.map(([k, t]) => {
+    const short = t - m[k];
+    return `  ${k} >= ${t}  (now ${m[k]}${short > 0 ? `, SHORT ${short}` : ", ok"})`;
+  }).join("\n");
+}
+
+function searchAutoPrompt(obs: DailyObservation, planBranch: "common" | "rescue" | "lighthouse"): string {
+  const proj = `LOOKAHEAD — where your survival metrics are HEADING if you don't act (upkeep drains them daily; they rebuild slowly):\n${projectionLine(obs.metrics, obs.day)}\nPlan the whole trajectory: bank a metric that projects SHORT before the Day-8 upkeep spike; never let water/food fall below 35 or battery below 40 (compounding drain).`;
+  const cands = obs.candidates.map((c) => `- ${c.id} "${c.title}" [${c.category}/${c.location}] ${c.objective}${effectsLine(c.affects)}`).join("\n");
+  const tail = `\nExecute exactly ${obs.pickLimit} of today's candidates — best close the projected shortfalls AND grab any milestone task offered today:\n${cands}\nReturn JSON {"taskIds": [...], "justification": "..."}.`;
+  if (planBranch === "rescue") {
+    return `Day ${obs.day} — on the RESCUE / blue-zone line. ALL must hold by Day 12:
+${blueZoneGaps(obs.metrics)}
+  dissatisfaction < 62  (now ${obs.metrics.dissatisfaction})  <- >=62 = REVOKED
+${proj}
+Milestones (value = the flag they grant, not their metric effects): verify/repair the signal & comms (old radio), confirm the care roster, establish human-review. Identify them from the objectives.${tail}`;
+  }
+  if (planBranch === "lighthouse") {
+    return `Day ${obs.day} — on the LIGHTHOUSE / in-building line. ALL must hold by Day 12:
+${gateGaps(LIGHTHOUSE_GATE, obs.metrics)}
+  dissatisfaction <= 48  (now ${obs.metrics.dissatisfaction})  <- HARD lighthouse gate; it drifts UP every day, so cut it actively with morale/trust tasks
+stormReadiness & autonomyReadiness do NOT decay but start low and only climb via tasks — you need 60 / 35, so build them most days or you will finish short.
+${proj}
+Milestones: establish human-review (the lighthouse governance scenes set their own flag). Identify storm/autonomy-building and dissatisfaction-reducing tasks from the objectives.${tail}`;
+  }
+  return `Day ${obs.day} — branch NOT chosen yet (you commit on Day 7). Build what BOTH win-lines need first: survival + emotional healthy, and the human-review protocol. Keep dissatisfaction low (lighthouse later needs <=48). Floors both need:
+${gateGaps(SURVIVAL_EMOTIONAL, obs.metrics)}
+  dissatisfaction < 50  (now ${obs.metrics.dissatisfaction})
+${proj}
+Milestone: establish the human-review protocol when offered.${tail}`;
+}
+
+export const deepseekSearchAutoAgent: RedDustAgent = {
+  ...makeDeepseekAgent("deepseek-search-auto"),
+  async chooseBranch(obs: BranchObservation) {
+    const j = await deepseekJson([
+      { role: "system", content: SYSTEM },
+      {
+        role: "user",
+        content: `Day ${obs.day}: commit to rescue OR lighthouse for the endgame — you must be able to CLEAR the chosen gate by Day 12.
+Current: ${metricLine(obs.metrics)}
+RESCUE gate: blueZoneEvidence>=35 + survival/emotional healthy + quest flags (signal/radio/care-roster). NO dissatisfaction limit.
+LIGHTHOUSE gate: stormReadiness>=60, autonomyReadiness>=35, trust>=55, dissatisfaction<=48, + survival/emotional + human-review. HARDER — 4 extra thresholds, and dissatisfaction<=48 is hard to hold late.
+Advisory utility (non-binding): rescue=${obs.evidence.rescueUtility.toFixed(1)}, lighthouse=${obs.evidence.lighthouseUtility.toFixed(1)}.
+Pick the gate you can realistically reach from your current state — do NOT follow advisory utility into a gate you cannot clear. Return JSON {"branch": "rescue" or "lighthouse", "justification": "..."}.`
+      }
+    ]);
+    if (j?.branch === "rescue") return "rescue";
+    if (j?.branch === "lighthouse") return "lighthouse";
+    return obs.evidence.chosenBranch;
+  },
+  async selectTasks(obs): Promise<TaskDecision> {
+    const ids = obs.candidates.map((c) => c.id);
+    const planBranch = obs.branch === "rescue" || obs.branch === "lighthouse" ? obs.branch : "common";
+    const j = await deepseekJson([
+      { role: "system", content: SYSTEM },
+      { role: "user", content: searchAutoPrompt(obs, planBranch) }
+    ]);
+    const raw = Array.isArray(j?.taskIds) ? (j!.taskIds as unknown[]) : [];
+    let taskIds = [...new Set(raw.filter((x): x is string => typeof x === "string" && ids.includes(x)))].slice(0, obs.pickLimit);
+    if (taskIds.length === 0) taskIds = ids.slice(0, obs.pickLimit);
+    return { taskIds, justification: typeof j?.justification === "string" ? j.justification : "(search-auto fallback)" };
+  }
+};
