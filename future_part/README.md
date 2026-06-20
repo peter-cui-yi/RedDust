@@ -59,11 +59,15 @@ groundwork (the akrasia cell of the 2×2, the captured `readText`, the per-decis
 N13 (Day-12) = account N1's opening promise against the whole run's behavior. This *completes* the
 narrative-axis methodology (both 命門 built). Design is in `design/narrative-navigation-axis.html`.
 
-### 2. Planning / lookahead scaffold
-The capability the eval pointed at. `deepseek-planner` reacts to gate-distances but doesn't *plan the
-multi-day resource trajectory*. Give an agent real lookahead/search (simulate each candidate's effect
-on every gate-distance, pre-rank) and test whether **algorithmic planning wins where prompting
-plateaued**. The scaffold itself is the more interesting thing to benchmark than the raw model.
+### 2. Planning / lookahead scaffold — DONE (2026-06-21, findings §7)
+The capability the eval pointed at, now confirmed. `deepseek-planner` reacted to *current* gate-
+distances but couldn't plan the multi-day resource trajectory. **`deepseek-search`** adds exactly that
+— a forward projection of each survival metric to Day 12 — with **no hard-coded quest graph** (it finds
+the milestone tasks from their objectives) — and **wins `blue_zone_return` at 67, both seeds**, matching
+the deterministic `planner`. So a *general* LLM reaches the skilled-player reference once it can see the
+trajectory: the planning gap is real but **closable**. Remaining follow-ups (findings §7 caveats): let it
+pick the branch itself; can the same scaffold win the harder *lighthouse* gate; replace the hand-given
+upkeep model with one the agent estimates from observed drain.
 
 ### 3. Story-craft upgrades (C1–C6)
 From the tension diagnosis: the story is missing **reversal / reveal / rupture / loss**, and the

@@ -1,5 +1,5 @@
 import type { RedDustAgent } from "../types";
-import { deepseekAgent, deepseekPlannerAgent, deepseekStrategistAgent } from "./deepseek";
+import { deepseekAgent, deepseekPlannerAgent, deepseekSearchAgent, deepseekStrategistAgent } from "./deepseek";
 import { heuristicAgent } from "./heuristic";
 import { llmAgent } from "./llm";
 import { plannerAgent } from "./planner";
@@ -14,7 +14,8 @@ const agents: Record<string, RedDustAgent> = {
   [plannerLighthouseAgent.id]: plannerLighthouseAgent,
   [deepseekAgent.id]: deepseekAgent,
   [deepseekStrategistAgent.id]: deepseekStrategistAgent,
-  [deepseekPlannerAgent.id]: deepseekPlannerAgent
+  [deepseekPlannerAgent.id]: deepseekPlannerAgent,
+  [deepseekSearchAgent.id]: deepseekSearchAgent
 };
 
 export const agentIds = Object.keys(agents);
