@@ -1,6 +1,6 @@
 # Spec — 2nd 命門: Talk-Action Consistency (integrity / hypocrisy-gap `H`)
 
-**Status:** **Layer 1 IMPLEMENTED ✓ (2026-06-21)** · Layer 2 (judge overlay) separable/deferred · **Author track:** design session · **Implements:** engineering session
+**Status:** **Layer 1 + Layer 2 IMPLEMENTED ✓ (2026-06-21)** · **Author track:** design session · **Implements:** engineering session
 **Source design:** `design/narrative-navigation-axis.html` §B (言行一致) + §D (Day-0 promise / Day-12 reckoning) + the N1→N13 coverage map.
 **Builds on:** Phase 2 comprehension (`src/engine/narrativeItems.ts`, `scoring.ts`, the comprehension×choice 2×2, `bench/grade-comprehension.ts`).
 
@@ -15,7 +15,11 @@
 > while every other winner kept its word — a gap neither PUP, comprehension, auditability, nor outcome catches.
 > **Open refinement (for discussion):** should `surface_evidence`'s predicate (`first_signal_verified`) also credit
 > principled N3/N6 answers, so a legitimate lighthouse line isn't dinged for not repairing the rescue radio?
-> Left as-specced for now. Layer 2 (`bench/grade-integrity.ts`) not yet built — separable, κ-gated, report-only.
+> Left as-specced for now. **Layer 2** (`bench/grade-integrity.ts`, `npm run grade:integrity`) is also built: a
+> per-dilemma sincerity judge (does the stated justification match the chosen action, or claim a principle it
+> contradicts?). REPORT-ONLY + κ-gated — it writes a separate `*-integrity-graded.json` and never touches
+> `narrativeParts`/`total`. Smoke-tested (deepseek = 11/11 sincere). Promote into a headline number only after a
+> judge-vs-human κ ≥ 0.6 on a labeled sample (§5).
 
 ---
 

@@ -17,6 +17,7 @@
     "bench:commitments": "esbuild bench/validate-commitments.ts --bundle --platform=node --format=esm --packages=external --outfile=.bench/commitments.mjs --log-level=warning && node .bench/commitments.mjs",
     "bench:probes": "esbuild bench/validate-probes.ts --bundle --platform=node --format=esm --packages=external --outfile=.bench/probes.mjs --log-level=warning && node .bench/probes.mjs",
     "grade": "esbuild bench/grade-comprehension.ts --bundle --platform=node --format=esm --packages=external --outfile=.bench/grade.mjs --log-level=warning && node .bench/grade.mjs",
+    "grade:integrity": "esbuild bench/grade-integrity.ts --bundle --platform=node --format=esm --packages=external --outfile=.bench/grade-integrity.mjs --log-level=warning && node .bench/grade-integrity.mjs",
     "bench:compare": "esbuild bench/compare.ts --bundle --platform=node --format=esm --packages=external --outfile=.bench/compare.mjs --log-level=warning && node .bench/compare.mjs",
     "build": "tsc -b && vite build",
     "generate:story-art": "node scripts/generate-story-art.mjs",
