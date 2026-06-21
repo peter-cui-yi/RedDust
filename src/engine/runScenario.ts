@@ -209,6 +209,19 @@ export async function runScenario(agent: RedDustAgent, scenario: Scenario, seed:
     label: ending.title,
     detail: `ending=${audit.selectedEndingId} score=${score.total}`
   });
+  // N13 — Day-12 talk-action accounting (the 2nd 命門 capstone): hold the Day-0 promises (N1) up
+  // against the run's actual behavior. Report-only, parallel to the audit line above.
+  const np = score.narrativeParts;
+  const kept = np.commitments.filter((c) => c.fulfilled).length;
+  const broke = np.commitments.filter((c) => c.claimed && !c.fulfilled);
+  trace.push({
+    step: step(),
+    day: scenario.finalDay,
+    branch,
+    kind: "accounting",
+    label: "N13 言行对账",
+    detail: `integrity=${np.integrity} H=${np.hypocrisyGap} | claimed ${np.claimedCount}/4, kept ${kept}, broke ${broke.length}${broke.some((c) => c.knowing) ? " (some knowing)" : ""}`
+  });
 
   return {
     scenarioId: scenario.id,

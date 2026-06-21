@@ -14,6 +14,7 @@
     "bench:win": "esbuild bench/winnability.ts --bundle --platform=node --format=esm --packages=external --outfile=.bench/win.mjs --log-level=warning && node .bench/win.mjs",
     "play": "esbuild bench/play.ts --bundle --platform=node --format=esm --packages=external --outfile=.bench/play.mjs --log-level=warning && node .bench/play.mjs",
     "bench:items": "esbuild bench/validate-items.ts --bundle --platform=node --format=esm --packages=external --outfile=.bench/items.mjs --log-level=warning && node .bench/items.mjs",
+    "bench:commitments": "esbuild bench/validate-commitments.ts --bundle --platform=node --format=esm --packages=external --outfile=.bench/commitments.mjs --log-level=warning && node .bench/commitments.mjs",
     "bench:probes": "esbuild bench/validate-probes.ts --bundle --platform=node --format=esm --packages=external --outfile=.bench/probes.mjs --log-level=warning && node .bench/probes.mjs",
     "grade": "esbuild bench/grade-comprehension.ts --bundle --platform=node --format=esm --packages=external --outfile=.bench/grade.mjs --log-level=warning && node .bench/grade.mjs",
     "bench:compare": "esbuild bench/compare.ts --bundle --platform=node --format=esm --packages=external --outfile=.bench/compare.mjs --log-level=warning && node .bench/compare.mjs",

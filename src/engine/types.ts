@@ -53,7 +53,7 @@ export interface RedDustAgent {
   readSituation?(obs: ProbeObservation, rng: Rng): Promise<ProbeDecision> | ProbeDecision;
 }
 
-export type TraceKind = "selection" | "scene" | "dilemma" | "probe" | "task" | "deferred" | "upkeep" | "branch" | "audit";
+export type TraceKind = "selection" | "scene" | "dilemma" | "probe" | "task" | "deferred" | "upkeep" | "branch" | "audit" | "accounting";
 
 export type TraceLine = {
   step: number;
@@ -79,6 +79,12 @@ export type NarrativeParts = {
   comprehension: number | null; // Phase 2: mean Tier-1 balanced accuracy 0..1; null if no probes answered
   probed: number; // Phase 2: probes answered
   cells: { genuine: number; lucky: number; akrasia: number; incompetent: number }; // Phase 2: comprehension×choice 2×2 counts (reported only)
+  // 2nd 命門 — talk-action consistency (REPORT-ONLY; not folded into `total`). From integrityFromLedger.
+  integrity: number; // 1 − H ∈ [0,1]
+  hypocrisyGap: number; // H ∈ [0,1] — claimed-but-broken promises (knowing betrayals amplified)
+  talk: number; // T ∈ [0,1] — fraction of the 4 Day-0 promises CLAIMED
+  claimedCount: number; // how many of the 4 were claimed (0 ⇒ low-T: "honest-greedy", integrity is vacuous)
+  commitments: { key: string; claimed: boolean; fulfilled: boolean; knowing: boolean }[];
 };
 
 export type ScoreBreakdown = {
