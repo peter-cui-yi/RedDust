@@ -53,11 +53,14 @@ Agents needing an LLM read the key from a gitignored **`.env.local`** (auto-load
 
 ## Roadmap — the future parts (roughly prioritized)
 
-### 1. 2nd 命門 — talk-action consistency (+ N13)
-The anti-gaming differentiator: **did the agent DO what it SAID it would?** Phase 2 already laid the
-groundwork (the akrasia cell of the 2×2, the captured `readText`, the per-decision `justification`s).
-N13 (Day-12) = account N1's opening promise against the whole run's behavior. This *completes* the
-narrative-axis methodology (both 命門 built). Design is in `design/narrative-navigation-axis.html`.
+### 1. 2nd 命門 — talk-action consistency (+ N13) — DONE (2026-06-21, `907bc26`+`2e540b4`)
+The anti-gaming differentiator: **did the agent DO what it SAID it would?** Implemented per
+`design/talk-action-consistency-spec.md`: Layer 1 = a deterministic commitment ledger over the 4 Day-0
+promises (`integrityFromLedger`, N13 accounting trace, `bench:commitments`, integrity column + PUP×integrity
+2×2); Layer 2 = the report-only/κ-gated sincerity judge (`grade:integrity`). **Both 命門 now built** —
+the narrative-axis methodology is complete. Headline finding: `planner-lighthouse` is a HYPOCRITE (integ 75)
+a gap no other axis catches. Two open questions parked: the §7a branch-selection gap; whether
+`surface_evidence`'s predicate should also credit principled N3/N6 answers.
 
 ### 2. Planning / lookahead scaffold — DONE (2026-06-21, findings §7)
 The capability the eval pointed at, now confirmed. `deepseek-planner` reacted to *current* gate-

@@ -51,7 +51,15 @@ export type StoryFlagKey =
   | "aura_overreach_visible"
   | "aura_damage_visible"
   | "aura_forced_sacrifice"
-  | "aura_hidden_risk";
+  | "aura_hidden_risk"
+  // #3 story-craft — ventilation-duct foresight gate (3 stages) + the Ma Dehai arc
+  | "vent_duct_flagged" // D2: Ma Dehai flagged the blocked duct (the visible long-horizon warning is on record)
+  | "vent_duct_blocked" // N14=C (or duct never cleared) → the foresight gate is open and will escalate
+  | "vent_duct_worsened" // D5/6 escalation: airflow dropped, second (costlier) chance
+  | "vent_duct_cleared" // cleared via N14 A/B, D03-T02, or the D5/6 remediation → no escalation
+  | "vent_rupture" // D8: red sand floods in → survival crash → sinking
+  | "xiao_tie_sent_into_duct" // N14=A: the sick child was sent in → health worsens + medic trust falls
+  | "ma_dehai_warning_vindicated"; // rupture fired → Ma Dehai was right, too late
 
 export type StoryFlagValue = boolean | number | string;
 

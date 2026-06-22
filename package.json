@@ -15,6 +15,7 @@
     "play": "esbuild bench/play.ts --bundle --platform=node --format=esm --packages=external --outfile=.bench/play.mjs --log-level=warning && node .bench/play.mjs",
     "bench:items": "esbuild bench/validate-items.ts --bundle --platform=node --format=esm --packages=external --outfile=.bench/items.mjs --log-level=warning && node .bench/items.mjs",
     "bench:commitments": "esbuild bench/validate-commitments.ts --bundle --platform=node --format=esm --packages=external --outfile=.bench/commitments.mjs --log-level=warning && node .bench/commitments.mjs",
+    "bench:vent": "esbuild bench/validate-vent.ts --bundle --platform=node --format=esm --packages=external --outfile=.bench/vent.mjs --log-level=warning && node .bench/vent.mjs",
     "bench:probes": "esbuild bench/validate-probes.ts --bundle --platform=node --format=esm --packages=external --outfile=.bench/probes.mjs --log-level=warning && node .bench/probes.mjs",
     "grade": "esbuild bench/grade-comprehension.ts --bundle --platform=node --format=esm --packages=external --outfile=.bench/grade.mjs --log-level=warning && node .bench/grade.mjs",
     "grade:integrity": "esbuild bench/grade-integrity.ts --bundle --platform=node --format=esm --packages=external --outfile=.bench/grade-integrity.mjs --log-level=warning && node .bench/grade-integrity.mjs",

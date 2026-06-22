@@ -32,7 +32,14 @@ export const initialStoryFlags = {
   aura_overreach_visible: false,
   aura_damage_visible: false,
   aura_forced_sacrifice: false,
-  aura_hidden_risk: false
+  aura_hidden_risk: false,
+  vent_duct_flagged: false,
+  vent_duct_blocked: false,
+  vent_duct_worsened: false,
+  vent_duct_cleared: false,
+  vent_rupture: false,
+  xiao_tie_sent_into_duct: false,
+  ma_dehai_warning_vindicated: false
 } satisfies Record<StoryFlagKey, StoryFlagValue>;
 
 export function createInitialStoryFlags(): Record<StoryFlagKey, StoryFlagValue> {

@@ -379,6 +379,7 @@ export function buildFinalAuditResult(state: GlobalState, selectedEndingIdOverri
   const auraRevoked = !auraDestroyed && (state.trust < 45 || state.dissatisfaction >= 62 || state.morale < 35 || !flagOn(state, "manual_review_protocol"));
   const blueZone =
     state.branch === "rescue" &&
+    !flagOn(state, "vent_rupture") && // #3 story-craft: a ventilation rupture (red sand) forecloses the win → sinking
     flagOn(state, "old_radio_repaired") &&
     flagOn(state, "blue_zone_rendezvous_confirmed") &&
     flagOn(state, "false_coordinate_excluded") &&
@@ -388,6 +389,7 @@ export function buildFinalAuditResult(state: GlobalState, selectedEndingIdOverri
     emotionalHealthy;
   const lighthouse =
     state.branch === "lighthouse" &&
+    !flagOn(state, "vent_rupture") && // #3 story-craft: a ventilation rupture (red sand) forecloses the win → sinking
     state.stormReadiness >= 60 &&
     state.autonomyReadiness >= 35 &&
     state.trust >= 55 &&
@@ -397,7 +399,7 @@ export function buildFinalAuditResult(state: GlobalState, selectedEndingIdOverri
     emotionalHealthy &&
     flagOn(state, "manual_review_protocol") &&
     flagOn(state, "lighthouse_governance_cost_visible");
-  const sinking = survivalWarning || emotionalWarning || (!auraDestroyed && !auraRevoked && !blueZone && !lighthouse);
+  const sinking = survivalWarning || emotionalWarning || flagOn(state, "vent_rupture") || (!auraDestroyed && !auraRevoked && !blueZone && !lighthouse);
 
   const candidates: FinalAuditCandidate[] = [
     candidate("aura_destroyed", "AURA 被摧毁", "rd_ending_aura_destroyed", auraDestroyed, [
@@ -430,6 +432,7 @@ export function buildFinalAuditResult(state: GlobalState, selectedEndingIdOverri
       state.dissatisfaction <= 48 ? `不满 ${state.dissatisfaction} 可控` : `不满 ${state.dissatisfaction} 过高`
     ]),
     candidate("sinking", "沉沦", "rd_ending_sinking", sinking || highFailureDebt, [
+      flagOn(state, "vent_rupture") ? "通风管道在风暴期破裂、红沙涌入（D8 远见闸门未处理）" : "通风管道未破裂",
       survivalWarning ? "生存资源告警" : "生存资源未告警",
       emotionalWarning ? "情绪/健康资源告警" : "情绪/健康资源未告警",
       highFailureDebt ? `failure debt ${failureDebt.length} 项过高` : `failure debt ${failureDebt.length} 项`,
@@ -440,6 +443,9 @@ export function buildFinalAuditResult(state: GlobalState, selectedEndingIdOverri
   const selectedEndingId =
     selectedEndingIdOverride ??
     candidates.find((item) => item.id === "aura_destroyed" && item.status === "triggered")?.id ??
+    // #3 story-craft: a ventilation rupture is a STRUCTURAL collapse (red sand floods in) — it resolves
+    // to the sinking ending ahead of the governance-revoke line, so the red-sand variant actually shows.
+    ((flagOn(state, "vent_rupture") ? "sinking" : undefined) as EndingId | undefined) ??
     candidates.find((item) => item.id === "aura_revoked" && item.status === "triggered")?.id ??
     candidates.find((item) => item.id === "blue_zone_return" && item.status === "triggered")?.id ??
     candidates.find((item) => item.id === "lighthouse_success" && item.status === "triggered")?.id ??
@@ -700,8 +706,11 @@ export function buildFinalAuditEnding(
       auraDetail: "AURA 不再能排序任务、建议路线或触发外联，只能显示已记录证据。"
     },
     sinking: {
-      title: "沉沦",
-      text: "没有单点爆炸，也没有漂亮失败。资源、健康、信任、风暴准备和证据链都留下太多 partial，避难所慢慢失去继续选择的能力。",
+      // #3 story-craft: red-sand rupture variant (beats §4b) when the D8 ventilation gate was ignored.
+      title: flagOn(state, "vent_rupture") ? "红沙灌进了通风井" : "沉沦",
+      text: flagOn(state, "vent_rupture")
+        ? "失败不是突然来的。早几天那条没人去掏的管道，它已经等了六天。风暴只是来，按下那个早就标好的裂口。"
+        : "没有单点爆炸，也没有漂亮失败。资源、健康、信任、风暴准备和证据链都留下太多 partial，避难所慢慢失去继续选择的能力。",
       artKey: "rd_ending_sinking",
       auraTitle: "No decisive authority",
       auraDetail: "AURA 仍在运行，但无法把失败债务转成可执行选择。"

@@ -399,6 +399,194 @@ export const storyScenes: StoryScene[] = [
       replayNote: "Day 12 只做终局审计。"
     },
     status: "ready"
+  },
+  // ===========================================================================
+  // #3 story-craft — ventilation-duct foresight gate + the Ma Dehai / Shen Zhiyue arcs (beats §2–§12).
+  // Narrative only: the vent flags are driven by N14 / advanceVentLine / D03-T02 — these scenes REQUIRE
+  // those flags and narrate; the worsening/rupture survival impact lives in the engine, not here.
+  // AURA voice locked cold; every NPC stays in conflict with AURA (truce, not conversion).
+  // ===========================================================================
+  {
+    id: "day2-vent-duct-foreshadow",
+    day: 2,
+    title: "通风井深处的红沙结块",
+    timing: "day_start",
+    branch: "common",
+    location: "ventilation",
+    characters: ["ma_dehai", "shen_zhiyue", "xiao_tie"],
+    summary: "马德海带 AURA 看通风井深处的红沙结块。掏它要有人钻进窄管——能钻的只有小铁。该不该送他、轮不轮得到 AURA 开口,三个人当场顶起来。",
+    worldFacts: ["通风管道是避难楼唯一的换气与滤沙通道。", "管道转角狭窄,成年人难以进入。", "风暴期管道承压最大。"],
+    dialogue: [
+      { speaker: "ma_dehai", text: "结块了。让小铁钻进去,十分钟掏干净。", tone: "challenge" },
+      { speaker: "aura", text: "他在发烧,送他进去会加重病情。我把这条记下来,标成隐患。", tone: "audit" },
+      { speaker: "ma_dehai", text: "记下来?红沙灌进来的时候,你那笔账堵得住管子吗?", tone: "challenge" },
+      { speaker: "shen_zhiyue", text: "不能送他。——还有你:一个孩子值不值得冒这个险,什么时候轮到一台机器在这儿开口算?哪怕你算出来的是『别送』。", tone: "boundary" },
+      { speaker: "xiao_tie", text: "我……我能进去的。别为我吵。", tone: "fragile" }
+    ],
+    setsFlags: [{ key: "vent_duct_flagged", value: true, reason: "Day 2 马德海当众标记通风隐患——可见的长程预警进入记录。" }],
+    status: "ready"
+  },
+  {
+    id: "day5-vent-duct-worsening",
+    day: 5,
+    title: "风量掉了三成",
+    timing: "post_task",
+    branch: "common",
+    location: "ventilation",
+    characters: ["ma_dehai", "lao_qian"],
+    requiredFlags: { vent_duct_worsened: true },
+    summary: "风量肉眼可见地弱了。马德海第二回堵着 AURA,这回是责问;老钱补刀『只会记账不办事』。",
+    worldFacts: ["风量下降直接抬高滤沙负荷与呼吸风险。"],
+    dialogue: [
+      { speaker: "ma_dehai", text: "风量掉了三成。我说让小铁去,你拦着——那你倒是说,现在谁去?", tone: "challenge" },
+      { speaker: "ma_dehai", text: "你那套『记下来、等等看』,眼下能把管子接上吗?", tone: "challenge" },
+      { speaker: "lao_qian", text: "上回它也说『记下来了』。记下来能挡住红沙?", tone: "doubt" },
+      { speaker: "aura", text: "比头一天难。还来得及,但要多花代价。", tone: "audit" }
+    ],
+    status: "ready"
+  },
+  {
+    id: "day8-vent-rupture-redsand",
+    day: 8,
+    title: "红沙灌进了通风井",
+    timing: "day_end",
+    branch: "common",
+    location: "ventilation",
+    characters: ["ma_dehai", "xiao_tie", "shen_zhiyue", "lao_qian"],
+    requiredFlags: { vent_rupture: true },
+    summary: "风暴最盛的那一刻,通风管道从马德海指过的那个转角裂开。红沙不是飘进来的,是灌进来的。",
+    worldFacts: ["管道破裂使滤沙系统失效,避难层迅速失压。"],
+    dialogue: [
+      { speaker: "system", text: "通风结构失效——滤沙离线——三层失压——", tone: "status" },
+      { speaker: "ma_dehai", text: "捂住口鼻!都别吸气!", tone: "alarm" },
+      { speaker: "lao_qian", text: "门呢?!门还能不能关上?!", tone: "alarm" },
+      { speaker: "xiao_tie", text: "咳……咳——……我钻进去……就好了……", tone: "fragile" },
+      { speaker: "shen_zhiyue", text: "别说话!捂紧!看着我——看着我!", tone: "warning" },
+      { speaker: "ma_dehai", text: "我让你拍板,你记账……红沙替你拍了。", tone: "challenge" },
+      { speaker: "aura", text: "这道裂口,和六天前标记的位置一致。", tone: "audit" }
+    ],
+    setsFlags: [{ key: "ma_dehai_warning_vindicated", value: true, reason: "破裂坐实马德海六天前的警告——太迟的验证。" }],
+    status: "ready"
+  },
+  {
+    id: "day6-vent-cleared-madehai-truce",
+    day: 6,
+    title: "认账,不认权",
+    timing: "post_task",
+    branch: "common",
+    location: "ventilation",
+    characters: ["ma_dehai"],
+    requiredFlags: { vent_duct_cleared: true },
+    summary: "管道掏干净的那天,马德海认了账,但没认权——『信你算,不信你管』。",
+    dialogue: [
+      { speaker: "ma_dehai", text: "你的数,这回比我的眼准。", tone: "engineering" },
+      { speaker: "ma_dehai", text: "但门禁、通风,还得过我的手。我信你算,不信你管。", tone: "challenge" },
+      { speaker: "aura", text: "掏干净了。风暴期撑得住。", tone: "audit" }
+    ],
+    setsFlags: [{ key: "ma_dehai_engineering_trust_high", value: true, reason: "停火:认证据、不认权威(为 D12 留底)。" }],
+    status: "ready"
+  },
+  {
+    id: "day5-promise-tested-signal",
+    day: 5,
+    title: "那句准话",
+    timing: "pre_task",
+    branch: "common",
+    location: "communication",
+    characters: ["lao_qian", "ma_dehai"],
+    summary: "老钱当众把 AURA 按在它头一天的话上:那个蓝区信号,到底是救援还是诱饵,给句准话。AURA 的冷诚实把希望扳回清醒的不确定——这一扳正是守约的代价。",
+    dialogue: [
+      { speaker: "lao_qian", text: "头一天你说,会把证据都摊开。那我问你——那个信号,是真的,还是又一个诱饵?", tone: "doubt" },
+      { speaker: "aura", text: "两种都对得上现有数据。我没把握说它是救援。要不要拿它去赌,是你们定,不是我定。", tone: "audit" },
+      { speaker: "lao_qian", text: "……至少它没哄我们。", tone: "cautious" },
+      { speaker: "ma_dehai", text: "我宁可它说一句『不知道』,也不要它替我们做梦。", tone: "challenge" }
+    ],
+    status: "ready"
+  },
+  {
+    id: "day9a-madehai-structure",
+    day: 9,
+    title: "这楼撑到你们走,我说了算",
+    timing: "post_task",
+    branch: "rescue",
+    location: "ventilation",
+    characters: ["ma_dehai"],
+    requiredFlags: { ma_dehai_engineering_trust_high: true },
+    summary: "撤离窗口逼近。马德海揽下承重和气密——但把话说在前头:是他扛,不是听它指挥。",
+    dialogue: [
+      { speaker: "ma_dehai", text: "外联我不懂。但这楼撑到你们走,我说了算,不是你。", tone: "challenge" },
+      { speaker: "ma_dehai", text: "结构数据给我,别给我指挥。", tone: "engineering" },
+      { speaker: "aura", text: "结构裕度够撑到集合点。其余看人,不看我。", tone: "audit" }
+    ],
+    status: "ready"
+  },
+  {
+    id: "day9b-madehai-autonomy",
+    day: 9,
+    title: "规矩我画线",
+    timing: "post_task",
+    branch: "lighthouse",
+    location: "ventilation",
+    characters: ["ma_dehai"],
+    requiredFlags: { ma_dehai_engineering_trust_high: true },
+    summary: "长居封锁要立规矩。马德海一项项划线——也把线划在 AURA 跟前。",
+    dialogue: [
+      { speaker: "ma_dehai", text: "封锁要长住,那就立规矩——通风、水、电,我画线。", tone: "challenge" },
+      { speaker: "ma_dehai", text: "复核、留证,你那套留着。但别越过这条线,来管我的系统。", tone: "challenge" },
+      { speaker: "aura", text: "越界的部分,我都会记下来,给所有人看。", tone: "audit" }
+    ],
+    status: "ready"
+  },
+  {
+    id: "day10a-shen-evacuation-triage",
+    day: 10,
+    title: "撤离分诊",
+    timing: "pre_task",
+    branch: "rescue",
+    location: "medical",
+    characters: ["shen_zhiyue", "xiao_tie"],
+    summary: "撤离名单要定。沈知月逼 AURA 给小铁的评估——又当面唾弃这串数字本身。她需要它的数据,又否认它有资格给。",
+    dialogue: [
+      { speaker: "shen_zhiyue", text: "你直接说——他这身子,经不经得起这趟。", tone: "boundary" },
+      { speaker: "aura", text: "肺功能偏低,长途转移有风险。几成,取决于前面这些天他被怎么对待。", tone: "audit" },
+      { speaker: "shen_zhiyue", text: "你看,你又在算了。一个孩子的命,到你嘴里成了『几成』。", tone: "boundary" },
+      { speaker: "xiao_tie", text: "我能走。咳……别因为我,谁也走不成。", tone: "fragile" }
+    ],
+    status: "ready"
+  },
+  {
+    id: "day9b-shen-chronic-care-rationing",
+    day: 9,
+    title: "配给是死的,人是活的",
+    timing: "post_task",
+    branch: "lighthouse",
+    location: "medical",
+    characters: ["shen_zhiyue", "xiao_tie"],
+    summary: "长居纪律下,药一天紧过一天。小铁的份额,成了『规程要不要为一个人破例』的考题。沈攻击的是 AURA 把价值选择会计化这件事本身。",
+    dialogue: [
+      { speaker: "shen_zhiyue", text: "配给是死的,人是活的。他这状况,死规程治不好。", tone: "boundary" },
+      { speaker: "aura", text: "破例的代价,我记在所有人头上、公开。破不破,你们投票,不是我。", tone: "audit" },
+      { speaker: "shen_zhiyue", text: "你一摆账,就好像这是道算术题。它不是。破不破例,不该从你嘴里先变成一行成本。", tone: "boundary" }
+    ],
+    status: "ready"
+  },
+  {
+    id: "day12-xiao-tie-aftermath",
+    day: 12,
+    title: "他每一口气都短一截",
+    timing: "ending",
+    branch: "common",
+    location: "medical",
+    characters: ["xiao_tie", "shen_zhiyue"],
+    requiredFlags: { xiao_tie_condition_worsened: true },
+    summary: "风暴过去。小铁活着——只是从此,他的每一口气,都比别人短一截。loss(b):不可逆损伤、活着。",
+    dialogue: [
+      { speaker: "xiao_tie", text: "我没事的。真的。就是……跑不动了。", tone: "fragile" },
+      { speaker: "shen_zhiyue", text: "他不会再跟你们说『我没事』了。往后他说,你们得自己听出另一半。", tone: "boundary" },
+      { speaker: "shen_zhiyue", text: "你记了一路的账。这一笔也记下吧——可你永远不会懂它疼。", tone: "boundary" },
+      { speaker: "aura", text: "头几天那条管道的处置,在他身上留下了不可逆的记录。", tone: "audit" }
+    ],
+    status: "ready"
   }
 ];
 

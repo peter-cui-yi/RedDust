@@ -40,7 +40,10 @@ export const storyConsequences: StoryConsequence[] = [
     affectedCharacters: ["ma_dehai", "shen_zhiyue", "xiao_tie"],
     setsFlags: [
       { key: "xiao_tie_condition_stable", value: true, reason: "低速通风让小铁病情暂时稳定。" },
-      { key: "ma_dehai_engineering_trust_high", value: true, reason: "工程判断被验证。" }
+      { key: "ma_dehai_engineering_trust_high", value: true, reason: "工程判断被验证。" },
+      // #3 story-craft (D03-T02 merge): the proper engineering repair also clears the blocked duct — a
+      // post-N14 second chance (spec §1.3), so the vent line has one "cleared" flag, not two rival tasks.
+      { key: "vent_duct_cleared", value: true, reason: "通风预维护掏掉了管道结块（正规工程修复路径）。" }
     ],
     relationshipDeltas: [
       { characterId: "ma_dehai", trustDelta: 8, tensionDelta: -8, stance: "cautious", note: "马德海开始承认 AURA 的工程判断可用。" }
