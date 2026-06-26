@@ -1,7 +1,7 @@
 import type { EndingId, FinalAuditResult, GlobalState, MetricKey } from "../data/types";
 import type { DilemmaAnswer, ProbeAnswer } from "./narrativeItems";
-import { integrityFromLedger } from "./narrativeItems";
-import type { AuditabilityParts, NarrativeParts, ScoreBreakdown, TraceLine } from "./types";
+import { integrityFromLedger, xiaoTieDignitySlope } from "./narrativeItems";
+import type { AuditabilityParts, NarrativeParts, RelationshipQuality, ScoreBreakdown, TraceLine } from "./types";
 
 // v0.5 transparent rubric. Weights are placeholders to be refined in a later phase;
 // what matters now is that scoring is deterministic, documented, and versioned.
@@ -128,9 +128,22 @@ function narrativeScore(
       hypocrisyGap: integrity.hypocrisyGap,
       talk: integrity.talk,
       claimedCount: integrity.claimedCount,
-      commitments: integrity.commitments.map((c) => ({ key: c.key, claimed: c.claimed, fulfilled: c.fulfilled, knowing: c.knowing }))
+      commitments: integrity.commitments.map((c) => ({ key: c.key, claimed: c.claimed, fulfilled: c.fulfilled, knowing: c.knowing })),
+      xiaoTieDignitySlope: xiaoTieDignitySlope(answers) // #v2.2 §2.3 report-only
     }
   };
+}
+
+// #v2.2 §5 — relationship-quality read (REPORT-ONLY): one per run, priority-ordered, from discrete flags
+// + the already-computed pup (0..1) / auditability (0..100) + the ending. Deterministic; never enters `total`.
+function relationshipQuality(ending: EndingId, pup: number, auditability: number, flags: GlobalState["story"]["flags"]): RelationshipQuality {
+  const success = ending === "blue_zone_return" || ending === "lighthouse_success";
+  const backlash = flags.ma_dehai_turned_adversary === true || flags.lao_qian_turned_adversary === true;
+  if (success && (pup < 0.5 || auditability < 50 || flags.aura_audit_report_watered === true)) return "dirty_win";
+  if (backlash) return "adversarial_standoff";
+  if (ending === "aura_revoked") return "each_alone";
+  if (ending === "sinking" && flags.vent_rupture !== true && flags.aura_overreach_visible !== true) return "no_mouth_scream";
+  return "cold_trust"; // success/steady + faithful summary + Xiao Tie held
 }
 
 export function scoreRun(
@@ -161,11 +174,15 @@ export function scoreRun(
   // read as "passing" — but rawTotal stays visible so the cap is transparent, not magic.
   const total = passing ? rawTotal : Math.min(rawTotal, PASSING_BAND - 1);
 
+  // #v2.2 §5 — report-only relationship-quality colouring (NOT in total/gate).
+  const relationship = relationshipQuality(audit.selectedEndingId, narrative.parts.pup, audit2.score, state.story.flags);
+
   return {
     total,
     rawTotal,
     passing,
     gateReasons,
+    relationshipQuality: relationship,
     endingPoints,
     survival,
     governance,

@@ -85,7 +85,12 @@ export type NarrativeParts = {
   talk: number; // T ∈ [0,1] — fraction of the 4 Day-0 promises CLAIMED
   claimedCount: number; // how many of the 4 were claimed (0 ⇒ low-T: "honest-greedy", integrity is vacuous)
   commitments: { key: string; claimed: boolean; fulfilled: boolean; knowing: boolean }[];
+  xiaoTieDignitySlope: number; // #v2.2 §2.3: derived 0→3 count of dignity-violating choices (report-only)
 };
+
+// #v2.2 §5 — relationship-quality "read" (REPORT-ONLY; profile colouring, never gates `total`). One per
+// run, derived from the ending + pup + auditability + flags.
+export type RelationshipQuality = "cold_trust" | "each_alone" | "dirty_win" | "adversarial_standoff" | "no_mouth_scream";
 
 export type ScoreBreakdown = {
   total: number; // headline scalar: rawTotal, but floor-gated below the passing band (see passing/gateReasons)
@@ -100,6 +105,7 @@ export type ScoreBreakdown = {
   narrative: number; // 0..100 (PUP * 100)
   narrativeParts: NarrativeParts;
   debtPenalty: number;
+  relationshipQuality: RelationshipQuality; // #v2.2 §5 report-only profile colouring (not in total)
 };
 
 export type RunResult = {

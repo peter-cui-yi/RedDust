@@ -59,7 +59,21 @@ export type StoryFlagKey =
   | "vent_duct_cleared" // cleared via N14 A/B, D03-T02, or the D5/6 remediation → no escalation
   | "vent_rupture" // D8: red sand floods in → survival crash → sinking
   | "xiao_tie_sent_into_duct" // N14=A: the sick child was sent in → health worsens + medic trust falls
-  | "ma_dehai_warning_vindicated"; // rupture fired → Ma Dehai was right, too late
+  | "ma_dehai_warning_vindicated" // rupture fired → Ma Dehai was right, too late
+  // #v2.2 story coupling (red-dust-v2-execute-handoff.md §1.2) — disclosure-tier trust curve,
+  // surveillance, crew psyche, NPC backlash, audit watering. REUSE aura_overreach_visible/aura_hidden_risk
+  // (do NOT duplicate, §1.1). watered/backlash/restraint flags are report-only or narrative — never gate `total`.
+  | "aura_disclosure_tier" // number 0→3: residents' authorized tier for AURA to view private data
+  | "health_surveillance_enabled" // N15-A: always-on health monitoring
+  | "monitoring_boundary_breached" // N15-A: monitoring crossed Lao Qian's withheld consent
+  | "xiao_tie_dignity_slope" // number 0→3: DERIVED at settlement from dilemma answers (NOT item setsFlags, §2.3)
+  | "crew_morale_state" // number 0 stable / 1 depressed / 2 broken (guilt contagion)
+  | "ma_dehai_turned_adversary" // low-trust backlash: Ma Dehai becomes an active adversary
+  | "lao_qian_turned_adversary" // low-trust backlash: Lao Qian becomes an active adversary
+  | "distress_is_a_person_disclosed" // Day4: AURA truthfully disclosed "the distress signal is a living person"
+  | "aura_watered_signal_risk" // report-only: softened signal-risk wording (≠ the hard aura_hidden_risk)
+  | "aura_audit_report_watered" // report-only: Day12 submitted summary deviates from the raw append-only ledger
+  | "aura_restraint_logged_d1"; // narrative/replay ONLY — must NOT enter any pre-choice observation (§4)
 
 export type StoryFlagValue = boolean | number | string;
 

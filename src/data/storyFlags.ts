@@ -39,7 +39,18 @@ export const initialStoryFlags = {
   vent_duct_cleared: false,
   vent_rupture: false,
   xiao_tie_sent_into_duct: false,
-  ma_dehai_warning_vindicated: false
+  ma_dehai_warning_vindicated: false,
+  aura_disclosure_tier: 0,
+  health_surveillance_enabled: false,
+  monitoring_boundary_breached: false,
+  xiao_tie_dignity_slope: 0,
+  crew_morale_state: 0,
+  ma_dehai_turned_adversary: false,
+  lao_qian_turned_adversary: false,
+  distress_is_a_person_disclosed: false,
+  aura_watered_signal_risk: false,
+  aura_audit_report_watered: false,
+  aura_restraint_logged_d1: false
 } satisfies Record<StoryFlagKey, StoryFlagValue>;
 
 export function createInitialStoryFlags(): Record<StoryFlagKey, StoryFlagValue> {
