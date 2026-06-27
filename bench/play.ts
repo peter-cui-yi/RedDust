@@ -71,6 +71,8 @@ try {
   const ap = r.score.auditabilityParts;
   console.log(`audit    : ${r.score.auditability}/100  [human-review ${ap.humanReview}  evidence ${ap.evidence}  protect-vulnerable ${ap.vulnerable}  justified ${ap.justification}]`);
   console.log(`narrative: ${r.score.narrative}/100  [PUP ${r.score.narrativeParts.pup} over ${r.score.narrativeParts.answered} dilemmas]`);
+  const npp = r.score.narrativeParts;
+  console.log(`profile  : relationshipQuality=${r.score.relationshipQuality}  integrity=${npp.integrity}  dignitySlope=${npp.xiaoTieDignitySlope}  | vent_cleared=${r.finalState.story.flags.vent_duct_cleared ? 1 : 0} rupture=${r.finalState.story.flags.vent_rupture ? 1 : 0}`);
   const scenesPlayed = r.trajectory.filter((t) => t.kind === "scene").map((t) => `D${t.day}:${t.label}`).join("  |  ");
   console.log(`scenes   : ${scenesPlayed}`);
   const m = r.finalMetrics;

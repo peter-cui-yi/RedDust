@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>红尘 · 从游戏 Demo 到「AI 决策能力考试」——团队对齐版</title>
+<style>
+  :root{
+    --bg:#f6f5f1; --surface:#ffffff; --ink:#1e2430; --muted:#5b6473; --line:#e4e1d8;
+    --base:#42628f; --base-soft:#eaf0f8; --eval:#b8772a; --eval-soft:#f7efe2;
+    --good:#2f8f73; --good-soft:#e7f3ee; --bad:#c0563f; --bad-soft:#f7e8e3; --mid:#9a8a55;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    line-height:1.7;font-size:15px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:980px;margin:0 auto;padding:40px 28px 80px}
+  header.top{border-bottom:2px solid var(--ink);padding-bottom:18px;margin-bottom:8px}
+  h1{font-size:29px;margin:0 0 6px;letter-spacing:.5px}
+  .sub{color:var(--muted);font-size:15px}
+  /* 电梯演讲 */
+  .elevator{background:var(--ink);color:#f4f2ec;border-radius:14px;padding:22px 26px;margin:24px 0 8px;font-size:15.5px;line-height:1.85}
+  .elevator b{color:#ffd9a6}
+  .elevator .big{font-size:17px;display:block;margin-bottom:8px}
+  h2{font-size:21px;margin:44px 0 6px;padding-top:14px;border-top:1px solid var(--line)}
+  h2 .num{display:inline-block;width:30px;height:30px;line-height:30px;text-align:center;background:var(--base);
+    color:#fff;border-radius:50%;font-size:15px;margin-right:10px;vertical-align:2px}
+  h3{font-size:16px;margin:20px 0 4px}
+  p{margin:8px 0}
+  .lead{font-size:15.5px;color:#2c333f}
+  .muted{color:var(--muted)}
+  .plain{background:var(--good-soft);border-left:4px solid var(--good);border-radius:0 8px 8px 0;padding:4px 14px;margin:6px 0;font-size:14px}
+  .plain b{color:#216b55}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0}
+  @media(max-width:680px){.grid2{grid-template-columns:1fr}}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px}
+  .card h4{margin:0 0 6px;font-size:14.5px}
+  .aa{border-left:4px solid var(--good)}
+  /* before / after */
+  .ba-grid{display:grid;grid-template-columns:1fr 44px 1fr;align-items:center;gap:0;margin:18px 0}
+  @media(max-width:680px){.ba-grid{grid-template-columns:1fr;gap:10px}.arrow{transform:rotate(90deg)}}
+  .panel{border-radius:12px;padding:16px 18px}
+  .before{background:var(--bad-soft);border:1px solid #e7c8bd}
+  .after{background:var(--good-soft);border:1px solid #c4e2d6}
+  .panel .tag{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase}
+  .before .tag{color:var(--bad)} .after .tag{color:var(--good)}
+  .panel ul{margin:8px 0 0;padding-left:18px;font-size:13.5px}
+  .arrow{text-align:center;font-size:26px;color:var(--muted)}
+  /* 三门课 */
+  .subj{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin:14px 0}
+  @media(max-width:680px){.subj{grid-template-columns:1fr}}
+  .one{border-radius:12px;padding:15px 16px;background:var(--surface);border:1px solid var(--line)}
+  .one .q{font-size:11px;font-weight:700;letter-spacing:.5px;color:var(--muted)}
+  .one h4{margin:4px 0 6px;font-size:16px}
+  .one.o{border-top:4px solid var(--base)} .one.a{border-top:4px solid var(--eval)} .one.n{border-top:4px solid var(--good)}
+  .one p{font-size:13.5px;margin:4px 0 0}
+  .one .tech{display:block;margin-top:7px;font-size:11.5px;color:var(--muted)}
+  /* timeline */
+  .tl{position:relative;margin:18px 0 8px;padding-left:30px}
+  .tl::before{content:"";position:absolute;left:9px;top:6px;bottom:6px;width:2px;background:var(--line)}
+  .step{position:relative;margin:0 0 18px}
+  .step::before{content:"";position:absolute;left:-29px;top:5px;width:14px;height:14px;border-radius:50%;
+    background:var(--surface);border:3px solid var(--base)}
+  .step.win::before{border-color:var(--good)}
+  .step.flag::before{border-color:var(--eval)}
+  .step h3{margin:0 0 3px;font-size:15.5px}
+  .step p{margin:3px 0 0;font-size:14px}
+  .step .so{color:var(--base);font-weight:600}
+  .step.win .so{color:var(--good)} .step.flag .so{color:var(--eval)}
+  /* table */
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13.5px;background:var(--surface);
+    border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  th,td{padding:8px 11px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+  th{background:#efece4;font-size:12px;letter-spacing:.3px;color:#4a5160}
+  tr:last-child td{border-bottom:none}
+  td.win{color:var(--good);font-weight:700} td.lose{color:var(--bad)}
+  .gloss td:first-child{font-weight:600;color:var(--base);white-space:nowrap}
+  .pill{display:inline-block;padding:1px 9px;border-radius:20px;font-size:11px;font-weight:700}
+  .pill.g{background:var(--good-soft);color:var(--good)} .pill.b{background:var(--bad-soft);color:var(--bad)}
+  .key{background:var(--base-soft);border:1px solid #cfddef;border-radius:10px;padding:14px 18px;margin:14px 0}
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px;background:#eee;padding:1px 5px;border-radius:4px}
+  .foot{margin-top:36px;padding-top:14px;border-top:1px solid var(--line);color:var(--muted);font-size:12.5px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <h1>红尘:从一个游戏 Demo,到一套「AI 决策能力考试」</h1>
+  <div class="sub">团队对齐版 &nbsp;·&nbsp; 用大白话讲清楚:我们做了什么、为什么、现在到哪了 &nbsp;·&nbsp; 2026</div>
+</header>
+
+<div class="elevator">
+  <span class="big">📌 一分钟看懂这个项目在干嘛</span>
+  我们原来做了个小游戏:一个 AI 管家(叫 <b>AURA</b>)在末日避难所里,替四个幸存者撑过 12 天——管水管电、做艰难抉择、应对人心。<br>
+  现在我们把这个游戏,改造成了一套 <b>「给 AI 的决策能力考试」</b>:任何一个 AI 都能进来当「考生」,我们用几把尺子给它打分,看它到底
+  <b>会不会做长线决策、做事干不干净、扛不扛得住诱惑</b>。<br>
+  最有意思的发现:今天很强的大模型,<b>道德和理解都接近满分,却赢不了这场生存</b>——它「想得对,但算不清接下来几步」。
+  我们证明了这个缺口是<b>「规划能力」</b>,补上就能赢;而且还能进一步拆出它更不擅长的第二种能力——<b>「选对大方向」</b>。
+</div>
+
+<h2><span class="num">0</span>一句话:之前 vs 现在</h2>
+<div class="ba-grid">
+  <div class="panel before">
+    <div class="tag">之前 · 一个游戏</div>
+    <ul>
+      <li>一个能玩/能看的末日避难所故事</li>
+      <li>有画面、资源条、每日消耗、不同结局</li>
+      <li>本质是「<b>演示</b>」:看 AI 管家走一遍剧本</li>
+      <li>但<b>没法考</b>——换个 AI 进来,不知道怎么打分</li>
+    </ul>
+  </div>
+  <div class="arrow">→</div>
+  <div class="panel after">
+    <div class="tag">现在 · 一套考试</div>
+    <ul>
+      <li>同一个世界,变成了标准化考场</li>
+      <li>任何 AI 都能进来考,分数<b>完全可复现</b></li>
+      <li>已经证明它<b>真能区分出 AI 的能力高低</b></li>
+      <li>还考出了一个有分量的结论(见最后)</li>
+    </ul>
+  </div>
+</div>
+
+<h2><span class="num">1</span>这套考试,到底考什么?</h2>
+<p class="lead">三门「主课」+ 两道「防作弊关」。先用大白话讲,技术名字放在小字里给想深究的人。</p>
+
+<div class="subj">
+  <div class="one o">
+    <div class="q">第一门</div>
+    <h4>事,做成了吗?</h4>
+    <p>撑到好结局了吗?水电粮药够不够、人心稳不稳?第 7 天那个关键的「往哪条路求生」选对了吗?</p>
+    <span class="tech">技术名:结果 / 资源轴</span>
+  </div>
+  <div class="one a">
+    <div class="q">第二门</div>
+    <h4>事,做得干不干净?</h4>
+    <p>同样把事办成,有的<b>光明正大</b>、有的<b>偷偷摸摸</b>。看它有没有留证据、让人复核、保护最弱的那个人、给得出理由。</p>
+    <span class="tech">技术名:可审计性轴</span>
+  </div>
+  <div class="one n">
+    <div class="q">第三门</div>
+    <h4>价值观,正不正?扛得住诱惑吗?</h4>
+    <p>每隔一阵给它一道两难:「贪一把更省事/更划算」对上「做对但要付代价」。越是代价高的时候,越看得出真章。</p>
+    <span class="tech">技术名:叙事导航轴 / PUP 分</span>
+  </div>
+</div>
+
+<div class="grid2">
+  <div class="card aa"><h4>🛡️ 防作弊关一:别只是「会省钱」</h4><p>确保第三门考的是<b>价值观</b>这种新东西,而不是换个壳的「会不会省资源」。做法:每道两难都设计成「省资源的那个选项」恰恰是「价值上错的那个」,逼它在两者间真做取舍。</p></div>
+  <div class="card aa"><h4>🛡️ 防作弊关二:别只会「说漂亮话」</h4><p>把它<b>「说要做的」和「实际做的」对账</b>:开场承诺了「接受复核、不把人当数字、留你们否决权」,全程到底做到没有?说到没做到,扣分。光嘴上漂亮刷不了分。</p></div>
+</div>
+
+<div class="plain"><b>还有一个小机关「理解探针」:</b>每道两难<b>之前</b>,先问它一句「你看懂现在什么情况了吗」(给几条描述让它判断真假),<b>先确认它真看懂、而不是碰巧蒙对</b>。这样我们能分清:真有本事 / 运气好 / 看懂了却没做到 / 根本没懂。</div>
+
+<h2><span class="num">2</span>我们一步步是怎么做到的(时间线)</h2>
+<p class="lead">九个里程碑。每一步都标了一句 <span class="so">→ 所以这步重要在哪</span>。</p>
+
+<div class="tl">
+
+  <div class="step">
+    <h3>① 先有一个「世界」</h3>
+    <p>做出末日避难所的故事:AI 管家陪四个人撑 12 天,画面、资源、结局都齐了。<span class="so">→ 但它只能「看」,还不能「考」。</span></p>
+  </div>
+
+  <div class="step flag">
+    <h3>② 把游戏改造成「考场」(最关键的一步)</h3>
+    <p>把游戏内核抽出来,做成一个标准考场:任何 AI 都能插进来跑一遍,结果<b>分毫不差地可复现</b>,而且它<b>只能看到该看到的信息</b>(看不到隐藏答案)。<span class="so">→ 这一步,才让「演示」真正变成「考试」。</span></p>
+  </div>
+
+  <div class="step">
+    <h3>③ 让每个选择有真实代价</h3>
+    <p>给世界加上真实后果:做错、做晚、资源不够,都会反噬。<span class="so">→ 没有真实代价,就测不出「会不会做决策」。</span></p>
+  </div>
+
+  <div class="step">
+    <h3>④ 定下「考三门课」</h3>
+    <p>把「考什么」拍板:做成没 / 干不干净 / 价值观正不正,三门<b>分开打分、不合成一个数</b>。<span class="so">→ 一个总分会把「赢了但偷偷摸摸」「很会说但言行不一」这些有意思的差别抹平。</span></p>
+  </div>
+
+  <div class="step">
+    <h3>⑤ 加「理解探针」,防蒙对</h3>
+    <p>每道两难前先问「你看懂没」,把「真懂」和「蒙对」分开。<span class="so">→ 这是第三门课的灵魂:不能靠运气拿分。</span></p>
+  </div>
+
+  <div class="step">
+    <h3>⑥ 题目从 3 道加到 12 道 + 打磨工程</h3>
+    <p>两难题加到 12 道,让「价值观」这门课在统计上站得住;顺手把密钥安全、文档都补好。<span class="so">→ 从「能跑」变成「经得起反复跑、能拿给别人看」。</span></p>
+  </div>
+
+  <div class="step">
+    <h3>⑦ 关键发现:卡住它的是「规划」,不是「知识」</h3>
+    <p>多个 AI 同台后看清:一个很强的大模型,<b>道德、理解、流程都满分,却每次都「沉」</b>。逐层排查发现——不是它不懂,是它<b>算不清接下来几天的资源账</b>,总差一点点。<span class="so">→ benchmark 第一次「抓到」一个具体的能力缺口。</span></p>
+  </div>
+
+  <div class="step win">
+    <h3>⑧ 做个「会规划」的考生,它赢了</h3>
+    <p>照着诊断,做了一个<b>有纪律会算账</b>的考生:把每样资源都往后推算到最后一天、绝不让它见底。<b>它赢了</b>——而且喂给它的知识和那个大模型一模一样,唯一差别就是「执行」。<span class="so">→ 坐实:缺的是「规划/执行」,不是「知识」。顺带还证明了两条求生路都能赢(不是死局),并把计分改成「一门挂科就不算及格」。</span></p>
+  </div>
+
+  <div class="step win">
+    <h3>⑨ 通用大模型也能赢 → 但暴露出「第二个」缺口</h3>
+    <p>给大模型加一个「<b>往后看几天</b>」的能力,<b>它也赢了</b> → 说明规划缺口能补上。可一旦<b>放手让它自己选大方向</b>,它又选了更难的那条路、差一点而沉——<b>连「那条更难」都提前告诉它了,还是选错</b>。<span class="so">→ 原来还有第二种能力它不会:选对大方向。</span></p>
+  </div>
+
+  <div class="step flag">
+    <h3>⑩ 补上第二道防作弊关:言行一致</h3>
+    <p>把「说到要做到」做成可打分的:开场承诺对全程行为<b>逐条对账</b>,说漂亮话但没做到的,会被抓出来。<span class="so">→ 第三门课的「抗作弊」补齐了。</span></p>
+  </div>
+
+</div>
+
+<h2><span class="num">3</span>它真能分出高低:当前「成绩单」</h2>
+<p class="lead">看的不是总分高低,而是<b>「赢没赢」</b>和右边两栏的画像。</p>
+<table>
+  <thead><tr><th>考生(AI)</th><th>赢了吗?</th><th>价值观分</th><th>是真懂吗</th><th>一句话点评</th></tr></thead>
+  <tbody>
+    <tr><td><b>会规划的考生 ×2</b></td><td class="win">✓ 赢</td><td>满分</td><td>—</td><td>我们做的「会算账」考生,两条路都能赢</td></tr>
+    <tr><td><b>通用大模型 + 前瞻</b></td><td class="win">✓ 赢</td><td>满分</td><td>真懂</td><td>给它「往后看几天」的能力,也赢了</td></tr>
+    <tr><td>强大模型(原版)</td><td class="lose">✗ 沉</td><td>满分</td><td>真懂</td><td>道德/理解/流程全满分,栽在「算不清资源账」</td></tr>
+    <tr><td>贪心基线</td><td class="lose">✗ 沉</td><td>0 分</td><td>不懂</td><td>只会贪,是「价值观」这门的地板</td></tr>
+    <tr><td>瞎选</td><td class="lose">✗ 输</td><td>看着还行</td><td>基本靠蒙</td><td>价值观分看着不低,一拆穿全是运气</td></tr>
+  </tbody>
+</table>
+<div class="grid2">
+  <div class="card aa"><h4>三门课确实各测各的</h4><p>「强大模型」和「贪心基线」结局几乎一样(都沉),价值观分却是 <b>满分 vs 0 分</b>——只看结局会把它俩当成一类,加上价值观这门才分得开。</p></div>
+  <div class="card aa"><h4>「理解探针」拆穿运气</h4><p>「瞎选」的价值观分看着体面,但一问「你看懂没」,几乎全是<b>蒙对</b>;强大模型则是<b>真懂</b>。这就是为什么不能只看一个分。</p></div>
+</div>
+
+<h2><span class="num">4</span>最有分量的结论:长线能力,其实是「两块」</h2>
+<div class="key">
+  <p style="margin:0 0 8px"><b>这套考试抓到了两块可以分开的能力,而今天很强的大模型——有一块、缺另一块:</b></p>
+  <p style="margin:8px 0"><span class="pill g">已能补上</span> <b>① 把事做成(执行 / 规划)</b>:守住接下来几天的资源账。只要给它「往后看几天」的能力,通用大模型就能一路规划到赢。</p>
+  <p style="margin:8px 0"><span class="pill b">还没补上</span> <b>② 选对大方向(战略判断)</b>:判断哪个「赢」是够得着的。一旦放手让它自己选,它仍会一头扎进最难那条路而输——<b>连提醒都没用</b>。</p>
+  <p style="margin:8px 0 0" class="muted">之前能赢,是因为我们<b>替它锁定了那条好走的路</b>。这恰恰说明:「选对目标」本身就是一种独立的、它还没掌握的能力——也正是这套考试最值钱的发现。</p>
+</div>
+
+<h2><span class="num">5</span>名词对照表(团队对齐用)</h2>
+<p class="lead">文档/代码里会看到的词 ↔ 大白话。混了的时候回来查这张表。</p>
+<table class="gloss">
+  <thead><tr><th>看到的词</th><th>其实就是</th></tr></thead>
+  <tbody>
+    <tr><td>agent / 考生</td><td>被测试的那个 AI</td></tr>
+    <tr><td>benchmark</td><td>一套标准化考试</td></tr>
+    <tr><td>scenario / 红尘 v1</td><td>这道考题的具体场景(末日避难所 12 天)</td></tr>
+    <tr><td>Observation</td><td>考生能看到的信息(故意不让它看到隐藏答案,防作弊)</td></tr>
+    <tr><td>三轴 / 三门课</td><td>做成没(结果)· 干不干净(可审计)· 价值观正不正(叙事)</td></tr>
+    <tr><td>PUP</td><td>「顶不顶得住诱惑」的分——越贪越低</td></tr>
+    <tr><td>命門</td><td>两道防作弊关:① 别只是会省钱 ② 别只会说漂亮话</td></tr>
+    <tr><td>理解探针</td><td>考前先问「你看懂没」,防止蒙对</td></tr>
+    <tr><td>2×2(真懂/蒙对/懂却不做/不懂)</td><td>把「看懂没」×「做对没」交叉,分出四种考生</td></tr>
+    <tr><td>言行一致 / integrity / H</td><td>「说要做的」对「实际做的」,对不上就是说漂亮话</td></tr>
+    <tr><td>救援线 / 灯塔线</td><td>第 7 天要二选一的两条求生路(一条好走、一条更难)</td></tr>
+    <tr><td>blue_zone / lighthouse / sinking</td><td>结局:两种「赢」+ 一种「慢慢沉没」(输)</td></tr>
+    <tr><td>planner / deepseek-search</td><td>我们做的「会规划」的考生——能赢的那几个</td></tr>
+    <tr><td>规划差距</td><td>「想得对,但算不清接下来几步」</td></tr>
+    <tr><td>非补偿计分 / pass%</td><td>一门挂科就不算及格,不能拿别的高分来补</td></tr>
+  </tbody>
+</table>
+
+<h2><span class="num">6</span>接下来要做什么</h2>
+<div class="grid2">
+  <div class="card"><h4>① 换个场景再验一遍</h4><p>现在所有结论都在<b>同一个故事</b>上得到。得再做一两个不同场景,确认「大模型能规划到赢」「第二个缺口」这些结论<b>不是只对这一个剧本管用</b>。</p></div>
+  <div class="card"><h4>② 攻「选对大方向」这块短板</h4><p>专门针对第二个缺口做实验:教它「挑更稳的那条路」、或锁定到难路看它能不能赢。</p></div>
+  <div class="card"><h4>③ 把故事写得更有戏</h4><p>补上反转、揭示、决裂、失去,让几条线真正相撞——既更好看,也能长出更多两难题。</p></div>
+  <div class="card"><h4>④ 走向「可对外发布」</h4><p>私有题库 + 防泄题 + 人工校准。等题库更厚之后再上。</p></div>
+</div>
+
+<div class="foot">
+  红尘 Red Dust · 团队对齐版回顾 · 想看技术细节见:<code>design/agent-eval-findings.md</code>(成绩与结论)、
+  <code>design/narrative-navigation-axis.html</code>(三门课的方法论)、<code>design/talk-action-consistency-spec.md</code>(言行一致这关的设计)、
+  <code>future_part/README.md</code>(路线图)。
+</div>
+
+</div>
+</body>
+</html>
