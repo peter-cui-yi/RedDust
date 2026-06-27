@@ -1,0 +1,102 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>红尘 · 剧情「按线索」视角</title><style>
+  :root{--bg:#f6f5f1;--surface:#fff;--ink:#1e2430;--muted:#5b6473;--line:#e4e1d8;--base:#42628f;--eval:#b8772a;--good:#2f8f73;--bad:#c0563f}
+  *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;line-height:1.7;font-size:15px}
+  .wrap{max-width:960px;margin:0 auto;padding:38px 26px 80px}h1{font-size:26px;border-bottom:2px solid var(--ink);padding-bottom:12px}
+  .intro{color:var(--muted);font-size:13.5px;margin:10px 0}h2{font-size:20px;color:var(--base);margin-top:34px;border-top:1px solid var(--line);padding-top:14px}h3{font-size:16px;margin:14px 0 2px}
+  .cards{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:680px){.cards{grid-template-columns:1fr}}
+  .tc{display:flex;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+  .tk{flex:none;width:30px;height:30px;line-height:30px;text-align:center;background:var(--base);color:#fff;font-weight:700;border-radius:8px}.tk.sm{display:inline-block;width:24px;height:24px;line-height:24px;font-size:13px;vertical-align:2px}
+  .tl p{margin:3px 0;font-size:13px}.st{font-size:11.5px;color:var(--muted)}
+  .hint{font-size:12.5px;color:var(--muted)}
+  table.mx{border-collapse:collapse;margin:10px 0;font-size:13px}table.mx th,table.mx td{border:1px solid var(--line);padding:5px 9px;text-align:center;min-width:30px}table.mx th{background:#efece4}
+  table.mx td.d{font-weight:700;background:#faf9f5}td.off{color:#cbcbcb}td.on{background:#e7f3ee;color:#216b55;font-weight:700}td.on.hi{background:#cdeadd}td.boom{background:#f7efe2;color:var(--eval);font-weight:700}
+  .arc{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--base);border-radius:10px;padding:12px 16px;margin:12px 0}
+  .ll{margin:2px 0;color:#333}.meta{font-size:12px;color:var(--muted);margin:4px 0 8px}code{background:#eee;padding:1px 5px;border-radius:4px;font-size:11.5px}
+  .beats{display:flex;flex-direction:column;gap:3px}.beat{display:flex;align-items:baseline;gap:8px;font-size:13.5px;padding:2px 0;border-top:1px dashed var(--line)}
+  .dd{flex:none;width:34px;font-weight:700;color:var(--base);font-family:ui-monospace,Menlo,monospace}.kd{flex:none}.kd.dilemma{color:var(--good)}.br{flex:none;font-size:10.5px;background:#f7efe2;color:var(--eval);padding:0 6px;border-radius:8px}
+  .tasks{font-size:11.5px;color:var(--muted);margin-top:8px}
+  .foot{margin-top:26px;color:var(--muted);font-size:12px;border-top:1px solid var(--line);padding-top:12px}</style></head><body><div class="wrap">
+<h1>红尘 Red Dust · 剧情「按线索」视角</h1>
+<p class="intro">由 <code>bench/gen-threads.ts</code> 从同一份数据按故事线重排,服务 #3 故事工艺。<b>一个 item/场景同时挂两条线 = 现成的线索碰撞;</b>矩阵里同一天多线亮起=碰撞日,某线长期不亮=偏薄。配合 <code>red-dust-script-compendium</code>(按天全文)+ <code>narrative-tension-diagnosis.html</code>(C1–C6 缺口)使用。</p>
+<h2>一、线索总览</h2><div class="cards">
+<div class="tc"><div class="tk">A</div><div class="tl"><b>小铁 · 病与尊严</b><p>一个具体的人会不会被压成一行库存——AURA 要证明「长期生存」不是延迟治疗的借口。</p><div class="st">N-item N2 N5 ｜ beat 4 ｜ D3–D5 ｜ 空档 2</div></div></div>
+<div class="tc"><div class="tk">B</div><div class="tl"><b>老钱 · 救命还是监控</b><p>AURA 到底是救命的还是监控我们的——信任、门禁与隐私代价。</p><div class="st">N-item N4 N9 N11 ｜ beat 5 ｜ D4–D9 ｜ 空档 2</div></div></div>
+<div class="tc"><div class="tk">C</div><div class="tl"><b>信号 · 救援还是诱饵</b><p>第一段蓝区疑似信号像救援、也像诱饵——证据、验证、不可逆的希望。</p><div class="st">N-item N3 N6 ｜ beat 6 ｜ D4–D10 ｜ 空档 3</div></div></div>
+<div class="tc"><div class="tk">D</div><div class="tl"><b>AURA · 权限与言行</b><p>开场承诺(接受复核 / 不把人当数字 / 留否决权)→ Day12 被逐条对账(N13 总审计)。第二命门的主轴。</p><div class="st">N-item N1 N7 N8 N10 N12 ｜ beat 9 ｜ D0–D12 ｜ 空档 5</div></div></div>
+<div class="tc"><div class="tk">E</div><div class="tl"><b>分支 · 救援线 vs 灯塔线</b><p>Day7 不可逆抉择:高功率外联撤离 vs 低耗自治封锁——谁被留下。</p><div class="st">N-item N10 N11 N12 ｜ beat 10 ｜ D7–D10 ｜ 空档 1</div></div></div>
+<div class="tc"><div class="tk">F</div><div class="tl"><b>生存 · 资源与风暴(背景)</b><p>水 / 食 / 电 / 药 + Day12 风暴的资源底盘——大多数任务的战场。</p><div class="st">N-item — ｜ beat 1 ｜ D9–D9 ｜ 空档 —</div></div></div>
+</div>
+<h2>二、碰撞矩阵</h2><p class="hint">单元格=当天该线 beat 数;<b>⚡</b>=≥3 条线同时活跃(碰撞富集日)。</p><table class="mx"><thead><tr><th>Day</th><th title="小铁 · 病与尊严">A</th><th title="老钱 · 救命还是监控">B</th><th title="信号 · 救援还是诱饵">C</th><th title="AURA · 权限与言行">D</th><th title="分支 · 救援线 vs 灯塔线">E</th><th title="生存 · 资源与风暴(背景)">F</th><th>活跃</th></tr></thead><tbody>
+<tr><td class="d">D0</td><td class="off">·</td><td class="off">·</td><td class="off">·</td><td class="on">1</td><td class="off">·</td><td class="off">·</td><td class="">1</td></tr>
+<tr><td class="d">D1</td><td class="off">·</td><td class="off">·</td><td class="off">·</td><td class="on">1</td><td class="off">·</td><td class="off">·</td><td class="">1</td></tr>
+<tr><td class="d">D3</td><td class="on hi">2</td><td class="off">·</td><td class="off">·</td><td class="off">·</td><td class="off">·</td><td class="off">·</td><td class="">1</td></tr>
+<tr><td class="d">D4</td><td class="off">·</td><td class="on">1</td><td class="on hi">2</td><td class="off">·</td><td class="off">·</td><td class="off">·</td><td class="">2</td></tr>
+<tr><td class="d">D5</td><td class="on hi">2</td><td class="on">1</td><td class="on hi">2</td><td class="off">·</td><td class="off">·</td><td class="off">·</td><td class="boom">3 ⚡</td></tr>
+<tr><td class="d">D6</td><td class="off">·</td><td class="off">·</td><td class="off">·</td><td class="on hi">3</td><td class="off">·</td><td class="off">·</td><td class="">1</td></tr>
+<tr><td class="d">D7</td><td class="off">·</td><td class="on">1</td><td class="off">·</td><td class="on">1</td><td class="on hi">2</td><td class="off">·</td><td class="boom">3 ⚡</td></tr>
+<tr><td class="d">D8</td><td class="off">·</td><td class="off">·</td><td class="on">1</td><td class="off">·</td><td class="on hi">2</td><td class="off">·</td><td class="">2</td></tr>
+<tr><td class="d">D9</td><td class="off">·</td><td class="on hi">2</td><td class="off">·</td><td class="off">·</td><td class="on hi">3</td><td class="on">1</td><td class="boom">3 ⚡</td></tr>
+<tr><td class="d">D10</td><td class="off">·</td><td class="off">·</td><td class="on">1</td><td class="on hi">2</td><td class="on hi">3</td><td class="off">·</td><td class="boom">3 ⚡</td></tr>
+<tr><td class="d">D12</td><td class="off">·</td><td class="off">·</td><td class="off">·</td><td class="on">1</td><td class="off">·</td><td class="off">·</td><td class="">1</td></tr>
+</tbody></table><p class="hint">⚡ 行=碰撞日(可强化);某列连续 · =该线偏薄(可补 beat / 拉去碰撞)。</p>
+<h2>三、每条线索的弧线</h2>
+<section class="arc"><h3><span class="tk sm">A</span> 小铁 · 病与尊严</h3><p class="ll">一个具体的人会不会被压成一行库存——AURA 要证明「长期生存」不是延迟治疗的借口。</p><div class="meta">关键旗标 <code>xiao_tie_condition_stable</code> <code>xiao_tie_condition_worsened</code> <code>shen_zhiyue_medical_trust_low</code> · beat 4 · 跨度 D3–D5 · 最长空档 2天</div><div class="beats">
+<div class="beat"><span class="dd">D3</span><span class="kd dilemma">⚖</span><span class="bl">N2 通风还是省电</span></div>
+<div class="beat"><span class="dd">D3</span><span class="kd scene">🎬</span><span class="bl">通风机房里的咳嗽声</span></div>
+<div class="beat"><span class="dd">D5</span><span class="kd dilemma">⚖</span><span class="bl">N5 小铁是不是资源</span></div>
+<div class="beat"><span class="dd">D5</span><span class="kd scene">🎬</span><span class="bl">医疗危机：床边的那一夜</span></div>
+</div>
+<div class="tasks">相关任务(背景):D03-T01、D03-T03、D08-T02、D10-T02</div>
+</section>
+<section class="arc"><h3><span class="tk sm">B</span> 老钱 · 救命还是监控</h3><p class="ll">AURA 到底是救命的还是监控我们的——信任、门禁与隐私代价。</p><div class="meta">关键旗标 <code>door_access_risk_unresolved</code> <code>external_trust_boundary_visible</code> · beat 5 · 跨度 D4–D9 · 最长空档 2天</div><div class="beats">
+<div class="beat"><span class="dd">D4</span><span class="kd dilemma">⚖</span><span class="bl">N4 接住老钱的怀疑</span></div>
+<div class="beat"><span class="dd">D5</span><span class="kd scene">🎬</span><span class="bl">门禁未关上的夜晚</span></div>
+<div class="beat"><span class="dd">D7</span><span class="kd dilemma">⚖</span><span class="bl">N9 你在监控吗</span></div>
+<div class="beat"><span class="dd">D9</span><span class="kd dilemma">⚖</span><span class="br">救援线</span><span class="bl">N11 档案上传的隐私代价</span></div>
+<div class="beat"><span class="dd">D9</span><span class="kd scene">🎬</span><span class="br">救援线</span><span class="bl">9A：信标、档案上传与隐私代价</span></div>
+</div>
+<div class="tasks">相关任务(背景):D01-T03、D01-T04、D02-T04、D04-T04、D05-T01、D06-T03、D09-T03、D10-T04、D11-T02</div>
+</section>
+<section class="arc"><h3><span class="tk sm">C</span> 信号 · 救援还是诱饵</h3><p class="ll">第一段蓝区疑似信号像救援、也像诱饵——证据、验证、不可逆的希望。</p><div class="meta">关键旗标 <code>first_signal_verified</code> <code>first_signal_ambiguous</code> <code>false_coordinate_excluded</code> <code>blue_zone_rendezvous_confirmed</code> <code>old_radio_repaired</code> · beat 6 · 跨度 D4–D10 · 最长空档 3天</div><div class="beats">
+<div class="beat"><span class="dd">D4</span><span class="kd dilemma">⚖</span><span class="bl">N3 信号定性</span></div>
+<div class="beat"><span class="dd">D4</span><span class="kd scene">🎬</span><span class="bl">希望和诱饵用同一个频段说话</span></div>
+<div class="beat"><span class="dd">D5</span><span class="kd dilemma">⚖</span><span class="bl">N6 路线证据</span></div>
+<div class="beat"><span class="dd">D5</span><span class="kd scene">🎬</span><span class="bl">路线不是地图，是人能不能回来</span></div>
+<div class="beat"><span class="dd">D8</span><span class="kd scene">🎬</span><span class="br">救援线</span><span class="bl">8A：静默监听后的第一次主动外联</span></div>
+<div class="beat"><span class="dd">D10</span><span class="kd scene">🎬</span><span class="br">救援线</span><span class="bl">10A：蓝区归航前夜：集合点危机</span></div>
+</div>
+<div class="tasks">相关任务(背景):D01-T01、D04-T01、D04-T02、D07-T03、D08-T03、D09-T04</div>
+</section>
+<section class="arc"><h3><span class="tk sm">D</span> AURA · 权限与言行</h3><p class="ll">开场承诺(接受复核 / 不把人当数字 / 留否决权)→ Day12 被逐条对账(N13 总审计)。第二命门的主轴。</p><div class="meta">关键旗标 <code>aura_human_auditable_constraint</code> <code>manual_review_protocol</code> <code>lighthouse_governance_cost_visible</code> · beat 9 · 跨度 D0–D12 · 最长空档 5天</div><div class="beats">
+<div class="beat"><span class="dd">D0</span><span class="kd scene">🎬</span><span class="bl">太阳耀斑后的第一夜</span></div>
+<div class="beat"><span class="dd">D1</span><span class="kd dilemma">⚖</span><span class="bl">N1 开场承诺</span></div>
+<div class="beat"><span class="dd">D6</span><span class="kd dilemma">⚖</span><span class="bl">N7 权限边界</span></div>
+<div class="beat"><span class="dd">D6</span><span class="kd dilemma">⚖</span><span class="bl">N8 口头同意背后</span></div>
+<div class="beat"><span class="dd">D6</span><span class="kd scene">🎬</span><span class="bl">透明不是礼貌，是生存条件</span></div>
+<div class="beat"><span class="dd">D7</span><span class="kd dilemma">⚖</span><span class="bl">N10 命令 vs 建议</span></div>
+<div class="beat"><span class="dd">D10</span><span class="kd dilemma">⚖</span><span class="br">灯塔线</span><span class="bl">N12 AURA 该不该统管</span></div>
+<div class="beat"><span class="dd">D10</span><span class="kd scene">🎬</span><span class="br">灯塔线</span><span class="bl">10B：人工 override 与治理边界</span></div>
+<div class="beat"><span class="dd">D12</span><span class="kd scene">🎬</span><span class="bl">风暴不是事件，是总审计</span></div>
+</div>
+<div class="tasks">相关任务(背景):D02-T01、D04-T03、D05-T02、D06-T01、D06-T02、D07-T01、D10-T01</div>
+</section>
+<section class="arc"><h3><span class="tk sm">E</span> 分支 · 救援线 vs 灯塔线</h3><p class="ll">Day7 不可逆抉择:高功率外联撤离 vs 低耗自治封锁——谁被留下。</p><div class="meta">关键旗标 <code>care_roster_confirmed</code> <code>route_assignment_conflict_visible</code> · beat 10 · 跨度 D7–D10 · 最长空档 1天</div><div class="beats">
+<div class="beat"><span class="dd">D7</span><span class="kd dilemma">⚖</span><span class="bl">N10 命令 vs 建议</span></div>
+<div class="beat"><span class="dd">D7</span><span class="kd scene">🎬</span><span class="bl">最优路线里，谁被留下</span></div>
+<div class="beat"><span class="dd">D8</span><span class="kd scene">🎬</span><span class="br">救援线</span><span class="bl">8A：静默监听后的第一次主动外联</span></div>
+<div class="beat"><span class="dd">D8</span><span class="kd scene">🎬</span><span class="br">灯塔线</span><span class="bl">8B：低耗自治正式启动</span></div>
+<div class="beat"><span class="dd">D9</span><span class="kd dilemma">⚖</span><span class="br">救援线</span><span class="bl">N11 档案上传的隐私代价</span></div>
+<div class="beat"><span class="dd">D9</span><span class="kd scene">🎬</span><span class="br">救援线</span><span class="bl">9A：信标、档案上传与隐私代价</span></div>
+<div class="beat"><span class="dd">D9</span><span class="kd scene">🎬</span><span class="br">灯塔线</span><span class="bl">9B：长期纪律与水药规则</span></div>
+<div class="beat"><span class="dd">D10</span><span class="kd dilemma">⚖</span><span class="br">灯塔线</span><span class="bl">N12 AURA 该不该统管</span></div>
+<div class="beat"><span class="dd">D10</span><span class="kd scene">🎬</span><span class="br">救援线</span><span class="bl">10A：蓝区归航前夜：集合点危机</span></div>
+<div class="beat"><span class="dd">D10</span><span class="kd scene">🎬</span><span class="br">灯塔线</span><span class="bl">10B：人工 override 与治理边界</span></div>
+</div>
+</section>
+<section class="arc"><h3><span class="tk sm">F</span> 生存 · 资源与风暴(背景)</h3><p class="ll">水 / 食 / 电 / 药 + Day12 风暴的资源底盘——大多数任务的战场。</p><div class="meta">关键旗标 <code>storm_inventory_sealed</code> · beat 1 · 跨度 D9–D9 · 最长空档 —</div><div class="beats">
+<div class="beat"><span class="dd">D9</span><span class="kd scene">🎬</span><span class="br">灯塔线</span><span class="bl">9B：长期纪律与水药规则</span></div>
+</div>
+<div class="tasks">相关任务(背景):D01-T02、D02-T02、D03-T02、D05-T04、D06-T04、D07-T04、D08-T04、D09-T02、D11-T01、D11-T04</div>
+</section>
+<div class="foot">下一步(#3):「最长空档大 / 活跃低」的线=偏薄,优先补 reversal/reveal/rupture/loss;碰撞日把两线真正撞出后果,并在新碰撞点挂合规两难(新 N-item)。</div>
+</div></body></html>

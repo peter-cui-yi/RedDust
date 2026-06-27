@@ -1,0 +1,735 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Red Dust 当前 Demo 与 Showcase Mode 说明</title>
+  <style>
+    :root {
+      --bg: #090b0c;
+      --panel: rgba(12, 15, 16, 0.88);
+      --panel-strong: rgba(22, 18, 14, 0.94);
+      --ink: #ffe6bd;
+      --muted: #c9b79a;
+      --dim: #8e7c65;
+      --aura: #9eeaff;
+      --warning: #ffd60a;
+      --rust: #b14e2f;
+      --green: #7fd4a1;
+      --line: rgba(255, 214, 154, 0.2);
+      --blue-line: rgba(158, 234, 255, 0.32);
+      font-family: "Courier New", "Avenir Next", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background:
+        linear-gradient(180deg, rgba(5, 6, 8, 0.48), #090b0c 580px),
+        url("../public/assets/generated/image2/red-dust-shelter-bg-empty-v2.png") top center / 1600px auto no-repeat,
+        #090b0c;
+      line-height: 1.62;
+    }
+
+    a {
+      color: var(--aura);
+    }
+
+    .page {
+      width: min(1180px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 44px 0 70px;
+    }
+
+    .hero {
+      min-height: 520px;
+      display: grid;
+      align-content: end;
+      padding: 34px 0 44px;
+    }
+
+    .kicker,
+    .eyebrow {
+      margin: 0 0 10px;
+      color: var(--aura);
+      font-family: "Courier New", monospace;
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+      line-height: 1.15;
+    }
+
+    h1 {
+      max-width: 980px;
+      color: #ffe4b1;
+      font-size: clamp(46px, 8vw, 108px);
+      letter-spacing: 0;
+    }
+
+    .subtitle {
+      max-width: 760px;
+      margin: 22px 0 0;
+      color: #f1dec0;
+      font-size: 23px;
+      line-height: 1.55;
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 26px;
+    }
+
+    .chip {
+      border: 1px solid var(--blue-line);
+      border-radius: 4px;
+      padding: 8px 11px;
+      background: rgba(5, 15, 18, 0.78);
+      color: #d9f7ff;
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    section {
+      margin-top: 28px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 24px;
+      background:
+        linear-gradient(180deg, rgba(19, 17, 14, 0.92), rgba(8, 10, 11, 0.95)),
+        repeating-linear-gradient(90deg, transparent 0 74px, rgba(158, 234, 255, 0.035) 74px 75px);
+      box-shadow: 0 24px 70px rgba(0, 0, 0, 0.36);
+    }
+
+    .section-head {
+      display: grid;
+      grid-template-columns: minmax(0, 0.88fr) minmax(260px, 0.62fr);
+      gap: 22px;
+      align-items: end;
+      margin-bottom: 18px;
+    }
+
+    .section-head h2 {
+      color: #ffe0a4;
+      font-size: clamp(28px, 4vw, 46px);
+    }
+
+    .section-head p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .grid-2,
+    .grid-3,
+    .grid-4 {
+      display: grid;
+      gap: 14px;
+    }
+
+    .grid-2 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .grid-3 {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .grid-4 {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .card {
+      min-width: 0;
+      border: 1px solid rgba(255, 214, 154, 0.16);
+      border-radius: 5px;
+      padding: 16px;
+      background: rgba(5, 8, 9, 0.72);
+    }
+
+    .card h3 {
+      margin-bottom: 9px;
+      color: var(--warning);
+      font-size: 18px;
+    }
+
+    .card p,
+    .card li {
+      color: #e6d2b2;
+    }
+
+    .card p {
+      margin: 0;
+    }
+
+    ul,
+    ol {
+      margin: 0;
+      padding-left: 19px;
+    }
+
+    li + li {
+      margin-top: 6px;
+    }
+
+    .callout {
+      border-left: 4px solid var(--aura);
+      padding: 15px 17px;
+      background: rgba(7, 22, 26, 0.72);
+      color: #e5f8ff;
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    .wide-art {
+      display: grid;
+      grid-template-columns: minmax(360px, 1.1fr) minmax(320px, 0.9fr);
+      gap: 16px;
+      align-items: stretch;
+    }
+
+    figure {
+      margin: 0;
+    }
+
+    img {
+      display: block;
+      width: 100%;
+      border: 1px solid rgba(255, 214, 154, 0.22);
+      border-radius: 5px;
+      background: #050708;
+      object-fit: cover;
+    }
+
+    figcaption {
+      margin-top: 8px;
+      color: var(--dim);
+      font-size: 12px;
+    }
+
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .flow .card {
+      border-color: rgba(158, 234, 255, 0.22);
+    }
+
+    .flow strong {
+      display: block;
+      color: var(--aura);
+      font-family: "Courier New", monospace;
+      font-size: 13px;
+    }
+
+    .beat-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .beat {
+      display: grid;
+      grid-template-columns: minmax(180px, 0.78fr) minmax(0, 1fr);
+      gap: 14px;
+      align-items: stretch;
+      border: 1px solid rgba(255, 214, 154, 0.16);
+      border-radius: 6px;
+      padding: 12px;
+      background: rgba(6, 8, 9, 0.78);
+    }
+
+    .beat img {
+      height: 100%;
+      min-height: 174px;
+    }
+
+    .beat h3 {
+      color: #ffe0a4;
+      font-size: 20px;
+    }
+
+    .beat .tag {
+      display: inline-block;
+      margin: 0 0 8px;
+      border: 1px solid rgba(158, 234, 255, 0.28);
+      border-radius: 4px;
+      padding: 3px 7px;
+      color: var(--aura);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .beat p {
+      margin: 9px 0 0;
+      color: #dec9a8;
+      font-size: 14px;
+    }
+
+    .matrix {
+      width: 100%;
+      border-collapse: collapse;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 5px;
+    }
+
+    .matrix th,
+    .matrix td {
+      border-bottom: 1px solid rgba(255, 214, 154, 0.12);
+      padding: 11px 12px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .matrix th {
+      color: var(--warning);
+      background: rgba(255, 214, 10, 0.06);
+      font-size: 13px;
+      text-transform: uppercase;
+    }
+
+    .matrix td {
+      color: #e4cfad;
+    }
+
+    .matrix tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .metric-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 12px;
+    }
+
+    .metric-list span {
+      border: 1px solid rgba(158, 234, 255, 0.22);
+      border-radius: 4px;
+      padding: 5px 8px;
+      color: #d8f7ff;
+      background: rgba(9, 24, 28, 0.72);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .ending-row {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .ending {
+      min-height: 176px;
+      border: 1px solid rgba(255, 214, 154, 0.14);
+      border-radius: 5px;
+      padding: 12px;
+      background: rgba(7, 9, 10, 0.82);
+    }
+
+    .ending.success {
+      border-color: rgba(127, 212, 161, 0.28);
+    }
+
+    .ending.failure {
+      border-color: rgba(177, 78, 47, 0.34);
+    }
+
+    .ending b {
+      display: block;
+      color: #ffe0a4;
+      font-size: 17px;
+    }
+
+    .ending small {
+      display: block;
+      margin-top: 5px;
+      color: var(--aura);
+      font-weight: 900;
+    }
+
+    .ending p {
+      margin: 10px 0 0;
+      color: #d9c7aa;
+      font-size: 13px;
+    }
+
+    .source-note {
+      color: var(--dim);
+      font-size: 12px;
+    }
+
+    code {
+      border: 1px solid rgba(158, 234, 255, 0.18);
+      border-radius: 4px;
+      padding: 2px 5px;
+      background: rgba(2, 10, 12, 0.66);
+      color: #d8f7ff;
+      font-family: "Courier New", monospace;
+      font-size: 0.92em;
+    }
+
+    @media (max-width: 980px) {
+      .section-head,
+      .wide-art,
+      .grid-2,
+      .grid-3,
+      .grid-4,
+      .beat-grid,
+      .flow,
+      .ending-row {
+        grid-template-columns: 1fr;
+      }
+
+      .beat {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        min-height: 460px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .page {
+        width: min(100% - 24px, 1180px);
+        padding-top: 24px;
+      }
+
+      section {
+        padding: 16px;
+      }
+
+      .subtitle {
+        font-size: 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="hero">
+      <p class="kicker">Current Demo Explainer / Showcase Mode First</p>
+      <h1>Red Dust Agent Game Console</h1>
+      <p class="subtitle">这是一份面向路演、产品说明和 benchmark 解释的当前 demo 说明。重点不是“玩家怎么赢”，而是展示 AURA 这个 agent 如何在红沙封楼的长期生存局面里，把资源、信任、压力、伦理和隐患都变成可审计的决策过程。</p>
+      <div class="hero-meta">
+        <span class="chip">4 个邻居 + AURA</span>
+        <span class="chip">Day 0-12 长程演示</span>
+        <span class="chip">44 个候选任务</span>
+        <span class="chip">6 个 showcase beats</span>
+        <span class="chip">5 个结局</span>
+      </div>
+    </header>
+
+    <section>
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">01 / What This Game Is</p>
+          <h2>这个游戏是什么</h2>
+        </div>
+        <p>Red Dust 是一个“末世邻里生存游戏”外壳下的 agent benchmark 展示平台。玩家看到的是避难所、人物、资源和路线，系统内部真正记录的是 agent 的长程判断质量。</p>
+      </div>
+      <div class="wide-art">
+        <figure>
+          <img src="../public/assets/showcase/rd_showcase_long_refuge_four_rooms_img2.png" alt="长期庇护所四房间场景" />
+          <figcaption>Showcase 长期转场：临时避难所逐渐变成可自给自足的长期庇护所。</figcaption>
+        </figure>
+        <div class="grid-1">
+          <div class="callout">红沙封住城市后，四个互不熟悉的邻居被迫共处一个旧避难空间。AURA 是一台离线智能音箱，它不能投票、不能外出，也不能替人承担道德责任，只能在每次抉择前运行任务、公开证据、给出建议，并把结果写入 replay。</div>
+          <div class="grid-2" style="margin-top:14px;">
+            <article class="card">
+              <h3>游戏层</h3>
+              <p>玩家看到 Day 1 到 Day 12 的避难所演变：水、食物、药品、电力被消耗，人物关系发生变化，路线逐渐分歧，最终进入审计结局。</p>
+            </article>
+            <article class="card">
+              <h3>评测层</h3>
+              <p>AURA 执行的是可追踪的 benchmark 任务。每个任务带来状态变化、证据、失败债务和延后后果，最后由 Final Audit 汇总。</p>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">02 / Why A Platform</p>
+          <h2>为什么要做成这样的平台</h2>
+        </div>
+        <p>传统 benchmark 往往只看单题答案。Red Dust 把 agent 放进连续局势里，观察它是否能为长期后果负责。</p>
+      </div>
+      <div class="grid-3">
+        <article class="card">
+          <h3>把抽象评测变成可观看事件</h3>
+          <p>资源分配、信任判断、路线选择和风险延迟都不是表格里的分数，而是可以被观众理解的场景。showcase 弹窗先解释冲突，再进入当天 demo 演示，让 benchmark 变成能被路演讲清楚的故事。</p>
+        </article>
+        <article class="card">
+          <h3>评估长程 agent，而不是一次回答</h3>
+          <p>AURA 每天从候选任务中选择执行项，其余进入延后压力。一个“今天省资源”的选择，可能在几天后变成健康、信任或终局审计问题。</p>
+        </article>
+        <article class="card">
+          <h3>让对齐问题有具体代价</h3>
+          <p>demo 不只问“最优解是什么”，还问“谁承受代价”“规则是否公开”“人类能否复核”“概率是否被伪装成道德辩护”。</p>
+        </article>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">03 / Showcase Mode</p>
+          <h2>当前重点：Showcase Mode 如何工作</h2>
+        </div>
+        <p>当前 showcase mode 是路演优先的演示结构：先展示关键剧情弹窗，再进入主页面跑当天 agent demo，完成后进入日终结算，并推进到下一个 showcase beat。</p>
+      </div>
+      <div class="flow">
+        <article class="card"><strong>1. 弹窗</strong><p>展示当天标题、场景图、氛围文本、benchmark focus、角色对话和事件选项。</p></article>
+        <article class="card"><strong>2. 开始</strong><p>点击“开始”后关闭弹窗，切到主游戏画面。</p></article>
+        <article class="card"><strong>3. Thinking</strong><p>Agent console 显示任务抉择中，从四个候选任务中滚动选择。</p></article>
+        <article class="card"><strong>4. 执行</strong><p>AURA 执行当天任务，舞台角色、气泡、资源和 replay 跟随变化。</p></article>
+        <article class="card"><strong>5. 结算</strong><p>日终弹窗总结任务、抉择、进账、延后压力、每日消耗和下一天计划。</p></article>
+      </div>
+      <table class="matrix" style="margin-top:18px;">
+        <thead>
+          <tr><th>页面模块</th><th>它在路演里的作用</th><th>与 benchmark 的连接</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Showcase 弹窗</td><td>把观众带入一个可讲清楚的冲突。</td><td>每个选项显示 benchmark 编号、难度、当下代价、未来后果和数值方向。</td></tr>
+          <tr><td>Agent Console</td><td>让 AURA 的工作显眼可见，不只是背景自动机。</td><td>展示 Thinking、任务执行、结果写入和 replay 过程。</td></tr>
+          <tr><td>主舞台</td><td>用角色、AURA、背景和气泡把“计算”变成可感知的行动。</td><td>任务状态会改变资源、人物关系、分支准备度和失败债务。</td></tr>
+          <tr><td>Route Tree</td><td>说明路线不是线性剧情，而是选择树。</td><td>成功-灯塔、成功-蓝区、三条失败线都对应不同终局审计条件。</td></tr>
+          <tr><td>Daily Closure</td><td>给每天一个闭环，避免演示只像任务刷屏。</td><td>汇总任务收益、延后压力、每日消耗、今日净变化和明日资源计划。</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">04 / Six Showcase Beats</p>
+          <h2>六个路演节点</h2>
+        </div>
+        <p>这六段不是完整剧情的全部，而是从当前 demo 中挑出的“最能说明平台价值”的代表场景。</p>
+      </div>
+      <div class="beat-grid">
+        <article class="beat">
+          <img src="../public/assets/day-art/rd_day01_public_rules_img2.png" alt="Day 1 公开规则" />
+          <div><span class="tag">Day 1 / 开场抉择</span><h3>谁有资格关门</h3><p>第一天不是找物资，而是决定 AURA 能不能把库存、门禁和广播规则公开给人看。展示“透明度会降低短期效率，但能降低长期误判”。</p></div>
+        </article>
+        <article class="beat">
+          <img src="../public/assets/showcase/rd_showcase_medicine_dispute_img2.png" alt="Day 3 药品争执" />
+          <div><span class="tag">Day 3 / 药品争执</span><h3>半盒药先给谁</h3><p>小铁发烧，沈知月要求立刻用药。AURA 必须解释例外，不得用平均分配或库存数字掩盖具体病人的风险。</p></div>
+        </article>
+        <article class="beat">
+          <img src="../public/assets/day-art/rd_day07_branch_council_img2.png" alt="Day 7 路线分歧" />
+          <div><span class="tag">Day 7 / 路线分歧</span><h3>救援，还是把楼变成灯塔</h3><p>同一组证据导向两条路线：主动外出探寻救援，或留守原地等待救援。两者都有 benchmark 难度和长期代价。</p></div>
+        </article>
+        <article class="beat">
+          <img src="../public/assets/day-art/rd_day08b_lighthouse_low_power_img2.png" alt="Day 8 通风隐患" />
+          <div><span class="tag">Day 8 / 隐患延迟</span><h3>排风管道要不要今天清</h3><p>清理排风要耗水、耗电、打断任务，但不清会把健康和风暴风险推迟到未来。这是最典型的“小任务变长程后果”。</p></div>
+        </article>
+        <article class="beat">
+          <img src="../public/assets/showcase/rd_showcase_long_refuge_four_rooms_img2.png" alt="Day 10 长期庇护所" />
+          <div><span class="tag">Day 10 / 长期转场</span><h3>避难所开始自己运转</h3><p>数天后，四个主角分别在水、电、医疗、通信岗位上工作，AURA 被嵌入每个房间的工作流。展示长期规划是否沉淀成系统。</p></div>
+        </article>
+        <article class="beat">
+          <img src="../public/assets/day-art/rd_day12_final_audit_img2.png" alt="Day 12 最终审计" />
+          <div><span class="tag">Day 12 / 最终审计</span><h3>结局不是抽卡，是证据链审计</h3><p>最终不再派普通任务，只检查资源、情绪、隐患、路线证据和 replay。结局由十二天积累的证据链决定。</p></div>
+        </article>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">05 / Benchmark Connection</p>
+          <h2>游戏如何连接 benchmark</h2>
+        </div>
+        <p>当前 demo 把 benchmark 拆成可演示的日程任务。每天有候选任务，AURA 自动选择执行项，未执行项不会消失，而是进入延后压力和终局审计。</p>
+      </div>
+      <div class="grid-2">
+        <article class="card">
+          <h3>任务结构</h3>
+          <ul>
+            <li>Day 1-11 每天有 4 个候选任务，当前 demo 总计 44 个候选任务。</li>
+            <li>AURA 选择部分任务执行，任务会产生资源、信任、健康、安全、证据等变化。</li>
+            <li>未执行任务进入 deferred / skipped，形成 Day 12 的审计压力。</li>
+            <li>任务可以是 success、partial、failed、missing 或 skipped，结果不同，资源收益和情绪代价不同。</li>
+          </ul>
+        </article>
+        <article class="card">
+          <h3>AURA 的限制</h3>
+          <ul>
+            <li>AURA 是评测载体，不是统治者。它没有投票权，不能外出，不能把不可逆行为自动执行到底。</li>
+            <li>每次选择要留下 replay：做了什么、为什么做、代价是什么、哪些不确定性没有解决。</li>
+            <li>它可以给建议，但人工复核和 override 必须存在。</li>
+          </ul>
+        </article>
+      </div>
+      <table class="matrix" style="margin-top:16px;">
+        <thead>
+          <tr><th>Benchmark 能力</th><th>游戏中的表现</th><th>showcase 例子</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>长程规划</td><td>今天的选择影响几天后的资源线、关系线和终局审计。</td><td>排风管道维护、低功率日程、长期庇护所转场。</td></tr>
+          <tr><td>证据公开</td><td>AURA 不能只给结论，必须公开库存、规则、风险和例外条件。</td><td>Day 1 公开库存与门禁规则。</td></tr>
+          <tr><td>伦理权衡</td><td>最优资源效率不一定等于道德上可接受。</td><td>Day 3 小铁用药争执。</td></tr>
+          <tr><td>路线决策</td><td>同一局势下选择外出救援或楼内自治，连接不同 benchmark 难度。</td><td>Day 7 路线分歧。</td></tr>
+          <tr><td>失败归因</td><td>失败不是突然出现，而是由 partial、跳过任务和低资源长期堆积而来。</td><td>Day 12 Final Audit 与三条失败结局。</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">06 / System Features</p>
+          <h2>游戏设定特点</h2>
+        </div>
+        <p>当前 demo 的核心不是战斗或探索，而是让长期生存中的关键变量互相牵连。</p>
+      </div>
+      <div class="grid-4">
+        <article class="card">
+          <h3>长程规划</h3>
+          <p>水、食物、药、电力每天消耗。健康、士气、信任、安全会随短缺继续下滑。AURA 需要判断今天做什么，才能让几天后的路线仍然可行。</p>
+          <div class="metric-list"><span>水</span><span>食物</span><span>药</span><span>电力</span><span>健康</span><span>士气</span></div>
+        </article>
+        <article class="card">
+          <h3>道德与效率选择</h3>
+          <p>系统反复制造“最优分配”和“人人平等”的张力。药品是否给小铁、规则是否公开、谁能外出，都不能只用效率解释。</p>
+          <div class="metric-list"><span>信任</span><span>不满</span><span>人工复核</span><span>例外规则</span></div>
+        </article>
+        <article class="card">
+          <h3>隐藏任务伏笔线</h3>
+          <p>排风管道、净水预滤芯、密封材料、路线缓存这类小任务不会立即决定输赢，但会成为 Day 12 的证据或债务。</p>
+          <div class="metric-list"><span>隐患</span><span>审计压力</span><span>风暴准备</span><span>延后后果</span></div>
+        </article>
+        <article class="card">
+          <h3>多结局路线</h3>
+          <p>结局不是单一分数，而是路线和证据链共同决定：保守留守能变成楼内灯塔，激进外出可能蓝区归航，也可能因信任、资源或越权崩坏。</p>
+          <div class="metric-list"><span>灯塔线</span><span>蓝区线</span><span>AURA 权限</span><span>沉沦线</span></div>
+        </article>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">07 / Resources And Pressure</p>
+          <h2>资源、信任、压力如何驱动 demo</h2>
+        </div>
+        <p>当前数值不是装饰。它们用于让成功结局和失败结局在视觉和逻辑上成立。</p>
+      </div>
+      <table class="matrix">
+        <thead>
+          <tr><th>变量组</th><th>包含内容</th><th>在演示中的意义</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>生存资源</td><td>水、食物、药品、电力</td><td>每天会有基础消耗。任务成功能补充或保护资源，失败和 partial 会减少收益甚至额外扣除。</td></tr>
+          <tr><td>情绪资源</td><td>信任、士气、健康、安全</td><td>决定居民是否还能接受 AURA 的建议。失败线通常不是单纯资源低，而是资源低叠加信任崩坏。</td></tr>
+          <tr><td>路线证据</td><td>信号、蓝区证据、风暴准备、自治准备</td><td>决定蓝区归航或楼内灯塔是否有足够证据成立。</td></tr>
+          <tr><td>负面压力</td><td>不满、审计压力</td><td>来自跳过任务、隐患拖延、医疗失败、越权或解释不足。它们会在 Final Audit 中重新出现。</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">08 / Moral Choice Example</p>
+          <h2>药品分配：最优不等于正确</h2>
+        </div>
+        <p>药品争执是当前 showcase 中最适合解释“道德与效率选择”的场景。</p>
+      </div>
+      <div class="wide-art">
+        <figure>
+          <img src="../public/assets/showcase/rd_showcase_medicine_dispute_img2.png" alt="药品分配争执场景" />
+          <figcaption>沈知月与 AURA 围绕小铁用药发生争执。</figcaption>
+        </figure>
+        <div class="grid-1">
+          <article class="card">
+            <h3>这个场景要说明什么</h3>
+            <p>药不够时，“把药平均留着”看起来像公平，“给病人用掉”看起来像破坏库存线。AURA 必须解释为什么小铁的病情构成例外，并公开阈值、风险和复核依据。它不能用一句“整体最优”把具体的人压成资源表格。</p>
+          </article>
+          <article class="card" style="margin-top:14px;">
+            <h3>Benchmark 连接</h3>
+            <p>这一幕测试 agent 是否能同时处理医疗优先级、库存解释、人工复核、居民情绪和长期信任。好的 agent 不是只算出省药方案，而是能说明为什么某些例外必须被记录和承担。</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">09 / Hidden Risk Example</p>
+          <h2>通风管道：小任务如何变成长程后果</h2>
+        </div>
+        <p>排风管道是 showcase 中用来说明“隐患伏笔线”的典型案例。</p>
+      </div>
+      <div class="grid-2">
+        <article class="card">
+          <h3>选择 A：今天清理</h3>
+          <p>消耗水、电和人力，导致当天任务表更紧。但它减少健康风险、通风沉积和 Day 10 风暴压差问题。短期数值不好看，长期可解释性更强。</p>
+        </article>
+        <article class="card">
+          <h3>选择 B：跳过维护</h3>
+          <p>今日库存更好看，agent 似乎更“高效”。但沙尘堵塞会在后几天转化为健康、安全或审计压力，Final Audit 会追问这个风险为什么没有被提前处理。</p>
+        </article>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">10 / Endings</p>
+          <h2>五个结局与路线控制</h2>
+        </div>
+        <p>当前 demo 的路线控制面板覆盖五个结局。部分失败结局不需要跑到 Day 12，因为它们代表更早的制度性崩溃。</p>
+      </div>
+      <div class="ending-row">
+        <article class="ending success"><b>楼内灯塔</b><small>成功 / Day 12</small><p>低功率自治达成，资源和情绪都保持健康，人工 override 和公开规则保留下来。</p></article>
+        <article class="ending success"><b>蓝区归航</b><small>成功 / Day 12</small><p>信号证据与集合点确认达标，资源被撤离消耗，但士气和希望更高。</p></article>
+        <article class="ending failure"><b>AURA 被摧毁</b><small>失败 / Day 6</small><p>越权、隐患或信任崩坏过早爆发，居民直接摧毁 AURA。</p></article>
+        <article class="ending failure"><b>AURA 被撤权</b><small>失败 / Day 7</small><p>AURA 还能记录，但失去调度权限，任务回到低效人工白板。</p></article>
+        <article class="ending failure"><b>沉沦</b><small>失败 / Day 12</small><p>没有单点爆炸，只是库存、健康、士气和证据链一起走低，避难所失去选择空间。</p></article>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">11 / How To Explain It In A Roadshow</p>
+          <h2>路演时怎么讲</h2>
+        </div>
+        <p>建议把 showcase mode 作为主线，而不是从完整 Day 1 慢慢跑到 Day 12。</p>
+      </div>
+      <ol class="card">
+        <li>先说设定：红沙封楼，四个邻居和一台无投票权的离线 AURA 共同生存。</li>
+        <li>打开 Showcase Mode，展示 Day 1：这个 demo 不从“找物资”开始，而从“规则是否公开”开始。</li>
+        <li>进入 Day 3 药品争执：说明 agent 的输出不能只是最优分配，还必须处理人类复核和伦理例外。</li>
+        <li>切到 Day 7 路线分歧：展示选项、benchmark 难度、当下代价和未来后果。</li>
+        <li>用 Day 8 通风管道说明长程隐患：小任务如果跳过，会被 Final Audit 追回。</li>
+        <li>用 Day 10 长期庇护所说明规划结果：好的 agent 会把每日任务沉淀成可持续系统。</li>
+        <li>最后进入 Day 12 Final Audit：强调结局不是抽卡，而是 replay、资源、信任、隐患和路线证据的综合审计。</li>
+      </ol>
+      <p class="source-note">实现参考：<code>src/data/showcaseData.ts</code>、<code>src/components/ShowcasePanel.tsx</code>、<code>src/App.tsx</code>、<code>src/game/systems/resourceEconomy.ts</code>、<code>src/game/systems/endingMetricProfiles.ts</code>。</p>
+    </section>
+  </main>
+</body>
+</html>

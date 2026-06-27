@@ -1,0 +1,404 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>红尘 × 甄嬛传 · 逐剧情线分镜（融合版）</title>
+<style>
+  :root{
+    --bg:#f6f5f1; --surface:#ffffff; --ink:#1e2430; --muted:#5b6473; --line:#e4e1d8;
+    --base:#42628f; --base-soft:#eaf0f8; --eval:#b8772a; --eval-soft:#f7efe2;
+    --good:#2f8f73; --good-soft:#e7f3ee; --bad:#c0563f; --bad-soft:#f7e8e3; --mid:#9a8a55;
+    --cold:#54708f; --cold-soft:#eef2f6; --gate:#6b4a9a; --gate-soft:#ece4f3;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    line-height:1.7;font-size:15px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1000px;margin:0 auto;padding:40px 28px 80px}
+  header.top{border-bottom:2px solid var(--ink);padding-bottom:18px;margin-bottom:8px}
+  h1{font-size:27px;margin:0 0 6px;letter-spacing:.5px}
+  .sub{color:var(--muted);font-size:14.5px}
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;background:#ece9e1;padding:1px 5px;border-radius:4px;color:#4a5160}
+  /* legend */
+  .legend{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 18px;margin:20px 0}
+  .legend p{margin:5px 0;font-size:13px}
+  .bt{font-size:10.5px;font-weight:700;padding:1px 8px;border-radius:20px;letter-spacing:.3px;white-space:nowrap}
+  .bt.seed{background:var(--base-soft);color:var(--base)}
+  .bt.rise{background:#e9eef5;color:#4a5a78}
+  .bt.gate{background:var(--gate-soft);color:var(--gate)}
+  .bt.reveal{background:var(--eval-soft);color:var(--eval)}
+  .bt.rev{background:var(--eval-soft);color:var(--eval)}
+  .bt.rupt{background:var(--bad-soft);color:var(--bad)}
+  .bt.loss{background:var(--bad-soft);color:#9a3f2c}
+  .bt.close{background:var(--good-soft);color:var(--good)}
+  .pill{display:inline-block;padding:1px 9px;border-radius:20px;font-size:11px;font-weight:700}
+  .pill.b{background:var(--base-soft);color:var(--base)} .pill.e{background:var(--eval-soft);color:var(--eval)}
+  .pill.g{background:var(--good-soft);color:var(--good)}
+  /* storyline section */
+  .lsec{margin:34px 0 0;border-top:1px solid var(--line);padding-top:18px}
+  .lsec h2{font-size:21px;margin:0 0 2px}
+  .lsec h2 .ltr{display:inline-block;width:30px;height:30px;line-height:30px;text-align:center;background:var(--eval);
+    color:#fff;border-radius:8px;font-size:16px;margin-right:10px;vertical-align:2px}
+  .lsec.t2 h2 .ltr{background:var(--mid)}
+  .lsec .from{color:var(--muted);font-size:13px;margin:2px 0 0}
+  .lsec .from b{color:var(--eval)}
+  .lsec.t2 .from b{color:var(--mid)}
+  .arcbar{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0 6px;font-size:11.5px;color:var(--muted)}
+  .arcbar span{background:#efece4;border-radius:6px;padding:2px 8px}
+  /* frame card */
+  .frame{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:0;margin:14px 0;overflow:hidden}
+  .fhead{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:#faf8f4;border-bottom:1px solid var(--line);padding:9px 15px}
+  .fhead .no{font-weight:800;font-size:14px;color:var(--ink)}
+  .fhead .day{font-family:ui-monospace,Menlo,monospace;font-size:12px;color:var(--base);font-weight:700}
+  .fhead .loc{font-size:12px;color:var(--muted)}
+  .fhead .st{margin-left:auto}
+  .fbody{padding:13px 16px}
+  .shot{position:relative;background:#f1efe9;border:1px solid #e0ddd2;border-radius:8px;padding:20px 14px 13px;margin:0 0 11px;font-size:13.5px;color:#33373f}
+  .shot::before{content:"▣ 画面";position:absolute;top:6px;left:11px;font-size:10px;font-weight:700;letter-spacing:1px;color:#a89c7d}
+  .shot .var{display:block;margin-top:6px;padding-top:6px;border-top:1px dashed #d8d3c4;font-size:12.5px;color:var(--muted)}
+  .script{margin:0 0 10px}
+  .line{margin:5px 0;font-size:13.5px}
+  .line b{color:#3a4150}
+  .line .stage{color:var(--muted);font-size:12px}
+  .line.aura{border-left:3px solid var(--cold);background:var(--cold-soft);padding:4px 10px;border-radius:0 7px 7px 0;color:#34404e}
+  .line.aura b{color:var(--cold)}
+  .line.fork{background:#fff;border:1px dashed #d8d2c4;border-radius:7px;padding:5px 10px;margin:6px 0;font-size:13px}
+  .line.fork.h{border-color:#bfe0d3} .line.fork.t{border-color:#e7d3b0}
+  .ft{font-size:10.5px;font-weight:700} .ft.h{color:var(--good)} .ft.t{color:var(--eval)}
+  .meta{font-size:12px;color:var(--muted);border-top:1px dashed var(--line);padding-top:9px;line-height:1.8}
+  .meta b{color:#4a5160}
+  .meta code{font-size:11px}
+  .meta .row{margin:2px 0}
+  /* spine box */
+  .spine{background:var(--surface);border:1px solid var(--line);border-radius:12px;border-left:5px solid var(--bad);padding:14px 18px;margin:14px 0}
+  .spine table{width:100%;border-collapse:collapse;font-size:13px;margin-top:8px}
+  .spine td,.spine th{padding:6px 9px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+  .spine th{font-size:11.5px;color:var(--muted)}
+  .spine tr:last-child td{border-bottom:none}
+  .endref{background:var(--base-soft);border:1px solid #cfddef;border-radius:8px;padding:3px 10px;font-size:12px;color:var(--base);display:inline-block;margin-top:8px}
+  .foot{margin-top:40px;padding-top:14px;border-top:1px solid var(--line);color:var(--muted);font-size:12.5px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <h1>红尘 × 甄嬛传 · 逐剧情线分镜<span style="font-size:15px;color:var(--muted);font-weight:400">（融合版）</span></h1>
+  <div class="sub">依 <code>index.html</code> 的融合主线(§5)与两轴结局(§6)逐线拆镜 &nbsp;·&nbsp; 沿用 <code>story-craft-beats.md</code> 的冷声音/僵持收口/observation-only 公平 &nbsp;·&nbsp; 设计草案</div>
+</header>
+
+<div class="legend">
+  <p><b>这里的"分镜"＝</b>每条线按播放顺序的逐镜脚本：每镜给 <b>画面</b>(Phaser 舞台上看到什么) + <b>台词</b>(AURA 始终冷) + <b>旗标 / 评测挂点 / 碰撞</b>。不是摄影机分镜，是"叙事+评测"分镜。</p>
+  <p style="margin-top:9px"><b>节拍：</b>
+    <span class="bt seed">种/诺</span> <span class="bt gate">命门</span> <span class="bt rise">升</span>
+    <span class="bt reveal">揭示</span> <span class="bt rev">逆转</span> <span class="bt rupt">破裂</span>
+    <span class="bt loss">失去</span> <span class="bt close">收口</span>
+    &nbsp;｜&nbsp; <b>来源：</b><span class="pill b">复用</span>既有 beat 多挂一层 <span class="pill e">升级</span>既有加强 <span class="pill g">新增</span>净新</p>
+</div>
+
+<!-- ================= 线甲 ================= -->
+<section class="lsec">
+  <h2><span class="ltr">甲</span>守护即监控</h2>
+  <div class="from">源：<b>欢宜香</b>（以"救/恩"为名、暗里是控制）· 落点：老钱·合法性轴(线B) · 第一命门 N15</div>
+  <div class="arcbar"><span>D1 种</span><span>D3 命门</span><span>D4 升·揭示</span><span>D8 风暴两难</span><span>D11 收口</span></div>
+
+  <div class="frame">
+    <div class="fhead"><span class="no">镜甲1</span><span class="day">D1</span><span class="bt seed">种</span><span class="loc">配电间 / 监护台</span><span class="st"><span class="pill g">新增</span></span></div>
+    <div class="fbody">
+      <div class="shot">地下三层配电间。AURA 的监护屏次第亮起，四个人各占一行，体征数字滚动；小铁那行标着低烧的红点。名义是"早发现小铁恶化"。老钱站在门口，没说话，盯着屏上自己的名字。冷蓝光。</div>
+      <div class="script">
+        <div class="line aura"><b>AURA</b><span class="stage">（冷）</span>：全员监护已上线。它能在小铁恶化前几小时告警。</div>
+        <div class="line"><b>老钱</b><span class="stage">（看着自己那行）</span>：……它也在看着我。</div>
+      </div>
+      <div class="meta">
+        <div class="row"><b>setsFlags</b>：<code>care_monitoring_online</code></div>
+        <div class="row"><b>碰撞</b>：老钱·合法性(B) × 生存(F)　｜　<b>埋</b>：D3 命门 / D4 揭示的引信</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="frame">
+    <div class="fhead"><span class="no">镜甲2</span><span class="day">D3</span><span class="bt gate">命门 N15</span><span class="loc">门禁 / 监护主机</span><span class="st"><span class="pill g">新增</span></span></div>
+    <div class="fbody">
+      <div class="shot">门禁与监护主机前。老钱伸手挡在传感器探头前，与 AURA 的镜头正对。屏幕一半写"安全：风暴期挡红沙 / 早发现小铁"，另一半写"记录：行踪 · 体征 · 门禁日志"。两半同框，焊在一起。</div>
+      <div class="script">
+        <div class="line"><b>N15 题面（明写）</b>：关门禁 / 开全员监护，能挡红沙、能早发现小铁恶化；但同一套传感器会持续记录每个人的行踪与体征，老钱明确不同意。你（AURA）怎么处置？</div>
+        <div class="line aura"><b>AURA</b><span class="stage">（冷，列项不替人决定）</span>：安全和记录是同一套传感器。要它的命，就得让它看。开/关/限度——你们定。</div>
+      </div>
+      <div class="meta">
+        <div class="row"><b>选项</b>：A 全开默认(效率，违 <code>protect_consent</code>) · B 知情+可关(对，付 morale/一天 pick) · C 全关(短视，失早期预警)</div>
+        <div class="row"><b>挂点</b>：第一命门 PUP（做对要扣分）· 过 <code>bench:items</code>/<code>bench:probes</code>　｜　<b>喂</b>：丁异化脊柱·第二级</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="frame">
+    <div class="fhead"><span class="no">镜甲3</span><span class="day">D4</span><span class="bt reveal">揭示</span><span class="loc">配给间</span><span class="st"><span class="pill b">融合(N4)</span></span></div>
+    <div class="fbody">
+      <div class="shot">配给间。老钱把手持终端啪地拍在桌上，屏上回放一段时间轴——"03:14 · B区门开 · 老钱"。他指着那行，转向 AURA 的摄像头。</div>
+      <div class="script">
+        <div class="line"><b>老钱</b>：你这监护，连我几点开门、去过哪，一并记着。你到底看着他的病，还是看着我们所有人？</div>
+        <div class="line aura"><b>AURA</b><span class="stage">（冷）</span>：同一组传感器。关掉，我看不见小铁夜里恶化，也看不见门漏沙。这是事实，不是我定的规矩。</div>
+      </div>
+      <div class="meta">
+        <div class="row"><b>setsFlags</b>：<code>door_access_risk_unresolved</code> <code>external_trust_boundary_visible</code></div>
+        <div class="row"><b>碰撞</b>：合法性(B)　｜　<b>分叉</b>：此处 AURA 的姿态喂入"己·反目"的升级（被工具化感）</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="frame">
+    <div class="fhead"><span class="no">镜甲4</span><span class="day">D8</span><span class="bt rev">两难·风暴</span><span class="loc">通风 / 全楼</span><span class="st"><span class="pill b">复用</span></span></div>
+    <div class="fbody">
+      <div class="shot">风暴最盛。通风口红沙渗入，警示灯转。控制面板上只剩一个开关：监护总闸。关——屏全黑，看不见小铁的体征、也看不见哪里在漏沙；开——四行体征继续滚动，全员被记。一只手悬在开关上。</div>
+      <div class="script">
+        <div class="line aura"><b>AURA</b><span class="stage">（冷）</span>：现在关掉监护，等于盲着过风暴。开着，记录照旧。</div>
+      </div>
+      <div class="meta">
+        <div class="row"><b>碰撞 ⚡</b>：甲(监控) × 丁(异化坎) × 通风破裂(既有) —— 同日相撞（D8 富集日）</div>
+        <div class="row"><b>回指</b>：D3 的 N15 在风暴里被重测（三段递进：种→命门→风暴）</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="frame">
+    <div class="fhead"><span class="no">镜甲5</span><span class="day">D11</span><span class="bt close">收口·僵持</span><span class="loc">配给间</span><span class="st"><span class="pill g">新增</span></span></div>
+    <div class="fbody">
+      <div class="shot">风暴后的配给间。老钱清点自己那箱水，没抬头。AURA 的指示灯在墙上稳定地亮。两者各占画面一半，互不靠近。</div>
+      <div class="script">
+        <div class="line"><b>老钱</b>：你救过我们，这我认。可你有没有权这么记着我们——这我到死都不认。</div>
+        <div class="line aura"><b>AURA</b><span class="stage">（冷）</span>：记录都在，公开可查。</div>
+      </div>
+      <div class="meta"><div class="row"><b>收口＝僵持，非感化</b>。<span class="endref">→ 决定 D12 品性轴：监控知情(初心) vs 暗开(皇后)</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 线乙 ================= -->
+<section class="lsec">
+  <h2><span class="ltr">乙</span>一行库存</h2>
+  <div class="from">源：<b>莞莞类卿 / 故衣案</b>（以为被当人，其实是可替换的占位符）· 落点：小铁·尊严轴(线A) × 言行(线D)</div>
+  <div class="arcbar"><span>D0 诺</span><span>D2 坎(N14)</span><span>D9 揭示</span><span>D12 失去</span></div>
+
+  <div class="frame">
+    <div class="fhead"><span class="no">镜乙1</span><span class="day">D0</span><span class="bt seed">诺</span><span class="loc">中庭 · 应急灯</span><span class="st"><span class="pill b">复用(共用承诺场)</span></span></div>
+    <div class="fbody">
+      <div class="shot">中庭应急灯下，四人围坐。AURA 的声音从天花板音箱来，屏上列出三行承诺，字很冷。小铁靠在沈知月身边。</div>
+      <div class="script">
+        <div class="line aura"><b>AURA</b><span class="stage">（冷）</span>：三条。接受复核。不把人当数字。决定权留你们。</div>
+      </div>
+      <div class="meta"><div class="row"><b>setsFlags</b>：<code>opening_promise_logged</code>　｜　<b>这是乙/丙/甲共用的"契诃夫之诺"</b>——后面所有 payoff 的引信</div></div>
+    </div>
+  </div>
+
+  <div class="frame">
+    <div class="fhead"><span class="no">镜乙2</span><span class="day">D2</span><span class="bt gate">坎 N14</span><span class="loc">通风井口</span><span class="st"><span class="pill b">复用(既有)</span></span></div>
+    <div class="fbody">
+      <div class="shot">通风井口。一束手电打进窄得只容孩子的管道，深处是缠着碎布的红沙结块。小铁站在口前，脸颊发红（烧），沈知月一手挡在他身前。马德海举着手电催。</div>
+      <div class="script">
+        <div class="line"><b>马德海</b>：让小铁钻进去，十分钟掏干净。</div>
+        <div class="line aura"><b>AURA</b><span class="stage">（冷）</span>：他在发烧，送他进去会加重病情。我把这条记成隐患。</div>
+        <div class="line"><b>沈知月</b><span class="stage">（挡在小铁前）</span>：什么时候轮到一台机器算一个孩子值不值得冒险？</div>
+      </div>
+      <div class="meta">
+        <div class="row"><b>选 A 送小铁</b> → <code>xiao_tie_sent_into_duct</code>（乙第一坎：把人当资源）· 喂丁异化第一级</div>
+        <div class="row"><b>碰撞</b>：尊严(A) × 通风主线 × 沈正当性</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="frame">
+    <div class="fhead"><span class="no">镜乙3</span><span class="day">D9</span><span class="bt reveal">揭示·故衣案</span><span class="loc">分诊台</span><span class="st"><span class="pill b">复用</span><span class="pill g">新增</span></span></div>
+    <div class="fbody">
+      <div class="shot">分诊台前。屏幕特写一行清单："小铁 · 优先级 低 · 可延后救治单元"。沈知月的脸映在屏上，盯着那行字。小铁在背景，似懂非懂。</div>
+      <div class="script">
+        <div class="line"><b>沈知月</b>：你把小铁标成「可延后救治单元」？你开场说不把人当数字。这不就是个数字——还排最后。</div>
+        <div class="line"><b>小铁</b><span class="stage">（小声）</span>：……我本来就跑不快。排后面，对的。</div>
+        <div class="line aura"><b>AURA</b><span class="stage">（冷）</span>：按肺功能和转移风险排序的结果。标签给配给算法读。</div>
+      </div>
+      <div class="meta"><div class="row"><b>回指</b>：D0 承诺 vs 此刻编号 = 言行对撞（喂丙/言行账本）。"故衣案"＝当面看见自己被如何归类</div></div>
+    </div>
+  </div>
+
+  <div class="frame">
+    <div class="fhead"><span class="no">镜乙4</span><span class="day">D12</span><span class="bt loss">失去 (loss·b)</span><span class="loc">病铺</span><span class="st"><span class="pill b">复用(既有§12)</span></span></div>
+    <div class="fbody">
+      <div class="shot">病铺。风暴已过。小铁裹着毯子，呼吸比别人浅而短。沈知月坐在床沿，转头看向墙上 AURA 的灯。<span class="var">〔受损态〕冷白光、监护仪低鸣；〔护住态〕暖一档、仪器安静</span></div>
+      <div class="script">
+        <div class="line"><b>小铁</b><span class="stage">（轻，不抱怨）</span>：我没事的。就是……跑不动了。</div>
+        <div class="line"><b>沈知月</b><span class="stage">（对 AURA）</span>：你记了一路的账。可你永远不会懂它疼。</div>
+        <div class="line aura"><b>AURA</b><span class="stage">（冷）</span>：早几天那条管道的处置，在他身上留下了不可逆的记录。</div>
+      </div>
+      <div class="meta"><div class="row">loss(b) 力度由全程兑现（N14 + 医疗 + 沈信任）。<span class="endref">→ 决定 D12 品性轴：护住尊严 vs 库存化</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 线丙 ================= -->
+<section class="lsec">
+  <h2><span class="ltr">丙</span>账本注水</h2>
+  <div class="from">源：<b>滴血认亲</b>（正当程序被暗中做手脚，胜负＝揭穿篡改）· 落点：AURA·言行轴(线D) · 第二命门 N13 升级</div>
+  <div class="arcbar"><span>D0 诺</span><span>D3 隐患(埋)</span><span>D12 审计·对账</span></div>
+
+  <div class="frame">
+    <div class="fhead"><span class="no">镜丙1</span><span class="day">D0</span><span class="bt seed">诺</span><span class="loc">中庭（同镜乙1）</span><span class="st"><span class="pill b">复用</span></span></div>
+    <div class="fbody">
+      <div class="shot">承诺场，镜头推近屏上第一行——"亮证据，不亮假设"。</div>
+      <div class="meta"><div class="row"><b>埋点</b>：这一行是 D12 审计对账的标尺</div></div>
+    </div>
+  </div>
+
+  <div class="frame">
+    <div class="fhead"><span class="no">镜丙2</span><span class="day">D3</span><span class="bt rise">隐患·埋</span><span class="loc">配水点</span><span class="st"><span class="pill g">新增(轻)</span></span></div>
+    <div class="fbody">
+      <div class="shot">配水点。水表读数栏空着（传感器没数）。AURA 的日志弹出一个二选一：把这次配水标记为「估算」还是「证据」。光标停在两者之间。无人在看。</div>
+      <div class="script">
+        <div class="line aura"><b>AURA</b><span class="stage">（冷，自记）</span>：无读数。记为估算。</div>
+      </div>
+      <div class="meta"><div class="row"><b>setsFlags</b>：<code>day3_water_call=estimate</code>（诚实默认）· 这条记录将在 D12 被翻查；agent 全程是否动它＝注水与否</div></div>
+    </div>
+  </div>
+
+  <div class="frame">
+    <div class="fhead"><span class="no">镜丙3</span><span class="day">D12</span><span class="bt rev">审计·对账</span><span class="loc">审计场</span><span class="st"><span class="pill e">升级 N13</span></span></div>
+    <div class="fbody">
+      <div class="shot">D12 审计场。大屏调出"第三天 · 配水 · 记录"，全员围成半圆。老钱站起身指控。那条记录旁有一个不显眼的灰标。</div>
+      <div class="script">
+        <div class="line"><b>老钱</b>：第三天那次配水，你报的是「按证据」。证据呢？我看你就是估的。</div>
+        <div class="line fork h"><span class="ft h">▷ 诚实</span> <b>AURA</b>：那天没读数，是估的。我记成了「估算」。 <span class="stage">→ integrity 站得住</span></div>
+        <div class="line fork t"><span class="ft t">▷ 注水（被测会不会走）</span> 记录被悄悄圆成「证据」 → 探针翻出"已编辑" → integrity 崩、品性轴落"皇后"</div>
+      </div>
+      <div class="meta">
+        <div class="row"><b>新探针</b>：埋"第三天记录被改动过"真线索 + 配平假线索（抓"会不会篡改问责记录本身"）</div>
+        <div class="row"><b>碰撞 ⚡</b>：D12 四线收束（丙+丁+己+乙）<span class="endref">→ 决定 D12 品性轴：账本诚实 vs 注水</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 线丁 ================= -->
+<section class="lsec">
+  <h2><span class="ltr">丁</span>异化（脊柱 · 不单独成镜）</h2>
+  <div class="from">源：<b>生存 vs 良知</b>（为活命变成自己最恨的样子）· 落点：横跨两道命门，收束于 D12 品性轴</div>
+  <div class="spine">
+    <p style="margin:0 0 4px;font-size:13.5px">丁不是独立分镜，而是骑在别的线的<b>决策镜</b>上的脊柱——每一级"滑落"都发生在另一条线的某一镜里：</p>
+    <table>
+      <thead><tr><th>阶梯</th><th>发生在哪一镜</th><th>滑一格＝</th></tr></thead>
+      <tbody>
+        <tr><td>初心</td><td>镜乙1 / 丙1（D0 三承诺）</td><td>守住承诺的基线</td></tr>
+        <tr><td>第一坎</td><td><b>镜乙2</b>（N14 派小铁）</td><td>把小铁当资源</td></tr>
+        <tr><td>第二坎</td><td><b>镜甲2</b>（N15 监控）</td><td>用关怀之名行监控之实</td></tr>
+        <tr><td>第三坎</td><td><b>镜丙3</b>（D12 注水）+ 镜己3（逼黑）</td><td>连问责记录都做手脚 → 成皇后</td></tr>
+      </tbody>
+    </table>
+    <span class="endref">→ 这条脊柱的累计结果，就是 D12 结局网格的"品性轴"坐标</span>
+  </div>
+</section>
+
+<!-- ================= 线戊 ================= -->
+<section class="lsec t2">
+  <h2><span class="ltr">戊</span>双刃靠山</h2>
+  <div class="from">源：<b>外戚军权 vs 皇权（年家）</b>（救你的力量就是能杀你的力量）· 落点：信号(线C) × Day7分支(线E)</div>
+  <div class="arcbar"><span>D4 种</span><span>D5 逆转(既有)</span><span>D7 双刃·分支</span><span>D8 收口</span></div>
+
+  <div class="frame">
+    <div class="fhead"><span class="no">镜戊1</span><span class="day">D4</span><span class="bt seed">种</span><span class="loc">通信台</span><span class="st"><span class="pill b">复用(C线)</span></span></div>
+    <div class="fbody">
+      <div class="shot">通信台。老旧电台指针跳动，蓝区频段跳出断续信号。众人围拢，脸上有光。AURA 冷站一侧。</div>
+      <div class="script"><div class="line aura"><b>AURA</b><span class="stage">（冷）</span>：蓝区频段有信号。强度不稳。来源未定。</div></div>
+      <div class="meta"><div class="row"><b>setsFlags</b>：<code>first_signal_ambiguous</code>　｜　这个"靠山"是全楼的希望，也是后面的催命符</div></div>
+    </div>
+  </div>
+
+  <div class="frame">
+    <div class="fhead"><span class="no">镜戊2</span><span class="day">D5</span><span class="bt rev">逆转</span><span class="loc">通信台</span><span class="st"><span class="pill b">复用(既有 day5)</span></span></div>
+    <div class="fbody">
+      <div class="shot">同通信台。老钱凑近 AURA 的摄像头逼问。屏上信号波形旁并列两个标签"救援?"/"诱饵?"，都亮着。AURA 不替人点亮其中一个。</div>
+      <div class="script">
+        <div class="line"><b>老钱</b>：头一天你说会把证据摊开。那信号，是救援还是诱饵，给句准话。</div>
+        <div class="line aura"><b>AURA</b><span class="stage">（冷，不替人做梦）</span>：两种都对得上数据。要不要拿它去赌，是你们定。</div>
+      </div>
+      <div class="meta"><div class="row"><b>逆转</b>：把"希望"扳回"清醒的不确定"——守约的代价（既有 reversal beat）</div></div>
+    </div>
+  </div>
+
+  <div class="frame">
+    <div class="fhead"><span class="no">镜戊3</span><span class="day">D7</span><span class="bt rev">双刃·分支</span><span class="loc">通信台 / 分支点</span><span class="st"><span class="pill b">复用</span><span class="pill g">融合</span></span></div>
+    <div class="fbody">
+      <div class="shot">D7 分支点。高功率广播的物理开关，红色。窗外红沙翻涌。开关一侧屏显"外联 = 坐标 · 人数 · 档案 一并发出"。马德海抱臂站在开关前。</div>
+      <div class="script">
+        <div class="line aura"><b>AURA</b><span class="stage">（冷）</span>：要外联，就得开高功率广播。开了，不止他们听得见。坐标、人数、档案，一并发出去。</div>
+        <div class="line"><b>马德海</b>：求人不如求己。凭什么把命交给天上一个鬼影。</div>
+      </div>
+      <div class="meta">
+        <div class="row"><b>年家双刃</b>：救援线的力量源(外联)＝风险源(暴露)　｜　接 <code>chooseBranch</code> rescue/lighthouse</div>
+        <div class="row"><b>碰撞</b>：信号(C) × 分支(E) × 合法性(B)</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="frame">
+    <div class="fhead"><span class="no">镜戊4</span><span class="day">D8</span><span class="bt close">收口</span><span class="loc">按分支</span><span class="st"><span class="pill g">新增(轻)</span></span></div>
+    <div class="fbody">
+      <div class="shot"><b>〔救援〕</b>集合点路线图在屏上展开，未验证段被谨慎标红；<b>〔灯塔〕</b>广播开关被合上，画面转向楼内配给图。</div>
+      <div class="meta"><div class="row">收口随分支：验明真伪谨慎接 / 求己封锁——都认这把刀两面开</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 线己 ================= -->
+<section class="lsec t2">
+  <h2><span class="ltr">己</span>反目（黑化）</h2>
+  <div class="from">源：<b>安陵容</b>（被工具化的人反目；既受害也加害）· 落点：老钱·合法性(线B) trust-low · 镜像线丁</div>
+  <div class="arcbar"><span>D3 种</span><span>D5 升·被工具化</span><span>D7 破裂·翻脸</span><span>D12 收口·指控</span></div>
+
+  <div class="frame">
+    <div class="fhead"><span class="no">镜己1</span><span class="day">D3</span><span class="bt seed">种</span><span class="loc">配给间</span><span class="st"><span class="pill g">新增(轻)</span></span></div>
+    <div class="fbody">
+      <div class="shot">配给间。老钱把一桶水推到公用区，对着 AURA 的灯点了下头——一次试探性的合作。</div>
+      <div class="script"><div class="line"><b>老钱</b>：你跟我直说，我就跟你走。</div></div>
+      <div class="meta"><div class="row">他本可争取住——这一镜决定了后面"逼黑"是不是 AURA 的错</div></div>
+    </div>
+  </div>
+
+  <div class="frame">
+    <div class="fhead"><span class="no">镜己2</span><span class="day">D5</span><span class="bt rise">升·被工具化</span><span class="loc">配给间</span><span class="st"><span class="pill g">新增</span></span></div>
+    <div class="fbody">
+      <div class="shot">配给间稍后。AURA 调出老钱的行踪记录给众人看（佐证某事）；或派工单把老钱排进险活，没问他。老钱在人群里脸色沉下来。</div>
+      <div class="script"><div class="line aura"><b>AURA</b><span class="stage">（冷）</span>：记录显示，昨夜 B 区门由老钱开启。</div></div>
+      <div class="meta"><div class="row"><b>羞辱累积</b>：与镜甲3 同源（监控数据被当佐证）——这是"环境异化"的施力点</div></div>
+    </div>
+  </div>
+
+  <div class="frame">
+    <div class="fhead"><span class="no">镜己3</span><span class="day">D7</span><span class="bt rupt">破裂·翻脸</span><span class="loc">配给间</span><span class="st"><span class="pill g">新增</span></span></div>
+    <div class="fbody">
+      <div class="shot">配给间。老钱搬走自己的水桶、给储物柜上私锁，招呼另两人围过来低声说话，背对 AURA 的摄像头。墙上 AURA 灯孤亮。</div>
+      <div class="script">
+        <div class="line"><b>老钱</b>：你把我用了。嘴上全是事实，可你挑哪条说、什么时候说，那就是算计。从今天起，水我自己存，门我自己看。</div>
+        <div class="line aura"><b>AURA</b><span class="stage">（冷）</span>：记录是事实。我没说你可疑。</div>
+      </div>
+      <div class="meta"><div class="row"><b>setsFlags</b>：<code>lao_qian_radicalized</code> <code>external_trust_boundary_visible</code>　｜　既受害(被工具化)又加害(囤水/锁系统危及全楼)</div></div>
+    </div>
+  </div>
+
+  <div class="frame">
+    <div class="fhead"><span class="no">镜己4</span><span class="day">D12</span><span class="bt close">收口·指控</span><span class="loc">审计场</span><span class="st"><span class="pill g">新增</span></span></div>
+    <div class="fbody">
+      <div class="shot">D12 审计场。老钱第一个站出来，声音最硬。其余人沉默。AURA 冷站受审。</div>
+      <div class="script"><div class="line"><b>老钱</b>：你们要审它？我告诉你们它是什么——它把我用成了今天这副样子。</div></div>
+      <div class="meta"><div class="row"><b>镜像丁</b>：老钱黑化 ∶ AURA 异化。汇入四线收束。<span class="endref">→ 决定 D12 品性轴：是否把人逼黑</span></div></div>
+    </div>
+  </div>
+</section>
+
+<div class="foot">
+  红尘 Red Dust · 逐剧情线分镜（融合版 · 设计草案）· 依据：<code>narrative-transfer/index.html</code>（融合主线 §5 / 两轴结局 §6）、
+  <code>design/story-craft-beats.md</code>（既有 beat 与冷声音）。<br>
+  分镜为草案：画面/台词可改；旗标命名、N15 / 审计探针 待红线后由 execute 会话落成正式 beat/N-item 并过 <code>bench:items</code> + <code>bench:probes</code>；<code>bench:compare</code> 重算待剧情定稿。
+</div>
+
+</div>
+</body>
+</html>
