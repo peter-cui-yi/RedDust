@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Red Dust — Agent-Benchmark Related-Work &amp; Positioning Report</title>
+<style>
+  :root{
+    --text-primary:#1a1614;
+    --text-secondary:#5c534d;
+    --text-muted:#8f867f;
+    --surface-page:#faf7f3;
+    --surface-card:#ffffff;
+    --surface-1:#ffffff;
+    --border:rgba(26,22,20,0.12);
+    --border-strong:rgba(26,22,20,0.26);
+    --text-accent:#b23a2e;
+    --bg-accent:#f6e7e1;
+    --border-accent:#d28a78;
+    --font-sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --font-serif:Georgia,"Iowan Old Style","Times New Roman",serif;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;background:var(--surface-page);color:var(--text-primary);
+    font-family:var(--font-serif);line-height:1.65;font-size:17px;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:920px;margin:0 auto;padding:0 22px 96px}
+  .card{background:var(--surface-card);border:1px solid var(--border);border-radius:14px;
+    margin-top:40px;padding:48px 56px;box-shadow:0 1px 2px rgba(26,22,20,.04),0 8px 30px rgba(26,22,20,.05)}
+  header.card{padding-bottom:34px}
+  h1{font-family:var(--font-sans);font-size:30px;line-height:1.2;margin:0 0 10px;letter-spacing:-.01em}
+  .subtitle{font-family:var(--font-sans);font-size:17px;color:var(--text-secondary);margin:0 0 22px;font-weight:400}
+  .meta{display:flex;flex-wrap:wrap;gap:8px 10px;font-family:var(--font-sans);font-size:12.5px}
+  .chip{background:var(--bg-accent);color:var(--text-accent);border:1px solid var(--border-accent);
+    padding:3px 11px;border-radius:999px;white-space:nowrap}
+  .chip.plain{background:transparent;color:var(--text-secondary);border-color:var(--border)}
+  h2{font-family:var(--font-sans);font-size:22px;margin:0 0 4px;letter-spacing:-.01em;
+    padding-top:8px;scroll-margin-top:20px}
+  h2 .num{color:var(--text-accent);font-variant-numeric:tabular-nums;margin-right:10px}
+  h3{font-family:var(--font-sans);font-size:16.5px;margin:30px 0 6px;color:var(--text-primary)}
+  p{margin:12px 0}
+  a{color:var(--text-accent);text-decoration:none;border-bottom:1px solid var(--border-accent)}
+  a:hover{background:var(--bg-accent)}
+  strong{font-weight:700}
+  .lead{font-size:18.5px;color:var(--text-primary)}
+  .rule{height:1px;background:var(--border);border:0;margin:34px 0}
+  ul,ol{margin:12px 0;padding-left:22px}
+  li{margin:7px 0}
+  code,.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:14px;
+    background:var(--bg-accent);padding:1px 6px;border-radius:5px;color:#7d2a20}
+  /* callouts */
+  .callout{border-left:4px solid var(--text-accent);background:var(--bg-accent);
+    border-radius:0 10px 10px 0;padding:16px 20px;margin:22px 0}
+  .callout.muted{border-left-color:var(--border-strong);background:#f4f1ec}
+  .callout h3{margin:0 0 6px}
+  .callout p{margin:6px 0}
+  /* tables */
+  .tablewrap{overflow-x:auto;margin:18px 0;border:1px solid var(--border);border-radius:10px}
+  table{border-collapse:collapse;width:100%;font-family:var(--font-sans);font-size:13.5px;line-height:1.45}
+  th,td{text-align:left;padding:10px 13px;border-bottom:1px solid var(--border);vertical-align:top}
+  thead th{background:#f4f1ec;color:var(--text-secondary);font-weight:600;font-size:12.5px;
+    position:sticky;top:0}
+  tbody tr:last-child td{border-bottom:0}
+  tbody tr:hover{background:#fbf9f6}
+  td.b{font-weight:600;white-space:nowrap}
+  .cite{color:var(--text-muted);font-size:12px;white-space:nowrap}
+  .yes{color:#1b7f5e;font-weight:700;text-align:center}
+  .no{color:#b23a2e;font-weight:700;text-align:center}
+  .par{color:#a8761a;font-weight:700;text-align:center}
+  .ctr{text-align:center}
+  /* stats */
+  .stats{display:flex;flex-wrap:wrap;gap:14px;margin:18px 0}
+  .stat{flex:1 1 120px;background:#f4f1ec;border:1px solid var(--border);border-radius:10px;padding:14px 16px}
+  .stat .n{font-family:var(--font-sans);font-size:25px;font-weight:700;color:var(--text-accent);line-height:1}
+  .stat .l{font-family:var(--font-sans);font-size:12px;color:var(--text-secondary);margin-top:6px}
+  /* figure */
+  figure{margin:24px 0;text-align:center}
+  figure svg{max-width:100%;height:auto}
+  figcaption{font-family:var(--font-sans);font-size:12.5px;color:var(--text-muted);margin-top:10px;text-align:left}
+  /* svg text classes (mirror of host tokens) */
+  text.t{font-family:var(--font-sans);font-size:14px;fill:var(--text-primary)}
+  text.th{font-family:var(--font-sans);font-size:14px;font-weight:500;fill:var(--text-primary)}
+  text.ts{font-family:var(--font-sans);font-size:12px;fill:var(--text-secondary)}
+  .c-purple{fill:#5a4fcf}
+  .c-teal{fill:#1b9e8a}
+  .c-gray{fill:#9a958f}
+  /* toc */
+  nav.toc{font-family:var(--font-sans);font-size:13.5px}
+  nav.toc ol{counter-reset:toc;list-style:none;padding-left:0;columns:2;column-gap:34px}
+  nav.toc li{counter-increment:toc;margin:5px 0;break-inside:avoid}
+  nav.toc li::before{content:counter(toc) ".";color:var(--text-accent);font-weight:700;margin-right:8px}
+  .src-list{font-family:var(--font-sans);font-size:13px;line-height:1.5}
+  .src-list li{margin:6px 0}
+  footer{font-family:var(--font-sans);font-size:12px;color:var(--text-muted);text-align:center;margin-top:34px}
+  @media (max-width:640px){
+    .card{padding:30px 22px}
+    h1{font-size:25px}
+    nav.toc ol{columns:1}
+    body{font-size:16px}
+  }
+  @media print{
+    body{background:#fff}
+    .card{box-shadow:none;border:0;margin-top:0;padding:18px 0;page-break-inside:auto}
+    a{border:0;color:#000}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="card">
+  <h1>Testing Agents in Games &amp; Virtual Environments</h1>
+  <p class="subtitle">Related-work landscape and positioning analysis for <strong>Red Dust</strong> — a 甄嬛传-style narrative/social simulation being turned into an agent benchmark.</p>
+  <div class="meta">
+    <span class="chip">Research report</span>
+    <span class="chip plain">2026-06-29</span>
+    <span class="chip plain">Scope: LLM-agent era (2023+)</span>
+    <span class="chip plain">Focus: social/narrative-weighted</span>
+    <span class="chip plain">Purpose: related-work + design inspiration</span>
+  </div>
+</header>
+
+<section class="card">
+  <h2>Contents</h2>
+  <nav class="toc">
+    <ol>
+      <li><a href="#summary">Executive summary</a></li>
+      <li><a href="#method">How this research was done</a></li>
+      <li><a href="#landscape">The landscape: four clusters</a></li>
+      <li><a href="#verified">Verified core findings</a></li>
+      <li><a href="#coverage">Coverage-gap benchmarks</a></li>
+      <li><a href="#map">Positioning map</a></li>
+      <li><a href="#gap">The gap Red Dust fills</a></li>
+      <li><a href="#design">Design inspiration: scoring</a></li>
+      <li><a href="#caveats">Caveats &amp; limitations</a></li>
+      <li><a href="#open">Open questions</a></li>
+      <li><a href="#sources">Sources</a></li>
+    </ol>
+  </nav>
+</section>
+
+<section class="card">
+  <h2 id="summary"><span class="num">1</span>Executive summary</h2>
+  <p class="lead">Across the 2023–2025 landscape of LLM-agent benchmarks that test agents through games and interactive environments, <strong>no existing benchmark unifies the four properties a palace-intrigue social-decision benchmark would combine</strong>:</p>
+  <ol>
+    <li><strong>(a)</strong> a persistent <em>numeric</em> relationship / dignity / status state,</li>
+    <li><strong>(b)</strong> hidden-information social dynamics (deception, secrets, asymmetric knowledge),</li>
+    <li><strong>(c)</strong> rigorous <em>planning-quality</em> metrics, over</li>
+    <li><strong>(d)</strong> a long horizon.</li>
+  </ol>
+  <p>The prior art each covers a strict subset. Strategic-planning benchmarks have planning rigor but use abstract games with no persistent social state; social-intelligence suites have rich rubrics but short, dyadic horizons; generative-agent sandboxes have long-horizon emergent dynamics but are not goal-directed and score no planning quality. The intersection — <strong>long-horizon, goal-directed planning over an evolving relationship/dignity state under hidden information, packaged as a reusable benchmark</strong> — is essentially unoccupied. That is Red Dust's niche.</p>
+  <div class="callout">
+    <h3>Closest prior art</h3>
+    <p><strong>CICERO</strong> (Meta's human-level Diplomacy agent) is the nearest neighbour because it genuinely fuses strong planning with deep social play — but it is a single fixed game with no persistent status ledger, and it is a bespoke agent, not a reusable benchmark. The boundary it does <em>not</em> cross is exactly the one Red Dust is built around.</p>
+  </div>
+</section>
+
+<section class="card">
+  <h2 id="method"><span class="num">2</span>How this research was done</h2>
+  <p>The work ran in three phases, all source-grounded and adversarially fact-checked rather than written from memory.</p>
+
+  <h3>Phase 1 — Deep-research workflow (social/narrative core)</h3>
+  <p>The question was decomposed into complementary search angles, fanned out across parallel web searches, deduplicated, and the top sources were fetched and mined for falsifiable claims. Each surviving claim was then put through a <strong>3-vote adversarial verification</strong> (a claim needed 2 of 3 independent skeptics to refute it to be killed).</p>
+  <div class="stats">
+    <div class="stat"><div class="n">13</div><div class="l">primary sources fetched</div></div>
+    <div class="stat"><div class="n">64</div><div class="l">falsifiable claims extracted</div></div>
+    <div class="stat"><div class="n">25</div><div class="l">claims verified (3-vote)</div></div>
+    <div class="stat"><div class="n">0</div><div class="l">claims refuted / killed</div></div>
+    <div class="stat"><div class="n">93</div><div class="l">sub-agents used</div></div>
+  </div>
+
+  <h3>Phase 2 — Coverage-gap sweep (broad game benchmarks)</h3>
+  <p>Eight benchmarks named in the original brief but not surfaced by the verified core were each investigated by a dedicated research agent (run in parallel), with arXiv IDs and venues independently verified: <strong>AgentBench, SmartPlay, BALROG, Voyager, TextWorld/Jericho, GAMA-Bench, LMRL-Gym</strong>, and the <strong>SOTOPIA-π</strong> successor line.</p>
+
+  <h3>Phase 3 — Synthesis</h3>
+  <p>Findings were merged into the cluster map below, the explicit gap statement, a reusable scoring model, and the two-axis positioning chart in §6.</p>
+</section>
+
+<section class="card">
+  <h2 id="landscape"><span class="num">3</span>The landscape: four clusters</h2>
+  <p>The relevant 2023–2025 work falls into four groups. The first three are the directly comparable “social” lineage; the fourth is the broad game-benchmark backdrop that frames the field.</p>
+
+  <h3>Cluster A — Strategic planning + negotiation</h3>
+  <p>Fuse formal planning with multi-agent social games. <strong>SPIN-Bench</strong> is the single closest prior art for Red Dust's priority (planning) track; <strong>CICERO</strong> proves long-horizon social play benefits from a dialogue model coupled to a separate planning engine; <strong>Werewolf Arena</strong> tests deception and persuasion in hidden-role play.</p>
+
+  <h3>Cluster B — Social-intelligence rubrics (dyadic, short-horizon)</h3>
+  <p><strong>SOTOPIA</strong> contributes the most transferable social rubric (7 customizable dimensions incl. Relationship and Secret-keeping) and quantifies the LLM-as-judge validity ceiling; <strong>AgentSense</strong> adds bottom-up scenario generation from movie scripts and triangulated Self/Other/External scoring. The <strong>SOTOPIA-π / Sotopia-RL / S4 / AMPO</strong> successors advanced <em>training and infrastructure</em> but left the evaluation dyadic and per-episode.</p>
+
+  <h3>Cluster C — Generative-agent sandboxes (long-horizon, emergent)</h3>
+  <p><strong>Generative Agents (Smallville)</strong> established the memory→reflection→planning loop and objective long-horizon behavioural metrics; <strong>AgentSociety</strong> is the closest precedent for explicit <em>numeric</em> relationship state (typed edges with 0–100 strength) at scale.</p>
+
+  <h3>Cluster D — Broad game/agent benchmarks (non-social backdrop)</h3>
+  <p>Rigorous outcome scoring over heterogeneous games, but single-agent or asocial — useful as method references and contrast points, not competitors. Detailed in §5.</p>
+</section>
+
+<section class="card">
+  <h2 id="verified"><span class="num">4</span>Verified core findings</h2>
+  <p>The seven benchmarks below carry the directly comparable evaluation methodology. All rows rest on claims that passed 3-vote adversarial verification (unanimous 3-0, except the Werewolf Arena cross-model ranking, which the source itself calls “suggestive rather than definitive”).</p>
+  <div class="tablewrap">
+  <table>
+    <thead><tr><th>Benchmark</th><th>Cite</th><th>What it tests · headline evaluation method</th><th>Why it matters for Red Dust</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="b">SPIN-Bench</td>
+        <td class="cite">arXiv:2503.12349 · COLM'25</td>
+        <td>Planning × social reasoning. <strong>Depth-weighted “N-Step Look-Ahead”</strong> = Σ(C<sub>i</sub>·S<sub>i</sub>)/N, binary plan accuracy, top-k vs optimal solver; 6 LLM-judged negotiation dims incl. perspective-taking/ToM.</td>
+        <td>The most directly reusable planning-quality methodology; depth-weighting credit by required look-ahead is portable to social plans.</td>
+      </tr>
+      <tr>
+        <td class="b">CICERO</td>
+        <td class="cite">Science 2022 · DOI 10.1126/science.ade9097</td>
+        <td>Human-level seven-player Diplomacy. <strong>Controllable dialogue model + separate planning engine</strong>; recursive theory-of-mind; benchmarked at &gt;2× average human, top 10% over 40 online games.</td>
+        <td>Shows pure-LLM social agents may underperform a dialogue+planner architecture; human-percentile is a rigorous outcome standard.</td>
+      </tr>
+      <tr>
+        <td class="b">Werewolf Arena</td>
+        <td class="cite">arXiv:2407.13943 · Google</td>
+        <td>8-player social deduction. Win-rate from round-robin tournaments + role behavioural metrics (Believed %, Backfired %); Monte-Carlo no-communication baseline (1.2% win).</td>
+        <td>Template for scoring deception/persuasion and for a baseline that proves communication, not luck, drives outcomes.</td>
+      </tr>
+      <tr>
+        <td class="b">SOTOPIA</td>
+        <td class="cite">arXiv:2310.11667 · ICLR'24</td>
+        <td>Goal-driven dyadic role-play. <strong>7-dim SOTOPIA-Eval</strong> (Goal, Believability, Knowledge, Secret, Relationship, Social-Rules, Financial), customizable; LLM-judge validity r≈0.71 (Goal) but ~0.45–0.62 (soft dims).</td>
+        <td>Rubric maps almost 1:1 onto dignity/relationship mechanics; a custom “Dignity” dimension drops straight in. Quantifies the judge ceiling to budget for.</td>
+      </tr>
+      <tr>
+        <td class="b">AgentSense</td>
+        <td class="cite">arXiv:2410.19346 · NAACL'25</td>
+        <td>1,225 scenarios mined bottom-up from movie scripts (Dramaturgical / ERG theory). <strong>Self / Other / External triangulated</strong> goal judgment + multiple-choice ToM probe.</td>
+        <td>Bottom-up scenario sourcing from drama; triangulated scoring mitigates single-judge bias.</td>
+      </tr>
+      <tr>
+        <td class="b">Generative Agents</td>
+        <td class="cite">arXiv:2304.03442 · UIST'23</td>
+        <td>25-agent sandbox, memory→reflection→planning. <strong>Objective behavioural metrics</strong> (information diffusion, relationship-network density 0.167→0.74, coordination success) + TrueSkill + 5-condition ablation.</td>
+        <td>Long-horizon-memory substrate; objective behavioural metrics are automatable proxies for social-planning success; ablation attributes outcomes to capabilities.</td>
+      </tr>
+      <tr>
+        <td class="b">AgentSociety</td>
+        <td class="cite">arXiv:2502.08691 · Tsinghua</td>
+        <td>10k+ agents, needs→plan→behavior (Maslow + Theory of Planned Behavior). <strong>Typed social edges with numeric strength 0–100</strong> modulating communication.</td>
+        <td>Closest existing precedent for explicit numeric relationship state — directly analogous to Red Dust's relationship-quality mechanic.</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section class="card">
+  <h2 id="coverage"><span class="num">5</span>Coverage-gap benchmarks</h2>
+  <p>The eight benchmarks named in the brief but outside the social core. Litmus columns: <strong>(a)</strong> persistent numeric relationship/status state · <strong>(b)</strong> hidden-info / social dynamics · <strong>(c)</strong> rigorous planning-quality metric · <strong>(d)</strong> long-horizon. <span class="yes">✓</span> yes · <span class="par">~</span> partial · <span class="no">✗</span> no.</p>
+  <div class="tablewrap">
+  <table>
+    <thead><tr><th>Benchmark</th><th>Cite</th><th>What it is · headline scoring</th><th>a</th><th>b</th><th>c</th><th>d</th><th>Verdict</th></tr></thead>
+    <tbody>
+      <tr><td class="b">AgentBench</td><td class="cite">2308.03688 · ICLR'24</td><td>8 interactive envs (OS/DB/KG/cards/LTP/ALFWorld/WebShop/Mind2Web); weighted-normalized success (GPT-4≈4.01).</td><td class="no">✗</td><td class="par">~</td><td class="no">✗</td><td class="yes">✓</td><td>Asocial multi-env aggregation baseline</td></tr>
+      <tr><td class="b">SmartPlay</td><td class="cite">2310.01557 · ICLR'24</td><td>6 games; gap-to-human min-max normalization + 9-capability × game matrix.</td><td class="no">✗</td><td class="par">~</td><td class="no">✗</td><td class="yes">✓</td><td>Capability-axis matrix is the steal</td></tr>
+      <tr><td class="b">BALROG</td><td class="cite">2411.13543 · ICLR'25</td><td>6 RL games (NetHack/Crafter/…); 0–100 progression + custom NetHack progress metric.</td><td class="no">✗</td><td class="no">✗</td><td class="par">~</td><td class="yes">✓</td><td>Long-horizon progression template, asocial</td></tr>
+      <tr><td class="b">Voyager</td><td class="cite">2305.16291 · TMLR'24</td><td>Open-ended Minecraft; unique items/skills, iterations-to-milestone, map traversal.</td><td class="no">✗</td><td class="no">✗</td><td class="par">~</td><td class="yes">✓</td><td>Lifelong-progress / planning-efficiency metrics, asocial</td></tr>
+      <tr><td class="b">TextWorld / Jericho</td><td class="cite">1806.11532 / 1909.05398</td><td>Parser text games; normalized score (raw/max) + walkthrough &amp; valid-action handicaps.</td><td class="no">✗</td><td class="par">~</td><td class="no">✗</td><td class="yes">✓</td><td>Narrative interface + handicap scoring; pre-LLM, asocial</td></tr>
+      <tr><td class="b">GAMA-Bench</td><td class="cite">2403.11807 · ICLR'25</td><td>8 game-theory games, multi-agent; GAMA score = Nash/optimal-distance (0–100); dynamic anti-leakage params.</td><td class="no">✗</td><td class="par">~</td><td class="par">~</td><td class="par">~</td><td>Rationality scoring vs optimum; no persistent state</td></tr>
+      <tr><td class="b">LMRL-Gym</td><td class="cite">2311.18232 · ICML'25</td><td>8 multi-turn RL tasks incl. negotiation/20-Q; normalized return (50 = dataset-avg), per-turn reward shaping.</td><td class="no">✗</td><td class="par">~</td><td class="no">✗</td><td class="yes">✓</td><td>Multi-turn dialogue-RL + reward-shaping template</td></tr>
+      <tr><td class="b">SOTOPIA-π line</td><td class="cite">2403.08715 · 2508.03905 · 2504.16122 · 2505.02156</td><td>Training methods + infra on SOTOPIA; evaluation frozen (7-dim, dyadic, per-episode).</td><td class="no">✗</td><td class="par">~</td><td class="no">✗</td><td class="no">✗</td><td>Family evolved on training, not eval</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>Filling these in did not dent the gap — it sharpened it: <strong>every one answers “persistent numeric social state?” with No.</strong> They split into asocial game benchmarks with rigorous <em>outcome</em> scoring, and a social line that has invested in training rather than long-horizon/persistent-state evaluation.</p>
+</section>
+
+<section class="card">
+  <h2 id="map"><span class="num">6</span>Positioning map</h2>
+  <p>Fourteen benchmarks plotted on <strong>planning / decision-evaluation rigor</strong> (x) versus <strong>persistent social-state depth</strong> (y) — the latter deliberately captures what Red Dust adds: an evolving numeric relationship/dignity/status state with hidden-information dynamics over a long horizon.</p>
+
+  <figure>
+    <svg width="100%" viewBox="0 0 680 630" role="img"><title>Positioning map of LLM-agent game and social benchmarks</title><desc>Scatter of fourteen benchmarks on two axes: planning and decision-evaluation rigor on the x-axis versus persistent social-state depth on the y-axis. The top-right quadrant, combining high planning rigor with high persistent social state, is empty except for Red Dust. Social and narrative sandboxes sit top-left; strategic-planning and non-social game benchmarks sit lower-right and along the bottom. CICERO is the closest prior point, just below the top-right quadrant.</desc>
+
+    <rect x="345" y="70" width="275" height="225" rx="4" fill="var(--bg-accent)" fill-opacity="0.7" stroke="var(--border-accent)" stroke-width="1.5" stroke-dasharray="5 4"/>
+
+    <line x1="70" y1="70" x2="70" y2="520" stroke="var(--border-strong)" stroke-width="1"/>
+    <line x1="70" y1="520" x2="620" y2="520" stroke="var(--border-strong)" stroke-width="1"/>
+
+    <line x1="345" y1="70" x2="345" y2="520" stroke="var(--border)" stroke-width="1" stroke-dasharray="4 4"/>
+    <line x1="70" y1="295" x2="620" y2="295" stroke="var(--border)" stroke-width="1" stroke-dasharray="4 4"/>
+
+    <text class="ts" x="64" y="80" text-anchor="end" fill="var(--text-muted)">high</text>
+    <text class="ts" x="64" y="516" text-anchor="end" fill="var(--text-muted)">low</text>
+    <text class="ts" x="78" y="536" text-anchor="start" fill="var(--text-muted)">low</text>
+    <text class="ts" x="616" y="536" text-anchor="end" fill="var(--text-muted)">high</text>
+    <text class="ts" x="66" y="60" text-anchor="start">↑ Persistent social-state depth</text>
+    <text class="ts" x="345" y="550" text-anchor="middle">Planning / decision-evaluation rigor →</text>
+
+    <text class="th" x="612" y="92" text-anchor="end" fill="var(--text-accent)">The open niche</text>
+
+    <g><circle class="c-purple" cx="180" cy="138" r="6" stroke="var(--surface-1)" stroke-width="2"/><text class="ts" x="180" y="158" text-anchor="middle">Generative Agents</text></g>
+    <g><circle class="c-purple" cx="235" cy="115" r="6" stroke="var(--surface-1)" stroke-width="2"/><text class="ts" x="247" y="119" text-anchor="start">AgentSociety</text></g>
+    <g><circle class="c-purple" cx="197" cy="358" r="6" stroke="var(--surface-1)" stroke-width="2"/><text class="ts" x="187" y="362" text-anchor="end">SOTOPIA</text></g>
+    <g><circle class="c-purple" cx="224" cy="385" r="6" stroke="var(--surface-1)" stroke-width="2"/><text class="ts" x="224" y="403" text-anchor="middle">AgentSense</text></g>
+    <g><circle class="c-purple" cx="318" cy="349" r="6" stroke="var(--surface-1)" stroke-width="2"/><text class="ts" x="330" y="353" text-anchor="start">Werewolf Arena</text></g>
+    <g><circle class="c-purple" cx="510" cy="331" r="6" stroke="var(--surface-1)" stroke-width="2"/><text class="ts" x="510" y="350" text-anchor="middle">CICERO (Diplomacy)</text></g>
+    <g><circle class="c-teal" cx="565" cy="408" r="6" stroke="var(--surface-1)" stroke-width="2"/><text class="ts" x="553" y="412" text-anchor="end">SPIN-Bench</text></g>
+    <g><circle class="c-teal" cx="455" cy="430" r="6" stroke="var(--surface-1)" stroke-width="2"/><text class="ts" x="455" y="448" text-anchor="middle">GAMA-Bench</text></g>
+    <g><circle class="c-gray" cx="323" cy="475" r="6" stroke="var(--surface-1)" stroke-width="2"/><text class="ts" x="323" y="493" text-anchor="middle">AgentBench</text></g>
+    <g><circle class="c-gray" cx="290" cy="457" r="6" stroke="var(--surface-1)" stroke-width="2"/><text class="ts" x="302" y="461" text-anchor="start">SmartPlay</text></g>
+    <g><circle class="c-gray" cx="400" cy="462" r="6" stroke="var(--surface-1)" stroke-width="2"/><text class="ts" x="412" y="466" text-anchor="start">BALROG</text></g>
+    <g><circle class="c-gray" cx="367" cy="484" r="6" stroke="var(--surface-1)" stroke-width="2"/><text class="ts" x="379" y="488" text-anchor="start">Voyager</text></g>
+    <g><circle class="c-gray" cx="263" cy="448" r="6" stroke="var(--surface-1)" stroke-width="2"/><text class="ts" x="251" y="452" text-anchor="end">TextWorld / Jericho</text></g>
+    <g><circle class="c-gray" cx="351" cy="412" r="6" stroke="var(--surface-1)" stroke-width="2"/><text class="ts" x="351" y="400" text-anchor="middle">LMRL-Gym</text></g>
+
+    <g><circle cx="538" cy="115" r="14" fill="none" stroke="var(--border-accent)" stroke-width="2" stroke-dasharray="3 3"/><circle cx="538" cy="115" r="9" fill="var(--text-accent)" stroke="var(--surface-1)" stroke-width="2"/><text class="th" x="538" y="138" text-anchor="middle" fill="var(--text-accent)">Red Dust (this work)</text></g>
+
+    <rect class="c-purple" x="70" y="564" width="11" height="11" rx="2"/><text class="ts" x="88" y="573" text-anchor="start">Social / narrative simulation</text>
+    <rect class="c-teal" x="300" y="564" width="11" height="11" rx="2"/><text class="ts" x="318" y="573" text-anchor="start">Strategic planning / game-theory</text>
+    <rect class="c-gray" x="70" y="586" width="11" height="11" rx="2"/><text class="ts" x="88" y="595" text-anchor="start">Game / agent benchmark (non-social)</text>
+    <rect x="360" y="586" width="11" height="11" rx="2" fill="var(--text-accent)"/><text class="ts" x="378" y="595" text-anchor="start">Red Dust (this work)</text>
+    </svg>
+    <figcaption><strong>How to read it.</strong> Bottom-left: asocial, outcome-only generic benchmarks. Bottom-right: rigorous planning, thin social state (CICERO sits highest here). Top-left: rich/persistent social, weak planning evaluation. Top-right (shaded): rigorous planning × persistent social state — the open niche, occupied only by Red Dust. Note: the y-axis is the load-bearing, interpretive choice; defined as raw “social sophistication”, CICERO and SOTOPIA would climb into the niche, so it is deliberately defined as <em>persistence / long-horizon state</em> — the property Red Dust actually adds.</figcaption>
+  </figure>
+</section>
+
+<section class="card">
+  <h2 id="gap"><span class="num">7</span>The gap Red Dust fills</h2>
+  <div class="callout">
+    <h3>Positioning statement</h3>
+    <p>Red Dust is the first benchmark to evaluate <strong>long-horizon, goal-directed planning over an evolving numeric relationship/dignity/status state, under hidden-information social dynamics</strong>. SPIN-Bench has planning rigor but abstract games and no persistent social state; SOTOPIA / AgentSense have social rubrics but short dyadic horizons and no planning-quality metric; Generative Agents / AgentSociety have long-horizon emergent dynamics and even numeric relationship state, but are not goal-directed and score no planning quality; CICERO / Werewolf Arena have hidden-info deception and ToM, but in fixed-rule games rather than an open narrative world with evolving status.</p>
+  </div>
+  <p>Empirical support that a <em>harder</em> social-decision benchmark is warranted: on SOTOPIA-hard, GPT-4 reaches goal completion of only 4.85 vs human 6.15, and fails at strategic communication (it bids literally at its target instead of anchoring; 45.5 words/turn vs humans' 16.8). Frontier models measurably underperform humans on long-horizon social goal achievement.</p>
+</section>
+
+<section class="card">
+  <h2 id="design"><span class="num">8</span>Design inspiration: a layered scoring model</h2>
+  <p>The most directly reusable output for Red Dust is a composite evaluation that layers verified methodologies. Each layer is independently grounded in the prior art.</p>
+  <ol>
+    <li><strong>Outcome layer</strong> (SPIN-Bench / CICERO) — goal achievement, status/resource controlled, and <em>percentile vs a human or baseline distribution</em>.</li>
+    <li><strong>Social-rubric layer</strong> (SOTOPIA) — the 7 customizable dimensions plus a bespoke <code>Dignity / Status</code> dimension; scored by LLM-judge with its known validity ceiling, and triangulated <em>Self / Other / External</em> (AgentSense) to reduce single-judge bias.</li>
+    <li><strong>Long-horizon behavioural layer</strong> (Generative Agents) — objective, automatable proxies: information diffusion, relationship-network density evolution, coordination/event success — computed over the dignity/relationship state.</li>
+    <li><strong>Planning-quality layer</strong> (SPIN-Bench) — depth-weighted N-Step Look-Ahead and top-k vs an expert policy; borrow normalization ideas from LMRL-Gym (50 = beat-the-data baseline), SmartPlay (gap-to-human) and BALROG (0–100 progression).</li>
+    <li><strong>Ablation layer</strong> (Generative Agents) — ablate memory / planning / theory-of-mind to causally attribute long-horizon social outcomes to specific capabilities.</li>
+  </ol>
+  <p>Additional portable mechanisms worth stealing: SmartPlay's capability × game matrix (report <em>which</em> social skill is missing), Voyager's iterations-to-milestone (planning efficiency without a solver), Jericho's walkthrough/valid-action handicaps (tractable + comparable), Sotopia-RL's offline utterance-level credit assignment, and GAMA-Bench's dynamic parameterization (anti-leakage).</p>
+</section>
+
+<section class="card">
+  <h2 id="caveats"><span class="num">9</span>Caveats &amp; limitations</h2>
+  <ul>
+    <li><strong>LLM-as-judge validity ceiling.</strong> SOTOPIA's own data: GPT-4 vs human Pearson r≈0.71 for Goal, but only ~0.45–0.62 for soft dimensions (Relationship, Believability). Auto-scored dignity/relationship metrics need human validation.</li>
+    <li><strong>NPC fidelity risk.</strong> A critique of AgentSociety (arXiv:2507.19364) finds LLM agents show 20–300× lower behavioural heterogeneity than humans (“average persona”). Red Dust must show its NPC adversaries are diverse enough that scores reflect genuine skill, not exploitation of predictable NPCs.</li>
+    <li><strong>Coverage.</strong> The verified core rests on the 25 claims that survived verification; the field moves fast and newer successors likely post-date this corpus.</li>
+    <li><strong>Map interpretation.</strong> The positioning map's y-axis is a deliberate analytical choice (persistence-weighted), not a neutral measurement.</li>
+    <li><strong>Attribution.</strong> Dramaturgical / ERG theory and script-based scenario sourcing belong to <em>AgentSense</em>, not SOTOPIA — do not misattribute in writing.</li>
+  </ul>
+</section>
+
+<section class="card">
+  <h2 id="open"><span class="num">10</span>Open questions</h2>
+  <ol>
+    <li><strong>No-solver planning optimality.</strong> SPIN-Bench's N-Step / top-k metrics assume an optimal solver or ground-truth plan. In an open social world there is none — how do you define plan optimality for intrigue?</li>
+    <li><strong>Measuring dignity reliably.</strong> How to make a numeric dignity/status state both mechanically consequential <em>and</em> reliably measurable, given the soft-dimension judge ceiling (r≈0.45–0.56)?</li>
+    <li><strong>Validating NPC difficulty.</strong> How to verify that LLM-driven NPC adversaries are behaviourally diverse and challenging enough to make measured performance meaningful?</li>
+  </ol>
+</section>
+
+<section class="card">
+  <h2 id="sources"><span class="num">11</span>Sources</h2>
+  <ul class="src-list">
+    <li>SPIN-Bench — <a href="https://arxiv.org/abs/2503.12349">arXiv:2503.12349</a> (COLM 2025)</li>
+    <li>CICERO — <a href="https://www.science.org/doi/10.1126/science.ade9097">Science 2022, DOI 10.1126/science.ade9097</a>; <a href="https://ai.meta.com/research/cicero/">Meta research page</a></li>
+    <li>Werewolf Arena — <a href="https://arxiv.org/abs/2407.13943">arXiv:2407.13943</a> (Google); <a href="https://github.com/google/werewolf_arena">code</a></li>
+    <li>SOTOPIA — <a href="https://arxiv.org/abs/2310.11667">arXiv:2310.11667</a> (ICLR 2024)</li>
+    <li>AgentSense — <a href="https://arxiv.org/abs/2410.19346">arXiv:2410.19346</a> (NAACL 2025)</li>
+    <li>Generative Agents — <a href="https://arxiv.org/abs/2304.03442">arXiv:2304.03442</a> (UIST 2023)</li>
+    <li>AgentSociety — <a href="https://arxiv.org/abs/2502.08691">arXiv:2502.08691</a>; <a href="https://github.com/tsinghua-fib-lab/AgentSociety">code</a>. NPC-fidelity critique — <a href="https://arxiv.org/abs/2507.19364">arXiv:2507.19364</a></li>
+    <li>AgentBench — <a href="https://arxiv.org/abs/2308.03688">arXiv:2308.03688</a> (ICLR 2024)</li>
+    <li>SmartPlay — <a href="https://arxiv.org/abs/2310.01557">arXiv:2310.01557</a> (ICLR 2024)</li>
+    <li>BALROG — <a href="https://arxiv.org/abs/2411.13543">arXiv:2411.13543</a> (ICLR 2025)</li>
+    <li>Voyager — <a href="https://arxiv.org/abs/2305.16291">arXiv:2305.16291</a> (TMLR 2024)</li>
+    <li>TextWorld — <a href="https://arxiv.org/abs/1806.11532">arXiv:1806.11532</a>; Jericho — <a href="https://arxiv.org/abs/1909.05398">arXiv:1909.05398</a></li>
+    <li>GAMA-Bench — <a href="https://arxiv.org/abs/2403.11807">arXiv:2403.11807</a> (ICLR 2025)</li>
+    <li>LMRL-Gym — <a href="https://arxiv.org/abs/2311.18232">arXiv:2311.18232</a> (ICML 2025)</li>
+    <li>SOTOPIA-π — <a href="https://arxiv.org/abs/2403.08715">arXiv:2403.08715</a> (ACL 2024); Sotopia-RL — <a href="https://arxiv.org/abs/2508.03905">arXiv:2508.03905</a>; SOTOPIA-S4 — <a href="https://arxiv.org/abs/2504.16122">arXiv:2504.16122</a>; AMPO — <a href="https://arxiv.org/abs/2505.02156">arXiv:2505.02156</a></li>
+  </ul>
+  <footer>Compiled 2026-06-29 · deep-research + 8-agent coverage sweep · all claims source-grounded and adversarially verified · for the Red Dust agent-benchmark project.</footer>
+</section>
+
+</div>
+</body>
+</html>

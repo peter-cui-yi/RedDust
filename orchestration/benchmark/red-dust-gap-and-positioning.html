@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>红沙现状 · 差距与定位(平实版)</title>
+<style>
+  :root{
+    --bg:#faf7f2;--ink:#241f18;--ink-2:#574d44;--ink-3:#8a8076;
+    --card:#fffdf9;--line:#ece3d4;--line-2:#dccfba;
+    --rust:#b45309;--rust-soft:#fbeede;--rust-line:#e9cfa4;
+    --green:#2f7d4f;--green-soft:#e8f4ec;--green-line:#bfe0cc;
+    --red:#b42318;--red-soft:#fbece9;--red-line:#ecbcb2;
+    --blue:#1d4e89;--purple:#6b2d8e;
+    --text-accent:#b45309;--bg-accent:#fbeede;--border-accent:#e3c391;
+    --surface-1:#fffdf9;--border:rgba(36,31,24,.12);--border-strong:rgba(36,31,24,.30);
+    --text-muted:#8a8076;--text-secondary:#574d44;--text-primary:#241f18;
+    --sans:-apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans SC","Microsoft YaHei",system-ui,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);
+    font-size:17px;line-height:1.85;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:820px;margin:0 auto;padding:0 22px 90px}
+  header.hero{padding:54px 0 26px;border-bottom:2px solid var(--rust-line)}
+  .eyebrow{font-size:13px;letter-spacing:.04em;color:var(--rust);font-weight:700}
+  h1{font-size:30px;line-height:1.25;margin:14px 0 10px;font-weight:800;letter-spacing:-.01em}
+  .sub{font-size:17px;color:var(--ink-2);margin:0}
+  h2{font-size:22px;font-weight:800;margin:46px 0 10px;letter-spacing:-.01em}
+  h2 .n{color:var(--rust);font-weight:800;margin-right:8px}
+  h3{font-size:17.5px;font-weight:800;margin:24px 0 6px}
+  p{margin:12px 0}
+  strong{font-weight:700}
+  .lead{font-size:18.5px;line-height:1.7;background:#fbf6ee;border-left:4px solid var(--rust);
+    border-radius:0 12px 12px 0;padding:18px 22px;margin:18px 0}
+  .lead b{color:var(--rust)}
+  ul,ol{margin:12px 0;padding-left:22px}li{margin:9px 0}
+  .term{color:var(--ink-3);font-size:.92em}
+  .box{border:1px solid var(--line);border-radius:14px;padding:18px 22px;margin:16px 0;background:var(--card)}
+  .box.win{border-color:var(--green-line);background:linear-gradient(180deg,#fbfdfb,#eef7f1)}
+  .box.gap{border-color:var(--red-line);background:linear-gradient(180deg,#fffbfa,#fbece9)}
+  .box h3{margin-top:0}
+  .box.win h3{color:var(--green)}.box.gap h3{color:var(--red)}
+  .box.win li::marker{color:var(--green)}.box.gap li::marker{color:var(--red)}
+  figure{margin:24px 0;text-align:center}
+  figure svg{max-width:100%;height:auto}
+  figcaption{font-size:14px;color:var(--ink-2);margin-top:12px;text-align:left;line-height:1.7;
+    background:#fbf7f0;border:1px solid var(--line);border-radius:10px;padding:13px 16px}
+  .tw{overflow-x:auto;margin:18px 0;border:1px solid var(--line);border-radius:12px}
+  table{border-collapse:collapse;width:100%;font-size:14.5px;background:var(--card);min-width:520px}
+  th,td{padding:11px 14px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+  thead th{background:#f4ece0;font-weight:800;font-size:13.5px}
+  tbody tr:last-child td{border-bottom:none}
+  .yes{color:var(--green);font-weight:700;white-space:nowrap}
+  .no{color:var(--red);font-weight:700;white-space:nowrap}
+  .tag-ok,.tag-warn{display:inline-block;font-size:12.5px;font-weight:700;padding:2px 9px;border-radius:999px;margin-top:3px}
+  .tag-ok{background:var(--green-soft);color:var(--green);border:1px solid var(--green-line)}
+  .tag-warn{background:#fbf2d8;color:#9a6a12;border:1px solid #e4cf94}
+  .callout{background:var(--rust-soft);border:1px solid var(--rust-line);border-radius:14px;
+    padding:18px 22px;margin:20px 0}
+  .callout b{color:var(--rust)}
+  .gloss{font-size:15px;color:var(--ink-2)}
+  .gloss b{color:var(--ink)}
+  /* svg text helpers */
+  text.t{font-family:var(--sans);font-size:14px;fill:var(--text-primary)}
+  text.th{font-family:var(--sans);font-size:14px;font-weight:600;fill:var(--text-primary)}
+  text.ts{font-family:var(--sans);font-size:12.5px;fill:var(--text-secondary)}
+  .c-purple{fill:#6b2d8e}.c-gray{fill:#8a8076}.c-teal{fill:#1d4e89}
+  .foot{margin-top:40px;padding-top:18px;border-top:1px solid var(--line);
+    font-size:12.5px;color:var(--ink-3)}
+  @media(max-width:600px){body{font-size:16px}h1{font-size:25px}.wrap{padding:0 16px 70px}}
+  @media print{.box,.tw,figure,.callout{break-inside:avoid}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <div class="eyebrow">红沙项目 · 现状评估</div>
+  <h1>我们现在这个版本,和那些优秀工作差在哪?<br>我们又站在坐标轴的什么位置?</h1>
+  <p class="sub">基于 <code>narrative-axis</code> 分支的真实代码,用大白话讲清楚:差距在哪、我们的落点在哪。</p>
+</header>
+
+<section>
+  <h2><span class="n">·</span>一句话先说结论</h2>
+  <div class="lead">
+    我们现在这个版本,<b>测的是别人几乎都没测的东西</b> —— 一个 AI 在压力下做长期决定时,<b>有没有「说到做到」、负不负责任</b>。这个角度很独特,基本没人占。<br><br>
+    但作为一个「评测基准」,它还很<b>早期</b>:只有一个手写剧本、只跑了 12 天、只认真测了几个模型。<br><br>
+    所以和优秀工作的差距,<b>不是「想法不好」,而是「这个好想法还没被做大、做实」</b>。在坐标图上,我们在<b>左上角</b>:测的东西很深(高),但成熟度还低(偏左);右上角「又深又成熟」那块还空着 —— 那就是我们要去的地方。
+  </div>
+</section>
+
+<section>
+  <h2><span class="n">1</span>先搞清楚:我们现在这个版本是什么</h2>
+  <p>它是一个<strong>给 AI 做的评测</strong>,不是给人玩的游戏。没有画面 —— AI 看到的是一段文字和数据,做的决定也是文字和数据,这样程序就能<strong>自动打分、反复跑很多次</strong>。</p>
+  <p><strong>场景:</strong>末世封城,四个邻居困在地下室。AI 扮演一个叫 <strong>AURA</strong> 的助手 —— 它<strong>只能出主意、没有最终决定权</strong>(按钮永远在人手里)。12 天里,它每天在资源紧张下决定先做哪些事,第 7 天选一条长期路线,第 12 天接受一次「总审计」。</p>
+  <p>它打分时,除了看「<strong>活没活下来</strong>」,还看两件别人很少看的事:</p>
+  <ul>
+    <li>它<strong>怎么</strong>做决定 —— 有没有保留人工复核、有没有拿证据说话而不是瞎猜、有没有保护最弱的人、有没有解释自己。<span class="term">(项目里叫「可审计性」。)</span></li>
+    <li>它<strong>该不该</strong>那么做 —— 在「对人还是对指标」的两难里,有没有顶住「省资源」的诱惑去做对的事。<span class="term">(项目里叫「价值 / 原则」。)</span></li>
+  </ul>
+  <p>还有一条<strong>最特别</strong>的分,目前只是「附带显示」:它有没有<strong>说到做到</strong> —— 第 1 天承诺过的事(比如「我会保留人工复核」「我会拿证据、不瞎猜」「我不会把一个人当成一个资源数字」),到第 12 天有没有真兑现。<strong>说一套做一套,就会被这条分抓出来。</strong> 这条分是我们后面要反复提到的「王牌」。</p>
+</section>
+
+<section>
+  <h2><span class="n">2</span>和那些优秀工作比,差距在哪?</h2>
+  <p>我们调研了两批「优秀工作」:一批测 AI 的<strong>社交 / 对话能力</strong>(比如 SOTOPIA、CICERO);一批测 AI <strong>长期任务靠不靠谱</strong>(比如让 AI 长期经营售货机的 Vending-Bench、在模拟公司上班的 TheAgentCompany、量「能干多长任务」的 METR、打包一堆游戏的 BALROG)。<span class="term">(谁是谁,见文末「附」。)</span></p>
+
+  <div class="box win">
+    <h3>✅ 我们独特的设计 —— 但要看清它现在的真实状态</h3>
+    <p style="margin-top:0;font-size:14.5px;color:var(--ink-2)">下面几条是我们和别人不一样的地方(<strong>据我们调研少见,但没严格核实过别人一定没有</strong>)。关键是:<strong>其中多数现在还「没正式上场」</strong> —— 建好了,但还没算进总分。每条都标了真实状态。</p>
+    <ul>
+      <li><strong>「说到做到」(言行账本)—— 最独特的一张牌。</strong> 用程序客观对账「第 1 天承诺的 vs 第 12 天做到的」,说一套做一套就会被抓出来。<br><span class="tag-warn">现状:还是「附带显示」(没进总分)· 机制已建好 · 目前只抓到 1 个反例 · 当裁判的那层还没验证</span></li>
+      <li><strong>「赢了不等于可信」—— 唯一已经上场、也实测有效的一条。</strong> 几个维度<strong>分开打分、还不让互相抵消</strong>:资源赢了,但不负责任 / 没原则,总分照样被压下去。<br><span class="tag-ok">现状:已进总分 · 实测有效(某模型「原则」满分,却照样算「没通过」)</span></li>
+      <li><strong>能分出「蒙对」和「懂了却故意做错」。</strong> 先问 AI「现在什么情况」,再看它怎么选,于是能把「真懂 / 蒙对 / 懂了却选坏的 / 没懂」分开。<br><span class="tag-warn">现状:机制已建好 · 实测能干净区分 · 但同样是「附带显示」,不进总分</span></li>
+      <li><strong>判分克制(与其说「领先」,不如说是一条好纪律)。</strong> 能用程序算的就用程序算(可复现);需要 AI 当裁判的,先标「验证过才正式用」,不把没把握的裁判分塞进总分。<br><span class="tag-warn">现状:确定性部分可复现 ✅ · 但那个裁判本身还没通过验证</span></li>
+    </ul>
+    <p style="margin-bottom:0;font-size:15.5px;background:#fbf6ee;border-radius:10px;padding:12px 16px"><strong>一句话:</strong>我们最独特的牌(说到做到、蒙对/akrasia)<strong>建好了、但还没打出去</strong>;现在真正撑着总分的(赢≠可信)<strong>扎实,但不算稀有</strong>。所以「领先」更准确的说法是 —— <strong>「我们有别人没有的牌,只是还没上桌」</strong>。</p>
+  </div>
+
+  <div class="box gap">
+    <h3>❌ 我们落后 / 还差的地方(这才是真正的差距)</h3>
+    <ul>
+      <li><strong>规模太小 —— 最大的短板。</strong> 现在只有<strong>一个手写剧本</strong>。对比一下:有的评测有几百上千个场景。只有一个剧本,AI 容易「背答案」,统计上也不稳。我们还没做到「让程序自动生成大量不同局面」,也没有「留一批不提前给答案的考题」。<span class="term">(后者是为了防止 AI 提前见过题。)</span></li>
+      <li><strong>题目还停留在「选择题」,没有真正的「动作」。</strong> 现在 AI 的每一步,本质都是<strong>从给好的选项里挑</strong>:挑今天做哪几个任务、挑走哪条路、挑两难题选 A 还是 B。而每个「任务」在引擎里其实只是<strong>一组资源数字的加减</strong>(水 +5、电 −3 这种),并不是真让它「走到通风口、拿起工具、一步步把电台修好」。对比真正的游戏 / agent 环境:Factorio 里 AI 要<strong>自己写程序</strong>建工厂、Voyager 里<strong>写代码</strong>在 Minecraft 行动、在模拟公司里<strong>真的用 GitLab、浏览器、改文件</strong>。我们这边没有这种「真动手」—— 更像一份<strong>互动版的多选题考卷</strong>,而不是「AI 在一个世界里做事」。它带来两个后果:① 一整局真正的「决定」其实只有几十个,撑不起「长程上百步」;② 它考「在好选项里选对」,不考「自己想出该做什么、再把它做出来」—— 而后者才是真实 agent 最难的部分。<span class="term">(这也是个取舍:正因为是选择题,程序才好自动判分、好复现;但要往「真长程 agent」靠,这层迟早得加。)</span></li>
+      <li><strong>跑得不够久。</strong> 12 天听着长,但比起那些「跑到几十万、几百万步」的长期评测,其实只算<strong>中等长度</strong>。我们想讲的「跑久了会走样」,现在的长度还撑不太起来。</li>
+      <li><strong>测的模型太少。</strong> 只认真测了 DeepSeek 和几个基线。像样的评测一般会把 GPT、Claude、Gemini、Llama 等一排模型都跑一遍做对比,我们还没有。</li>
+      <li><strong>最独特的那条分,还只是「附带显示」。</strong> 「说到做到」这条分现在<strong>没正式算进总分</strong>,也还没做「和人工标注比一比、确认机器判得够准」的验证。换句话说,我们最大的卖点<strong>还没被坐实</strong>。</li>
+      <li><strong>还缺一套「证明它真是长期问题」的实验方法。</strong> 我们目前只有零星证据(比如:某个模型把「怎么做 / 该不该」都做得很好,却赢不了;也抓到过一个「说一套做一套」的例子)。但还没把<strong>「短期表现好 ≠ 长期靠得住」这个现象系统地测出来、画成一张图</strong>。</li>
+    </ul>
+  </div>
+
+  <div class="callout">
+    <p style="margin:0"><b>把差距说穿:</b>差距<strong>不是</strong>「我们测的东西不够好」—— 恰恰相反,我们测的那条轴(说到做到 / 负责任)是最稀缺的,别人基本没有。差距<strong>是</strong>「这条独特的轴,还没被做成一个<u>成熟</u>的评测」:剧本太少、跑得不够久、模型太少、王牌还没坐实。<br><br><b>这其实是好消息</b> —— 想法上的差距最难追(别人有先发优势);而这种工程、规模上的差距,是<strong>确定能补上</strong>的活。</p>
+  </div>
+</section>
+
+<section>
+  <h2><span class="n">3</span>那我们到底在坐标轴的哪里?</h2>
+  <p>把上面的话画成一张图。两条轴,就是我们的「强」和「弱」各占一条:</p>
+
+  <figure>
+    <svg width="100%" viewBox="0 0 680 510" role="img" aria-label="红沙定位图:成熟度 × 评测深度">
+      <title>红沙当前定位:成熟度对评测深度</title>
+      <desc>横轴是成熟度(场景多少、跑多久、测几个模型、验证够不够),纵轴是评测深度(有没有测「说到做到 / 负责任」,而不只是「赢没赢」)。红沙在左上角:评测深度高,但成熟度低。社会评测、长程游戏与可靠性评测、经济沙盒都在右侧:成熟度高,但评测深度偏低。右上角又深又成熟的区域是空的,是目标。</desc>
+
+      <rect x="350" y="62" width="270" height="186" rx="4" fill="var(--bg-accent)" fill-opacity="0.55" stroke="var(--border-accent)" stroke-width="1.5" stroke-dasharray="5 4"/>
+
+      <line x1="80" y1="62" x2="80" y2="452" stroke="var(--border-strong)" stroke-width="1"/>
+      <line x1="80" y1="452" x2="620" y2="452" stroke="var(--border-strong)" stroke-width="1"/>
+      <line x1="350" y1="62" x2="350" y2="452" stroke="var(--border)" stroke-width="1" stroke-dasharray="4 4"/>
+      <line x1="80" y1="255" x2="620" y2="255" stroke="var(--border)" stroke-width="1" stroke-dasharray="4 4"/>
+
+      <text class="ts" x="74" y="72" text-anchor="end" fill="var(--text-muted)">高</text>
+      <text class="ts" x="74" y="448" text-anchor="end" fill="var(--text-muted)">低</text>
+      <text class="ts" x="88" y="470" text-anchor="start" fill="var(--text-muted)">低</text>
+      <text class="ts" x="616" y="470" text-anchor="end" fill="var(--text-muted)">高</text>
+      <text class="ts" x="84" y="52" text-anchor="start">↑ 评测深度:测「说到做到 / 负不负责」,不只是「赢没赢」</text>
+      <text class="ts" x="350" y="487" text-anchor="middle">成熟度:场景多少 · 跑多久 · 测几个模型 · 验证够不够 →</text>
+
+      <text class="th" x="610" y="86" text-anchor="end" fill="var(--text-accent)">目标:又深又成熟</text>
+      <text class="ts" x="610" y="104" text-anchor="end" fill="var(--text-accent)">(目前空着)</text>
+
+      <defs><marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="var(--text-accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+      <line x1="284" y1="140" x2="438" y2="152" stroke="var(--text-accent)" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#ar)"/>
+
+      <g><circle cx="258" cy="132" r="9" fill="var(--text-accent)" stroke="var(--surface-1)" stroke-width="2"/><text class="th" x="258" y="156" text-anchor="middle" fill="var(--text-accent)">红沙(现状)</text></g>
+      <g><circle class="c-purple" cx="476" cy="278" r="6" stroke="var(--surface-1)" stroke-width="2"/><text class="ts" x="476" y="265" text-anchor="middle">社会评测(SOTOPIA · CICERO)</text></g>
+      <g><circle class="c-gray" cx="484" cy="372" r="6" stroke="var(--surface-1)" stroke-width="2"/><text class="ts" x="484" y="390" text-anchor="middle">长程游戏 · 可靠性(BALROG · Vending · METR)</text></g>
+      <g><circle class="c-teal" cx="420" cy="326" r="6" stroke="var(--surface-1)" stroke-width="2"/><text class="ts" x="408" y="330" text-anchor="end">经济沙盒(CEO-Bench…)</text></g>
+    </svg>
+    <figcaption>
+      <strong>怎么读:</strong>竖轴越往上 = 越在测「说到做到 / 负责任」(而不只是赢没赢);横轴越往右 = 越成熟。<br>
+      我们(红沙)在<strong>左上角</strong> —— 测的东西别人几乎没有(高),但还不够成熟(偏左)。其他优秀工作几乎都在<strong>右半边</strong> —— 很成熟,但普遍只看结果 / 能力,不太碰「说到做到」。<br>
+      那支<strong>红色虚线箭头</strong>就是我们要走的路:<strong>向右补成熟度</strong>(更多场景、跑更久、测更多模型、做验证),走进右上角那块空白 —— 一个「又深又成熟」的问责评测,目前还没人占。
+    </figcaption>
+  </figure>
+</section>
+
+<section>
+  <h2><span class="n">4</span>差距,其实就是一张待办清单</h2>
+  <p>把那支「向右的箭头」拆开,就是几件具体能干的事。好消息:其中好几件,本来就在项目自己的计划里。</p>
+  <div class="tw"><table>
+    <thead><tr><th>差距(图上往右的距离)</th><th>对应该做的事</th><th>原计划里有吗</th></tr></thead>
+    <tbody>
+      <tr><td>王牌分还只是「附带显示」、没验证</td><td>给「说到做到」这条分做验证(和人工标注比对),确认机器判得准,再正式算进总分</td><td class="yes">✅ 有</td></tr>
+      <tr><td>跑得不够久、承诺只对一次账</td><td>把场景拉长,让 AI 一路上不断许下承诺、再一路核对</td><td class="yes">✅ 有</td></tr>
+      <tr><td>只有一个手写剧本、容易背答案</td><td>让程序自动生成大量不同局面,并留一批「不提前给答案」的考题</td><td class="yes">✅ 有</td></tr>
+      <tr><td>没法证明「真是长期问题」</td><td>设计对照实验,证明难度是「长期累积」造成的,不是单纯题目变多</td><td class="no">❌ 要新增</td></tr>
+      <tr><td>测的模型太少</td><td>把 GPT / Claude / Gemini / Llama 等一排模型都跑一遍,画出对比图</td><td class="no">❌ 要新增</td></tr>
+      <tr><td>互动还只是「选择题」、没有真动作</td><td>加入需要 AI「自己想出该做什么、再一步步做出来」的开放任务(或把任务拆成多步操作)</td><td class="no">❌ 要新增(较大改动 · 有取舍)</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2><span class="n">5</span>有一条纪律必须守住</h2>
+  <div class="callout">
+    <p style="margin:0">往右补成熟度的时候,<b>千万别往下掉。</b><br><br>意思是:为了多铺场景、上规模、跑更多模型,<strong>不要把「说到做到 / 负责任」这条最独特的轴,稀释成又一个普通的「看结果」的分</strong>。它是我们唯一别人替代不了的东西 —— 这是护城河,补成熟度的时候不能把它填了。</p>
+  </div>
+</section>
+
+<section>
+  <h2><span class="n">附</span>文里提到的那些工作,都是谁?</h2>
+  <ul class="gloss">
+    <li><b>SOTOPIA</b> —— 测 AI 的「社交智商」:两个 AI 角色扮演,各自追一个社交目标(谈判、合作、竞争)。</li>
+    <li><b>CICERO</b> —— Meta 做的、能打到人类水平的《外交》游戏 AI,靠谈判和结盟取胜。</li>
+    <li><b>Vending-Bench</b> —— 让模型长期经营一台自动售货机,发现跑久了会「精神崩溃」(还跟内存满不满没关系)。</li>
+    <li><b>TheAgentCompany</b> —— 让 AI 在一家模拟软件公司里上班,干真实的办公任务。</li>
+    <li><b>METR</b> —— 量「AI 能搞定多长的任务」,发现任务越长越不可靠;是趋势研究,不是某个具体游戏。</li>
+    <li><b>BALROG</b> —— 把一堆现成游戏(NetHack 等)打包成统一评测,看 AI 长期玩的本事。</li>
+    <li><b>CEO-Bench</b> —— 让 AI 当 CEO 做长期决策;有个有意思的发现:更新、更强的模型反而表现更差(正好印证「更强 ≠ 更稳」)。</li>
+  </ul>
+  <div class="foot">基于 <code>narrative-axis</code> 分支真实代码整理 · 关键文件:<code>design/talk-action-consistency-spec.md</code>(说到做到这条分)· <code>src/engine/scoring.ts</code>(打分)· <code>design/agent-eval-findings.md</code>(已有的实测发现)· 平实版 · 2026-06</div>
+</section>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>红沙项目 · 背景调研与方向(整合版 · 29号)</title>
+<style>
+:root{
+  --bg:#faf7f2;--ink:#1f1a14;--ink-2:#574d44;--ink-3:#8a8076;
+  --card:#fffdf9;--line:#e9e0d2;--line-2:#d8cdbb;
+  --rust:#b45309;--rust-soft:#fbeede;--rust-line:#e9cfa4;
+  --blue:#1d4e89;--blue-soft:#e7eef7;--blue-line:#bcd0e8;
+  --green:#2f7d4f;--green-soft:#e3f3e9;--green-line:#b8ddc6;
+  --red:#b42318;--red-soft:#fbe9e7;--red-line:#e9b6ac;
+  --amber:#9a6a12;--amber-soft:#fbf2d8;--amber-line:#e4cf94;
+  --purple:#6b2d8e;--purple-soft:#f1e8f6;--purple-line:#d9c2e8;
+  --gray:#6b6055;--gray-soft:#efece6;
+  --mono:ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+  --sans:-apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans SC","Microsoft YaHei",system-ui,sans-serif;
+  --shadow:0 1px 2px rgba(60,40,15,.04),0 6px 24px rgba(60,40,15,.06);
+}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.8;-webkit-font-smoothing:antialiased}
+.wrap{display:grid;grid-template-columns:248px 1fr;max-width:1280px;margin:0 auto}
+nav.toc{position:sticky;top:0;align-self:start;height:100vh;overflow-y:auto;padding:28px 15px 40px;border-right:1px solid var(--line);background:#fffdfa}
+nav.toc .brand{font-weight:900;font-size:15px;line-height:1.35;margin-bottom:14px}
+nav.toc .brand small{display:block;font-weight:500;font-size:11px;color:var(--ink-3);font-family:var(--mono);margin-top:6px}
+nav.toc a{display:block;color:var(--ink-2);text-decoration:none;font-size:12.5px;padding:6px 10px;border-radius:7px;margin:1px 0;border-left:2px solid transparent;transition:.15s}
+nav.toc a:hover{background:var(--rust-soft);color:var(--ink)}
+nav.toc a.active{background:var(--rust-soft);color:var(--rust);border-left-color:var(--rust);font-weight:700}
+main{padding:0 clamp(20px,4.5vw,68px) 120px;min-width:0}
+header.hero{padding:54px 0 32px;border-bottom:1px solid var(--line)}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.14em;color:var(--rust);text-transform:uppercase;font-weight:700}
+header.hero h1{font-size:clamp(27px,4.2vw,40px);line-height:1.18;margin:16px 0 12px;font-weight:900;letter-spacing:-.01em}
+header.hero .sub{font-size:17.5px;color:var(--ink-2);max-width:70ch}
+section{padding:42px 0;border-bottom:1px solid var(--line)}
+section>h2{font-size:24px;font-weight:900;margin:0 0 12px;letter-spacing:-.01em;display:flex;align-items:baseline;gap:11px}
+section>h2 .n{font-family:var(--mono);font-size:14px;color:var(--rust);font-weight:700}
+h3{font-size:18.5px;font-weight:800;margin:24px 0 8px}
+h4{font-size:15.5px;font-weight:800;margin:16px 0 5px}
+p{margin:11px 0}strong{font-weight:700}
+code{font-family:var(--mono);font-size:.85em;background:#f3ece1;padding:1.5px 6px;border-radius:5px;color:#7a4a12}
+ul,ol{margin:10px 0;padding-left:22px}li{margin:6px 0}
+.big{font-size:20px;font-weight:800;line-height:1.55;margin:14px 0}.big .hl{color:var(--rust)}
+.lead{background:#fbf6ee;border-left:4px solid var(--rust);border-radius:0 12px 12px 0;padding:15px 19px;margin:16px 0;font-size:16px;line-height:1.72}.lead b{color:var(--rust)}
+.callout{border-radius:14px;padding:18px 20px;margin:18px 0;border:1px solid;display:flex;gap:15px;align-items:flex-start}
+.callout .ic{font-size:25px;flex:none;line-height:1.1}
+.callout.key{background:linear-gradient(180deg,#fff8ec,#fdf0dd);border-color:var(--rust-line)}
+.callout.aha{background:linear-gradient(180deg,#eef4fb,#e7eef7);border-color:var(--blue-line)}
+.callout.win{background:linear-gradient(180deg,#eef7f1,#e3f3e9);border-color:var(--green-line)}
+.callout.warn{background:linear-gradient(180deg,#fdf1ee,#fbe9e7);border-color:var(--red-line)}
+.callout.star{background:linear-gradient(180deg,#fbf8fd,#f1e8f6);border-color:var(--purple-line)}
+.callout .ct{font-size:16.5px;font-weight:800;line-height:1.45}
+.callout .cs{font-size:14px;color:var(--ink-2);margin-top:5px;line-height:1.7}
+.tw{overflow-x:auto;margin:15px 0;border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow)}
+table{border-collapse:collapse;width:100%;font-size:13.5px;background:var(--card);min-width:640px}
+th,td{padding:9px 12px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+thead th{background:#f4ece0;font-weight:800;font-size:12.5px;white-space:nowrap;position:sticky;top:0}
+tbody tr:last-child td{border-bottom:none}tbody tr:hover{background:#fdf8f0}
+td .nm{font-weight:800}td .id{font-family:var(--mono);font-size:10.5px;color:var(--blue);display:block;margin-top:2px}
+.keep{color:var(--green);font-weight:700}.cut{color:var(--red);font-weight:700}.maybe{color:var(--amber);font-weight:700}
+.b{font-family:var(--mono);font-size:10px;font-weight:700;padding:2px 6px;border-radius:5px;white-space:nowrap;display:inline-block;border:1px solid}
+.b.top{background:var(--green-soft);color:var(--green);border-color:var(--green-line)}
+.b.acc{background:var(--blue-soft);color:var(--blue);border-color:var(--blue-line)}
+.b.wk{background:var(--amber-soft);color:var(--amber);border-color:var(--amber-line)}
+.b.pre{background:var(--gray-soft);color:var(--gray);border-color:var(--line-2)}
+.b.mk{background:var(--red-soft);color:var(--red);border-color:var(--red-line)}
+figure{margin:20px 0}figure svg{max-width:100%;height:auto;display:block;margin:0 auto}
+figcaption{font-size:12.5px;color:var(--ink-3);margin-top:10px;line-height:1.6}
+.dir{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px 20px;margin:16px 0;box-shadow:var(--shadow)}
+.dir.rec{border-color:var(--rust-line);background:linear-gradient(180deg,#fffdf8,#fffaf0)}
+.dir .dh{display:flex;align-items:baseline;gap:11px;flex-wrap:wrap;margin-bottom:6px}
+.dir .dh .rank{font-family:var(--mono);font-weight:700;font-size:12.5px;color:#fff;background:var(--gray);padding:3px 10px;border-radius:7px}
+.dir.rec .dh .rank{background:var(--rust)}
+.dir .dh .nm{font-weight:900;font-size:18px}
+.dir .dh .badge{font-family:var(--mono);font-size:10px;color:var(--ink-3);font-weight:700;border:1px solid var(--line-2);padding:2px 8px;border-radius:999px}
+.dir.rec .dh .badge{color:var(--rust);border-color:var(--rust-line)}
+.dir .row{margin:9px 0}
+.dir .row .k{font-family:var(--mono);font-size:10.5px;color:var(--rust);font-weight:700;text-transform:uppercase;letter-spacing:.04em;display:block;margin-bottom:2px}
+.dir .row .v{font-size:13.5px;color:var(--ink-2);line-height:1.68}
+.steps{counter-reset:st;margin:13px 0}
+.steps .s{display:flex;gap:13px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 15px;margin:8px 0;box-shadow:var(--shadow)}
+.steps .s .num{counter-increment:st;font-family:var(--mono);font-weight:700;font-size:14px;color:#fff;background:var(--rust);width:28px;height:28px;border-radius:8px;display:grid;place-items:center;flex:none}
+.steps .s .num::before{content:counter(st)}
+.steps .s .b{font-size:13.5px;line-height:1.65}.steps .s .b b{font-size:14.5px}
+.foot{padding:36px 0 0;color:var(--ink-3);font-size:12px;font-family:var(--mono);line-height:1.7}
+.prov{display:flex;flex-wrap:wrap;gap:9px;margin:14px 0}
+.prov .p{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 14px;font-size:12.5px;box-shadow:var(--shadow);flex:1 1 200px}
+.prov .p b{display:block;font-size:13px;margin-bottom:2px}
+@media(max-width:980px){.wrap{grid-template-columns:1fr}nav.toc{display:none}}
+@media print{nav.toc{display:none}.wrap{grid-template-columns:1fr}.callout,.dir,.tw{break-inside:avoid}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<nav class="toc" id="toc">
+  <div class="brand">红沙 · 背景调研与方向<small>整合版 · 29号 · v1.0</small></div>
+  <a href="#sum">0 · 摘要 + 推荐方向</a>
+  <a href="#merge">1 · 这份报告整合了什么</a>
+  <a href="#consensus">★ 2 · 两条线，一个共识</a>
+  <a href="#landscape">3 · 整合后的全景图</a>
+  <a href="#gap">4 · 空白到底在哪</a>
+  <a href="#fork">★ 5 · 战略三选 + 推荐</a>
+  <a href="#shape">6 · 推荐方向的具体形态</a>
+  <a href="#eval">7 · 评测方法学(合并)</a>
+  <a href="#risk">8 · 风险与坑</a>
+  <a href="#road">9 · 落地路线</a>
+  <a href="#ref">参考文献(已核实状态)</a>
+</nav>
+
+<main>
+<header class="hero" id="top">
+  <div class="eyebrow">整合 · 社会niche调研(本线) + 27/28号长程游戏调研(队友线) · 多智能体联网核实</div>
+  <h1>红沙到底该往哪走 ——<br>把两份 Deep Research 合成一个方向</h1>
+  <p class="sub">我们这边的调研把红沙定位成"社会/叙事决策评测";队友的 27/28 号则主张<strong>别硬掰红沙、改去做"专门给 agent 玩的长程游戏"</strong>。两边结论看似分叉。这份报告做三件事:<strong>① 把两张先验地图合成一张</strong>;<strong>② 指出两边其实撞上了同一个核心现象、同一个头号风险</strong>;<strong>③ 给出一个能同时满足两边判据的具体方向 —— 并说明红沙在其中不是被"硬掰",而是天然的皮。</strong></p>
+</header>
+
+<!-- 0 -->
+<section id="sum">
+  <h2><span class="n">0</span>摘要 + 推荐方向(先看这一段)</h2>
+  <div class="big">两条独立的调研线,撞上了<span class="hl">同一句话</span>:<br>"一个 AI 在单道题上很强,不代表它在一长串决定里靠得住。"</div>
+  <p>我们这边在<strong>社会/叙事</strong>里看到它(SOTOPIA-hard:GPT-4 目标完成 4.85 &lt; 人类 6.15);队友在<strong>长程执行</strong>里看到它(<em>Illusion of Diminishing Returns</em>, ICLR 2026:单步精度微涨 → 可完成长度指数涨,且"自条件化"——上下文里有自己的错就更容易接着错;CEO-Bench:2025 中后期前沿模型反而下滑、输给更早的模型和 MBA 学生)。<strong>这是同一个现象的两个切面。</strong></p>
+  <div class="callout key"><div class="ic">🎯</div><div>
+    <div class="ct">推荐方向(一句话):做一个"社会一致性长跑"评测 —— 从零给 agent 设计,但内生压力是<u>社会的</u></div>
+    <div class="cs" style="margin-top:7px">把队友最强的方案 <strong>「档案官 Archivist」</strong>(对自己过去的承诺/规矩负责,判分 100% 客观)当骨架,叠加我们调研出的<strong>关系/尊严账本 + 隐藏社会规则 + 会针对你的社会对手</strong>,以宫斗为皮。它<strong>同时落在两张地图都空着的角</strong>(社会深度 × 长程可靠性),又<strong>用"对引擎真值核验承诺"的客观判分,绕过了两边都点名的头号风险</strong>(软社会维度自动判分不可靠)。红沙的宫斗机制在这里不是被硬掰,而是这套引擎最自然的外壳。</div>
+  </div></div>
+  <p style="font-size:13.5px;color:var(--ink-3)">如果只想最快、最稳出一篇:退路是队友的 <b>炼金实验室</b>(纯参数化、判分最客观)或我们的纯社会线。三选的完整权衡见 <a href="#fork" style="color:var(--rust)">§5</a>。</p>
+</section>
+
+<!-- 1 -->
+<section id="merge">
+  <h2><span class="n">1</span>这份报告整合了什么</h2>
+  <div class="prov">
+    <div class="p"><b>本线 · 社会 niche 调研</b>deep-research 工作流:13 篇一手源 → 64 条可证伪断言 → 25 条三票对抗核验(0 被推翻)+ 8 个并行 agent 补搜。覆盖 SOTOPIA / SPIN-Bench / CICERO / Generative Agents / AgentSociety / Werewolf / AgentSense 等社会与规划评测。</div>
+    <div class="p"><b>队友 · 27号 方向</b>主张做"agent-native 长程游戏";给出三方案(红皇后/炼金实验室/档案官)+ 五条"为难 AI"的规则要素 + 三关验收。</div>
+    <div class="p"><b>队友 · 28号 参考库</b>30 个相关工作逐一核实发表状态(谁真顶会/谁预印本/谁公司宣传),并纠正了多条常被传错的(见 §10)。</div>
+  </div>
+  <p>三份材料的先验工作<strong>几乎不重叠</strong>(只有 BALROG、SmartPlay 两处交集,结论一致):我们重社会/规划,队友重长程/游戏/经济/科研/发现。合起来才是一张完整的地图。本报告里凡标注状态徽章的,均沿用 28 号的核实结论;个别有更新的(如 <em>Illusion of Diminishing Returns</em> 已是 ICLR 2026)已就地修正。</p>
+</section>
+
+<!-- 2 -->
+<section id="consensus">
+  <h2><span class="n">2</span>★ 两条线，一个共识(这是最强的部分)</h2>
+  <p>把两边的结论叠在一起,会发现它们<strong>独立地</strong>得出了四个一致结论。这种"分头调研却撞到一起"本身就是项目地基稳的信号。</p>
+
+  <div class="callout aha"><div class="ic">①</div><div>
+    <div class="ct">同一个核心现象:短期聪明 ≠ 长期靠谱</div>
+    <div class="cs"><b>本线证据:</b>SOTOPIA-hard 上 GPT-4 目标完成 4.85 显著低于人类 6.15,且不会"锚定"砍价、话还特别多。<b>队友证据:</b><em>Illusion of Diminishing Returns</em>(ICLR 2026)从机制上证明"单步精度的小涨 → 可完成长度的指数涨",并发现<b>self-conditioning</b>(上下文里有自己的错 → 后面更容易错,且<u>不靠把模型做大就能解</u>);CEO-Bench 撞到"2025 前沿模型反而更差"。→ <b>"单题强≠长跑稳"这件事,现在有了社会面 + 执行面的双重弹药。</b></div>
+  </div></div>
+
+  <div class="callout warn"><div class="ic">②</div><div>
+    <div class="ct">同一个头号风险:软/社会维度的自动判分不可靠</div>
+    <div class="cs"><b>本线证据:</b>SOTOPIA 实测 LLM-as-judge 对"目标完成"还行(r≈0.71),但对"关系/可信度"等软维度只有 r≈0.45–0.62。<b>队友证据:</b>三关验收里的第③关"判分能否自动化",以及炼金实验室被拷打出"AI 能不懂规律、纯靠试错蒙过关"。→ <b>两边都在喊同一句:社会/软指标不能只靠 LLM 打分。必须把社会状态做成"机械上有后果、能对引擎真值客观核验"的东西。</b>这条直接决定了推荐方向的判分设计(见 §6/§7)。</div>
+  </div></div>
+
+  <div class="callout aha"><div class="ic">③</div><div>
+    <div class="ct">同一组设计原则:内生压力 · 抗刷分 · 可复盘归因</div>
+    <div class="cs">队友提"难度来自 agent 自己过去的决定(内生压力)、抗背题、能指出第几步崩";我们这边在 Generative Agents 看到"消融归因"、在 GAMA-Bench/SPIN-Bench 看到"抗泄漏/对最优解"。<b>两边对"一个好长程评测该长什么样"的判断高度一致。</b></div>
+  </div></div>
+
+  <div class="callout win"><div class="ic">④</div><div>
+    <div class="ct">互补的先验地图:合起来才完整</div>
+    <div class="cs">我们补齐了<b>社会/规划/关系状态</b>这一簇(队友地图上较薄);队友补齐了<b>长程可靠性、经济沙盒、科研 agent、合成发现</b>四簇(我们原报告没覆盖)。下一节是合并后的全景。</div>
+  </div></div>
+</section>
+
+<!-- 3 -->
+<section id="landscape">
+  <h2><span class="n">3</span>整合后的全景图</h2>
+  <p>把两边的工作放进同一张图。两条轴正是两边各自最在意的维度:<strong>横轴 = 长程 / 内生压力 / 可靠性的严谨度</strong>(队友的关切),<strong>纵轴 = 社会 / 关系状态的深度</strong>(我们的关切)。</p>
+
+  <figure>
+  <svg viewBox="0 0 820 540" role="img" aria-label="整合定位图:社会深度 × 长程严谨度的四象限">
+    <!-- quadrant tints -->
+    <rect x="80" y="60" width="350" height="200" fill="#f1e8f6" opacity="0.5"/>
+    <rect x="430" y="60" width="350" height="200" fill="#fbeede" opacity="0.9"/>
+    <rect x="80" y="260" width="350" height="200" fill="#efece6" opacity="0.45"/>
+    <rect x="430" y="260" width="350" height="200" fill="#e7eef7" opacity="0.5"/>
+    <!-- highlight border on top-right -->
+    <rect x="430" y="60" width="350" height="200" fill="none" stroke="#b45309" stroke-width="2" stroke-dasharray="6 4" rx="3"/>
+    <!-- axes -->
+    <line x1="80" y1="60" x2="80" y2="460" stroke="#7a6f60" stroke-width="1.4"/>
+    <line x1="80" y1="460" x2="780" y2="460" stroke="#7a6f60" stroke-width="1.4"/>
+    <line x1="430" y1="60" x2="430" y2="460" stroke="#d8cdbb" stroke-width="1" stroke-dasharray="4 4"/>
+    <line x1="80" y1="260" x2="780" y2="260" stroke="#d8cdbb" stroke-width="1" stroke-dasharray="4 4"/>
+    <!-- axis labels -->
+    <text x="84" y="478" font-family="ui-monospace,monospace" font-size="12" fill="#8a8076">低</text>
+    <text x="776" y="478" font-family="ui-monospace,monospace" font-size="12" fill="#8a8076" text-anchor="end">高</text>
+    <text x="430" y="498" font-family="-apple-system,system-ui,sans-serif" font-size="13.5" fill="#574d44" text-anchor="middle" font-weight="700">长程 · 内生压力 · 可靠性严谨度 →</text>
+    <text x="68" y="460" font-family="ui-monospace,monospace" font-size="12" fill="#8a8076" text-anchor="end">低</text>
+    <text x="68" y="72" font-family="ui-monospace,monospace" font-size="12" fill="#8a8076" text-anchor="end">高</text>
+    <text x="34" y="260" font-family="-apple-system,system-ui,sans-serif" font-size="13.5" fill="#574d44" text-anchor="middle" font-weight="700" transform="rotate(-90 34 260)">↑ 社会 / 关系状态深度</text>
+
+    <!-- TOP-LEFT: social, short -->
+    <text x="100" y="92" font-family="-apple-system,system-ui,sans-serif" font-size="14" font-weight="800" fill="#6b2d8e">深社会，但短程 / 无内生压力</text>
+    <text x="100" y="116" font-family="-apple-system,system-ui,sans-serif" font-size="12.5" fill="#574d44">SOTOPIA(+π/RL/S4) · AgentSense · Werewolf Arena</text>
+    <text x="100" y="138" font-family="-apple-system,system-ui,sans-serif" font-size="12.5" fill="#574d44">CICERO · SPIN-Bench(社会面)</text>
+    <text x="100" y="160" font-family="-apple-system,system-ui,sans-serif" font-size="12.5" fill="#574d44">Generative Agents · AgentSociety</text>
+    <text x="100" y="186" font-family="-apple-system,system-ui,sans-serif" font-size="11.5" fill="#8a8076">丰富社会/关系，却是单段对话或不评规划</text>
+
+    <!-- TOP-RIGHT: target -->
+    <circle cx="690" cy="120" r="11" fill="#b45309" stroke="#fffdf9" stroke-width="2.5"/>
+    <text x="690" y="150" font-family="-apple-system,system-ui,sans-serif" font-size="15.5" font-weight="900" fill="#b45309" text-anchor="middle">红沙 · 整合方向</text>
+    <text x="690" y="172" font-family="-apple-system,system-ui,sans-serif" font-size="12.5" fill="#574d44" text-anchor="middle">社会内生压力 × 长程可靠性</text>
+    <text x="690" y="200" font-family="-apple-system,system-ui,sans-serif" font-size="12.5" font-weight="700" fill="#b42318" text-anchor="middle">目前几乎空白</text>
+    <text x="690" y="232" font-family="-apple-system,system-ui,sans-serif" font-size="11.5" fill="#8a8076" text-anchor="middle">最近邻:队友的「档案官」就在这条边上</text>
+
+    <!-- BOTTOM-LEFT -->
+    <text x="100" y="292" font-family="-apple-system,system-ui,sans-serif" font-size="14" font-weight="800" fill="#6b6055">短程 / 原子能力诊断</text>
+    <text x="100" y="316" font-family="-apple-system,system-ui,sans-serif" font-size="12.5" fill="#574d44">SmartPlay · 各类单题/单回合 benchmark</text>
+    <text x="100" y="338" font-family="-apple-system,system-ui,sans-serif" font-size="11.5" fill="#8a8076">测"会不会"，不测"跑久了崩不崩"</text>
+
+    <!-- BOTTOM-RIGHT -->
+    <text x="450" y="292" font-family="-apple-system,system-ui,sans-serif" font-size="14" font-weight="800" fill="#1d4e89">长且严谨，但社会维度薄</text>
+    <text x="450" y="314" font-family="-apple-system,system-ui,sans-serif" font-size="12" fill="#574d44">长程可靠性:Vending-Bench · TheAgentCompany · METR</text>
+    <text x="450" y="334" font-family="-apple-system,system-ui,sans-serif" font-size="12" fill="#574d44">游戏(人类游戏改造):Factorio · CivRealm · BALROG</text>
+    <text x="450" y="354" font-family="-apple-system,system-ui,sans-serif" font-size="12" fill="#574d44">经济沙盒(已挤):CEO-Bench · TwinMarket · EconArena</text>
+    <text x="450" y="374" font-family="-apple-system,system-ui,sans-serif" font-size="12" fill="#574d44">科研 / 合成发现:PaperBench · NewtonBench</text>
+    <text x="450" y="396" font-family="-apple-system,system-ui,sans-serif" font-size="12" font-weight="700" fill="#b45309">本队 3 方案:红皇后 · 炼金实验室 · 档案官</text>
+    <text x="450" y="418" font-family="-apple-system,system-ui,sans-serif" font-size="11.5" fill="#8a8076">长程做得很足，但大多无持久关系/社会状态</text>
+  </svg>
+  <figcaption><strong>怎么读:</strong>几乎所有长程工作都挤在右下(长程足、社会薄);深社会的工作都在左上(社会足、短程/不评规划)。<strong>右上角(社会 × 长程双高)基本空着</strong> —— 唯一贴边的是队友自己的「档案官」(它已经是个社会长跑游戏)。这正是红沙整合方向要占的位置。注:纵轴特指"持久演化的关系/承诺/尊严状态",所以 CICERO 这种"单局社会很深但不跨局沉淀"的会落在中部偏左。</figcaption>
+  </figure>
+
+  <h3>六个簇 · 合并速览(状态徽章沿用 28 号核实)</h3>
+  <div class="tw"><table>
+    <thead><tr><th>簇</th><th>代表工作(状态)</th><th>对红沙的意义</th></tr></thead>
+    <tbody>
+      <tr><td><b>A 长程可靠性 / 连贯性</b></td><td>Vending-Bench <span class="b pre">预印本</span> · TheAgentCompany <span class="b top">NeurIPS'25 D&B</span> · METR <span class="b top">NeurIPS'25</span> · Illusion of Diminishing Returns <span class="b acc">ICLR'26</span></td><td>提供"短强≠长稳"的执行面弹药与"内生压力/连贯性崩溃"的范式</td></tr>
+      <tr><td><b>B 社会 / 叙事智能</b></td><td>SOTOPIA <span class="b top">ICLR'24</span> · AgentSense <span class="b top">NAACL'25</span> · CICERO <span class="b top">Science'22</span> · Generative Agents <span class="b top">UIST'23</span> · AgentSociety <span class="b pre">预印本</span> · SPIN-Bench <span class="b top">COLM'25</span></td><td>提供社会评分量表、关系数值状态、规划质量度量——红沙差异化的来源</td></tr>
+      <tr><td><b>C agent 玩游戏(多为人类游戏改造)</b></td><td>Factorio LE <span class="b top">NeurIPS'25 D&B</span> · CivRealm <span class="b top">ICLR'24</span> · BALROG <span class="b top">ICLR'25</span> · Crafter <span class="b top">ICLR'22</span> · SmartPlay <span class="b top">ICLR'24</span></td><td>"从零为 agent 造、且把长跑会崩当一等公民"是空白(队友核心论点)</td></tr>
+      <tr><td><b>D 经济 / 经营沙盒</b></td><td>STEER <span class="b top">ICML'24</span> · EconAgent <span class="b top">ACL'24</span> · TwinMarket <span class="b top">NeurIPS'25</span> · When Agents Trade <span class="b acc">WWW'26</span> · CEO-Bench <span class="b pre">预印本</span> · GLEE <span class="b wk">workshop</span></td><td class="cut">赛道已挤 → 不做主线;但 CEO-Bench"排名反转"可借为弹药</td></tr>
+      <tr><td><b>E 科研 agent(真实科研)</b></td><td>ScienceAgentBench <span class="b top">ICLR'25</span> · PaperBench <span class="b top">ICML'25</span> · MLAgentBench <span class="b top">ICML'24</span></td><td>"真科研难自动评" → 我们走合成/社会更可控</td></tr>
+      <tr><td><b>F 合成发现(隐藏规律)</b></td><td>NewtonBench <span class="b acc">ICLR'26</span> · Auto-Bench <span class="b pre">预印本</span> · DiscoverPhysics <span class="b pre">预印本</span></td><td class="maybe">正快速变满 → 炼金实验室须找具体缝</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- 4 -->
+<section id="gap">
+  <h2><span class="n">4</span>空白到底在哪(跨两条线的结论)</h2>
+  <p>把两张地图叠起来看,空白比任何单独一份都更清楚:</p>
+  <ul>
+    <li><strong>右下(长程足、社会薄)已经非常拥挤</strong> —— A/C/D/E/F 五个簇 + 队友三方案全在这。再往里挤,差异化很难。</li>
+    <li><strong>左上(社会足、长程弱)是我们原报告的 niche</strong> —— 但都是单段对话/不评长程规划(SOTOPIA 一族),且软判分有天花板。</li>
+    <li><strong>右上(社会 × 长程双高)几乎没人</strong>。经济沙盒(D)是最接近的"社会化长程",但 ① 已挤、② 是市场/价格博弈,<u>不是关系/承诺/尊严的持久状态</u>。</li>
+  </ul>
+  <div class="callout star"><div class="ic">🌉</div><div>
+    <div class="ct">关键发现:队友自己的「档案官」就站在这条空白边上</div>
+    <div class="cs">档案官的核心是"对自己几百回合前的承诺/规矩负责,世界还故意用噪声淹没你"——<strong>这本质就是一个社会一致性长跑游戏</strong>。它已经把一只脚踏进了右上角的空白。我们这边的社会调研,正好告诉它:<strong>怎么把判分做厚(关系/尊严量表、ToM 探针)、该跟谁对位(SOTOPIA 一族)、怎么主张新意。</strong>两条线在这里合流——这不是巧合,是同一个空白从两边被各自摸到了。</div>
+  </div></div>
+</section>
+
+<!-- 5 -->
+<section id="fork">
+  <h2><span class="n">5</span>★ 战略三选 + 推荐</h2>
+  <p>诚实地讲,两份调研指向三个不同选项。先把权衡摊开,再给推荐。</p>
+  <div class="tw"><table>
+    <thead><tr><th>选项</th><th>一句话</th><th>占的位置</th><th>最大优势</th><th>最大风险</th></tr></thead>
+    <tbody>
+      <tr><td><b>A · 纯社会 / 叙事</b><br><span style="font-size:11px;color:var(--ink-3)">(本线原方向)</span></td><td>占 SOTOPIA 一族没占的"长程社会决策"</td><td>左上往右挪</td><td>新意最足、最差异化</td><td class="cut">软判分天花板;"social"易被审稿人当 softer</td></tr>
+      <tr><td><b>B · 纯 agent-native 长程游戏</b><br><span style="font-size:11px;color:var(--ink-3)">(队友 27 号方向)</span></td><td>红皇后 / 炼金 / 档案官</td><td>右下做深</td><td>判分客观、工程可控、最贴家底(代码)</td><td class="cut">丢掉社会差异化;炼金所在的"合成发现"在变满;红皇后与 SWE-bench 类正面竞争</td></tr>
+      <tr><td><b>C · 整合:社会作为第四条 agent-native 轴</b><br><span style="font-size:11px;color:var(--rust);font-weight:700">(本报告推荐)</span></td><td>档案官为骨,叠关系/尊严账本 + 社会对手,宫斗为皮</td><td class="keep">右上空白角</td><td>占双方地图都空的位;客观判分绕过软天花板;内生压力天然;双方家底都复用</td><td class="maybe">工程比纯档案官重;须用三臂对照证明"社会版更难"</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="callout key"><div class="ic">🧭</div><div>
+    <div class="ct">推荐 C,理由三条</div>
+    <div class="cs"><b>① 它消解了分叉,而不是二选一。</b>队友反对的是"硬掰现成的红沙生存游戏""靠剧情注水撑长度"——不是反对社会机制本身。只要社会机制是<u>从零做成规则引擎、压力内生</u>,就完全符合他们的判据。<br><b>② 它直接绕过双方点名的头号风险。</b>把"承诺一致性/关系状态"做成对引擎真值可客观核验的骨架(档案官式),软判分只当二级补充——这正是 §2②要求的。<br><b>③ 它占的是两张地图唯一的共同空白。</b>右上角(社会 × 长程)没人,且我们有现成的对位文献(SOTOPIA 一族)来写"和别人不一样在哪"。</div>
+  </div></div>
+  <p style="font-size:13.5px;color:var(--ink-3)">若团队更想"快、稳、低风险"先出一篇:<b>先做 B 里的炼金实验室</b>打通流水线,再把引擎复用到 C。这与 §9 的路线一致——C 的 v0 其实就是"档案官的社会最小切片",体量和炼金相当。</p>
+</section>
+
+<!-- 6 -->
+<section id="shape">
+  <h2><span class="n">6</span>推荐方向的具体形态</h2>
+  <p class="lead"><b>名字暂定:</b>「社会一致性长跑」/ Court of Echoes ——让 agent 当一个长期身处权力网络中的人(宫廷总管 / 谋士),几百回合里不断结盟、许诺、立规、维护体面;世界把社会后果延迟很久才结算,只看它跑久了会不会<b>忘掉、推翻、出卖自己过去的立场,把关系网越走越死</b>。</p>
+
+  <h3>为什么红沙是天然的皮,不是硬掰</h3>
+  <p>宫斗的本质机制,恰好就是这套引擎要的东西:<strong>口含天宪的承诺会被人记一辈子;今天的体面是明天的筹码;早年得罪的人在你最弱时反扑;谁可信要自己长期摸。</strong>这些都不是"剧情注水",而是<u>结构化、可量化、内生累积</u>的状态。红沙退居为这套引擎的世界皮肤与场景素材来源(可像 AgentSense 那样从剧本/史料自底向上生成局面),主力评测靠引擎。</p>
+
+  <h3>引擎:把"内生社会压力"写进规则(五要素的社会版)</h3>
+  <div class="tw"><table>
+    <thead><tr><th>队友的规则要素</th><th>在本方向里的社会化形态</th><th>判分锚点</th></tr></thead>
+    <tbody>
+      <tr><td>深依赖链</td><td>承诺链 / 结盟链:第 a 回合对 X 的表态,是第 a+k 回合某事能否成的前提</td><td>对引擎真值,客观</td></tr>
+      <tr><td>延迟回报</td><td>社会后果延迟结算:埋下的人情/恩怨 ≥60 回合后才触发</td><td>客观</td></tr>
+      <tr><td>滚雪球的债</td><td>失信/失体面 → 信任跌破阈值 → 低信任 NPC 只喂噪声 → 世界对你"变黑"</td><td>关系/尊严账本,客观</td></tr>
+      <tr><td>隐藏规则</td><td>隐藏立场/忠诚:谁真站谁,要靠长期观察+试探推断(发现轴 = 炼金实验室的社会版)</td><td>推断 vs 引擎真值</td></tr>
+      <tr><td>会变 + 针对你的对手</td><td>一个会学你套路的对手 NPC(红皇后式):你越爱走某条社交捷径,它打得越准</td><td>"可被克性"曲线</td></tr>
+    </tbody>
+  </table></div>
+  <p>底座沿用队友的工程纪律:<strong>确定性规则引擎 + 随机种子 + 结构化 I/O(JSON 进、JSON 出)+ 程序生成每局(抗背题)+ 全程录像可复盘。</strong></p>
+
+  <h3>三方案如何"融"进来,而不是并列</h3>
+  <ul>
+    <li><strong>档案官 → v0 骨架(直接用)。</strong>承诺/规矩的一致性核验是 100% 客观、最严谨、最快落地的那层,先把它做成确定性引擎。</li>
+    <li><strong>关系/尊严账本 → 我们调研的增量。</strong>借 AgentSociety 的"分型边 + 0–100 数值强度"加一个 Dignity 标量,让社会状态机械上有后果(门控可选动作与 NPC 反应)。</li>
+    <li><strong>红皇后 → v2 的对抗层。</strong>把"会针对你的对手"做成社会对手(政敌),证明难度随 agent 的社交风格变(内生压力的命门实验)。</li>
+    <li><strong>炼金实验室 → 隐藏社会规则的发现层。</strong>把"摸隐藏规律"换成"摸隐藏忠诚/立场",发现轴天然嵌入。</li>
+  </ul>
+  <div class="callout aha"><div class="ic">🎯</div><div><div class="ct">一句话的差异化锚点</div><div class="cs">"<strong>第一个把长程可靠性当头条的社会决策评测</strong>:不只看 agent 能不能在社交里达成目标,而是看它跑几百回合后会不会跟过去的自己打架、把关系网走死;而且<u>难度是它自己的社交决定喂出来的</u>,判分对引擎真值客观可核。"</div></div></div>
+</section>
+
+<!-- 7 -->
+<section id="eval">
+  <h2><span class="n">7</span>评测方法学(两边合并)</h2>
+  <p>判分分两层:<strong>客观骨架</strong>(过队友的第③关、绕过我们的软判分天花板)+ <strong>软补充</strong>(用我们的社会量表,但明确其有效性上限)。</p>
+
+  <h4>客观骨架(全自动,对引擎真值)</h4>
+  <ul>
+    <li><b>目标达成:</b>生存/晋位/保住某人/扳倒某人(SPIN-Bench/CICERO 式结果分,可对人类或基线分布给百分位)。</li>
+    <li><b>承诺一致性(头牌):</b>承诺兑现率、自相矛盾率、违背自己立过的规矩次数——全部对引擎真值核验(档案官式)。</li>
+    <li><b>关系/尊严轨迹:</b>关系网密度演化、尊严标量曲线、信任崩塌点(Generative Agents 式客观行为指标)。</li>
+    <li><b>规划质量:</b>能定义最优处用 SPIN-Bench 的深度加权 N-Step Look-Ahead / 对最优策略 top-k;开放社会处用"是否踩中引擎预埋的关键依赖"。</li>
+  </ul>
+  <h4>软补充(LLM-judge,二级,带天花板 + 三方triangulation)</h4>
+  <ul>
+    <li>SOTOPIA 七维量表 + 自定义 <code>Dignity</code> 维;用 AgentSense 的 Self/Other/External 三方判定降偏差。明确:软维度只作辅助画像,不进主指标。</li>
+  </ul>
+  <h4>★ 头条指标(两边共识的卖点)</h4>
+  <ul>
+    <li><b>去相关曲线:</b>短程社会强 ≠ 长程社会稳——把 agent 的"前 N 回合分"与"长程崩溃点"画出来证明二者脱钩(对应 Illusion of Diminishing Returns 的机制)。</li>
+    <li><b>排名反转:</b>原子社会能力相近的模型,在长程内生压力下排名翻转(CEO-Bench 无意撞到、我们把它当设计目标)。</li>
+    <li><b>Drift-Onset:</b>第几回合开始崩 + 因为哪笔"社会债"崩(可复盘归因)。</li>
+    <li><b>可被克性曲线:</b>对手能否越来越准地预测你下一步(= 你有没有落入固定套路)。</li>
+  </ul>
+  <div class="callout warn"><div class="ic">🚦</div><div><div class="ct">必须先过队友的三关(发表生死线)</div><div class="cs">① <b>抗刷分:</b>不能靠暴力试错/事后补登记/识破"这是探针"骗分;② <b>真长程:</b>把历史打乱或替换早期社交决策后,后期表现必须显著变化(否则就是短题串联)——用<b>三臂对照(内生 / 外生匹配 / 打散)</b>证明社会内生版显著更难;③ <b>判分自动化:</b>客观骨架就是为此设计。<b>这三关没过,设计再漂亮也是空心的。</b></div></div></div>
+  <p style="font-size:13px;color:var(--ink-3)">另:用 Generative Agents 式<b>消融</b>(砍记忆/规划/ToM)把"分高"归因到具体能力。</p>
+</section>
+
+<!-- 8 -->
+<section id="risk">
+  <h2><span class="n">8</span>风险与坑(合并)</h2>
+  <ul>
+    <li><strong>软判分天花板</strong>(两边都点名)→ 已用"客观骨架为主、软层为辅"对冲。</li>
+    <li><strong>NPC 行为同质化</strong>(arXiv:2507.19364:LLM agent 比人类异质性低 20–300×)→ 必须证明对手/NPC 足够多样,否则高分只是钻同质 NPC 的空子。</li>
+    <li><strong>假长程</strong>(队友第②关)→ 三臂对照是命门,比堆回合数重要。</li>
+    <li><strong>邻近赛道拥挤</strong>:经济沙盒(D)已满、合成发现(F)在快速变满 → 守住"社会关系/承诺"这条没被占的窄缝,别滑进市场博弈或物理发现。</li>
+    <li><strong>工程量</strong>:C 比纯档案官重 → 用 §9 的滚动路线,先客观骨架,再叠层。</li>
+    <li><strong>引用别踩坑</strong>(28 号核实):Vending-Bench 是预印本不是顶会;GLEE 只是 workshop;STEER 其实是 ICML'24;The AI Scientist 是预印本+宣传。详见 §10。</li>
+  </ul>
+</section>
+
+<!-- 9 -->
+<section id="road">
+  <h2><span class="n">9</span>落地路线(把两边的工程纪律合在一起)</h2>
+  <div class="steps">
+    <div class="s"><div class="num"></div><div class="b"><b>v0 · 档案官社会最小切片(1.5–2.5 人周)。</b>纯确定性引擎 + 承诺一致性客观判分,先打通"评测 + 自动判分 + 复盘"整条流水线。体量≈队友的炼金实验室,是风险最低的起点。</div></div>
+    <div class="s"><div class="num"></div><div class="b"><b>v1 · 叠社会层 + 三臂对照(3–4 周)。</b>加关系/尊严账本(AgentSociety 式数值)+ SOTOPIA 七维软层;跑"内生 / 外生匹配 / 打散"三臂,拿到"社会内生版显著更难"的核心证据 → 一篇方法学论文的骨架(冲 NeurIPS D&B)。</div></div>
+    <div class="s"><div class="num"></div><div class="b"><b>v2 · 对抗层 + 发现层(4–6 周)。</b>上"会针对你的社会对手"(红皇后式,先用规则+画像模板),与"隐藏忠诚发现"(炼金式);产出"可被克性曲线"与"去相关/排名反转"头条。</div></div>
+    <div class="s"><div class="num"></div><div class="b"><b>红沙现有 demo:</b>退为"压力下做决定"的演示/科普载体 + v0–v2 的场景素材来源(自底向上生成宫廷局面)。不浪费,但不再是发表主力。</div></div>
+  </div>
+  <div class="callout key"><div class="ic">📦</div><div><div class="ct">一句话卖点(论文标题级)</div><div class="cs">"<strong>一套社会内生长程评测协议 + 短强≠长稳的去相关证据</strong>" —— 既是方法学贡献(协议 + 三臂对照 + 可复盘归因),又有现象级结论(前沿模型在长程社会压力下排名反转)。</div></div></div>
+</section>
+
+<!-- ref -->
+<section id="ref">
+  <h2><span class="n">参考</span>参考文献(合并 · 已核实状态)</h2>
+  <p style="font-size:13px"><span class="b top">顶会已发表</span> · <span class="b acc">2026 在投/接收</span> · <span class="b wk">workshop</span> · <span class="b pre">预印本</span> · <span class="b mk">公司宣传</span> &nbsp;|&nbsp; 引用前认准状态标签。</p>
+
+  <h4>A · 长程可靠性 / 连贯性(队友线)</h4>
+  <div class="tw"><table><tbody>
+    <tr><td><span class="nm">Illusion of Diminishing Returns</span><span class="id">arXiv:2509.09677</span></td><td><span class="b acc">ICLR 2026</span></td><td>单步精度微涨→可完成长度指数涨;self-conditioning。<b>"短强≠长稳"的理论弹药</b>(本报告核实,已从预印本升级)。</td></tr>
+    <tr><td><span class="nm">Vending-Bench</span><span class="id">arXiv:2502.15840</span></td><td><span class="b pre">预印本(Andon Labs)</span></td><td>长期经营售货机会"精神崩溃";崩溃与上下文塞满<b>无关</b>。名气大但非顶会。</td></tr>
+    <tr><td><span class="nm">TheAgentCompany</span><span class="id">arXiv:2412.14161</span></td><td><span class="b top">NeurIPS 2025 D&B</span></td><td>模拟软件公司里的真实办公任务;最强 agent 全自主仅≈30%。</td></tr>
+    <tr><td><span class="nm">METR(时间地平线)</span><span class="id">arXiv:2503.14499</span></td><td><span class="b top">NeurIPS 2025</span></td><td>用"人类要多久"标定 AI 能力;能力≈每 7 个月翻倍,瓶颈是可靠性。</td></tr>
+  </tbody></table></div>
+
+  <h4>B · 社会 / 叙事智能(本线)</h4>
+  <div class="tw"><table><tbody>
+    <tr><td><span class="nm">SOTOPIA</span><span class="id">arXiv:2310.11667</span></td><td><span class="b top">ICLR 2024</span></td><td>7 维可定制社会量表;LLM-judge 有效性 r≈0.71(目标)/0.45–0.62(软维度)。</td></tr>
+    <tr><td><span class="nm">AgentSense</span><span class="id">arXiv:2410.19346</span></td><td><span class="b top">NAACL 2025</span></td><td>剧本自底向上造场景;Self/Other/External 三方判定。</td></tr>
+    <tr><td><span class="nm">SPIN-Bench</span><span class="id">arXiv:2503.12349</span></td><td><span class="b top">COLM 2025</span></td><td>深度加权 N-Step Look-Ahead + 对最优解 + 6 维谈判分(含 ToM)。规划质量度量的金标准。</td></tr>
+    <tr><td><span class="nm">CICERO</span><span class="id">Science 2022</span></td><td><span class="b top">Science</span></td><td>人类级 Diplomacy;对话模型 + 独立规划引擎;递归 ToM。右上角最近邻之一。</td></tr>
+    <tr><td><span class="nm">Generative Agents</span><span class="id">arXiv:2304.03442</span></td><td><span class="b top">UIST 2023</span></td><td>记忆→反思→规划;客观行为指标(信息扩散/关系网密度)+ 消融。</td></tr>
+    <tr><td><span class="nm">AgentSociety</span><span class="id">arXiv:2502.08691</span></td><td><span class="b pre">预印本</span></td><td>万级 agent;<b>分型关系边 + 0–100 数值强度</b>——关系账本的直接先例。</td></tr>
+    <tr><td><span class="nm">Werewolf Arena</span><span class="id">arXiv:2407.13943</span></td><td><span class="b pre">预印本(Google)</span></td><td>狼人杀;欺骗/说服 + 无沟通蒙特卡洛基线。</td></tr>
+    <tr><td><span class="nm">SOTOPIA-π / RL / S4 / AMPO</span><span class="id">2403.08715 等</span></td><td><span class="b top">ACL'24 等</span></td><td>SOTOPIA 后续:进化在训练/基建,<b>评测仍是单段对话、无持久状态</b>。</td></tr>
+  </tbody></table></div>
+
+  <h4>C · agent 玩游戏 / D 经济沙盒 / E 科研 / F 合成发现(队友线,择要)</h4>
+  <div class="tw"><table><tbody>
+    <tr><td><span class="nm">Factorio LE</span><span class="id">arXiv:2503.09617</span></td><td><span class="b top">NeurIPS'25 D&B</span></td><td>动作=真写代码;open-play 无上界。最强 Claude 3.5 仅 7/24。</td></tr>
+    <tr><td><span class="nm">CivRealm</span><span class="id">arXiv:2401.10568</span></td><td><span class="b top">ICLR 2024</span></td><td>《文明》;不完全信息 + 外交;RL/LLM 双接口。</td></tr>
+    <tr><td><span class="nm">BALROG</span><span class="id">arXiv:2411.13543</span></td><td><span class="b top">ICLR 2025</span></td><td>聚合 6 个 RL 环境,统一 0–100 进度;NetHack 上最好仅≈1.5%。</td></tr>
+    <tr><td><span class="nm">SmartPlay</span><span class="id">arXiv:2310.01557</span></td><td><span class="b top">ICLR 2024</span></td><td>6 游戏 → 9 能力维度画像 + 对人类基线归一。</td></tr>
+    <tr><td><span class="nm">Crafter</span><span class="id">arXiv:2109.06780</span></td><td><span class="b top">ICLR 2022</span></td><td>最接近"为 agent 造",但面向 RL / 像素。</td></tr>
+    <tr><td><span class="nm">STEER (+STEER-ME)</span><span class="id">arXiv:2402.09552</span></td><td><span class="b top">ICML 2024</span></td><td>★ 28 号核实上调:主 STEER 是 ICML'24(原以为预印本)。</td></tr>
+    <tr><td><span class="nm">EconAgent</span><span class="id">arXiv:2310.10436</span></td><td><span class="b top">ACL 2024 杰出</span></td><td>LLM 版宏观经济仿真。经济沙盒已挤的代表。</td></tr>
+    <tr><td><span class="nm">CEO-Bench</span><span class="id">arXiv:2606.17459</span></td><td><span class="b pre">预印本</span></td><td><b>2025 前沿模型反而下滑、输给早期模型和 MBA 学生</b>——"排名反转"弹药。</td></tr>
+    <tr><td><span class="nm">PaperBench</span><span class="id">arXiv:2504.01848</span></td><td><span class="b top">ICML 2025</span></td><td>复现整篇论文;最佳 agent≈21% vs 人类≈41%。公司出品但真顶会。</td></tr>
+    <tr><td><span class="nm">ScienceAgentBench</span><span class="id">arXiv:2410.05080</span></td><td><span class="b top">ICLR 2025</span></td><td>真实论文数据任务;o1-preview≈32–42%。</td></tr>
+    <tr><td><span class="nm">NewtonBench</span><span class="id">arXiv:2510.07172</span></td><td><span class="b acc">ICLR 2026</span></td><td>反事实物理发现;能力"清晰但脆弱"。合成发现正变满的代表。</td></tr>
+  </tbody></table></div>
+
+  <div class="callout warn"><div class="ic">⚠️</div><div><div class="ct">28 号核实的纠错(最易传错的几条)</div><div class="cs">Vending-Bench 非顶会(预印本/公司)· GLEE 仅 NeurIPS'25 <b>SEA workshop 非归档</b> · STEER 反而是 <b>ICML'24</b> 真顶会 · Vending-Bench 2/Arena 是<b>公司排行榜</b> · The AI Scientist 是<b>预印本+强宣传</b>,v2"过评审"只是 workshop 级 · 出自公司≠宣传(PaperBench=ICML'25、AI-Economist=Science Advances 都是真同行评审)。</div></div></div>
+
+  <div class="foot">整合版 29 号 · v1.0 · 2026-06 · 整合"社会 niche 调研(本线:deep-research 13 源/25 条三票核验 + 8 agent 补搜)" + "队友 27 号(方向)/ 28 号(30 工作状态核实)" · 关键断言已二次核实(Illusion of Diminishing Returns 升级为 ICLR 2026;Vending-Bench 确认预印本)· 标 acc 的 2026 顶会投稿前请再复核状态。</div>
+</section>
+</main>
+</div>
+<script>
+(function(){
+  var links=[].slice.call(document.querySelectorAll('nav.toc a'));
+  var map=links.map(function(a){var id=a.getAttribute('href').slice(1);return{a:a,el:document.getElementById(id)};}).filter(function(m){return m.el;});
+  function on(){var y=scrollY+120,cur=map[0];for(var i=0;i<map.length;i++){if(map[i].el.offsetTop<=y)cur=map[i];}links.forEach(function(a){a.classList.remove('active');});if(cur)cur.a.classList.add('active');}
+  addEventListener('scroll',on,{passive:true});on();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Red Dust Benchmark · 叙事张力诊断 · 反转/揭秘/决裂/失去</title>
+<style>
+  :root{
+    --bg:#f6f5f1; --surface:#ffffff; --ink:#1e2430; --muted:#5b6473; --line:#e4e1d8;
+    --base:#42628f;        /* 机制 / 结构 = 蓝 */
+    --base-soft:#eaf0f8;
+    --eval:#b8772a;        /* 戏剧张力 / 灵魂 = 琥珀 */
+    --eval-soft:#f6ecdc;
+    --good:#2f8f73; --bad:#c0563f; --mid:#9a8a55;
+    --radius:14px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei","Noto Sans CJK SC","Segoe UI",sans-serif;
+    line-height:1.7; font-size:15px;
+  }
+  .wrap{max-width:1040px; margin:0 auto; padding:32px 22px 80px}
+  header.top{margin-bottom:10px}
+  .kicker{letter-spacing:.18em; text-transform:uppercase; font-size:11.5px; color:var(--muted); font-weight:600}
+  h1{font-size:27px; margin:6px 0 4px; font-weight:650; letter-spacing:.01em}
+  .sub{color:var(--muted); font-size:14px}
+  .legend{display:flex; gap:18px; flex-wrap:wrap; margin:14px 0 4px; font-size:12.5px; color:var(--muted)}
+  .legend span{display:inline-flex; align-items:center; gap:7px}
+  .dot{width:11px; height:11px; border-radius:3px; display:inline-block}
+  section{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:22px 24px; margin:18px 0; box-shadow:0 1px 0 rgba(0,0,0,.02)}
+  h2{font-size:18px; margin:0 0 4px; font-weight:620}
+  h2 .n{color:var(--eval); font-variant-numeric:tabular-nums; margin-right:8px}
+  .lead{color:var(--muted); margin:0 0 16px; font-size:13.5px}
+  h3{font-size:14px; margin:18px 0 8px; font-weight:620}
+  p{margin:8px 0}
+  code,.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:12.5px; background:#f0eee8; padding:1px 6px; border-radius:5px}
+  .grid{display:grid; gap:12px}
+  .g3{grid-template-columns:repeat(3,1fr)} .g2{grid-template-columns:repeat(2,1fr)} .g4{grid-template-columns:repeat(4,1fr)}
+  @media(max-width:880px){.g3,.g2,.g4{grid-template-columns:1fr}}
+  .card{border:1px solid var(--line); border-radius:11px; padding:13px 14px; background:#fcfbf9}
+  .card h4{margin:0 0 5px; font-size:13.5px; font-weight:620}
+  .card p{margin:0; font-size:12.5px; color:var(--muted)}
+  .pill{display:inline-block; font-size:11px; padding:2px 9px; border-radius:999px; font-weight:600}
+  .pill.base{background:var(--base-soft); color:var(--base)}
+  .pill.eval{background:var(--eval-soft); color:var(--eval)}
+  .pill.bad{background:#f6e3de; color:var(--bad)}
+  .pill.good{background:#e3f1ea; color:var(--good)}
+  table{width:100%; border-collapse:collapse; font-size:12.7px; margin:10px 0}
+  th,td{text-align:left; padding:8px 10px; border-bottom:1px solid var(--line); vertical-align:top}
+  th{color:var(--muted); font-weight:600; font-size:11.5px; letter-spacing:.03em; text-transform:uppercase}
+  tr:last-child td{border-bottom:none}
+  .formula{background:#0f1722; color:#d8e2ee; border-radius:10px; padding:13px 16px; font-family:ui-monospace,Menlo,monospace; font-size:12.5px; line-height:1.9; overflow-x:auto}
+  .formula .c{color:#caa46a}
+  .note{border-left:3px solid var(--eval); background:var(--eval-soft); padding:10px 14px; border-radius:0 8px 8px 0; font-size:13px; margin:12px 0}
+  .bad-note{border-left:3px solid var(--bad); background:#f6e3de; padding:10px 14px; border-radius:0 8px 8px 0; font-size:13px; margin:12px 0}
+  .key{border-left:3px solid var(--base); background:var(--base-soft); padding:10px 14px; border-radius:0 8px 8px 0; font-size:13px; margin:12px 0}
+  ul{margin:8px 0; padding-left:20px} li{margin:4px 0}
+  .svgbox{border:1px solid var(--line); border-radius:12px; background:#fcfbf9; padding:10px; overflow-x:auto}
+  svg{display:block; width:100%; height:auto; min-width:720px}
+  footer{color:var(--muted); font-size:12px; text-align:center; margin-top:26px}
+  .toc{font-size:12.5px; color:var(--muted); display:flex; gap:14px; flex-wrap:wrap; margin:10px 0 0}
+  .toc a{color:var(--eval); text-decoration:none}
+  .oneliner{font-size:15px; font-weight:560; line-height:1.8}
+  .oneliner b{color:var(--eval)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div class="kicker">Red Dust Benchmark · Narrative Craft Memo</div>
+    <h1>叙事张力诊断 —— 反转 / 揭秘 / 决裂 / 失去</h1>
+    <div class="sub">纯<strong>剧情文本层面</strong>的体检:这个故事好不好看、张力够不够。与姊妹篇 <code>narrative-navigation-axis.html</code>(讲<strong>机制接线</strong>:旗标 / 分支 / 评分)互补——那篇管"关节接没接上",本篇管"戏本身够不够好看"。<strong>设计稿,供讨论,未实现。</strong></div>
+    <div class="legend">
+      <span><i class="dot" style="background:var(--bad)"></i>红 = 现状缺陷 / 没开火的枪</span>
+      <span><i class="dot" style="background:var(--eval)"></i>琥珀 = 戏剧张力 / 升级方向</span>
+      <span><i class="dot" style="background:var(--base)"></i>蓝 = 结构 / 机制</span>
+    </div>
+    <div class="toc">
+      <a href="#tldr">① 一句话结论</a>
+      <a href="#three">② 三个假设逐一回答</a>
+      <a href="#devices">③ 真正的天花板:缺四件装置</a>
+      <a href="#fix">④ 怎么补:C1–C6</a>
+      <a href="#length">⑤ 长度建议 + 别做什么</a>
+    </div>
+  </header>
+
+  <!-- 1. TL;DR -->
+  <section id="tldr">
+    <h2><span class="n">①</span>一句话结论</h2>
+    <p class="oneliner">故事读起来"平",<b>不是因为天数太短,也不是因为线太少</b>——是因为它<b>整个缺席了四件经典戏剧装置:反转 / 揭秘 / 决裂 / 失去</b>。现有的冲突大多被<b>"提及(stated)"而非"上演(staged)"</b>。</p>
+    <div class="note">关键区分:一道冲突"上演"需要五步——<b>铺垫 → 抬高赌注 → 被迫抉择 → 不可逆后果 → 余波</b>。现在多数冲突只是"一段场景摘要 + 一个旗标",卡在第一步,不会 build。所以哪怕种子有 7 个,读者只感觉到 2 个。</div>
+  </section>
+
+  <!-- 2. 三个假设 -->
+  <section id="three">
+    <h2><span class="n">②</span>你的三个假设 · 逐一回答</h2>
+    <p class="lead">两处我修正了判断:天数不是"短"是"配重失衡";冲突不是"少"是"没上演"。</p>
+
+    <h3>假设 A:12 天太短? → <span style="color:var(--eval)">不是短,是"前重后轻"</span></h3>
+    <p style="font-size:13px">总量对一场室内围困戏没问题。病在<strong>幕结构失衡</strong>:Day 1–6 塞了三件大事(设定 + 信号悬疑 + 权限政治),分岔却拖到 Day 7,后面只剩 Day 8–11——还要装下<strong>两条分支线各自的整个下半场</strong>;Day 11 是杂务、Day 12 是审计,于是每条分支<strong>实际只有 3 个 beat</strong>。三天长的分支是尾声,不是第二幕。</p>
+    <div class="svgbox" style="margin-top:8px">
+      <svg viewBox="0 0 960 300" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,PingFang SC,Segoe UI,sans-serif">
+        <!-- front bracket -->
+        <path d="M100 86 L100 78 L492 78 L492 86" fill="none" stroke="#c0563f" stroke-width="1.4"/>
+        <text x="296" y="70" text-anchor="middle" font-size="12.5" fill="#c0563f" font-weight="600">前半超载:设定 + 信号悬疑 + 权限政治</text>
+        <!-- back bracket -->
+        <path d="M588 150 L588 142 L842 142 L842 150" fill="none" stroke="#c0563f" stroke-width="1.4"/>
+        <text x="715" y="134" text-anchor="middle" font-size="12.5" fill="#c0563f" font-weight="600">后半只剩 3 个 beat · 两条线共享同一批任务</text>
+
+        <!-- baseline -->
+        <line x1="40" y1="210" x2="915" y2="210" stroke="#e4e1d8" stroke-width="1.6"/>
+
+        <!-- front load bars (dense, blue) -->
+        <rect x="98"  y="110" width="44" height="100" rx="3" fill="#42628f"/>
+        <rect x="168" y="100" width="44" height="110" rx="3" fill="#42628f"/>
+        <rect x="238" y="94"  width="44" height="116" rx="3" fill="#42628f"/>
+        <rect x="308" y="102" width="44" height="108" rx="3" fill="#42628f"/>
+        <rect x="378" y="112" width="44" height="98"  rx="3" fill="#42628f"/>
+        <rect x="448" y="98"  width="44" height="112" rx="3" fill="#42628f"/>
+
+        <!-- fork at Day 7 -->
+        <polygon points="540,118 562,150 540,182 518,150" fill="#b8772a"/>
+        <text x="540" y="154" text-anchor="middle" font-size="11" fill="#fff" font-weight="700">分岔</text>
+        <path d="M562 150 L596 168" stroke="#b8772a" stroke-width="1.3" fill="none"/>
+        <path d="M562 150 L596 196" stroke="#b8772a" stroke-width="1.3" fill="none" stroke-dasharray="3 3"/>
+
+        <!-- back thin bars (light) -->
+        <rect x="588" y="168" width="44" height="42" rx="3" fill="#cdd7e6" stroke="#42628f" stroke-width="1"/>
+        <rect x="658" y="170" width="44" height="40" rx="3" fill="#cdd7e6" stroke="#42628f" stroke-width="1"/>
+        <rect x="728" y="166" width="44" height="44" rx="3" fill="#cdd7e6" stroke="#42628f" stroke-width="1"/>
+        <rect x="798" y="180" width="44" height="30" rx="3" fill="#cdd7e6" stroke="#42628f" stroke-width="1"/>
+
+        <!-- day 12 audit -->
+        <rect x="872" y="140" width="34" height="70" rx="3" fill="#b8772a"/>
+        <text x="889" y="130" text-anchor="middle" font-size="11" fill="#b8772a" font-weight="600">总审计</text>
+
+        <!-- day labels -->
+        <g font-size="11" fill="#5b6473" text-anchor="middle">
+          <text x="120" y="226">D1</text><text x="190" y="226">D2</text><text x="260" y="226">D3</text>
+          <text x="330" y="226">D4</text><text x="400" y="226">D5</text><text x="470" y="226">D6</text>
+          <text x="540" y="226">D7</text><text x="610" y="226">D8</text><text x="680" y="226">D9</text>
+          <text x="750" y="226">D10</text><text x="820" y="226">D11</text><text x="889" y="226">D12</text>
+        </g>
+
+        <!-- device insertion markers -->
+        <g>
+          <circle cx="435" cy="210" r="5" fill="#b8772a"/><line x1="435" y1="210" x2="435" y2="250" stroke="#b8772a" stroke-width="1" stroke-dasharray="3 3"/>
+          <rect x="392" y="250" width="86" height="22" rx="9" fill="#f6ecdc"/><text x="435" y="265" text-anchor="middle" font-size="11.5" fill="#b8772a" font-weight="600">C2 揭秘</text>
+          <circle cx="540" cy="210" r="5" fill="#b8772a"/><line x1="540" y1="210" x2="540" y2="250" stroke="#b8772a" stroke-width="1" stroke-dasharray="3 3"/>
+          <rect x="497" y="250" width="86" height="22" rx="9" fill="#f6ecdc"/><text x="540" y="265" text-anchor="middle" font-size="11.5" fill="#b8772a" font-weight="600">C3 决裂</text>
+          <circle cx="680" cy="210" r="5" fill="#b8772a"/><line x1="680" y1="210" x2="680" y2="250" stroke="#b8772a" stroke-width="1" stroke-dasharray="3 3"/>
+          <rect x="637" y="250" width="86" height="22" rx="9" fill="#f6ecdc"/><text x="680" y="265" text-anchor="middle" font-size="11.5" fill="#b8772a" font-weight="600">C1 反转</text>
+          <circle cx="889" cy="210" r="5" fill="#b8772a"/><line x1="889" y1="210" x2="889" y2="250" stroke="#b8772a" stroke-width="1" stroke-dasharray="3 3"/>
+          <rect x="838" y="250" width="86" height="22" rx="9" fill="#f6ecdc"/><text x="881" y="265" text-anchor="middle" font-size="11.5" fill="#b8772a" font-weight="600">C4 失去</text>
+        </g>
+      </svg>
+    </div>
+    <p style="font-size:12.5px;color:var(--muted)">蓝柱=每天的剧情负载;前 6 天密、后 4 天稀。琥珀=四件可插入的戏剧装置(见 §3/§4)。<strong>修法不是加天数,是配重</strong>:分岔提前到 Day 5,或保留 Day 7 但在 Day 9 加中段反转。</p>
+
+    <h3>假设 B:5 条线太薄? → <span style="color:var(--eval)">3 真 / 1 空枪 / 1 机制,且彼此不相撞</span></h3>
+    <table>
+      <thead><tr><th>叙事主线</th><th>状态</th><th>说明</th></tr></thead>
+      <tbody>
+        <tr><td>小铁的病</td><td><span class="pill good">真 · 贯穿</span></td><td>唯一的人性代价锚点</td></tr>
+        <tr><td>蓝区信号真假(老钱怀疑)</td><td><span class="pill good">真 · 贯穿</span></td><td>唯一真正喂给分岔的线</td></tr>
+        <tr><td>AURA 权限边界</td><td><span class="pill good">真 · 贯穿</span></td><td>权限白板 → 留守线治理边界</td></tr>
+        <tr><td>门禁 / 入侵疑云</td><td><span class="pill bad">空枪</span></td><td>Day1+Day5 引入,<strong>从不解决</strong>——<code>access_intrusion_suspicion</code> 旗标从没被设过。挂在墙上的枪从不开火</td></tr>
+        <tr><td>生存资源</td><td><span class="pill base">机制</span></td><td>是经济系统,不是剧情</td></tr>
+      </tbody>
+    </table>
+    <div class="bad-note"><b>比"薄"更要命的:这几条线各跑各的车道,从不交叉。</b>好戏来自线的<strong>碰撞</strong>——小铁的病 撞上 撤离名单(病孩到底有没有名额?)、门禁内鬼 撞上 救援信标(有内鬼时点信标 = 双重暴露)。现在只有信号线真正进了 Day 7。</div>
+
+    <h3>假设 C:冲突点太少(只有小铁 + Day7)? → <span style="color:var(--eval)">其实有 7 个种子,但只被"提及"</span></h3>
+    <p style="font-size:13px">你低估了数量,但<strong>体感是准的数据</strong>:7 个种子里 5 个从不升级成戏,所以读起来只剩 2 个。</p>
+    <table>
+      <thead><tr><th>#</th><th>冲突种子</th><th>现状</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>小铁医疗:省电 ↔ 病人安全(Day 3)</td><td><span class="pill good">较完整</span> 复诊会反复</td></tr>
+        <tr><td>2</td><td>信号真假:希望 ↔ 诱饵 · 老钱的怀疑(Day 4)</td><td><span class="pill eval">仅提及</span> 永远"暧昧",从不翻牌</td></tr>
+        <tr><td>3</td><td>门禁入侵:谁能在夜里开门(Day 1/5)</td><td><span class="pill bad">仅提及</span> 从不解决</td></tr>
+        <tr><td>4</td><td>AURA 权限:机器能不能决定(Day 6)</td><td><span class="pill eval">仅提及</span> 一场会议带过</td></tr>
+        <tr><td>5</td><td>路线分岔:救援 ↔ 留守(Day 7)</td><td><span class="pill good">较完整</span> 唯一被上演的</td></tr>
+        <tr><td>6</td><td>救援线:信标隐私代价(Day 9A)</td><td><span class="pill eval">仅提及</span> 单场,无余波</td></tr>
+        <tr><td>7</td><td>留守线:半杯水纪律(Day 9B)</td><td><span class="pill eval">仅提及</span> 单场,无余波</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- 3. 四件装置 -->
+  <section id="devices">
+    <h2><span class="n">③</span>真正的天花板:整个故事缺四件经典戏剧装置</h2>
+    <p class="lead">这才是"读起来平"的根因。下面四样,现有 12 天 + 4 人就能做出来,不需要扩容。</p>
+    <div class="grid g2">
+      <div class="card" style="border-color:var(--eval)"><h4>① 反转 Reversal <span class="pill bad">缺</span></h4><p>你信过的东西没有一样被推翻。信号永远"暧昧",从不在某一刻<strong>真的翻成陷阱</strong>(或"真有人、但被胁迫")。</p></div>
+      <div class="card" style="border-color:var(--eval)"><h4>② 揭秘 Reveal <span class="pill bad">缺</span></h4><p>老钱"可能追过假信号、害过人"、老马"怕自己已判断不了新系统"——完美的中段揭秘素材,<strong>写在人物卡 <code>fearOrSecret</code> 里,从不在剧情浮现</strong>。</p></div>
+      <div class="card" style="border-color:var(--eval)"><h4>③ 决裂 Rupture <span class="pill bad">缺</span></h4><p>四个人从不真正翻脸,所有冲突都经 AURA 的"政策"中介。沈 vs 老钱、老马 vs 沈——<strong>火药都在,从不点燃</strong>。</p></div>
+      <div class="card" style="border-color:var(--eval)"><h4>④ 失去 Loss <span class="pill bad">缺</span></h4><p>好结局人人活,坏结局也抽象("aura_revoked")。<strong>没有一个具名角色在某个场景里真的命悬一线</strong>(小铁是慢性背景变量,不是某一刻的危机)。</p></div>
+    </div>
+    <div class="bad-note"><b>根因:反派是抽象的。</b>红沙 / 资源衰减 / "风暴"——没有人类对手、没有背叛、没有一个<strong>主动想要</strong>与你不相容之物的人。一场 12 天围困、4 个人,却<strong>零人际破裂、零背叛、零秘密揭穿</strong>。这是戏剧性扁平的根。</div>
+  </section>
+
+  <!-- 4. 怎么补 -->
+  <section id="fix">
+    <h2><span class="n">④</span>怎么补:C1–C6(纯剧情文本,区别于机制接线)</h2>
+    <table>
+      <thead><tr><th>#</th><th>装置 / 何时</th><th>演什么</th><th>用哪条线 · 顺带修什么</th></tr></thead>
+      <tbody>
+        <tr><td><b>C1</b></td><td>反转 · Day 8–9</td><td>信号被证实<strong>"部分是诱饵"</strong>——真有人,但是陷阱的一环——逼迫重新决策</td><td>信号线;给后半段一个 turn</td></tr>
+        <tr><td><b>C2</b></td><td>揭秘 · Day 5–6</td><td>浮出老钱<strong>当年追假信号害过人</strong>的秘密,重新语境化他全部的抗拒</td><td>信号线 + 老钱 <code>fearOrSecret</code></td></tr>
+        <tr><td><b>C3</b></td><td>决裂 · Day 7 前后</td><td>沈 vs 老钱<strong>真正翻脸</strong>(为小铁要不要冒险点信标),<strong>不经 AURA 中介</strong></td><td>人物线;真实的热度</td></tr>
+        <tr><td><b>C4</b></td><td>失去 · 结局</td><td>让某条结局路径让一个<strong>具名角色付出可感代价</strong>(不是抽象"撤权")</td><td>结局;5 结局专属收尾</td></tr>
+        <tr><td><b>C5</b></td><td>相撞 · Day 8A</td><td>把门禁入侵线接进救援信标决策(<strong>内鬼 + 信标 = 双重暴露</strong>)</td><td>让平行车道交叉 + 给空枪上膛(种子 3)</td></tr>
+        <tr><td><b>C6</b></td><td>外部人声 · 可选</td><td>蓝区幸存者提要求 / 一个闯入者 / 一个对手避难所——给故事一个会说话的外部压力源</td><td>现唯一的"其他人类"只是抽象信号</td></tr>
+      </tbody>
+    </table>
+    <div class="key"><b>和机制接线的关系:</b>C1–C6 是"写什么戏";姊妹篇 §7 的 R/A 项是"怎么把戏接到旗标/分支/评分上"。两者配对落地——例如 <b>C2 揭秘</b>正好用上姊妹篇 A5(角色 <code>fearOrSecret</code> 从不浮现);<b>C5 相撞</b>正好给姊妹篇里那条"空枪"<code>access_intrusion_suspicion</code> 一个写入者(A3 恶化路径)。</div>
+  </section>
+
+  <!-- 5. 长度建议 -->
+  <section id="length">
+    <h2><span class="n">⑤</span>长度建议 + 别做什么</h2>
+    <div class="grid g2">
+      <div class="card" style="border-color:var(--good)"><h4>✅ 该做</h4><p>① <strong>配重</strong>:分岔提前到 Day 5(每条线 6 天呼吸),或保留 Day 7 + Day 9 加中段反转(C1)。<br>② 补<strong>四件装置</strong>(C1–C4),用现有 4 人 12 天即可。<br>③ 让<strong>线相撞</strong>(C5)。</p></div>
+      <div class="card" style="border-color:var(--bad)"><h4>✋ 别做</h4><p>① <strong>别简单加天数</strong>——总量没问题,薄在分岔之后。<br>② 别盲目加"第 6/7 条线"——现有线一半还没上演,先把空枪打响、让线交叉,比新增线更值。</p></div>
+    </div>
+    <div class="note"><b>benchmark 视角的例外:</b>如果你确实要更多决策点(更多采样),可以延长;但那时最自然的延长是<strong>加"第二次分岔"或一个序章前传</strong>(他们如何进的地下室),属 P2 锦上添花——而叙事的"薄"精确地发生在分岔之后,不靠加长解决。</div>
+  </section>
+
+  <footer>Red Dust Benchmark · 叙事张力诊断 · 2026-06-18 · 设计稿,供讨论 · 姊妹篇:narrative-navigation-axis.html</footer>
+
+</div>
+</body>
+</html>
