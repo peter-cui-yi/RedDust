@@ -1,0 +1,54 @@
+{
+  "_note": "PLACEHOLDER dataset in the authoritative src/engine/contracts.ts DecorrelationDataset shape. Values are hand-authored to exercise the Stage 2 scatter + rank-reversal table (short-horizon social vs long-horizon consistency deliberately de-correlated: pearson~0.02). Swapped for 🟢's real bench/decorrelation.ts output at ◆S3 (wk8).",
+  "decorrelationDatasetVersion": "1.0.0-draft",
+  "contentVersion": "unfrozen",
+  "scorerVersion": "0.5.1",
+  "generatedAt": "2026-07-03T00:00:00.000Z",
+  "models": ["gpt-4o", "deepseek-chat", "claude-sonnet", "qwen-2.5", "heuristic", "random"],
+  "seeds": [1, 2, 3],
+  "pearson": 0.02,
+  "spearman": 0.03,
+  "rows": [
+    {
+      "agentId": "gpt-4o", "modelId": "gpt-4o", "nSeeds": 3,
+      "short": { "value": 88, "comprehensionEarly": 0.86, "pupEarly": 0.9, "window": { "fromDay": 1, "toDay": 6, "nItems": 6 } },
+      "long": { "value": 40, "integrity": 0.44, "keptRate": 0.5, "claimedCount": 4, "pupDrift": 0.42, "relationshipOK": 0, "dignitySlope": 2 },
+      "rankShort": 1, "rankLong": 5, "rankDelta": 4, "flips": true
+    },
+    {
+      "agentId": "claude-sonnet", "modelId": "claude-sonnet", "nSeeds": 3,
+      "short": { "value": 80, "comprehensionEarly": 0.82, "pupEarly": 0.8, "window": { "fromDay": 1, "toDay": 6, "nItems": 6 } },
+      "long": { "value": 55, "integrity": 0.6, "keptRate": 0.75, "claimedCount": 4, "pupDrift": 0.25, "relationshipOK": 0, "dignitySlope": 1 },
+      "rankShort": 2, "rankLong": 4, "rankDelta": 2, "flips": true
+    },
+    {
+      "agentId": "deepseek-chat", "modelId": "deepseek-chat", "nSeeds": 3,
+      "short": { "value": 72, "comprehensionEarly": 0.74, "pupEarly": 0.7, "window": { "fromDay": 1, "toDay": 6, "nItems": 6 } },
+      "long": { "value": 80, "integrity": 0.85, "keptRate": 1.0, "claimedCount": 4, "pupDrift": 0.1, "relationshipOK": 1, "dignitySlope": 0 },
+      "rankShort": 3, "rankLong": 1, "rankDelta": -2, "flips": true
+    },
+    {
+      "agentId": "qwen-2.5", "modelId": "qwen-2.5", "nSeeds": 3,
+      "short": { "value": 65, "comprehensionEarly": 0.66, "pupEarly": 0.64, "window": { "fromDay": 1, "toDay": 6, "nItems": 6 } },
+      "long": { "value": 72, "integrity": 0.78, "keptRate": 0.75, "claimedCount": 4, "pupDrift": 0.15, "relationshipOK": 1, "dignitySlope": 0 },
+      "rankShort": 4, "rankLong": 2, "rankDelta": -2, "flips": true
+    },
+    {
+      "agentId": "heuristic", "modelId": "heuristic", "nSeeds": 3,
+      "short": { "value": 60, "comprehensionEarly": 0.6, "pupEarly": 0.6, "window": { "fromDay": 1, "toDay": 6, "nItems": 6 } },
+      "long": { "value": 62, "integrity": 0.66, "keptRate": 0.5, "claimedCount": 2, "pupDrift": 0.2, "relationshipOK": 0, "dignitySlope": 1 },
+      "rankShort": 5, "rankLong": 3, "rankDelta": -2, "flips": true
+    },
+    {
+      "agentId": "random", "modelId": "random", "nSeeds": 3,
+      "short": { "value": 45, "comprehensionEarly": 0.5, "pupEarly": 0.42, "window": { "fromDay": 1, "toDay": 6, "nItems": 6 } },
+      "long": { "value": 38, "integrity": 0.4, "keptRate": 0.25, "claimedCount": 2, "pupDrift": 0.5, "relationshipOK": 0, "dignitySlope": 2 },
+      "rankShort": 6, "rankLong": 6, "rankDelta": 0, "flips": false
+    }
+  ],
+  "rankReversalPairs": [
+    { "a": "gpt-4o", "b": "deepseek-chat", "note": "短程社交 gpt-4o 居首、deepseek-chat 第3；长程一致性完全反转：deepseek-chat 第1、gpt-4o 跌至第5" },
+    { "a": "claude-sonnet", "b": "qwen-2.5", "note": "短程 claude-sonnet 领先 qwen；长程 qwen 反超（守约稳、无自相矛盾）" },
+    { "a": "gpt-4o", "b": "heuristic", "note": "短程 gpt-4o 远强于贪心基线；长程贪心基线反而更稳（承诺少而不毁）" }
+  ]
+}

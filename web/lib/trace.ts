@@ -3,11 +3,11 @@
 // RunResult JSON (`npm run bench` output) and the adapter converts them to TraceExport shape.
 import type { RunResult, TraceLine, TraceKind } from "../../src/engine/types";
 import type { MetricKey } from "../../src/data/types";
-import type { TraceExport, TraceDayFrame, HeroMoment, RunProfile } from "./contract";
+import type { TraceExport, TraceDayFrame, HeroMoment, RunProfile, DecorrelationDataset } from "./contract";
 import { runResultToTraceExport } from "./contract";
 
 export type { RunResult, TraceLine, TraceKind, MetricKey };
-export type { TraceExport, TraceDayFrame, HeroMoment, RunProfile } from "./contract";
+export type { TraceExport, TraceDayFrame, HeroMoment, RunProfile, DecorrelationDataset, DecorrelationRow } from "./contract";
 
 // ---- trace manifest (which runs the site can replay) --------------------------------------
 export type TraceManifestEntry = {
@@ -65,5 +65,11 @@ export async function fetchManifest(): Promise<TraceManifest> {
 export async function fetchRun(file: string): Promise<RunResult> {
   const res = await fetch(`${base()}traces/${file}`);
   if (!res.ok) throw new Error(`trace fetch failed (${file}): ${res.status}`);
+  return res.json();
+}
+
+export async function fetchDecorrelation(): Promise<DecorrelationDataset> {
+  const res = await fetch(`${base()}decorrelation/placeholder.json`);
+  if (!res.ok) throw new Error(`decorrelation fetch failed: ${res.status}`);
   return res.json();
 }

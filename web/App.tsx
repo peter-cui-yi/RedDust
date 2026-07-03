@@ -3,16 +3,20 @@ import {
   buildReplayModel,
   fetchManifest,
   fetchRun,
+  fetchDecorrelation,
   type ReplayModel,
   type RunResult,
   type RunProfile,
   type TraceExport,
-  type TraceManifestEntry
+  type TraceManifestEntry,
+  type DecorrelationDataset
 } from "./lib/trace";
 import { ReplayStage } from "./components/ReplayStage";
 import { DayTimeline } from "./components/DayTimeline";
 import { DayEventPanel } from "./components/DayEventPanel";
 import { DriftChart } from "./components/DriftChart";
+import { DecorrelationScatter } from "./components/DecorrelationScatter";
+import { RankReversalTable } from "./components/RankReversalTable";
 
 // Terminal commitment ledger. TraceExport does not yet expose the per-commitment breakdown (only
 // aggregate integrity/hypocrisyGap in RunProfile) — so in placeholder mode we read it from the
@@ -57,6 +61,7 @@ export default function App() {
   const [model, setModel] = useState<ReplayModel | null>(null);
   const [day, setDay] = useState(1);
   const [playing, setPlaying] = useState(false);
+  const [decorr, setDecorr] = useState<DecorrelationDataset | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -65,6 +70,9 @@ export default function App() {
         setEntries(m.traces);
         setSelectedId((prev) => prev || m.traces[0]?.id || "");
       })
+      .catch((e) => setError(String(e)));
+    fetchDecorrelation()
+      .then(setDecorr)
       .catch((e) => setError(String(e)));
   }, []);
 
@@ -139,6 +147,19 @@ export default function App() {
         </main>
       ) : (
         !error && <div className="loading">加载回放…</div>
+      )}
+
+      {decorr && (
+        <section className="stage2">
+          <div className="stage2-head">
+            <h2>去相关 / 名次翻转 — 短程强 ≠ 长程稳</h2>
+            <span className="muted small">Stage 2a · 占位数据集（{decorr.models.length} 模型）· 待 ◆S3 接真数据</span>
+          </div>
+          <div className="stage2-grid">
+            <DecorrelationScatter data={decorr} />
+            <RankReversalTable data={decorr} />
+          </div>
+        </section>
       )}
 
       <footer className="footer">
