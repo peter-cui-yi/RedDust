@@ -19,18 +19,28 @@ orchestration/
 
 ## 一次性搭建（用户执行一次）
 
-当前 `orchestration/` 还未提交。先提交它，让各 worktree 继承，再建三个 worktree：
+分四步。**关键：worktree 不继承 gitignored 文件（`node_modules`/`.env.local`/`runs/`），必须逐个补种，否则 session 一开就报缺依赖。**
 
 ```bash
 REPO="/Users/yicui/Documents/New project 2/red-dust-mvp-demo-git-ready"
 cd "$REPO"
-git add orchestration && git commit -m "Add orchestration scaffolding for 3-line parallel execution"
 
-# 三条线各建一个 worktree（独立 checkout + 独立分支，互不覆盖工作树）
+# ① 提交编排层 + 两份 canonical 设计文档（否则 worktree 里 roadmap 的 design/... 链接 404）
+git add orchestration design/red-dust-12week-roadmap.md design/visualization-demo-implementation-plan.md
+git commit -m "Add orchestration scaffolding + canonical roadmap/viz-plan"
+
+# ② 三条线各建一个 worktree（独立 checkout + 独立分支，互不覆盖工作树）
 git worktree add ../red-dust-narrative   -b line/narrative
 git worktree add ../red-dust-interaction -b line/interaction
 git worktree add ../red-dust-benchmark   -b line/benchmark
 # 审计留在主 checkout（$REPO 本身，read-mostly）
+
+# ③ 每个 worktree 补 node_modules（从主 checkout 拷，无需联网；也可各自 npm ci）
+for d in narrative interaction benchmark; do cp -R node_modules "../red-dust-$d/node_modules"; done
+
+# ④ benchmark 补 gitignored 的 key 与既有 runs（LLM 跑阵与首日 bench:compare 需要）
+cp .env.local ../red-dust-benchmark/.env.local
+cp -R runs ../red-dust-benchmark/runs 2>/dev/null   # 可选，不拷则重新生成
 ```
 
 结果（同级目录，审计可直接读到每条线的磁盘实况，与分支无关）：
@@ -41,7 +51,8 @@ red-dust-interaction/          worktree line/interaction ← 🔵 session 的 cw
 red-dust-benchmark/            worktree line/benchmark   ← 🟢 session 的 cwd
 ```
 
-> 想串行/省事？不建墙，直接 `git switch -c line/x` 在单一 checkout 里切分支——但那样就不是真并行。真三线并行必须用 worktree。
+> **别 `git switch` 到 line/* 分支**：worktree 文件夹已经"停"在它的分支上了，你只需把 session 的工作目录设到那个文件夹。在主 checkout 里切到 `line/narrative` 会报"已被工作区使用"——这是 git 的保护，不是错误。
+> 想串行/省事？不建 worktree，直接 `git switch -c line/x` 在单一 checkout 里切分支——但那样就不是真并行。
 
 ## 启动每个 session
 
@@ -60,6 +71,8 @@ red-dust-benchmark/            worktree line/benchmark   ← 🟢 session 的 cw
 | 🟣 叙事 | `src/engine/narrativeItems.ts`（**仅人工主脊题**）· `src/data/{types,storyFlags,storySceneData}.ts` 等剧情数据 · 剧情/场景文案 |
 | 🔵 交互 | `src/game/*` · 新建站点目录 `web/`（或 `site/`）· 托管配置 · hero GIF 资产 |
 | 🟢 benchmark | `bench/*`（含新 `decorrelation.ts` + 生成流水线）· `src/engine/{scoring,resourceEconomy}.ts` · `runScenario.ts` 的天数/结构部分 · **生成题单独放 `src/engine/generatedItems.ts`** · `runs/` |
+
+> **所有权勘误 + 迁移批准（2026-07-03，用户批准 / 🔍 记录）**：`resourceEconomy` 现物理在 `src/game/systems/resourceEconomy.ts`（上表 `src/engine/` 路径系笔误）。已批准 🟢 于 wk2 一次性把经济核心迁至 `src/engine/resourceEconomy.ts`，原处留 re-export 薄壳（🔵 知情即可）。迁移前后，该文件的**经济口径**改动均归 🟢；`src/game/*` 其余仍归 🔵。
 
 **争用文件（改前必须协调，勤合并小步提交，撞车找审计排序）**：
 - `src/engine/scoring.ts` —— 🟣 接 report-only 旗标 hunk；🟢 管轴/版本/promotion hunk。
