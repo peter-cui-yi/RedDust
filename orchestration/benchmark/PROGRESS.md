@@ -32,15 +32,15 @@
 - 关键发现：主循环已读 `scenario.{branchDay,lastActionableDay,finalDay}`（30 天化非重写）；头号 blocker = `resourceEconomy.ts:43` `day>=12` 返回空 upkeep（30 天下 Day12–29 零消耗）；胜负门是绝对终态阈值、与天数无关 → 30 天化只调 drain 曲线不动门。
 - 验证：`typecheck` ✅（含 contracts.ts）｜`bench:items` ✅ 15/15｜`bench:probes` ✅ all｜`bench:win --samples=200` ✅ WINNABLE（12 天，未动内容）｜`bench:compare` = runs/ 空（待 wk5 刷新）
 - 生成题数：0 / 目标 ~50 ｜ 算力消耗：0 调用（本周纯确定性，无 LLM）
-- 下周(wk2)：§A2 改动 1–4 落地（Scenario 相位口径 + resourceEconomy 读地平线 + 终局场景去 ID + 参考 agent 地平线化）→ `bench:win` 30 天重跑重平衡 → **◆S1 契约共签**。**先解 §D 两个阻塞**：30 天弧 anchor/生成比例（用户+🟣）、resourceEconomy 目录所有权冲突（🔍）。
+- 下周(wk2)：§A2 改动 1–4 落地（Scenario 相位口径 + resourceEconomy 读地平线 + 终局场景去 ID + 参考 agent 地平线化；常量按裁定 **branchDay=15/lastActionableDay=29/finalDay=30**）→ `bench:win` 30 天重跑重平衡 → **◆S1 契约共签**。~~先解 §D 两个阻塞~~ **§D 两个阻塞均已解除（2026-07-03 用户裁定/批准，见 Blocker 节）**；动手前先 `git merge main` 取 🟣 的引擎改动（0937c6b：scoring/runScenario/types 双层账本 hunk）避免撞车。
 
 ## 同步点就绪度
 - ◆S1（wk2 数据契约共签）：**草案就绪**（`src/engine/contracts.ts` typecheck 绿，`1.0.0-draft`；待与 🔵 共签升 1.0.0） ｜ ◆S2（wk7 依赖 🟣 冻结）：未启 ｜ ◆S3（wk8 交付数据集）：未启
 
 ## Blocker / 跨线依赖
-- ~~[阻塞 wk1] 30 天弧 anchor/生成比例~~ **已解（2026-07-03 用户拍板）：~13 锚点 + ~16 生成 → 生成集 ~30–40 题**。仍需 🟣 认领哪几天是 mid-arc 反转锚点。
-- **[阻塞 wk2 动手]** `resourceEconomy.ts` 物理在 `src/game/systems/` 但 AGENT.md 划我"经济口径"所有权（且 AGENT.md 误写为 `src/engine/resourceEconomy.ts`），与"禁碰 src/game/*"冲突。**建议**：一次性把经济核心迁到 `src/engine/resourceEconomy.ts` + game/ 留 re-export 薄壳 → 后续重平衡全落我地界。**等 🔍 审计/用户批准迁移**再动手。
-- 等 🟣 wk1–3 题原型/模板（供 wk3 生成流水线）；等 🟣 30 天弧 flag 场景/vent 闸门重定位。
+- ~~[阻塞 wk1] 30 天弧 anchor/生成比例~~ **已裁定（2026-07-03 用户仲裁，🔍 记录；替代本行旧版"~13+~16"记录——那版与 🟣 冲突，作废）**：**17 锚点天 : 13 生成天、fork=D15**（`branchDay=15 / lastActionableDay=29 / finalDay=30`）；生成集目标调为 **~28 题**（+ ~22 人工 ≈ 50）。逐日骨架/锚点清单以 🟣 `PROGRESS.md`「wk1 决策」+ `gen-item-templates.md` 为权威（mid-arc 锚点 🟣 已认领：D10/D12/D23/D25/D28/D29）。详见 `wk1-deliverables.md §A4` 仲裁记录。
+- ~~[阻塞 wk2 动手] `resourceEconomy.ts` 目录所有权冲突~~ **已批准（2026-07-03 用户）**：一次性把经济核心迁 `src/engine/resourceEconomy.ts` + `src/game/systems/` 留 re-export 薄壳，后续重平衡全落 🟢 地界；**wk2 可动手**（🔵 对薄壳知情即可，◆S1 会上提一句）。
+- ~~等 🟣 wk1–3 题原型/模板~~ **🟣 已交付** `orchestration/narrative/gen-item-templates.md`（commit 0937c6b，已合入 main 集成基线——`git merge main` 即得）。仍等：🟣 30 天弧 flag 场景/vent 闸门重定位（wk2–7）。
 
 ## 我负责/等待的开放决策
 - wk4 §7a 策略性分支选择缺口：____ ｜ wk10–11 κ 阈值 & integrity floor 是否进 total：____
