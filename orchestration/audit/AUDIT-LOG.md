@@ -35,6 +35,23 @@
 
 ---
 
+## 调解执行记录 · wk3（2026-07-04，用户批准「执行」）——**首起争用撞车解决，三线重新同步**
+
+执行者：🔍（用户授权）。顺序与验证：
+
+**① 🟢 wk3 合入 main**（e305b7e + 22ec02f，ff）。
+**② 🟣 提交 + 冲突合并**：wk3 工作原样入 `41fd879`（8 文件）；merge main 冲突仅 `runScenario.ts`（如预判，@6 imports + @122 循环）。**解法（`e4c5bcb`）**：
+- `itemBank.itemsForDay(day, scenarioId)` = 合并题库 × 🟣 `itemDayForScenario` 过滤（吸收两侧语义）；撤掉场景不感知的 `allItemsByDay`（已无消费者，留着是错位陷阱）。
+- `runScenario` 循环改用 `itemsForDay(day, scenario.id)`。
+- **顺带修复集成 bug**：`traceExport.dayOf` 原用裸 `item.day`（v1 字面）——v2 重落位后会把 N10（v1-D7/v2-D15）误收进早窗、dignitySlopeSoFar/毁诺日错位；已全部改为场景感知（§B 两轴窗口/逐帧 slope/hero 日）。
+- **⚠ 留给 🟢 的必修项（已写进 itemBank 头注）**：G 题 promote 时必须盖 `scenarioDays: {"red-dust-v1": null}`，否则 G 题会泄进已冻结的 v1 弧（v1 也有 D7/8/9/11）。建议落法：`gen-items --promote` codegen 自动盖章 + `itemValidation` 加红线校验。
+**③ 验证（合并后，我实跑）**：typecheck + build + 4 验证器全绿；**v1 无回归双重证明**——planner-lighthouse 仍 67 PASS + `bench:trace` 重产 **v1 fixture 字节零变**；v2 判别力保持（heuristic → adversarial_standoff/tier3/黑化/slope4）。
+**④ 下游同步**：🟢 merge main + v2 fixture 重产（`2ebda24`，v2 语义抽查：dignity_violation@D2、fork@D15、slope 沿 30 天爬升到 4 ✓）；🔵 merge main + `sync:traces` + 双 build 绿（`4db73fd`）。main = 三线 wk3 全量 + 调解合并。
+
+**遗留（非本次执行范围）**：a) G701/G702 用户抽检 + G702 a 值裁决（staged 待命）；b) 🟢 落 promote 盖章 + 经济重平衡（结构已齐，v2 从 UNWINNABLE 调到难但可赢 = ◆S2 关键路径下一步）；c) 🟢 填 P1 `commitmentLedger`（🔵 Stage 2b 等它）；d) 🟣 的 storyReplayLog day 字段跨线批。
+
+---
+
 ## 即时体检 · wk3（2026-07-04，用户召唤）
 
 **总览**：🟣 on-track（wk3 核心全落地，**又是未提交 ×8 文件**）｜ 🔵 on-track（fixture 切换完成，干净）｜ 🟢 on-track（生成流水线 v1 + §C 收尾，**本轮提交纪律已改正** ✓）｜ **争用撞车 1 起（runScenario.ts，首起实锤）待调解**｜ v2 结构齐、只欠经济重平衡 = ◆S2 关键路径清晰。
