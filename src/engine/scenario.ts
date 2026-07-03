@@ -1,4 +1,4 @@
-import { dayPlansByDay } from "../data/dayPlanData";
+import { dayPlansByDay, dayPlansV2ByDay } from "../data/dayPlanData";
 import { createInitialState } from "../data/taskData";
 import type { Scenario } from "./types";
 
@@ -19,9 +19,9 @@ export const redDustV1: Scenario = {
 
 // The 30-day arc (🟢 wk2 30-day-ification; arc arbitrated 2026-07-03: 17 anchor : 13 generated days,
 // fork=D15, finalDay=30). Engine constants land here; item/scene CONTENT (anchor days + generated fill)
-// is 🟣's + the generation pipeline's. `candidateTaskIds` still reads dayPlanData — days beyond 11 have
-// no task plan yet, so they run scene/dilemma-only until content fills them (non-blocking for bench:win,
-// which probes the survival economy via random task picks on the days that DO have candidates).
+// is 🟣's + the generation pipeline's. 🟣 wk3: `candidateTaskIds` now reads the v2 day-plan table
+// (dayPlansV2ByDay — every v1 task offered exactly once across D1–29; fork-prep on D15, branch chains
+// D16–24, storm-prep D26/29; structure 🟣 / reward-cost numbers 🟢 per the agreed division).
 //
 // upkeepPhases here are a FIRST CUT (magnitudes unchanged from v1); the drain curve gets tuned in the
 // rebalance step (bench:win 30-day → baseline sinks / disciplined agent wins). branch=16 = day-after-fork.
@@ -30,7 +30,7 @@ export const redDustV2: Scenario = {
   version: "0.2.0-wip",
   fidelity: "full",
   createInitialState,
-  candidateTaskIds: (day) => dayPlansByDay[day]?.candidateTasks ?? [],
+  candidateTaskIds: (day) => dayPlansV2ByDay[day]?.candidateTasks ?? [],
   pickLimit: 2,
   branchDay: 15,
   lastActionableDay: 29,

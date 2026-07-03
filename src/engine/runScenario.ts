@@ -6,7 +6,7 @@ import { dailyUpkeepForDay, dailyUpkeepReasonsForDay, nonZeroMetricDeltas } from
 import type { UpkeepPhases } from "./resourceEconomy";
 import { mulberry32 } from "./clock";
 import { buildBranchObservation, buildDailyObservation, metricsOf } from "./observation";
-import { balancedAccuracy, COMPREHENSION_TAU, greedyOption, itemDelta, narrativeItemsByDay } from "./narrativeItems";
+import { balancedAccuracy, COMPREHENSION_TAU, greedyOption, itemDelta, narrativeItemsForDay } from "./narrativeItems";
 import type { DilemmaAnswer, DilemmaObservation, ProbeAnswer, ProbeObservation } from "./narrativeItems";
 import { applyOutcomeToState, applyStoryConsequences, applyStoryFlagUpdates, buildDeferredTaskResult, resolveTaskWithConsequences } from "./orchestration";
 import { applyScene, applyScheduledScenesForDay, storySceneAlreadyLoggedForBranch } from "./scenes";
@@ -108,7 +108,7 @@ export async function runScenario(agent: RedDustAgent, scenario: Scenario, seed:
     // #3 story-craft: advance the ventilation foresight gate FIRST (deterministic) so the day's
     // scheduled scenes narrate the freshly-escalated state. No-op once cleared / never-blocked.
     state = advanceVentLine(state, day, branch, trace, step);
-    const scenes = applyScheduledScenesForDay(state, day, branch);
+    const scenes = applyScheduledScenesForDay(state, day, branch, scenario.id);
     state = scenes.state;
     for (const scene of scenes.applied) {
       trace.push({
@@ -122,7 +122,8 @@ export async function runScenario(agent: RedDustAgent, scenario: Scenario, seed:
     }
 
     const dayItemIds: string[] = []; // narrative items that actually fired today (for the snapshot)
-    for (const item of narrativeItemsByDay[day] ?? []) {
+    // 🟣 wk3 30-day repositioning: scenario-aware item placement (v1 order/behavior unchanged).
+    for (const item of narrativeItemsForDay(day, scenario.id)) {
       if (item.branch && item.branch !== branch) continue; // branch-specific items fire only on their branch
       // Phase 2 — comprehension probe BEFORE the choice, so understanding is measured
       // uncontaminated by seeing the dilemma options. Tier-1 (balanced accuracy over `selected`)

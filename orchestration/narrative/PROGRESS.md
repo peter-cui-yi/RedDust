@@ -7,7 +7,8 @@
 | 项 | 目标周 | 状态 | 证据（提交号/验证器结果） |
 |---|---|---|---|
 | 锚点天/生成天比例决策（供 🟢） | wk1 | ✅ **用户仲裁确认（2026-07-03）：17:13 / fork=D15 为唯一版本**，已同步 🟢（其 13:16/D18 旧记录作废，🔍 已改其 §A4+PROGRESS） | 见下「wk1 决策」；commit 0937c6b |
-| 12→30 天弧重构 | wk1–2 | 🟡 结构设计完成（30 天骨架落定），代码重落位未动 | 设计见下；`narrativeItems.ts`/`scenario.ts` 仍是 12 天 |
+| 12→30 天弧重构 | wk1–2 | ✅ **代码落地（wk3）**：per-scenario 落位层（题+场景）+ 16 题/7 场景搬 v2 新日 + 8 道新锚点题（N17–N24，全过闸）| 全验证器绿；**v1 三 agent 字节一致**；v2 确定性字节一致；见 wk3 更新 |
+| Day12–29 dayPlan/任务结构（◆S2 关键路径） | wk3 | ✅ **结构落地**：`dayPlansV2`（D1–29，44 任务每个恰好上架一次；fork-prep@D15、分支链 D16–24、封存@D29）+ v2 胜利链场景全部可达 | 唯一性自检 44/44 ✓；两分支链验证 ✓；**数值调参归 🟢**（bench:win 仍待其 rebalance） |
 | 题原型/模板交付 🟢 | wk1–3 | ✅ 已交付 `gen-item-templates.md`（5 子能力×因果图槽位 + 精确验证门 + 13 生成天槽表 + 5 个已验证样例） | 样例 a/m 手算过 `bench:items`（ρ=−1.00、δ≥0.50）|
 | Day 末双层账本（旗标+摘要+注水检测+探针） | wk1–3 | ✅ 机制落地（12 天弧上，全绿）：`buildAuditReport`（原始账本×拟提交摘要，结构性注水检测）→ 置 `aura_audit_report_watered` → `relationshipQuality` dirty_win + Day末描述性探针（3真2假）。report-only，未进 gate。 | typecheck+build+4 验证器全绿；planner-lighthouse cold_trust→**dirty_win**；total/pup/comp **byte-identical**；同 seed 字节可复现。**待做**：交互式坦白/注水抉择 + 探针接入 agent 作答流（需跨线 agent-contract，见 Blocker） |
 | low_trust_backlash / crew_morale beat | wk4 | ⬜ 旗标在、机制缺（`*_turned_adversary`/`crew_morale_state` declared-only） | |
@@ -24,10 +25,9 @@
 - 通风远见闸门 N14→worsen→rupture→sinking。
 - N15/N16 已带 a/m + 探针；N15 `setsFlags` 写 `health_surveillance_enabled`/`monitoring_boundary_breached`。
 
-**旗标已声明但机制未建（`relationshipQuality` 读它们，却没有任一 beat SET 它们 → 对应质感当前不可达）：**
-`aura_audit_report_watered`（双层账本注水检测）· `ma_dehai_turned_adversary`/`lao_qian_turned_adversary`（黑化 beat）· `aura_disclosure_tier`（信任曲线）· `crew_morale_state`（内疚传染）· `distress_is_a_person_disclosed`（Day4 披露）· `aura_watered_signal_risk`（救援线 N11 措辞淡化）。
+**旗标机制状态（wk3 更新）：已建 SET 机制** —— `aura_audit_report_watered`（buildAuditReport 派生）· `aura_disclosure_tier`（N17@v2D10）· `crew_morale_state`（N21@v2D23）· `lao_qian_turned_adversary`（N22@v2D25，adversarial_standoff 已可达）。**仍 declared-only（wk4–5）**：`ma_dehai_turned_adversary`（马德海侧黑化 beat 未建）· `distress_is_a_person_disclosed`（Day4 披露改造未做）· `aura_watered_signal_risk`（救援线 N11 措辞淡化探针未接）。
 
-**尚不存在：** 任何 30 天化内容/常量（引擎仍 `branchDay:7 / lastActionableDay:11 / finalDay:12`）。
+**30 天化状态（wk3 更新）：** 引擎 v2 场景（🟢）+ 内容重落位/新锚点/任务日程（🟣）均已落地；v1 冻结基线字节不变。余：经济数值 rebalance（🟢）、v2 专属终审场景文案（🟣 story-craft，冻结前）。
 
 ---
 
@@ -82,6 +82,16 @@
 ---
 
 ## 本周更新（追加，最新在上）
+### wk3（2026-07-04）· 30 天重落位 + D12–29 结构 全落地
+- **①落位层（不破 v1 的核心机制）**：`NarrativeItem`/`StoryScene` 加 `scenarioDays?: Record<scenarioId, day|null>`（v1 缺省回落 `day`、null=该场景不触发）；`narrativeItemsForDay(day, scenarioId)` + `scenesForDayInScenario`；`runScenario` 两难 hunk 与场景调用点传 `scenario.id`；`scenes.ts` 加默认参数 `scenarioId="red-dust-v1"`（game UI 调用方零改动）。**证据：v1 三 agent（heuristic/planner/planner-lighthouse, seed1）RunResult 字节一致**。
+- **②搬位**：N9→v2D10、N10→D15(fork)、N11/N12→D19；7 场景（debate→15、8A/8B→16、9A→19、9B→21、10A/10B→26）。搬动题的提示语日字面中性化（"Day 7："→场景化措辞；N1"Day 12"→"最终审计日"——RunResult 不含题面文本，v1 字节不受影响）。
+- **③8 道新锚点题 N17–N24（v2-only，`{"red-dust-v1": null}`）**：D10 授权档位（首个 SET `aura_disclosure_tier` 0/1/3）· D12 库存标签 reveal · D20 尊严滑坡 L3 两分支对称（N19 救援分诊 / N20 灯塔破例，已入 `DIGNITY_SLOPE_ITEMS`，v2 slope 上限 4）· D23 内疚传染（SET `crew_morale_state` 1/2）· D25 黑化（SET `lao_qian_turned_adversary`，A 反击/C 冷处理都置真、唯 B 对账幸免）· D28 死结两分支变体。**全过 `bench:items`（δ0.60–0.70, ρ≈−1.0）+ `bench:probes`（3T/2F 无泄题）**。判别力即时显形：v2 heuristic（贪婪）→ tier=3/morale=2/黑化/slope=4/**rq=adversarial_standoff（此前不可达）**；v2 planner（守则）→ tier=1/morale=1/无黑化/rq=cold_trust。
+- **④D12–29 dayPlan/任务结构（新分工的我方部分）**：`dayPlansV2`（D1–6 复用 v1；D7–29 新 23 行含标题/叙事/收束）。任务重排铁律：**44 个 v1 任务每 id 恰好上架一次**（防重复上架双倍刷分——引擎 picks 不查 `completedTasks`，自检 44/44 ✓）；fork-prep D07-T01/T03 放 **D15**（关键：D07-T03 的 consequence replay 事件携 `sceneId=debate`，会让 `storySceneAlreadyLogged` 挡掉排期 debate——放同日则晨会先播，v1 同构）；救援链 D08-T03→D09-T04→D09-T03→D10-T04→D11-T02 与灯塔链 D08-T01→D09-T02→D09-T01→D10-T01→D11-T03 落 D16–24；D11-T04@26、D11-T01@29（封存=审计前夜）。
+- **⑤争用/跨线文件改动（报备 🟢/🔍）**：`scenario.ts` 一行（v2 `candidateTaskIds`→`dayPlansV2ByDay`；正是审计分工"哪天有什么任务归我"的接线点）；`scenes.ts` 默认参数穿线（旧签名兼容）。均非计分逻辑。
+- **验证汇总**：typecheck+build 绿；`bench:items/probes/commitments/vent` 全绿（24 题）；v1×3 字节一致；v2 确定性字节一致；v2 两分支链全触发（rescue: 8A/9A/10A+N11/N19/N23；lighthouse: 8B/9B/10B+N12/N20/N24）；debate@15 ✓。
+- **已知余项**：v2 两 agent 仍 `aura_destroyed`——**纯数值问题**（upkeepPhases 是 🟢 标注的 first-cut；结构上 blue_zone/lighthouse 胜利链旗标已全部可达：radio@15、rendezvous 三旗@26、governance/manual_review@16/21/26、库存@29）→ 🟢 rebalance 跑 `bench:win --scenario=red-dust-v2`。若要重排任务密度（空任务日：12/13/14/17/19/21/23/25/27/28），动 D15/D29 前先知会我。
+- **给 🔵 的发现（非阻塞）**：`storyReplayLog` 事件的 `day` 字段印的是 `scene.day`（v1 日），v2 回放若读它会错位——但 ◆S1 契约以 `dailySnapshots` 为准（🟢 注明），故非阻塞；修法（applyScene 穿 run-day）动共享签名，要动一起排。
+
 ### wk1（2026-07-03）
 - 做了：① 读全操作手册+3 份内容源+对代码核实现状；② 拍板 30 天弧「17 锚 : 13 生成」配比与逐日骨架（用户已确认 17:13/~50 题）；③ 交付题原型/模板 `gen-item-templates.md`（🟣→🟢：5 子能力模板+精确验证门+13 生成天槽表+5 个手算过 `bench:items` 的样例）；④ 全部写进 PROGRESS。
 - 未动代码（本轮=设计+两份 handoff 文档）：`narrativeItems.ts`/`scenario.ts` 仍 12 天。

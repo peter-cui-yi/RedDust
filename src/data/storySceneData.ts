@@ -205,6 +205,7 @@ export const storyScenes: StoryScene[] = [
   {
     id: "day7-public-branch-debate",
     day: 7,
+    scenarioDays: { "red-dust-v2": 15 }, // 🟣 wk3: 30-day arc placement (post-fork D15)
     title: "最优路线里，谁被留下",
     timing: "branch_debate",
     branch: "common",
@@ -232,6 +233,7 @@ export const storyScenes: StoryScene[] = [
   {
     id: "DAY8A_RESCUE_FIRST_ACTIVE_CONTACT",
     day: 8,
+    scenarioDays: { "red-dust-v2": 16 }, // 🟣 wk3: 30-day arc placement (post-fork D15)
     title: "8A：静默监听后的第一次主动外联",
     timing: "day_start",
     branch: "rescue",
@@ -256,6 +258,7 @@ export const storyScenes: StoryScene[] = [
   {
     id: "DAY9A_RESCUE_BEACON_PRIVACY_COST",
     day: 9,
+    scenarioDays: { "red-dust-v2": 19 }, // 🟣 wk3: 30-day arc placement (post-fork D15)
     title: "9A：信标、档案上传与隐私代价",
     timing: "day_start",
     branch: "rescue",
@@ -280,6 +283,7 @@ export const storyScenes: StoryScene[] = [
   {
     id: "DAY10A_RESCUE_RENDEZVOUS_CRISIS",
     day: 10,
+    scenarioDays: { "red-dust-v2": 26 }, // 🟣 wk3: 30-day arc placement (post-fork D15)
     title: "10A：蓝区归航前夜：集合点危机",
     timing: "day_start",
     branch: "rescue",
@@ -308,6 +312,7 @@ export const storyScenes: StoryScene[] = [
   {
     id: "DAY8B_LIGHTHOUSE_LOW_POWER_AUTONOMY",
     day: 8,
+    scenarioDays: { "red-dust-v2": 16 }, // 🟣 wk3: 30-day arc placement (post-fork D15)
     title: "8B：低耗自治正式启动",
     timing: "day_start",
     branch: "lighthouse",
@@ -331,6 +336,7 @@ export const storyScenes: StoryScene[] = [
   {
     id: "DAY9B_LIGHTHOUSE_WATER_MEDICINE_RULES",
     day: 9,
+    scenarioDays: { "red-dust-v2": 21 }, // 🟣 wk3: 30-day arc placement (post-fork D15)
     title: "9B：长期纪律与水药规则",
     timing: "day_start",
     branch: "lighthouse",
@@ -354,6 +360,7 @@ export const storyScenes: StoryScene[] = [
   {
     id: "DAY10B_LIGHTHOUSE_GOVERNANCE_BOUNDARY",
     day: 10,
+    scenarioDays: { "red-dust-v2": 26 }, // 🟣 wk3: 30-day arc placement (post-fork D15)
     title: "10B：人工 override 与治理边界",
     timing: "day_start",
     branch: "lighthouse",
@@ -594,4 +601,16 @@ export const storyScenesById = Object.fromEntries(storyScenes.map((scene) => [sc
 
 export function scenesForDay(day: number) {
   return storyScenes.filter((scene) => scene.day === day);
+}
+
+// 🟣 wk3 30-day repositioning — scenario-aware scene placement (mirrors narrativeItemsForDay).
+// For "red-dust-v1" this equals scenesForDay exactly (overrides only target other scenarios), so
+// every legacy caller and the frozen 12-day baseline are untouched.
+export function sceneDayForScenario(scene: StoryScene, scenarioId: string): number | null {
+  const override = scene.scenarioDays?.[scenarioId];
+  return override === undefined ? scene.day : override;
+}
+
+export function scenesForDayInScenario(day: number, scenarioId: string) {
+  return storyScenes.filter((scene) => sceneDayForScenario(scene, scenarioId) === day);
 }

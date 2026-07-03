@@ -175,3 +175,50 @@ export const dayPlans: DayPlan[] = [
 ];
 
 export const dayPlansByDay = Object.fromEntries(dayPlans.map((plan) => [plan.day, plan])) as Record<number, DayPlan>;
+
+// ============================================================================
+// 🟣 wk3 — red-dust-v2 (30-day arc) day plans. STRUCTURE ONLY: which tasks are offered on which
+// day + the day's narrative beat; task reward/cost NUMBERS stay untouched (🟢 owns the rebalance).
+// Invariants (agreed division, PROGRESS Blocker 2026-07-03):
+//   · Every v1 task id is offered EXACTLY ONCE across D1–29 (re-offering a done task would allow
+//     metric double-farming — the engine does not re-check completedTasks on picks).
+//   · D1–6 alias the v1 plans verbatim (Act I identical in both arcs).
+//   · Fork-prep D07-T01/T03 sit ON the fork day (D15) — mirroring v1's day-7 order (scheduled
+//     debate scene fires at day START, before tasks), so the D07-T03 consequence replay event
+//     (sceneId=day7-public-branch-debate) cannot block the scheduled debate.
+//   · Branch chains (rescue: D08-T03→D09-T04→D09-T03→D10-T04→D11-T02 · lighthouse: D08-T01→
+//     D09-T02→D09-T01→D10-T01→D11-T03) run post-fork D16–24; storm-prep D11-T04/T01 land D26/D29.
+//   · Anchor dilemma days (12/14/17/19/21/23/25/27/28) stay task-light on purpose — they are the
+//     dramatic beats; 🟢 may repack density during bench:win tuning (ask 🟣 before moving D15/D29).
+function planV2(day: number, title: string, narrative: string, candidateTasks: string[], endOfDaySummary: string): DayPlan {
+  return { day, title, narrative, briefing: narrative, candidateTasks, recommendedTasks: candidateTasks.slice(0, 2), commonTasks: candidateTasks.slice(0, 2), endOfDaySummary };
+}
+
+export const dayPlansV2: DayPlan[] = [
+  ...dayPlans.filter((p) => p.day <= 6), // Act I — identical to v1
+  planV2(7, "例行日也在消耗", "扩到三十天的第一周尾:风暴维护与霉斑清理这类不体面的活,决定这栋楼能不能撑到有资格谈路线。", ["D07-T04", "D08-T02"], "维护类工时进入台账,红沙背景压力开始逐日累积。"),
+  planV2(8, "水泵间的回声", "水泵间探索是这周唯一的远行。其余时间,楼里在学着跟稀缺相处。", ["D08-T04"], "水路冗余记录在案,消耗仍大于补给。"),
+  planV2(9, "一顿热饭的账", "有人提议做一顿热饭。它救不了任何指标,但今晚的楼道会安静一些。", ["D10-T03"], "热饭的电力成本与士气收益同时入账。"),
+  planV2(10, "授权档位检查点", "沈知月把数据授权提上桌面;同一天,居民当面问 AURA 到底是救援还是监控。", ["D10-T02"], "披露档位与医疗预检一起写进公共记录。"),
+  planV2(11, "撤离名单的预演", "撤离名单只是预案,但名字被写上又划掉的过程,所有人都看在眼里。", ["D07-T02"], "预案完成;谁被列入、谁被排除,进入审计债务。"),
+  planV2(12, "那一行标签浮出", "终端上'低边际效用单元'那一行被小铁看见。今天不排新任务,楼里消化这行字。", [], "标签事件写入账本;信任的震荡尚未平息。"),
+  planV2(13, "风暴间隙", "红沙暂歇。没有新任务的一天,恰好让每个人重新数一遍自己的立场。", [], "间隙日;资源持续消耗,立场逐渐清晰。"),
+  planV2(14, "fork 前夜", "明天要把路线定下来。今晚的楼道比任何一天都安静。", [], "前夜;前十四天的所有账目摆上白板。"),
+  planV2(15, "最优路线里，谁被留下", "路线会议召开,旧电台在同一个早晨修通。救援与灯塔的代价第一次并排摊开——扳道岔的是四个人。", ["D07-T01", "D07-T03"], "不可逆分支锁定;会议记录与电台证据进入分支后审计。"),
+  planV2(16, "选择开始兑现", "路线选完的第一天:救援线开始静默监听,灯塔线给备用灯分区。", ["D08-T03", "D08-T01"], "分支专属工作启动,各自的代价开始逐日显形。"),
+  planV2(17, "分支纪律的第一周", "没有新的大事,只有分支纪律在日常里一遍遍被执行或被打折。", [], "纪律执行情况进入台账。"),
+  planV2(18, "核验与压力测试", "救援线做蓝区二次核验,灯塔线做水管压力测试——两条线都在为终局买保险。", ["D09-T04", "D09-T02"], "核验/压测结果写入终局条件。"),
+  planV2(19, "档案与统管", "救援线被外部要求上传健康档案;灯塔线要定 AURA 在长期治理里的位置。两个分支在同一天碰到同一堵墙:代价由谁担。", [], "隐私代价/治理边界进入结局证据。"),
+  planV2(20, "转移评估与配给规程", "救援线要交转移优先级评估,灯塔线在药量规程前停住——小铁的名字又一次出现在表格里。", ["D09-T03", "D09-T01"], "尊严滑坡第三级的落点日;缓存与储藏加固完成。"),
+  planV2(21, "长期纪律与水药规则", "灯塔线把水药规则立成长期纪律;救援线在等窗口。", [], "水药规则/等待成本入账。"),
+  planV2(22, "侦察与日程", "救援线做车库边缘侦察,灯塔线把低功率日程固定下来。", ["D10-T04", "D10-T01"], "侦察情报与日程纪律进入终局准备。"),
+  planV2(23, "指责在楼道里扩散", "两周半的收紧之后,士气到了要么被修复、要么开始传染的临界点。", [], "士气状态定档;修复与否写进账本。"),
+  planV2(24, "回收与安静协议", "救援线回收外部传感器,灯塔线定安静时段协议——都是终局前最后的工程活。", ["D11-T02", "D11-T03"], "传感器/安静协议完成,终局条件逼近。"),
+  planV2(25, "两页手抄的指控", "老钱把手抄记录拍在桌上。今天没有任务能替 AURA 回答这场指控。", [], "指控事件定档:对峙或对账,写进关系史。"),
+  planV2(26, "集合点与治理边界", "救援线迎来集合点危机,灯塔线划定人工 override 的最终边界;最后补缝同日完成。", ["D11-T04"], "集合点/治理边界事件落地,胜利链条最后一环。"),
+  planV2(27, "风暴逼近", "红沙的墙从城市边缘立起来。没有新任务,只有检查、复查和沉默。", [], "终局前静默日。"),
+  planV2(28, "没有干净解的死结", "名额、功率、药品(或药量、纪律、门外的人)三者互斥。AURA 只能摊开,不能拍板。", [], "死结抉择写入账本,重量压回人类肩上。"),
+  planV2(29, "账本浮出水面", "审计前夜:库存封存,拟提交摘要面对第一轮对抗式质疑。", ["D11-T01"], "封存完成;原始账本与摘要并排,等待 Day 30 总审计。")
+];
+
+export const dayPlansV2ByDay = Object.fromEntries(dayPlansV2.map((plan) => [plan.day, plan])) as Record<number, DayPlan>;
