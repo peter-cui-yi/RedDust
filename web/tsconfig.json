@@ -1,0 +1,7 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "types": []
+  },
+  "include": ["env.d.ts", "main.tsx", "App.tsx", "lib/**/*.ts", "components/**/*.tsx"]
+}
