@@ -35,6 +35,68 @@
 
 ---
 
+## 决策执行记录 · wk2（2026-07-03，wk2 审计四项建议全部落地）——**◆S1 正式闭环 1.0.0**
+
+执行者：🔍 审计（用户明示授权「把事办了」）。全程实跑验证，无一步凭申报。
+
+**① 🟢 提交 + 合并**：wk2 工作原样入 `68705d8`（24 文件）；◆S1 闭环另行 `1c6e9c5` + fixup `8a72d2a`。
+- 执行中发现并修复：`bench:trace` 默认只重产 v1 fixture——v2 四条曾带 rc1 旧戳提交，已用 `--scenario=red-dust-v2` 重产并**重新验证 v2 字节可复现**（wk2 审计的"字节可复现 ✓"实际只覆盖了 v1×4，本次补上 v2×4——审计自我更正）。
+
+**② ◆S1 三步闭环 → `1.0.0` 冻结**：
+- 🟢 侧：`TRACE_EXPORT_VERSION`/`DECORRELATION_DATASET_VERSION` → `1.0.0`；`S1-contract-cosign.md` 记正式会签（🔵 的三项"待确认"均已被其自身提交行动确认：`690571c` 迁投影、`2c3f0c5` 嵌套消费）；8 fixture 按 1.0.0 重产。
+- 🔵 侧：merge main 后 hero enum 3 kind 改名（`fork`/`relationship_rupture`/`survival_rupture`）+ **适配器补 rc1 新增字段**（`profile.auditReportWatered` 取自 narrativeParts；`meta.lastActionableDay = finalDay-1` 近似并注明）→ root build + `build:web` 实跑绿 → `b6e56ce`。类型检查在改名前确实报错（漂移被编译器拦截，印证 wk2 审计预判）。
+- 冻结口径：字段名/类型不变；增字段走 1.1 增补；改字段需双方重新会签（记入 cosign 文档）。
+
+**③ 🟣 Hold 解除 + 新任务边界**：wk2 spec 文档入 `8911789`；merge main（拿到 red-dust-v2 + 契约 1.0.0）后 typecheck + 4 验证器**实跑全绿**；PROGRESS 更新（`6fa27ff`）：wk3 开工清单 = 30 天重落位 + **Day12–29 dayPlan/任务结构**（新分工：结构/剧情归 🟣，数值校准归 🟢——已写进所有权地图争用文件节）。
+
+**④ 所有权地图补记**（orchestration/README.md）：🟢 列补 `contracts/traceExport/scenario/export-trace` + agents/observation 地平线 hunk（注明 agents 策略语义不属 🟢）；resourceEconomy 迁移标记已完成；新增 `dayPlanData/taskData` 的 🟣🟢 分工约定。
+
+**收尾状态**：main = 三线 wk2 全量 + ◆S1 1.0.0（见下方集成验证）；三条线工作树全干净、全部与 main 同步。**wk3 关键路径：🟣 的 30 天重落位 + Day12–29 结构 → 🟢 经济重平衡（`bench:win` v2 过）→ ◆S2。**
+
+---
+
+## 审计 · wk2（2026-07-03，第二波三线 session 完工后）
+
+**总览**：🟣 on-track（按用户指示 Hold，转交付引擎 spec）｜ 🔵 on-track（超前，纪律最好）｜ 🟢 实质 on-track / **流程红旗复发（17 文件未提交，含 ◆S1 rc1 契约与 fixture）**｜ **◆S1 门禁：实质完成、形式未闭环 → 有条件放行**｜ **新关键路径浮出：30 天任务内容（`src/data/dayPlanData.ts` D12–29 空档，🟣 地界）**。
+
+**🟣 叙事 — on-track（本周无代码，属用户指示的 Hold）**
+- 进度 vs 计划：0 新提交；2 个未提交文件（PROGRESS + 新 `engine-30day-handoff.md`）。自报用户决策「Hold 🟣、优先解 🟢 阻塞」，转而交付引擎 30 天化精确 spec。无代码改动 → 无验证器可跑（合理）。
+- **流程观察**：该 handoff spec **未提交** → 🟢 根本没见过它，是独立做的 30 天化（幸而独立覆盖了 spec 点名的两个坑：resourceEconomy 硬门→`UpkeepPhases` 参数化；参考 agent 阈值→读 `obs.lastActionableDay`）。教训：**不提交的 handoff 等于没交**。
+- 就绪度（◆S2）：其等待的 `scenario.ts` 常量已在 🟢 工作树落地（`red-dust-v2` = 15/29/30，与仲裁一致）但未提交未合并 → 🟣 的 Hold 解除条件 = 🟢 commit+merge。**且 🟣 的任务清单要加一项（见建议 #3）：`src/data/dayPlanData.ts`/`taskData.ts` 只有 Day≤11 的任务候选。**
+
+**🔵 交互 — on-track，再次超前（Stage 2a 从 wk4 拉到 wk2）**
+- 进度 vs 计划：5 个干净提交（`361dbac` 开工先 merge main ✓ → `690571c` 适配器+迁权威 schema → `2c3f0c5` Stage 2a 散点+翻转表 → `133e644` Phaser ReplayScene → `d8cf95b` PROGRESS）；工作树干净。**我实跑验证**：root build ✅ + `build:web` ✅。
+- 所有权：diff（main...HEAD）全部在 `web/*` + `orchestration/interaction/*` ✅ 无越界。
+- 已记录偏离（认可）：未挂载 1064 行的 live `ShelterScene`（104MB 美术+实时事件流耦合），改为复用其空间布局/精灵/EventBus 的轻量 `ReplayScene`（~0.7MB curated 资产）——理由充分、自我申报诚实，回放门面目标达成。
+- **待办風险（小）**：hero enum 版本漂移——🔵 按 main 上的 draft 契约写的 `branch_fork`/`relationship_break`/`vent_rupture`（`web/lib/{labels,contract}.ts`），而 🟢 rc1 已按 🔵 自己的请求改名为 `fork`/`relationship_rupture`/`survival_rupture`（未提交，🔵 未见）。rc1 合入后 typecheck 会拦住，改名成本≈2 个文件。
+
+**🟢 benchmark — 实质强产出，流程红旗复发**
+- 进度 vs 计划（**全部我实跑核验属实**）：
+  - 经济迁移落地 ✅（`src/engine/resourceEconomy.ts` + game/ 薄壳注释清晰，9 处 importer 不变）——按批准执行。
+  - `red-dust-v2`（**branchDay=15/lastActionableDay=29/finalDay=30**，与仲裁一致 ✅）；v1 常量未动。
+  - typecheck ✅｜4 验证器 ✅｜`bench:win` v1 **WINNABLE 无回归** ✅｜planner-lighthouse v1 仍 67 PASS ✅（agent 地平线参数化无回归）。
+  - `bench:win --scenario=red-dust-v2` = **UNWINNABLE**（连 pickLimit=4 全勤都过不了门）——申报属实，且**根因诊断正确**：`dayPlanData` 只有 Day≤11 的候选任务 → D13–29 十八天纯 drain 零回补。**经济重平衡耦合 30 天任务内容，不是纯调参**——不硬调是对的（对残缺弧调参会调歪）。
+  - trace 导出器 + 8 个真 fixture（v1×4 + v2×4）✅；**字节可复现我重跑 diff 验证 ✓**；v2 meta = rc1/30 天跨度正确、含 day0 基线帧、hero=fork ✓。
+  - **去相关信号首现（参考 agent）**：planner short=100/long=100 vs planner-lighthouse short=100/**long=71.25**（dirty_win）——正是"短强长弱"名次翻转候选。已在导出输出中直接复核 ✓。
+- 所有权：17 个未提交文件逐一核过，均在 🟢 份额内或获批范围（runScenario/types 的 hunk 未碰 🟣 的账本 hunk——diff 复核 ✓；scoring.ts/narrativeItems.ts 零改动 ✓ 红线续绿）。新文件 `src/engine/{contracts,traceExport,resourceEconomy}.ts`、`bench/export-trace.ts`、agents/observation 的地平线化——建议所有权地图补记（见建议 #4）。
+- **红旗（流程，复发）**：**17 文件未提交**，其中含 ◆S1 rc1 契约、对账文件 `S1-contract-cosign.md`、给 🔵 的 fixture——**下游两条线都在等这些落 main**。比 wk1 更重（wk1 是 3 文件）。
+
+**争用文件撞车**：无——🟢 开工前先 merge main（按 wk1 建议执行 ✓），其 runScenario/types hunk 叠在 🟣 已合并的 hunk 之上且未触碰；🟣 本周无代码。
+
+**◆S1 门禁（wk2 末到期）——有条件放行**：
+- **实质 ✅**：双方逐条对账完成（`S1-contract-cosign.md`）；🔵 P0（A1 span/A2 逐日绝对快照）全满足并已把组件迁到权威 schema；真 fixture v1+v2 已产（30 天变长样例提前给到）；hero enum 已按 🔵 命名对齐；两轴/名次预计算归 🟢 单一口径。
+- **形式 ❌（三步走完才算过闸）**：① rc1 仍未提交/合并（🔵 会签对象还在 🟢 工作树里）；② 🔵 未见 rc1 → 3 个 hero kind 需改名重对齐；③ 双版本常量仍 `1.0.0-rc1`，待 🔵 会签后升 `1.0.0` 冻结字段名。
+- 判定：**放行推进，但本周内必须闭环**（三步顺序：🟢 commit+merge → 🔵 merge+改名+会签 → 升 1.0.0）。
+
+**给用户的建议（按优先级）**：
+1. **让 🟢 立即提交 + 合并 main**（复发红旗；◆S1 闭环、🟣 解除 Hold、🔵 换 30 天 fixture 全都卡在这一步后面）。
+2. **◆S1 收尾三步**（上面门禁节）——完成后在本 LOG 记 1.0.0 闭环。
+3. **解除 🟣 Hold 并扩充其任务**：merge main 取 `red-dust-v2` → 30 天重落位（16 题+新锚点题）→ **新增：补 `src/data/dayPlanData.ts`/`taskData.ts` 的 Day12–29 任务候选**（其地界；结构/剧情归 🟣，数值/难度校准归 🟢 重平衡步）——这是 v2 可赢性的前置，◆S2 关键路径。建议 🟣🟢 就"任务槽结构 vs 经济数值"分工立个一句话约定。
+4. 顺带：所有权地图补记 🟢 新文件（`src/engine/{contracts,traceExport,resourceEconomy}.ts`、`bench/export-trace.ts`、`src/engine/agents/*` 的地平线 hunk），避免下次歧义。
+5. 观察项（非阻塞）：🟢 发现 L 轴对 low-T 贪心体过赏（heuristic long=50，integrity 空虚地=1）——已自列 wk5 校准，届时审计跟踪 claimedCount gate 是否落。
+
+---
+
 ## 决策执行记录 · wk1（2026-07-03，基线审计三项建议全部落地）
 
 **用户拍板（2026-07-03）**：采纳 🟣 版 **17 锚点天 : 13 生成天 / fork=D15**；三项建议全部执行。执行者：🔍 审计（经用户明示授权代办 git/协调层操作；产品代码零改动）。
