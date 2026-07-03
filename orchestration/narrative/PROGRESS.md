@@ -96,12 +96,14 @@
 - 决策（用户）：**Hold 🟣、优先解 🟢 阻塞**（不前推 wk4 的 backlash/morale）。
 - 做了：交付 `engine-30day-handoff.md`（🟣→🟢 引擎 30 天化精确改点 spec）——全仓核 day-count 耦合，点名 `resourceEconomy` 的 `day>=12` 硬门 + 参考 agent 阈值这两处"只改 3 常量会漏"的坑。
 - 下一步：等 🟢 按 spec 落常量+经济并合并 → 我接 30 天重落位。其间待用户/🔍 调度；如 🟢 卡 `bench:win`，我可调锚点落点或设计中段补给题。
+- **[2026-07-03 🔍 更新] Hold 已解除**：🟢 30 天化已合入 main（`red-dust-v2`）、◆S1 已闭环 1.0.0。我的 wk3 开工清单：① 30 天重落位（16 题搬 v2 新日 + 4–5 新锚点题，逐题过验证器）；② **Day12–29 dayPlan/任务结构**（新分工见 Blocker 节，◆S2 关键路径）；③ 双层账本交互式抉择（Option A）仍列跨线排期。
 
 ## 同步点就绪度
 - **◆S2（wk7）内容冻结**——我是关键路径。就绪度：早（wk1，结构+双层账本已定/账本机制已落；30 天重落位待 🟢 引擎化）。
 
 ## Blocker / 跨线依赖
-- **[需 🟢] 引擎 30 天化常量 —— ✅ 已交精确 spec `engine-30day-handoff.md`**：核实 🟢 仍未起（其 PROGRESS 全 ⬜、本分支 `scenario.ts` 仍 7/11/12）。spec 给出逐行改点：§A scenario 3 常量（7→15/11→29/12→30）；§B `resourceEconomy` 去掉 `day>=12` 硬门（否则 D12–29 零消耗白给）+ 12 天档位阈值按 30 天重定（附映射表）+ 幅度过 `bench:win`；§C 参考 agent（planner/planner-lighthouse/deepseek）储备阈值 + deepseek "by Day 12" prompt 同步；§D 结局阈值验证。**两件事解耦**：🟢 的常量+经济自足、不依赖我的重落位；我的重落位跟在其合并后。**我不改 scenario.ts/resourceEconomy（src/game，禁碰）。** 通风闸门 5/8 阈值默认不动、如需拉长再与 🟢 共定。
+- ~~[需 🟢] 引擎 30 天化常量~~ ✅ **已解除（2026-07-03，🔍 记录）——Hold 结束，30 天重落位可开工**：🟢 wk2 已落 `red-dust-v2`（`branchDay=15/lastActionableDay=29/finalDay=30`，`UpkeepPhases` 参数化，v1 无回归）并已合入 main（本分支已 merge，验证器全绿）。当时 spec（`engine-30day-handoff.md`）点名的两个坑 🟢 独立覆盖（硬门→相位参数化；agent 阈值→读 `obs.lastActionableDay`）。注意：🟢 是**新增 v2 场景**而非改 v1 常量——我的重落位/新题落在 v2 弧上，v1 保持基线。
+- **[新·◆S2 关键路径，我的下一步] Day12–29 任务内容缺口**：`bench:win --scenario=red-dust-v2` 当前 UNWINNABLE，根因=`src/data/dayPlanData.ts`/`taskData.ts` 只有 Day≤11 的候选任务 → D13–29 十八天纯 drain。**分工约定（2026-07-03）**：Day12–29 的 dayPlan 结构/任务剧情（哪天有什么任务、叙事上做什么）归我（src/data 我地界）；任务奖励/消耗**数值**的经济校准归 🟢 重平衡步。顺序：我先落结构（可用占位数值）→ 🟢 调参跑 `bench:win` v2。与 30 天题重落位同批做。
 - **[需 🟢] 生成流水线的题模板**：🟢 的生成流水线阻塞在我的题原型/模板（5 子能力×因果图槽位）——wk1–3 必须尽早交。下一步产出。
 - **[需用户拍板] 锚点:生成配比**：✅ 用户已确认 17:13 天 / ~50 题（2026-07-03）。
 - **[跨线 follow-up，非阻塞] 交互式注水抉择（双层账本 Option A）**：当前双层账本是**确定性派生**（注水=派生自已破承诺）。设计稿 Day12 原意是给 agent 一个**主动坦白 vs 注水**的抉择——判别力更强（能抓"行为干净但最终报告说谎"的 agent），但需：N13 变可作答项（改 agent-contract）、排除出 PUP 聚合与 bench:items、🔵 回放呈现该抉择。建议 wk2–3 与 🟢/🔵 一起排，别单线改。Day末探针的 agent-作答接入同此批。
