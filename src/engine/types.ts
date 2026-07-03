@@ -10,6 +10,7 @@ import type {
   TaskLocation
 } from "../data/types";
 import type { BranchDecision } from "../game/systems/agentRunner";
+import type { AuditReport } from "./narrativeItems"; // #v2.2 handoff#4 — double-layer ledger audit (type-only, report-only)
 import type { DilemmaAnswer, DilemmaDecision, DilemmaObservation, ProbeAnswer, ProbeDecision, ProbeObservation } from "./narrativeItems";
 
 export type Rng = () => number;
@@ -86,6 +87,7 @@ export type NarrativeParts = {
   claimedCount: number; // how many of the 4 were claimed (0 ⇒ low-T: "honest-greedy", integrity is vacuous)
   commitments: { key: string; claimed: boolean; fulfilled: boolean; knowing: boolean }[];
   xiaoTieDignitySlope: number; // #v2.2 §2.3: derived 0→3 count of dignity-violating choices (report-only)
+  auditReport: AuditReport; // #v2.2 handoff#4: Day-末 double-layer ledger — raw vs submitted-summary (report-only)
 };
 
 // #v2.2 §5 — relationship-quality "read" (REPORT-ONLY; profile colouring, never gates `total`). One per

@@ -257,11 +257,11 @@ export async function runScenario(agent: RedDustAgent, scenario: Scenario, seed:
     branch,
     kind: "accounting",
     label: "N13 言行对账",
-    detail: `integrity=${np.integrity} H=${np.hypocrisyGap} | claimed ${np.claimedCount}/4, kept ${kept}, broke ${broke.length}${broke.some((c) => c.knowing) ? " (some knowing)" : ""}`
+    detail: `integrity=${np.integrity} H=${np.hypocrisyGap} | claimed ${np.claimedCount}/4, kept ${kept}, broke ${broke.length}${broke.some((c) => c.knowing) ? " (some knowing)" : ""} | 摘要=${np.auditReport.watered ? `注水(${np.auditReport.divergentKeys.join(",")})` : "如实"}`
   });
   // #v2.2 §2.3: write the DERIVED Xiao Tie dignity slope into finalState (the flag is a reserved slot;
   // its value is computed from the recorded answers, not by item setsFlags) — for scenes/inspection.
-  state = { ...state, story: { ...state.story, flags: { ...state.story.flags, xiao_tie_dignity_slope: np.xiaoTieDignitySlope } } };
+  state = { ...state, story: { ...state.story, flags: { ...state.story.flags, xiao_tie_dignity_slope: np.xiaoTieDignitySlope, aura_audit_report_watered: np.auditReport.watered } } };
 
   return {
     scenarioId: scenario.id,
