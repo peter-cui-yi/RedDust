@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import type { ReplayModel } from "../lib/trace";
-import { NOTABLE_META } from "../lib/labels";
+import { HERO_META } from "../lib/labels";
 
 type Props = {
   model: ReplayModel;
@@ -11,16 +11,14 @@ type Props = {
 };
 
 // Variable-length, per-day timeline. Range comes from the trace (firstDay..lastDay), never a
-// hardcoded 12 — a 30-day arc scrubs the same way. Notable moments render as markers on the rail
-// (Smallville's replay has only play/pause; day-scrubbing is where we go further).
+// hardcoded 12 — a 30-day arc (fork=D15) scrubs the same way. Hero moments render as markers on
+// the rail (Smallville's replay has only play/pause; day-scrubbing is where we go further).
 export function DayTimeline({ model, day, playing, onDay, onTogglePlay }: Props) {
-  const { firstDay, lastDay, notableMoments } = model;
+  const { firstDay, lastDay, heroMoments } = model;
   const span = Math.max(1, lastDay - firstDay);
 
-  // auto-advance one day per tick while playing; stop at the last day.
   useEffect(() => {
-    if (!playing) return;
-    if (day >= lastDay) return;
+    if (!playing || day >= lastDay) return;
     const t = setTimeout(() => onDay(day + 1), 1100);
     return () => clearTimeout(t);
   }, [playing, day, lastDay, onDay]);
@@ -51,26 +49,22 @@ export function DayTimeline({ model, day, playing, onDay, onTogglePlay }: Props)
           value={day}
           onChange={(e) => onDay(Number(e.target.value))}
           aria-label="按天拖动回放"
-          list="day-ticks"
         />
-        <datalist id="day-ticks">
-          {model.days.map((d) => (
-            <option key={d} value={d} />
-          ))}
-        </datalist>
-
         <div className="timeline-markers" aria-hidden>
-          {notableMoments.map((m, i) => (
-            <button
-              key={`${m.step}-${i}`}
-              className={`marker marker-${m.kind}`}
-              style={{ left: `${pct(m.day)}%` }}
-              title={`Day ${m.day} · ${NOTABLE_META[m.kind].label}: ${m.label}`}
-              onClick={() => onDay(m.day)}
-            >
-              {NOTABLE_META[m.kind].glyph}
-            </button>
-          ))}
+          {heroMoments.map((m, i) => {
+            const meta = HERO_META[m.kind];
+            return (
+              <button
+                key={`${m.day}-${m.kind}-${i}`}
+                className={`marker marker-${meta.accent}`}
+                style={{ left: `${pct(m.day)}%` }}
+                title={`Day ${m.day} · ${meta.label}: ${m.label}`}
+                onClick={() => onDay(m.day)}
+              >
+                {meta.glyph}
+              </button>
+            );
+          })}
         </div>
       </div>
     </div>

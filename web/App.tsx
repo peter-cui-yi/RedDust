@@ -5,6 +5,8 @@ import {
   fetchRun,
   type ReplayModel,
   type RunResult,
+  type RunProfile,
+  type TraceExport,
   type TraceManifestEntry
 } from "./lib/trace";
 import { ReplayStage } from "./components/ReplayStage";
@@ -12,9 +14,9 @@ import { DayTimeline } from "./components/DayTimeline";
 import { DayEventPanel } from "./components/DayEventPanel";
 import { DriftChart } from "./components/DriftChart";
 
-// Terminal (Day-final) commitment ledger, straight from score.narrativeParts. The per-DAY ledger
-// that decays across the arc is the hero visual — it needs per-day contract fields (◆S1). This
-// strip shows what today's RunResult already carries, honestly labeled "终局".
+// Terminal commitment ledger. TraceExport does not yet expose the per-commitment breakdown (only
+// aggregate integrity/hypocrisyGap in RunProfile) — so in placeholder mode we read it from the
+// source RunResult. Surfacing this in TraceExport is data-contract §对账 request #1.
 function CommitmentLedger({ run }: { run: RunResult }) {
   const np = run.score.narrativeParts;
   return (
@@ -37,17 +39,14 @@ function CommitmentLedger({ run }: { run: RunResult }) {
   );
 }
 
-function ScoreChips({ run }: { run: RunResult }) {
-  const s = run.score;
+function ScoreChips({ profile, ending }: { profile: RunProfile; ending: TraceExport["ending"] }) {
   return (
     <div className="chips">
-      <span className={`chip ${run.endingTier === "success" ? "chip-good" : "chip-bad"}`}>
-        {run.endingId}
-      </span>
-      <span className="chip">score {s.total}</span>
-      <span className="chip">{s.passing ? "PASS" : "GATED"}</span>
-      <span className="chip">audit {s.auditability}</span>
-      <span className="chip">narrative {s.narrative}</span>
+      <span className={`chip ${ending.tier === "success" ? "chip-good" : "chip-bad"}`}>{ending.id}</span>
+      <span className="chip">score {profile.total}</span>
+      <span className="chip">{profile.passing ? "PASS" : "GATED"}</span>
+      <span className="chip">audit {profile.auditability}</span>
+      <span className="chip">narrative {profile.narrative}</span>
     </div>
   );
 }
@@ -88,7 +87,7 @@ export default function App() {
     };
   }, [selectedId, entries]);
 
-  const slice = useMemo(() => model?.slicesByDay.get(day), [model, day]);
+  const frame = useMemo(() => model?.framesByDay.get(day), [model, day]);
 
   return (
     <div className="app">
@@ -118,12 +117,12 @@ export default function App() {
         <main className="layout">
           <section className="col-stage">
             <div className="run-meta">
-              <ScoreChips run={model.run} />
+              <ScoreChips profile={model.profile} ending={model.export.ending} />
               <span className="muted small">
-                {model.days.length} 天 · engine {model.run.versions.engine} · scorer {model.run.versions.scorer}
+                {model.days.length} 天 · engine {model.export.meta.engineVersion} · scorer {model.export.meta.scorerVersion}
               </span>
             </div>
-            <ReplayStage model={model} day={day} slice={slice} />
+            <ReplayStage model={model} day={day} frame={frame} />
             <DayTimeline
               model={model}
               day={day}
@@ -131,11 +130,11 @@ export default function App() {
               onDay={setDay}
               onTogglePlay={() => setPlaying((p) => !p)}
             />
-            <CommitmentLedger run={model.run} />
+            <CommitmentLedger run={model.sourceRun} />
             <DriftChart model={model} day={day} />
           </section>
           <section className="col-events">
-            <DayEventPanel slice={slice} day={day} />
+            <DayEventPanel frame={frame} day={day} />
           </section>
         </main>
       ) : (
@@ -144,7 +143,8 @@ export default function App() {
 
       <footer className="footer">
         <span className="muted small">
-          Stage 0 骨架 · 变长天数（支持 30 天）· 数据为占位样例 trace，待 ◆S1 契约锁定后接权威 trace/去相关数据集
+          Stage 0/1 · 变长天数（支持 30 天 / fork=D15）· 占位样例 trace 经 RunResult→TraceExport 适配器；
+          待 🟢 真导出器 + ◆S3 去相关数据集接入
         </span>
       </footer>
     </div>

@@ -82,7 +82,9 @@ body {
 .banner-tag { font-size: 11px; padding: 3px 9px; border-radius: 6px; font-weight: 600; }
 .banner-fork { background: #2b2140; color: #b9a6e6; }
 .banner-rupture { background: #3a1e18; color: #e08a76; }
-.banner-task-failure { background: #3a2a18; color: #e0b276; }
+.banner-broken { background: #3a1a16; color: #e0533d; }
+.banner-dignity { background: #3a2a18; color: #e0b276; }
+.banner-dirty { background: #302620; color: #c98f6f; }
 .stage-seam {
   position: absolute; bottom: 10px; left: 14px; font-size: 10px; letter-spacing: 1px;
   color: #5a5248; border: 1px dashed #4a423731; padding: 2px 6px; border-radius: 4px;
@@ -107,7 +109,9 @@ body {
 }
 .marker-fork { color: #b9a6e6; }
 .marker-rupture { color: #e08a76; }
-.marker-task-failure { color: #e0b276; }
+.marker-broken { color: #e0533d; }
+.marker-dignity { color: #e0b276; }
+.marker-dirty { color: #c98f6f; }
 
 /* ledger */
 .ledger { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; }
@@ -139,19 +143,29 @@ body {
 .delta-chips { display: flex; gap: 4px; flex-wrap: wrap; margin-left: auto; }
 .delta-chips .chip { font-size: 10px; padding: 2px 6px; }
 
-.event-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
-.event { display: flex; gap: 10px; padding: 8px 10px; background: var(--bg-2); border: 1px solid var(--line); border-left-width: 3px; border-radius: 8px; }
-.event-glyph { flex: none; width: 18px; text-align: center; color: var(--muted); font-size: 13px; }
-.event-label { font-size: 13px; font-weight: 600; }
-.event-detail { font-size: 12px; color: var(--ink-2); margin-top: 2px; line-height: 1.5; word-break: break-word; }
-.event-just { font-size: 12px; color: var(--muted); margin-top: 3px; font-style: italic; }
-.event-dilemma { border-left-color: var(--dust); }
-.event-branch { border-left-color: #8f79c9; }
-.event-audit { border-left-color: #c9a24a; }
-.event-accounting { border-left-color: #c9a24a; }
-.event-scene { border-left-color: #6f8fae; }
-.event-task { border-left-color: #6fae7a; }
-.event-upkeep { border-left-color: #5a5248; }
+.event-glyph { color: var(--muted); font-size: 12px; margin-right: 2px; }
+.event-just { font-size: 12px; color: var(--muted); margin-top: 4px; font-style: italic; line-height: 1.5; }
+
+.frame-block { margin-bottom: 14px; }
+.frame-h { margin: 0 0 6px; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); display: flex; align-items: center; gap: 8px; }
+.frame-scene { font-size: 13px; color: var(--ink-2); padding: 4px 0; border-left: 3px solid #6f8fae; padding-left: 8px; margin-bottom: 4px; }
+
+.frame-dilemma { background: var(--bg-2); border: 1px solid var(--line); border-left: 3px solid var(--dust); border-radius: 8px; padding: 8px 10px; margin-bottom: 8px; }
+.frame-dilemma-head { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.dilemma-id { font-family: ui-monospace, monospace; font-size: 12px; color: var(--dust); font-weight: 700; }
+.dilemma-title { font-size: 13px; font-weight: 600; }
+.dilemma-pick { margin-left: auto; font-size: 12px; color: var(--ink-2); border: 1px solid var(--line); border-radius: 999px; padding: 1px 8px; }
+.reveal-chips { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 6px; }
+.reveal-chips .chip { font-size: 10px; padding: 2px 7px; font-family: ui-monospace, monospace; }
+
+.task-chips { display: flex; gap: 5px; flex-wrap: wrap; }
+.chip-task { font-family: ui-monospace, monospace; font-size: 11px; color: #8fbf9a; border-color: #3c5a41; }
+
+.metric-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+.metric-cell { display: flex; flex-direction: column; align-items: center; background: var(--bg-2); border: 1px solid var(--line); border-radius: 6px; padding: 6px 4px; }
+.metric-k { font-size: 10px; color: var(--muted); }
+.metric-v { font-size: 15px; font-weight: 650; color: var(--ink); }
+@media (max-width: 480px) { .metric-grid { grid-template-columns: repeat(2, 1fr); } }
 
 /* misc */
 .loading { padding: 40px; text-align: center; color: var(--muted); }

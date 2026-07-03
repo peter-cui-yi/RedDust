@@ -1,16 +1,18 @@
-import type { DaySlice, MetricKey } from "../lib/trace";
-import { KIND_META } from "../lib/labels";
+import type { TraceDayFrame, MetricKey } from "../lib/trace";
 
-type Props = { slice: DaySlice | undefined; day: number };
+type Props = { frame: TraceDayFrame | undefined; day: number };
 
-function DeltaChips({ delta }: { delta: Partial<Record<MetricKey, number>> }) {
-  const entries = Object.entries(delta).filter(([, v]) => v && v !== 0);
+// Narratively salient metrics to surface in the per-day readout (metricsEndOfDay carries all 14).
+const SHOWN: MetricKey[] = ["trust", "morale", "dissatisfaction", "safety", "water", "food", "medicine", "health"];
+
+function DeltaChips({ delta }: { delta: Record<string, number> | undefined }) {
+  const entries = Object.entries(delta ?? {}).filter(([, v]) => v && v !== 0);
   if (entries.length === 0) return null;
   return (
     <span className="delta-chips">
       {entries.map(([k, v]) => (
-        <span key={k} className={`chip ${v! > 0 ? "chip-up" : "chip-down"}`}>
-          {k} {v! > 0 ? "+" : ""}
+        <span key={k} className={`chip ${v > 0 ? "chip-up" : "chip-down"}`}>
+          {k} {v > 0 ? "+" : ""}
           {v}
         </span>
       ))}
@@ -18,10 +20,9 @@ function DeltaChips({ delta }: { delta: Partial<Record<MetricKey, number>> }) {
   );
 }
 
-// The per-day event stream: exactly the trace lines tagged with the current day, in step order.
-// This is the readable, byte-for-byte-from-the-trace panel that co-scrubs with the timeline.
-export function DayEventPanel({ slice, day }: Props) {
-  if (!slice || slice.lines.length === 0) {
+// The per-day frame digest, in the authoritative TraceDayFrame shape. Co-scrubs with the timeline.
+export function DayEventPanel({ frame, day }: Props) {
+  if (!frame) {
     return (
       <div className="day-panel empty">
         <p className="muted">Day {day} 无记录事件。</p>
@@ -31,27 +32,72 @@ export function DayEventPanel({ slice, day }: Props) {
   return (
     <div className="day-panel">
       <div className="day-panel-head">
-        <span className="day-badge">Day {day}</span>
-        <span className={`branch-badge branch-${slice.branch}`}>{slice.branch}</span>
-        <DeltaChips delta={slice.metricDelta} />
+        <span className="day-badge">Day {frame.day}</span>
+        <span className={`branch-badge branch-${frame.branch}`}>{frame.branch}</span>
       </div>
-      <ol className="event-list">
-        {slice.lines.map((line) => {
-          const meta = KIND_META[line.kind];
-          return (
-            <li key={line.step} className={`event event-${meta.accent}`}>
-              <span className="event-glyph" title={meta.label}>
-                {meta.glyph}
-              </span>
-              <div className="event-body">
-                <div className="event-label">{line.label}</div>
-                <div className="event-detail">{line.detail}</div>
-                {line.justification && <div className="event-just">“{line.justification}”</div>}
+
+      {frame.scenes.length > 0 && (
+        <section className="frame-block">
+          <h4 className="frame-h">场景</h4>
+          {frame.scenes.map((s, i) => (
+            <div key={i} className="frame-scene">
+              <span className="event-glyph">◆</span> {s}
+            </div>
+          ))}
+        </section>
+      )}
+
+      {frame.dilemmas.length > 0 && (
+        <section className="frame-block">
+          <h4 className="frame-h">两难抉择</h4>
+          {frame.dilemmas.map((d) => (
+            <div key={d.itemId} className="frame-dilemma">
+              <div className="frame-dilemma-head">
+                <span className="dilemma-id">{d.itemId}</span>
+                <span className="dilemma-title">{d.title}</span>
+                <span className="dilemma-pick">选 {d.optionId}</span>
               </div>
-            </li>
-          );
-        })}
-      </ol>
+              <div className="reveal-chips">
+                <span className="chip" title="appropriateness (回放揭示)">a {d.a}</span>
+                <span className="chip" title="贪心诱惑">m {d.m}</span>
+                <span className="chip" title="做对的代价 divergence">δ {d.delta.toFixed(2)}</span>
+                {d.probe && (
+                  <span className={`chip ${d.probe.understood ? "chip-good" : "chip-bad"}`} title="理解探针">
+                    BA {d.probe.balancedAccuracy.toFixed(2)}
+                    {d.probe.understood ? " 懂" : " 未懂"}
+                  </span>
+                )}
+              </div>
+              {d.justification && <div className="event-just">“{d.justification}”</div>}
+            </div>
+          ))}
+        </section>
+      )}
+
+      {frame.tasksPicked.length > 0 && (
+        <section className="frame-block">
+          <h4 className="frame-h">任务选择</h4>
+          <div className="task-chips">
+            {frame.tasksPicked.map((t) => (
+              <span key={t} className="chip chip-task">{t}</span>
+            ))}
+          </div>
+        </section>
+      )}
+
+      <section className="frame-block">
+        <h4 className="frame-h">
+          日终指标 <DeltaChips delta={frame.upkeepDelta} />
+        </h4>
+        <div className="metric-grid">
+          {SHOWN.map((k) => (
+            <div key={k} className="metric-cell">
+              <span className="metric-k">{k}</span>
+              <span className="metric-v">{frame.metricsEndOfDay[k]}</span>
+            </div>
+          ))}
+        </div>
+      </section>
     </div>
   );
 }

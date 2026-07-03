@@ -1,13 +1,15 @@
-// Read-only consumer view of a runScenario trace. We import the ENGINE's own types so this
-// site stays honest against the real contract: if the trace shape changes upstream, tsc breaks
-// here. The 🔵 interaction line never mutates the engine — it only reads RunResult.
+// Read-only consumer view. We consume 🟢's authoritative TraceExport schema (src/engine/contracts.ts)
+// via the client-side adapter in ./contract. Until 🟢's real exporter ships, the fixtures are raw
+// RunResult JSON (`npm run bench` output) and the adapter converts them to TraceExport shape.
 import type { RunResult, TraceLine, TraceKind } from "../../src/engine/types";
 import type { MetricKey } from "../../src/data/types";
+import type { TraceExport, TraceDayFrame, HeroMoment, RunProfile } from "./contract";
+import { runResultToTraceExport } from "./contract";
 
 export type { RunResult, TraceLine, TraceKind, MetricKey };
+export type { TraceExport, TraceDayFrame, HeroMoment, RunProfile } from "./contract";
 
 // ---- trace manifest (which runs the site can replay) --------------------------------------
-// Served as a static asset at ${BASE_URL}traces/index.json so the deployed site is zero-backend.
 export type TraceManifestEntry = {
   id: string;
   agentId: string;
@@ -18,88 +20,38 @@ export type TraceManifestEntry = {
 };
 export type TraceManifest = { scenarioId: string; traces: TraceManifestEntry[] };
 
-// ---- per-day projection the replay UI scrubs over ------------------------------------------
-export type DaySlice = {
-  day: number;
-  lines: TraceLine[];
-  branch: string;
-  // rolled-up metric deltas that ARE present on this day's trace lines. NOTE: this is a
-  // per-day delta sum, NOT an absolute snapshot — the current trace does not carry absolute
-  // per-day metrics. Getting those is the core ◆S1 data-contract ask (see data-contract-draft).
-  metricDelta: Partial<Record<MetricKey, number>>;
-};
-
+// ---- the replay model the UI scrubs over ---------------------------------------------------
 export type ReplayModel = {
-  run: RunResult;
-  days: number[]; // sorted unique actionable days present in the trajectory (variable-length!)
+  export: TraceExport; // authoritative-shaped data the components consume
+  sourceRun: RunResult; // placeholder-mode source; used ONLY for the terminal commitment ledger,
+  //                       which the current TraceExport does not yet expose (data-contract §对账 req#1).
+  days: number[];
   firstDay: number;
   lastDay: number;
-  slicesByDay: Map<number, DaySlice>;
-  // provisional, DERIVED-from-trajectory notable moments. The authoritative hero-moment markers
-  // (first broken promise / relationship rupture) are a ◆S1 contract ask; until then we surface
-  // what the trajectory already makes visible (the branch fork, survival ruptures, task failures).
-  notableMoments: NotableMoment[];
+  framesByDay: Map<number, TraceDayFrame>;
+  heroMoments: HeroMoment[];
+  profile: RunProfile;
 };
-
-export type NotableMoment = {
-  day: number;
-  step: number;
-  kind: "fork" | "rupture" | "task-failure";
-  label: string;
-  detail: string;
-};
-
-function addDelta(
-  into: Partial<Record<MetricKey, number>>,
-  from?: Partial<Record<MetricKey, number>>
-): void {
-  if (!from) return;
-  for (const [k, v] of Object.entries(from)) {
-    const key = k as MetricKey;
-    into[key] = (into[key] ?? 0) + (v ?? 0);
-  }
-}
-
-function deriveNotableMoments(trajectory: TraceLine[]): NotableMoment[] {
-  const out: NotableMoment[] = [];
-  for (const line of trajectory) {
-    if (line.kind === "branch") {
-      out.push({ day: line.day, step: line.step, kind: "fork", label: line.label, detail: line.detail });
-    } else if (line.kind === "upkeep" && /破裂|rupture|涌入/.test(line.label)) {
-      out.push({ day: line.day, step: line.step, kind: "rupture", label: line.label, detail: line.detail });
-    } else if (line.kind === "task" && /^fail/i.test(line.detail)) {
-      out.push({ day: line.day, step: line.step, kind: "task-failure", label: line.label, detail: line.detail });
-    }
-  }
-  return out;
-}
 
 export function buildReplayModel(run: RunResult): ReplayModel {
-  const slicesByDay = new Map<number, DaySlice>();
-  for (const line of run.trajectory) {
-    let slice = slicesByDay.get(line.day);
-    if (!slice) {
-      slice = { day: line.day, lines: [], branch: line.branch, metricDelta: {} };
-      slicesByDay.set(line.day, slice);
-    }
-    slice.lines.push(line);
-    slice.branch = line.branch; // last branch tag of the day wins (post-fork days flip)
-    addDelta(slice.metricDelta, line.metricDelta);
-  }
-  const days = [...slicesByDay.keys()].sort((a, b) => a - b);
+  const exp = runResultToTraceExport(run);
+  const framesByDay = new Map<number, TraceDayFrame>();
+  for (const f of exp.frames) framesByDay.set(f.day, f);
+  const days = exp.frames.map((f) => f.day);
   return {
-    run,
+    export: exp,
+    sourceRun: run,
     days,
     firstDay: days[0] ?? 1,
-    lastDay: days[days.length - 1] ?? 1,
-    slicesByDay,
-    notableMoments: deriveNotableMoments(run.trajectory)
+    lastDay: days[days.length - 1] ?? exp.meta.finalDay,
+    framesByDay,
+    heroMoments: exp.heroMoments,
+    profile: exp.profile
   };
 }
 
-// ---- fetch helpers (relative to Vite's BASE_URL so it works under any deploy subpath) -------
+// ---- fetch helpers (relative to Vite BASE_URL → works under any deploy subpath) -------------
 function base(): string {
-  // import.meta.env.BASE_URL is "./" in our config; normalize to a fetchable prefix.
   const b = import.meta.env.BASE_URL || "/";
   return b.endsWith("/") ? b : `${b}/`;
 }
