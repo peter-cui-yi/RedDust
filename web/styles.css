@@ -63,32 +63,26 @@ body {
 /* stage */
 .stage {
   position: relative; overflow: hidden; border: 1px solid var(--line); border-radius: 12px;
-  background: linear-gradient(160deg, #241d16, #171310); min-height: 240px; padding: 18px;
-  display: flex; flex-direction: column; justify-content: center;
+  background: linear-gradient(160deg, #241d16, #171310); aspect-ratio: 960 / 540;
 }
-.stage-scanlines {
-  position: absolute; inset: 0; pointer-events: none; opacity: 0.25;
-  background: repeating-linear-gradient(0deg, transparent 0 3px, rgba(0,0,0,0.35) 3px 4px);
+.replay-canvas { position: absolute; inset: 0; }
+.replay-canvas canvas { display: block; }
+.stage-overlay { position: absolute; inset: 0; pointer-events: none; display: flex; flex-direction: column; justify-content: flex-end; padding: 12px; gap: 8px; }
+.stage-headline-strip {
+  display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
+  background: rgba(20,17,14,0.72); border: 1px solid var(--line); border-radius: 8px; padding: 7px 12px;
+  backdrop-filter: blur(2px);
 }
-.stage-daychip {
-  position: absolute; top: 12px; right: 14px; font-size: 12px; letter-spacing: 2px;
-  color: var(--dust); font-weight: 700;
-}
-.stage-headline { position: relative; max-width: 90%; }
 .stage-kind { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); }
-.stage-title { font-size: 20px; font-weight: 650; margin-top: 4px; }
-.stage-sub { font-size: 13px; color: var(--ink-2); margin-top: 6px; line-height: 1.5; }
-.stage-banner { position: relative; margin-top: 12px; display: flex; gap: 6px; flex-wrap: wrap; }
+.stage-title-sm { font-size: 15px; font-weight: 650; }
+.stage-sub-sm { font-size: 12px; color: var(--ink-2); }
+.stage-banner { display: flex; gap: 6px; flex-wrap: wrap; }
 .banner-tag { font-size: 11px; padding: 3px 9px; border-radius: 6px; font-weight: 600; }
 .banner-fork { background: #2b2140; color: #b9a6e6; }
 .banner-rupture { background: #3a1e18; color: #e08a76; }
 .banner-broken { background: #3a1a16; color: #e0533d; }
 .banner-dignity { background: #3a2a18; color: #e0b276; }
 .banner-dirty { background: #302620; color: #c98f6f; }
-.stage-seam {
-  position: absolute; bottom: 10px; left: 14px; font-size: 10px; letter-spacing: 1px;
-  color: #5a5248; border: 1px dashed #4a423731; padding: 2px 6px; border-radius: 4px;
-}
 
 /* timeline */
 .timeline { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; }

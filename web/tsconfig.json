@@ -3,5 +3,5 @@
   "compilerOptions": {
     "types": []
   },
-  "include": ["env.d.ts", "main.tsx", "App.tsx", "lib/**/*.ts", "components/**/*.tsx"]
+  "include": ["env.d.ts", "main.tsx", "App.tsx", "lib/**/*.ts", "components/**/*.tsx", "game/**/*.ts", "game/**/*.tsx"]
 }
