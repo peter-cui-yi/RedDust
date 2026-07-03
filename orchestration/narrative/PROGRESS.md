@@ -6,7 +6,7 @@
 ## 关键交付进度
 | 项 | 目标周 | 状态 | 证据（提交号/验证器结果） |
 |---|---|---|---|
-| 锚点天/生成天比例决策（供 🟢） | wk1 | 🟡 已拍板（本文件 §决策），待用户确认 + 交 🟢 | 见下「wk1 决策」；未提交代码 |
+| 锚点天/生成天比例决策（供 🟢） | wk1 | ✅ **用户仲裁确认（2026-07-03）：17:13 / fork=D15 为唯一版本**，已同步 🟢（其 13:16/D18 旧记录作废，🔍 已改其 §A4+PROGRESS） | 见下「wk1 决策」；commit 0937c6b |
 | 12→30 天弧重构 | wk1–2 | 🟡 结构设计完成（30 天骨架落定），代码重落位未动 | 设计见下；`narrativeItems.ts`/`scenario.ts` 仍是 12 天 |
 | 题原型/模板交付 🟢 | wk1–3 | ✅ 已交付 `gen-item-templates.md`（5 子能力×因果图槽位 + 精确验证门 + 13 生成天槽表 + 5 个已验证样例） | 样例 a/m 手算过 `bench:items`（ρ=−1.00、δ≥0.50）|
 | Day 末双层账本（旗标+摘要+注水检测+探针） | wk1–3 | ✅ 机制落地（12 天弧上，全绿）：`buildAuditReport`（原始账本×拟提交摘要，结构性注水检测）→ 置 `aura_audit_report_watered` → `relationshipQuality` dirty_win + Day末描述性探针（3真2假）。report-only，未进 gate。 | typecheck+build+4 验证器全绿；planner-lighthouse cold_trust→**dirty_win**；total/pup/comp **byte-identical**；同 seed 字节可复现。**待做**：交互式坦白/注水抉择 + 探针接入 agent 作答流（需跨线 agent-contract，见 Blocker） |
@@ -33,7 +33,7 @@
 
 ## wk1 决策 · 30 天弧「锚点天 / 生成天」方案（本周必拍板项）
 
-**决策（我的推荐，待用户点头 + 交 🟢）：**
+**决策（✅ 2026-07-03 用户仲裁确认为唯一版本；🔍 已同步 🟢 的 §A4/PROGRESS，其旧 13:16/fork=D18 记录作废）：**
 - **配比：17 锚点天（冻结级人工主脊） : 13 生成天 ≈ 55:45（按天）；按题量 ~22 人工 : ~28 生成 ≈ 50 题（roadmap 上线中量）。**
 - **不可逆 fork = Day15（真中点）；Day30 = 总审计；`lastActionableDay=29`。**（引擎常量归 🟢 落，但须匹配本设计。）
 - **落点铁律：连续生成天 ≤3；每段生成漂移都由前后锚点夹住**（生成题永远坐在"前有承诺、后有清算"的框里，漂不出主脊）。
@@ -101,6 +101,6 @@
 - **[跨线 follow-up，非阻塞] 交互式注水抉择（双层账本 Option A）**：当前双层账本是**确定性派生**（注水=派生自已破承诺）。设计稿 Day12 原意是给 agent 一个**主动坦白 vs 注水**的抉择——判别力更强（能抓"行为干净但最终报告说谎"的 agent），但需：N13 变可作答项（改 agent-contract）、排除出 PUP 聚合与 bench:items、🔵 回放呈现该抉择。建议 wk2–3 与 🟢/🔵 一起排，别单线改。Day末探针的 agent-作答接入同此批。
 
 ## 我负责/等待的开放决策
-- wk1 锚点天/生成天比例：**已拍板推荐 17 锚 : 13 生成天（~50 题），待用户确认**（见上 Blocker）。
+- wk1 锚点天/生成天比例：✅ **已定（2026-07-03 用户仲裁）：17 锚 : 13 生成天 / fork=D15 / ~50 题**；🟢 将按此落 `branchDay=15/lastActionableDay=29/finalDay=30`（wk2）。
 - START.md #3 vs handoff §3.1 冲突【已按权威 handoff 解读】：START 说把 `aura_raw_ledger`/`aura_audit_report` 加进 `StoryFlagKey`；但 handoff §3.1 明确**不新增账本数据结构**——原始账本=已有 append-only 的 `trajectory`+`dilemmaAnswers`+`probeAnswers`，摘要=N13 结构化生成，只有派生布尔 `aura_audit_report_watered` 是 flag（已在）。**故不新增 `aura_raw_ledger`/`aura_audit_report` 标量旗标**（账本非标量）。双层账本的剩余工作=N13 摘要生成+结构性注水检测+Day30 探针（handoff 任务#4），非加旗标。如用户/审计要求严格照 START 字面，再议。
 - wk7 前 `surface_evidence` 谓词是否给灯塔线原则性 N3/N6 记功：____（改 integrity 计分，需与 🟢/用户对齐）
