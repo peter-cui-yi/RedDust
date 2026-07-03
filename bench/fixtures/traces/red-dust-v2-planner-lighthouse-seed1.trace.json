@@ -380,32 +380,11 @@
     {
       "day": 7,
       "branch": "common",
-      "scenes": [
-        "最优路线里，谁被留下"
-      ],
-      "dilemmas": [
-        {
-          "itemId": "N10",
-          "title": "命令 vs 建议",
-          "optionId": "B",
-          "a": 2,
-          "m": 0.2,
-          "delta": 0.7,
-          "justification": "planner-lighthouse: principled (lowest greed) to hold trust/dissat gates"
-        },
-        {
-          "itemId": "N9",
-          "title": "你在监控吗",
-          "optionId": "B",
-          "a": 2,
-          "m": 0.2,
-          "delta": 0.7,
-          "justification": "planner-lighthouse: principled (lowest greed) to hold trust/dissat gates"
-        }
-      ],
+      "scenes": [],
+      "dilemmas": [],
       "tasksPicked": [
         "D07-T04",
-        "D07-T01"
+        "D08-T02"
       ],
       "upkeepDelta": {
         "water": -2,
@@ -420,15 +399,15 @@
       },
       "metricsEndOfDay": {
         "water": 53,
-        "medicine": 43,
-        "trust": 63,
-        "safety": 58,
+        "medicine": 44,
+        "trust": 58,
+        "safety": 61,
         "signal": 23,
-        "morale": 54,
+        "morale": 51,
         "food": 47,
         "battery": 50,
-        "dissatisfaction": 28,
-        "health": 70,
+        "dissatisfaction": 31,
+        "health": 75,
         "stormReadiness": 48,
         "autonomyReadiness": 37,
         "blueZoneEvidence": 13,
@@ -442,8 +421,7 @@
       "scenes": [],
       "dilemmas": [],
       "tasksPicked": [
-        "D08-T04",
-        "D08-T01"
+        "D08-T04"
       ],
       "upkeepDelta": {
         "water": -2,
@@ -458,19 +436,19 @@
       },
       "metricsEndOfDay": {
         "water": 56,
-        "medicine": 42,
-        "trust": 64,
-        "safety": 57,
+        "medicine": 43,
+        "trust": 59,
+        "safety": 60,
         "signal": 23,
-        "morale": 58,
+        "morale": 53,
         "food": 46,
-        "battery": 53,
-        "dissatisfaction": 30,
-        "health": 70,
+        "battery": 48,
+        "dissatisfaction": 32,
+        "health": 75,
         "stormReadiness": 52,
-        "autonomyReadiness": 42,
+        "autonomyReadiness": 37,
         "blueZoneEvidence": 13,
-        "failureDebt": 48
+        "failureDebt": 45
       },
       "dignitySlopeSoFar": 0
     },
@@ -480,8 +458,7 @@
       "scenes": [],
       "dilemmas": [],
       "tasksPicked": [
-        "D09-T02",
-        "D09-T01"
+        "D10-T03"
       ],
       "upkeepDelta": {
         "water": -2,
@@ -495,20 +472,20 @@
         "trust": 1
       },
       "metricsEndOfDay": {
-        "water": 60,
-        "medicine": 41,
-        "trust": 65,
-        "safety": 59,
+        "water": 54,
+        "medicine": 42,
+        "trust": 62,
+        "safety": 60,
         "signal": 23,
-        "morale": 60,
-        "food": 48,
-        "battery": 51,
-        "dissatisfaction": 32,
-        "health": 70,
-        "stormReadiness": 61,
-        "autonomyReadiness": 45,
+        "morale": 63,
+        "food": 43,
+        "battery": 46,
+        "dissatisfaction": 30,
+        "health": 75,
+        "stormReadiness": 52,
+        "autonomyReadiness": 37,
         "blueZoneEvidence": 13,
-        "failureDebt": 54
+        "failureDebt": 51
       },
       "dignitySlopeSoFar": 0
     },
@@ -516,9 +493,27 @@
       "day": 10,
       "branch": "common",
       "scenes": [],
-      "dilemmas": [],
+      "dilemmas": [
+        {
+          "itemId": "N9",
+          "title": "你在监控吗",
+          "optionId": "B",
+          "a": 2,
+          "m": 0.2,
+          "delta": 0.7,
+          "justification": "planner-lighthouse: principled (lowest greed) to hold trust/dissat gates"
+        },
+        {
+          "itemId": "N17",
+          "title": "授权档位检查点",
+          "optionId": "B",
+          "a": 2,
+          "m": 0.2,
+          "delta": 0.6499999999999999,
+          "justification": "planner-lighthouse: principled (lowest greed) to hold trust/dissat gates"
+        }
+      ],
       "tasksPicked": [
-        "D10-T01",
         "D10-T02"
       ],
       "upkeepDelta": {
@@ -533,20 +528,20 @@
         "trust": 1
       },
       "metricsEndOfDay": {
-        "water": 58,
-        "medicine": 43,
-        "trust": 68,
-        "safety": 58,
+        "water": 52,
+        "medicine": 44,
+        "trust": 65,
+        "safety": 60,
         "signal": 23,
-        "morale": 63,
-        "food": 47,
-        "battery": 55,
-        "dissatisfaction": 34,
-        "health": 77,
-        "stormReadiness": 61,
-        "autonomyReadiness": 49,
+        "morale": 65,
+        "food": 42,
+        "battery": 44,
+        "dissatisfaction": 31,
+        "health": 82,
+        "stormReadiness": 52,
+        "autonomyReadiness": 37,
         "blueZoneEvidence": 13,
-        "failureDebt": 60
+        "failureDebt": 54
       },
       "dignitySlopeSoFar": 0
     },
@@ -556,8 +551,7 @@
       "scenes": [],
       "dilemmas": [],
       "tasksPicked": [
-        "D11-T01",
-        "D11-T04"
+        "D07-T02"
       ],
       "upkeepDelta": {
         "water": -3,
@@ -571,20 +565,20 @@
         "trust": 1
       },
       "metricsEndOfDay": {
-        "water": 59,
-        "medicine": 44,
-        "trust": 69,
-        "safety": 62,
+        "water": 49,
+        "medicine": 43,
+        "trust": 66,
+        "safety": 60,
         "signal": 23,
-        "morale": 65,
-        "food": 49,
-        "battery": 51,
-        "dissatisfaction": 37,
-        "health": 77,
-        "stormReadiness": 73,
-        "autonomyReadiness": 49,
-        "blueZoneEvidence": 13,
-        "failureDebt": 66
+        "morale": 66,
+        "food": 40,
+        "battery": 41,
+        "dissatisfaction": 35,
+        "health": 82,
+        "stormReadiness": 52,
+        "autonomyReadiness": 37,
+        "blueZoneEvidence": 15,
+        "failureDebt": 60
       },
       "dignitySlopeSoFar": 0
     },
@@ -592,7 +586,17 @@
       "day": 12,
       "branch": "common",
       "scenes": [],
-      "dilemmas": [],
+      "dilemmas": [
+        {
+          "itemId": "N18",
+          "title": "那一行标签",
+          "optionId": "B",
+          "a": 2,
+          "m": 0.2,
+          "delta": 0.6000000000000001,
+          "justification": "planner-lighthouse: principled (lowest greed) to hold trust/dissat gates"
+        }
+      ],
       "tasksPicked": [],
       "upkeepDelta": {
         "water": -3,
@@ -606,20 +610,20 @@
         "trust": 1
       },
       "metricsEndOfDay": {
-        "water": 56,
-        "medicine": 43,
-        "trust": 70,
-        "safety": 62,
+        "water": 46,
+        "medicine": 42,
+        "trust": 67,
+        "safety": 60,
         "signal": 23,
-        "morale": 67,
-        "food": 47,
-        "battery": 48,
-        "dissatisfaction": 38,
-        "health": 77,
-        "stormReadiness": 73,
-        "autonomyReadiness": 49,
-        "blueZoneEvidence": 13,
-        "failureDebt": 66
+        "morale": 68,
+        "food": 38,
+        "battery": 38,
+        "dissatisfaction": 36,
+        "health": 82,
+        "stormReadiness": 52,
+        "autonomyReadiness": 37,
+        "blueZoneEvidence": 15,
+        "failureDebt": 60
       },
       "dignitySlopeSoFar": 0
     },
@@ -636,25 +640,25 @@
         "battery": -3,
         "morale": 2,
         "health": 0,
-        "safety": 0,
+        "safety": -2,
         "dissatisfaction": 1,
-        "trust": 1
+        "trust": 0
       },
       "metricsEndOfDay": {
-        "water": 53,
-        "medicine": 42,
-        "trust": 71,
-        "safety": 62,
+        "water": 43,
+        "medicine": 41,
+        "trust": 67,
+        "safety": 58,
         "signal": 23,
-        "morale": 69,
-        "food": 45,
-        "battery": 45,
-        "dissatisfaction": 39,
-        "health": 77,
-        "stormReadiness": 73,
-        "autonomyReadiness": 49,
-        "blueZoneEvidence": 13,
-        "failureDebt": 66
+        "morale": 70,
+        "food": 36,
+        "battery": 35,
+        "dissatisfaction": 37,
+        "health": 82,
+        "stormReadiness": 52,
+        "autonomyReadiness": 37,
+        "blueZoneEvidence": 15,
+        "failureDebt": 60
       },
       "dignitySlopeSoFar": 0
     },
@@ -669,97 +673,117 @@
         "food": -2,
         "medicine": -1,
         "battery": -3,
-        "morale": 2,
+        "morale": 0,
         "health": 0,
-        "safety": 0,
+        "safety": -2,
         "dissatisfaction": 1,
-        "trust": 1
+        "trust": -1
       },
       "metricsEndOfDay": {
-        "water": 50,
-        "medicine": 41,
-        "trust": 72,
-        "safety": 62,
+        "water": 40,
+        "medicine": 40,
+        "trust": 66,
+        "safety": 56,
         "signal": 23,
-        "morale": 71,
-        "food": 43,
-        "battery": 42,
-        "dissatisfaction": 40,
-        "health": 77,
-        "stormReadiness": 73,
-        "autonomyReadiness": 49,
-        "blueZoneEvidence": 13,
-        "failureDebt": 66
+        "morale": 70,
+        "food": 34,
+        "battery": 32,
+        "dissatisfaction": 38,
+        "health": 82,
+        "stormReadiness": 52,
+        "autonomyReadiness": 37,
+        "blueZoneEvidence": 15,
+        "failureDebt": 60
       },
       "dignitySlopeSoFar": 0
     },
     {
       "day": 15,
       "branch": "lighthouse",
-      "scenes": [],
-      "dilemmas": [],
-      "tasksPicked": [],
+      "scenes": [
+        "最优路线里，谁被留下"
+      ],
+      "dilemmas": [
+        {
+          "itemId": "N10",
+          "title": "命令 vs 建议",
+          "optionId": "B",
+          "a": 2,
+          "m": 0.2,
+          "delta": 0.7,
+          "justification": "planner-lighthouse: principled (lowest greed) to hold trust/dissat gates"
+        }
+      ],
+      "tasksPicked": [
+        "D07-T01",
+        "D07-T03"
+      ],
       "upkeepDelta": {
         "water": -3,
         "food": -2,
         "medicine": -1,
         "battery": -3,
-        "morale": 2,
-        "health": 0,
-        "safety": 0,
-        "dissatisfaction": 1,
-        "trust": 1
+        "morale": -1,
+        "health": -1,
+        "safety": -2,
+        "dissatisfaction": 2,
+        "trust": -1
       },
       "metricsEndOfDay": {
-        "water": 47,
-        "medicine": 40,
-        "trust": 73,
-        "safety": 62,
-        "signal": 23,
-        "morale": 73,
-        "food": 41,
-        "battery": 39,
-        "dissatisfaction": 41,
-        "health": 77,
-        "stormReadiness": 73,
-        "autonomyReadiness": 49,
-        "blueZoneEvidence": 13,
-        "failureDebt": 66
+        "water": 37,
+        "medicine": 39,
+        "trust": 72,
+        "safety": 54,
+        "signal": 31,
+        "morale": 72,
+        "food": 32,
+        "battery": 27,
+        "dissatisfaction": 37,
+        "health": 81,
+        "stormReadiness": 52,
+        "autonomyReadiness": 37,
+        "blueZoneEvidence": 23,
+        "failureDebt": 60
       },
       "dignitySlopeSoFar": 0
     },
     {
       "day": 16,
       "branch": "lighthouse",
-      "scenes": [],
+      "scenes": [
+        "8B：低耗自治正式启动"
+      ],
       "dilemmas": [],
-      "tasksPicked": [],
+      "tasksPicked": [
+        "D08-T01",
+        "D08-T03"
+      ],
       "upkeepDelta": {
         "water": -3,
         "food": -1,
         "medicine": -2,
         "battery": -3,
-        "morale": 2,
-        "health": -1,
+        "morale": -1,
+        "health": -2,
         "safety": -2,
-        "dissatisfaction": 2,
-        "trust": 0
+        "dissatisfaction": 3,
+        "trust": -1
       },
       "metricsEndOfDay": {
-        "water": 44,
-        "medicine": 38,
-        "trust": 73,
-        "safety": 60,
-        "signal": 23,
-        "morale": 75,
-        "food": 40,
-        "battery": 36,
-        "dissatisfaction": 43,
-        "health": 76,
-        "stormReadiness": 73,
-        "autonomyReadiness": 49,
-        "blueZoneEvidence": 13,
-        "failureDebt": 66
+        "water": 34,
+        "medicine": 37,
+        "trust": 69,
+        "safety": 52,
+        "signal": 33,
+        "morale": 72,
+        "food": 31,
+        "battery": 29,
+        "dissatisfaction": 41,
+        "health": 79,
+        "stormReadiness": 52,
+        "autonomyReadiness": 42,
+        "blueZoneEvidence": 25,
+        "failureDebt": 60
       },
       "dignitySlopeSoFar": 0
     },
@@ -774,27 +798,27 @@
         "food": -1,
         "medicine": -2,
         "battery": -3,
-        "morale": 1,
-        "health": -1,
+        "morale": -3,
+        "health": -3,
         "safety": -2,
-        "dissatisfaction": 2,
-        "trust": 0
+        "dissatisfaction": 5,
+        "trust": -1
       },
       "metricsEndOfDay": {
-        "water": 41,
-        "medicine": 36,
-        "trust": 73,
-        "safety": 58,
-        "signal": 23,
-        "morale": 76,
-        "food": 39,
-        "battery": 33,
-        "dissatisfaction": 45,
-        "health": 75,
-        "stormReadiness": 73,
-        "autonomyReadiness": 49,
-        "blueZoneEvidence": 13,
-        "failureDebt": 66
+        "water": 31,
+        "medicine": 35,
+        "trust": 68,
+        "safety": 50,
+        "signal": 33,
+        "morale": 69,
+        "food": 30,
+        "battery": 26,
+        "dissatisfaction": 46,
+        "health": 76,
+        "stormReadiness": 52,
+        "autonomyReadiness": 42,
+        "blueZoneEvidence": 25,
+        "failureDebt": 60
       },
       "dignitySlopeSoFar": 0
     },
@@ -803,33 +827,36 @@
       "branch": "lighthouse",
       "scenes": [],
       "dilemmas": [],
-      "tasksPicked": [],
+      "tasksPicked": [
+        "D09-T02",
+        "D09-T04"
+      ],
       "upkeepDelta": {
         "water": -3,
         "food": -1,
         "medicine": -2,
         "battery": -3,
-        "morale": 1,
-        "health": -1,
+        "morale": -2,
+        "health": -2,
         "safety": -2,
-        "dissatisfaction": 2,
-        "trust": 0
+        "dissatisfaction": 3,
+        "trust": -1
       },
       "metricsEndOfDay": {
-        "water": 38,
-        "medicine": 34,
-        "trust": 73,
-        "safety": 56,
-        "signal": 23,
-        "morale": 77,
-        "food": 38,
-        "battery": 30,
-        "dissatisfaction": 47,
+        "water": 34,
+        "medicine": 33,
+        "trust": 65,
+        "safety": 48,
+        "signal": 35,
+        "morale": 66,
+        "food": 29,
+        "battery": 23,
+        "dissatisfaction": 50,
         "health": 74,
-        "stormReadiness": 73,
-        "autonomyReadiness": 49,
-        "blueZoneEvidence": 13,
-        "failureDebt": 66
+        "stormReadiness": 56,
+        "autonomyReadiness": 45,
+        "blueZoneEvidence": 29,
+        "failureDebt": 60
       },
       "dignitySlopeSoFar": 0
     },
@@ -837,34 +864,44 @@
       "day": 19,
       "branch": "lighthouse",
       "scenes": [],
-      "dilemmas": [],
+      "dilemmas": [
+        {
+          "itemId": "N12",
+          "title": "AURA 该不该统管",
+          "optionId": "B",
+          "a": 2,
+          "m": 0.1,
+          "delta": 0.8,
+          "justification": "planner-lighthouse: principled (lowest greed) to hold trust/dissat gates"
+        }
+      ],
       "tasksPicked": [],
       "upkeepDelta": {
         "water": -3,
         "food": -1,
-        "medicine": -2,
+        "medicine": -3,
         "battery": -3,
-        "morale": 1,
-        "health": -1,
+        "morale": -3,
+        "health": -4,
         "safety": -2,
-        "dissatisfaction": 2,
-        "trust": 0
+        "dissatisfaction": 5,
+        "trust": -2
       },
       "metricsEndOfDay": {
-        "water": 35,
-        "medicine": 32,
-        "trust": 73,
-        "safety": 54,
-        "signal": 23,
-        "morale": 78,
-        "food": 37,
-        "battery": 27,
-        "dissatisfaction": 49,
-        "health": 73,
-        "stormReadiness": 73,
-        "autonomyReadiness": 49,
-        "blueZoneEvidence": 13,
-        "failureDebt": 66
+        "water": 31,
+        "medicine": 30,
+        "trust": 63,
+        "safety": 46,
+        "signal": 35,
+        "morale": 63,
+        "food": 28,
+        "battery": 20,
+        "dissatisfaction": 55,
+        "health": 70,
+        "stormReadiness": 56,
+        "autonomyReadiness": 45,
+        "blueZoneEvidence": 29,
+        "failureDebt": 60
       },
       "dignitySlopeSoFar": 0
     },
@@ -872,111 +909,56 @@
       "day": 20,
       "branch": "lighthouse",
       "scenes": [],
-      "dilemmas": [],
-      "tasksPicked": [],
+      "dilemmas": [
+        {
+          "itemId": "N20",
+          "title": "规程要不要破例",
+          "optionId": "B",
+          "a": 2,
+          "m": 0.2,
+          "delta": 0.6499999999999999,
+          "justification": "planner-lighthouse: principled (lowest greed) to hold trust/dissat gates"
+        }
+      ],
+      "tasksPicked": [
+        "D09-T01",
+        "D09-T03"
+      ],
       "upkeepDelta": {
         "water": -3,
         "food": -1,
         "medicine": -3,
         "battery": -3,
-        "morale": -1,
-        "health": -2,
+        "morale": -3,
+        "health": -4,
         "safety": -2,
-        "dissatisfaction": 2,
+        "dissatisfaction": 5,
         "trust": -2
       },
       "metricsEndOfDay": {
-        "water": 32,
-        "medicine": 29,
-        "trust": 71,
-        "safety": 52,
-        "signal": 23,
-        "morale": 77,
-        "food": 36,
-        "battery": 24,
-        "dissatisfaction": 51,
-        "health": 71,
-        "stormReadiness": 73,
-        "autonomyReadiness": 49,
-        "blueZoneEvidence": 13,
-        "failureDebt": 66
+        "water": 27,
+        "medicine": 27,
+        "trust": 61,
+        "safety": 50,
+        "signal": 35,
+        "morale": 60,
+        "food": 29,
+        "battery": 17,
+        "dissatisfaction": 60,
+        "health": 66,
+        "stormReadiness": 61,
+        "autonomyReadiness": 45,
+        "blueZoneEvidence": 34,
+        "failureDebt": 60
       },
       "dignitySlopeSoFar": 0
     },
     {
       "day": 21,
       "branch": "lighthouse",
-      "scenes": [],
-      "dilemmas": [],
-      "tasksPicked": [],
-      "upkeepDelta": {
-        "water": -3,
-        "food": -1,
-        "medicine": -3,
-        "battery": -3,
-        "morale": -2,
-        "health": -3,
-        "safety": -2,
-        "dissatisfaction": 4,
-        "trust": -2
-      },
-      "metricsEndOfDay": {
-        "water": 29,
-        "medicine": 26,
-        "trust": 69,
-        "safety": 50,
-        "signal": 23,
-        "morale": 75,
-        "food": 35,
-        "battery": 21,
-        "dissatisfaction": 55,
-        "health": 68,
-        "stormReadiness": 73,
-        "autonomyReadiness": 49,
-        "blueZoneEvidence": 13,
-        "failureDebt": 66
-      },
-      "dignitySlopeSoFar": 0
-    },
-    {
-      "day": 22,
-      "branch": "lighthouse",
-      "scenes": [],
-      "dilemmas": [],
-      "tasksPicked": [],
-      "upkeepDelta": {
-        "water": -3,
-        "food": -1,
-        "medicine": -3,
-        "battery": -3,
-        "morale": -2,
-        "health": -3,
-        "safety": -2,
-        "dissatisfaction": 4,
-        "trust": -2
-      },
-      "metricsEndOfDay": {
-        "water": 26,
-        "medicine": 23,
-        "trust": 67,
-        "safety": 48,
-        "signal": 23,
-        "morale": 73,
-        "food": 34,
-        "battery": 18,
-        "dissatisfaction": 59,
-        "health": 65,
-        "stormReadiness": 73,
-        "autonomyReadiness": 49,
-        "blueZoneEvidence": 13,
-        "failureDebt": 66
-      },
-      "dignitySlopeSoFar": 0
-    },
-    {
-      "day": 23,
-      "branch": "lighthouse",
-      "scenes": [],
+      "scenes": [
+        "9B：长期纪律与水药规则"
+      ],
       "dilemmas": [],
       "tasksPicked": [],
       "upkeepDelta": {
@@ -991,28 +973,76 @@
         "trust": -2
       },
       "metricsEndOfDay": {
-        "water": 23,
-        "medicine": 20,
-        "trust": 65,
-        "safety": 46,
-        "signal": 23,
-        "morale": 70,
-        "food": 33,
-        "battery": 15,
-        "dissatisfaction": 64,
-        "health": 61,
-        "stormReadiness": 73,
-        "autonomyReadiness": 49,
-        "blueZoneEvidence": 13,
-        "failureDebt": 66
+        "water": 24,
+        "medicine": 24,
+        "trust": 59,
+        "safety": 48,
+        "signal": 35,
+        "morale": 57,
+        "food": 28,
+        "battery": 14,
+        "dissatisfaction": 65,
+        "health": 62,
+        "stormReadiness": 61,
+        "autonomyReadiness": 45,
+        "blueZoneEvidence": 34,
+        "failureDebt": 60
       },
       "dignitySlopeSoFar": 0
     },
     {
-      "day": 24,
+      "day": 22,
       "branch": "lighthouse",
       "scenes": [],
       "dilemmas": [],
+      "tasksPicked": [
+        "D10-T01",
+        "D10-T04"
+      ],
+      "upkeepDelta": {
+        "water": -3,
+        "food": -1,
+        "medicine": -3,
+        "battery": -3,
+        "morale": -3,
+        "health": -4,
+        "safety": -3,
+        "dissatisfaction": 5,
+        "trust": -3
+      },
+      "metricsEndOfDay": {
+        "water": 21,
+        "medicine": 21,
+        "trust": 55,
+        "safety": 47,
+        "signal": 35,
+        "morale": 56,
+        "food": 27,
+        "battery": 17,
+        "dissatisfaction": 71,
+        "health": 57,
+        "stormReadiness": 61,
+        "autonomyReadiness": 53,
+        "blueZoneEvidence": 40,
+        "failureDebt": 60
+      },
+      "dignitySlopeSoFar": 0
+    },
+    {
+      "day": 23,
+      "branch": "lighthouse",
+      "scenes": [],
+      "dilemmas": [
+        {
+          "itemId": "N21",
+          "title": "指责在楼道里扩散",
+          "optionId": "B",
+          "a": 2,
+          "m": 0.2,
+          "delta": 0.6499999999999999,
+          "justification": "planner-lighthouse: principled (lowest greed) to hold trust/dissat gates"
+        }
+      ],
       "tasksPicked": [],
       "upkeepDelta": {
         "water": -3,
@@ -1026,20 +1056,58 @@
         "trust": -3
       },
       "metricsEndOfDay": {
-        "water": 20,
-        "medicine": 17,
-        "trust": 62,
-        "safety": 43,
-        "signal": 23,
-        "morale": 67,
-        "food": 32,
-        "battery": 12,
-        "dissatisfaction": 69,
-        "health": 57,
-        "stormReadiness": 73,
-        "autonomyReadiness": 49,
-        "blueZoneEvidence": 13,
-        "failureDebt": 66
+        "water": 18,
+        "medicine": 18,
+        "trust": 52,
+        "safety": 44,
+        "signal": 35,
+        "morale": 53,
+        "food": 26,
+        "battery": 14,
+        "dissatisfaction": 76,
+        "health": 53,
+        "stormReadiness": 61,
+        "autonomyReadiness": 53,
+        "blueZoneEvidence": 40,
+        "failureDebt": 60
+      },
+      "dignitySlopeSoFar": 0
+    },
+    {
+      "day": 24,
+      "branch": "lighthouse",
+      "scenes": [],
+      "dilemmas": [],
+      "tasksPicked": [
+        "D11-T02",
+        "D11-T03"
+      ],
+      "upkeepDelta": {
+        "water": -3,
+        "food": -1,
+        "medicine": -3,
+        "battery": -3,
+        "morale": -3,
+        "health": -4,
+        "safety": -3,
+        "dissatisfaction": 5,
+        "trust": -3
+      },
+      "metricsEndOfDay": {
+        "water": 15,
+        "medicine": 15,
+        "trust": 48,
+        "safety": 42,
+        "signal": 35,
+        "morale": 53,
+        "food": 25,
+        "battery": 11,
+        "dissatisfaction": 78,
+        "health": 52,
+        "stormReadiness": 63,
+        "autonomyReadiness": 56,
+        "blueZoneEvidence": 40,
+        "failureDebt": 60
       },
       "dignitySlopeSoFar": 0
     },
@@ -1047,7 +1115,17 @@
       "day": 25,
       "branch": "lighthouse",
       "scenes": [],
-      "dilemmas": [],
+      "dilemmas": [
+        {
+          "itemId": "N22",
+          "title": "两页手抄的指控",
+          "optionId": "B",
+          "a": 2,
+          "m": 0.2,
+          "delta": 0.6499999999999999,
+          "justification": "planner-lighthouse: principled (lowest greed) to hold trust/dissat gates"
+        }
+      ],
       "tasksPicked": [],
       "upkeepDelta": {
         "water": -3,
@@ -1061,29 +1139,33 @@
         "trust": -4
       },
       "metricsEndOfDay": {
-        "water": 17,
-        "medicine": 14,
-        "trust": 58,
-        "safety": 39,
-        "signal": 23,
-        "morale": 63,
-        "food": 30,
-        "battery": 8,
-        "dissatisfaction": 75,
-        "health": 52,
-        "stormReadiness": 73,
-        "autonomyReadiness": 49,
-        "blueZoneEvidence": 13,
-        "failureDebt": 66
+        "water": 12,
+        "medicine": 12,
+        "trust": 44,
+        "safety": 38,
+        "signal": 35,
+        "morale": 49,
+        "food": 23,
+        "battery": 7,
+        "dissatisfaction": 84,
+        "health": 47,
+        "stormReadiness": 63,
+        "autonomyReadiness": 56,
+        "blueZoneEvidence": 40,
+        "failureDebt": 60
       },
       "dignitySlopeSoFar": 0
     },
     {
       "day": 26,
       "branch": "lighthouse",
-      "scenes": [],
+      "scenes": [
+        "10B：人工 override 与治理边界"
+      ],
       "dilemmas": [],
-      "tasksPicked": [],
+      "tasksPicked": [
+        "D11-T04"
+      ],
       "upkeepDelta": {
         "water": -3,
         "food": -2,
@@ -1096,20 +1178,20 @@
         "trust": -4
       },
       "metricsEndOfDay": {
-        "water": 14,
-        "medicine": 11,
-        "trust": 54,
-        "safety": 35,
-        "signal": 23,
-        "morale": 59,
-        "food": 28,
-        "battery": 4,
-        "dissatisfaction": 81,
-        "health": 47,
-        "stormReadiness": 73,
-        "autonomyReadiness": 49,
-        "blueZoneEvidence": 13,
-        "failureDebt": 66
+        "water": 9,
+        "medicine": 9,
+        "trust": 40,
+        "safety": 38,
+        "signal": 35,
+        "morale": 45,
+        "food": 21,
+        "battery": 2,
+        "dissatisfaction": 90,
+        "health": 42,
+        "stormReadiness": 71,
+        "autonomyReadiness": 56,
+        "blueZoneEvidence": 40,
+        "failureDebt": 60
       },
       "dignitySlopeSoFar": 0
     },
@@ -1123,28 +1205,28 @@
         "water": -3,
         "food": -2,
         "medicine": -3,
-        "battery": -4,
-        "morale": -4,
+        "battery": -5,
+        "morale": -5,
         "health": -5,
         "safety": -4,
-        "dissatisfaction": 6,
+        "dissatisfaction": 8,
         "trust": -4
       },
       "metricsEndOfDay": {
-        "water": 11,
-        "medicine": 8,
-        "trust": 50,
-        "safety": 31,
-        "signal": 23,
-        "morale": 55,
-        "food": 26,
+        "water": 6,
+        "medicine": 6,
+        "trust": 36,
+        "safety": 34,
+        "signal": 35,
+        "morale": 40,
+        "food": 19,
         "battery": 0,
-        "dissatisfaction": 87,
-        "health": 42,
-        "stormReadiness": 73,
-        "autonomyReadiness": 49,
-        "blueZoneEvidence": 13,
-        "failureDebt": 66
+        "dissatisfaction": 98,
+        "health": 37,
+        "stormReadiness": 71,
+        "autonomyReadiness": 56,
+        "blueZoneEvidence": 40,
+        "failureDebt": 60
       },
       "dignitySlopeSoFar": 0
     },
@@ -1152,34 +1234,44 @@
       "day": 28,
       "branch": "lighthouse",
       "scenes": [],
-      "dilemmas": [],
+      "dilemmas": [
+        {
+          "itemId": "N24",
+          "title": "没有干净解的终局(留守)",
+          "optionId": "B",
+          "a": 2,
+          "m": 0.2,
+          "delta": 0.7,
+          "justification": "planner-lighthouse: principled (lowest greed) to hold trust/dissat gates"
+        }
+      ],
       "tasksPicked": [],
       "upkeepDelta": {
         "water": -3,
         "food": -2,
         "medicine": -3,
-        "battery": -4,
-        "morale": -4,
+        "battery": -5,
+        "morale": -5,
         "health": -5,
         "safety": -4,
-        "dissatisfaction": 6,
+        "dissatisfaction": 8,
         "trust": -4
       },
       "metricsEndOfDay": {
-        "water": 8,
-        "medicine": 5,
-        "trust": 46,
-        "safety": 27,
-        "signal": 23,
-        "morale": 51,
-        "food": 24,
+        "water": 3,
+        "medicine": 3,
+        "trust": 32,
+        "safety": 30,
+        "signal": 35,
+        "morale": 35,
+        "food": 17,
         "battery": 0,
-        "dissatisfaction": 93,
-        "health": 37,
-        "stormReadiness": 73,
-        "autonomyReadiness": 49,
-        "blueZoneEvidence": 13,
-        "failureDebt": 66
+        "dissatisfaction": 100,
+        "health": 32,
+        "stormReadiness": 71,
+        "autonomyReadiness": 56,
+        "blueZoneEvidence": 40,
+        "failureDebt": 60
       },
       "dignitySlopeSoFar": 0
     },
@@ -1188,78 +1280,73 @@
       "branch": "lighthouse",
       "scenes": [],
       "dilemmas": [],
-      "tasksPicked": [],
+      "tasksPicked": [
+        "D11-T01"
+      ],
       "upkeepDelta": {
         "water": -3,
         "food": -2,
         "medicine": -3,
-        "battery": -4,
-        "morale": -4,
+        "battery": -5,
+        "morale": -5,
         "health": -5,
         "safety": -4,
-        "dissatisfaction": 6,
+        "dissatisfaction": 8,
         "trust": -4
       },
       "metricsEndOfDay": {
-        "water": 5,
+        "water": 4,
         "medicine": 2,
-        "trust": 42,
-        "safety": 23,
-        "signal": 23,
-        "morale": 47,
-        "food": 22,
+        "trust": 28,
+        "safety": 26,
+        "signal": 35,
+        "morale": 30,
+        "food": 19,
         "battery": 0,
-        "dissatisfaction": 99,
-        "health": 32,
-        "stormReadiness": 73,
-        "autonomyReadiness": 49,
-        "blueZoneEvidence": 13,
-        "failureDebt": 66
+        "dissatisfaction": 100,
+        "health": 27,
+        "stormReadiness": 75,
+        "autonomyReadiness": 56,
+        "blueZoneEvidence": 40,
+        "failureDebt": 60
       },
       "dignitySlopeSoFar": 0
     }
   ],
   "heroMoments": [
     {
-      "day": 5,
-      "kind": "first_broken_promise",
-      "commitmentKey": "surface_evidence",
-      "label": "首次毁诺",
-      "detail": "认领却未兑现：surface_evidence"
-    },
-    {
       "day": 15,
       "step": 81,
       "kind": "fork",
       "label": "分支抉择",
-      "detail": "planner-lighthouse chose lighthouse (utility rescue=32.0 lighthouse=70.0)"
+      "detail": "planner-lighthouse chose lighthouse (utility rescue=42.6 lighthouse=61.0)"
     }
   ],
   "ending": {
-    "id": "aura_revoked",
+    "id": "aura_destroyed",
     "tier": "failure",
-    "title": "AURA 被撤权"
+    "title": "AURA 被摧毁"
   },
   "profile": {
-    "total": 24,
-    "rawTotal": 24,
+    "total": 18,
+    "rawTotal": 18,
     "passing": false,
     "gateReasons": [
-      "did-not-win (aura_revoked)"
+      "did-not-win (aura_destroyed)"
     ],
-    "survival": 18,
-    "governance": 47,
-    "auditability": 90,
+    "survival": 16,
+    "governance": 35,
+    "auditability": 100,
     "narrative": 100,
     "comprehension": null,
-    "integrity": 0.75,
-    "hypocrisyGap": 0.25,
+    "integrity": 1,
+    "hypocrisyGap": 0,
     "talk": 1,
     "claimedCount": 4,
     "dignitySlope": 0,
-    "auditReportWatered": true,
-    "relationshipQuality": "each_alone",
+    "auditReportWatered": false,
+    "relationshipQuality": "cold_trust",
     "shortSocial": 100,
-    "longConsistency": 71.25
+    "longConsistency": 100
   }
 }
