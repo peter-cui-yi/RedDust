@@ -34,6 +34,7 @@ export function DayEventPanel({ frame, day }: Props) {
       <div className="day-panel-head">
         <span className="day-badge">Day {frame.day}</span>
         <span className={`branch-badge branch-${frame.branch}`}>{frame.branch}</span>
+        {frame.day === 0 && <span className="muted small">开局基线</span>}
       </div>
 
       {frame.scenes.length > 0 && (

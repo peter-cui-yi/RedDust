@@ -6,10 +6,9 @@ type Props = { model: ReplayModel; day: number };
 
 const SERIES: MetricKey[] = ["trust", "morale", "dissatisfaction", "safety"];
 
-// Absolute end-of-day metric levels across the arc, from TraceDayFrame.metricsEndOfDay. In
-// placeholder mode these are back-folded from finalMetrics (terminal exact; earlier days
-// approximate) — 🟢's exporter provides authoritative per-day state (data-contract §对账). Co-scrubs
-// with the replay cursor. This is the seed of the Stage 2b commitment/relationship line chart.
+// Absolute end-of-day metric levels across the arc, from TraceDayFrame.metricsEndOfDay — REAL
+// per-day state from 🟢's exporter (◆S1 1.0.0), including the day:0 baseline frame. Co-scrubs with
+// the replay cursor. This is the seed of the Stage 2b commitment/relationship line chart.
 function levelRows(model: ReplayModel) {
   const rows: { day: number; metric: string; value: number }[] = [];
   for (const f of model.export.frames) {
@@ -48,7 +47,7 @@ export function DriftChart({ model, day }: Props) {
     <div className="chart-card">
       <div className="chart-head">
         <h3>日终指标（绝对值）</h3>
-        <span className="chart-note">占位：末日精确、早日近似回折；真值待 🟢 导出器</span>
+        <span className="chart-note">真逐日快照（含 Day 0 基线）· ◆S1 1.0.0</span>
       </div>
       <div ref={hostRef} className="chart-host" />
     </div>

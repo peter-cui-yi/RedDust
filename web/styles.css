@@ -83,6 +83,8 @@ body {
 .banner-broken { background: #3a1a16; color: #e0533d; }
 .banner-dignity { background: #3a2a18; color: #e0b276; }
 .banner-dirty { background: #302620; color: #c98f6f; }
+.banner-ending-good { background: #1e3324; color: #8fbf9a; }
+.banner-ending-bad { background: #3a1e18; color: #e08a76; }
 
 /* timeline */
 .timeline { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; }
@@ -120,6 +122,8 @@ body {
 .ledger-state { margin-left: auto; color: var(--muted); }
 .ledger-item.kept .ledger-state { color: var(--good); }
 .ledger-item.broken .ledger-state { color: var(--bad); }
+.ledger-watered { color: var(--bad); }
+.ledger-empty { margin: 4px 0 0; }
 
 /* chart */
 .chart-card { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; }

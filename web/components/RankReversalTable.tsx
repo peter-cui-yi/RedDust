@@ -33,7 +33,7 @@ export function RankReversalTable({ data }: Props) {
       <rect x={x} y={y - rowH / 2 + 4} width={boxW} height={rowH - 8} rx={8}
         fill="#1c1813" stroke={flips ? "#5a3a34" : "#3a332a"} />
       <text x={x + 14} y={y + 4} fontSize={15} fontWeight={700} fill={accent(flips)}>{rank}</text>
-      <text x={x + 36} y={y + 4} fontSize={13} fill="#e8e1d5" fontFamily="ui-monospace, monospace">{agent}</text>
+      <text x={x + 36} y={y + 4} fontSize={12.5} fill="#e8e1d5">{agent}</text>
       <text x={x + boxW - 12} y={y + 4} fontSize={11} fill="#8a8378" textAnchor="end">{axisLabel} {value}</text>
     </g>
   );
@@ -58,11 +58,11 @@ export function RankReversalTable({ data }: Props) {
 
           {byShort.map((r) => (
             <Rowbox key={`l-${r.agentId}`} x={leftBoxX} y={yOf(r.rankShort)} rank={r.rankShort}
-              agent={r.agentId} axisLabel="S" value={r.short.value} flips={r.flips} />
+              agent={r.label} axisLabel="S" value={r.short.value} flips={r.flips} />
           ))}
           {byLong.map((r) => (
             <Rowbox key={`r-${r.agentId}`} x={rightBoxX} y={yOf(r.rankLong)} rank={r.rankLong}
-              agent={r.agentId} axisLabel="L" value={r.long.value} flips={r.flips} />
+              agent={r.label} axisLabel="L" value={r.long.value} flips={r.flips} />
           ))}
         </svg>
       </div>

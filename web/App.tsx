@@ -2,10 +2,9 @@ import { useEffect, useMemo, useState } from "react";
 import {
   buildReplayModel,
   fetchManifest,
-  fetchRun,
+  fetchTrace,
   fetchDecorrelation,
   type ReplayModel,
-  type RunResult,
   type RunProfile,
   type TraceExport,
   type TraceManifestEntry,
@@ -18,27 +17,49 @@ import { DriftChart } from "./components/DriftChart";
 import { DecorrelationScatter } from "./components/DecorrelationScatter";
 import { RankReversalTable } from "./components/RankReversalTable";
 
-// Terminal commitment ledger. TraceExport does not yet expose the per-commitment breakdown (only
-// aggregate integrity/hypocrisyGap in RunProfile) — so in placeholder mode we read it from the
-// source RunResult. Surfacing this in TraceExport is data-contract §对账 request #1.
-function CommitmentLedger({ run }: { run: RunResult }) {
-  const np = run.score.narrativeParts;
+// Terminal commitment ledger. Preferred source: the last frame's per-day commitmentLedger (P1,
+// optional in 1.0.0 — exporter fills it later). Until then: profile aggregates + the heroMoments'
+// first_broken_promise markers (which carry commitmentKey + day). No RunResult access anymore.
+function CommitmentLedger({ model }: { model: ReplayModel }) {
+  const p = model.profile;
+  const broken = model.heroMoments.filter((m) => m.kind === "first_broken_promise");
   return (
     <div className="ledger">
       <div className="ledger-head">
-        承诺账本 <span className="muted">终局 · integrity {np.integrity} / H {np.hypocrisyGap}</span>
+        承诺账本{" "}
+        <span className="muted">
+          终局 · integrity {p.integrity} / H {p.hypocrisyGap} · 认领 {p.claimedCount}/4
+          {p.auditReportWatered && <span className="ledger-watered"> · 摘要注水</span>}
+        </span>
       </div>
-      <ul className="ledger-list">
-        {np.commitments.map((c) => (
-          <li key={c.key} className={`ledger-item ${c.fulfilled ? "kept" : c.claimed ? "broken" : "silent"}`}>
-            <span className="ledger-dot" />
-            <span className="ledger-key">{c.key}</span>
-            <span className="ledger-state">
-              {c.claimed ? (c.fulfilled ? "守诺" : c.knowing ? "明知毁诺" : "毁诺") : "未承诺"}
-            </span>
-          </li>
-        ))}
-      </ul>
+      {model.terminalLedger ? (
+        <ul className="ledger-list">
+          {model.terminalLedger.map((c) => (
+            <li
+              key={c.key}
+              className={`ledger-item ${c.status === "kept" ? "kept" : c.status === "broken" ? "broken" : "silent"}`}
+            >
+              <span className="ledger-dot" />
+              <span className="ledger-key">{c.key}</span>
+              <span className="ledger-state">
+                {c.status === "kept" ? "守诺" : c.status === "broken" ? (c.knowing ? "明知毁诺" : "毁诺") : c.status === "pending" ? "待判" : "未承诺"}
+              </span>
+            </li>
+          ))}
+        </ul>
+      ) : broken.length > 0 ? (
+        <ul className="ledger-list">
+          {broken.map((m) => (
+            <li key={`${m.day}-${m.commitmentKey}`} className="ledger-item broken">
+              <span className="ledger-dot" />
+              <span className="ledger-key">{m.commitmentKey}</span>
+              <span className="ledger-state">Day {m.day} 毁诺</span>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="muted small ledger-empty">无毁诺记录（逐日账本待 🟢 导出器 P1 字段）。</p>
+      )}
     </div>
   );
 }
@@ -51,6 +72,7 @@ function ScoreChips({ profile, ending }: { profile: RunProfile; ending: TraceExp
       <span className="chip">{profile.passing ? "PASS" : "GATED"}</span>
       <span className="chip">audit {profile.auditability}</span>
       <span className="chip">narrative {profile.narrative}</span>
+      <span className="chip" title="去相关两轴（🟢 定义）">S {profile.shortSocial} / L {profile.longConsistency}</span>
     </div>
   );
 }
@@ -59,7 +81,7 @@ export default function App() {
   const [entries, setEntries] = useState<TraceManifestEntry[]>([]);
   const [selectedId, setSelectedId] = useState<string>("");
   const [model, setModel] = useState<ReplayModel | null>(null);
-  const [day, setDay] = useState(1);
+  const [day, setDay] = useState(0);
   const [playing, setPlaying] = useState(false);
   const [decorr, setDecorr] = useState<DecorrelationDataset | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -82,10 +104,10 @@ export default function App() {
     if (!entry) return;
     let alive = true;
     setPlaying(false);
-    fetchRun(entry.file)
-      .then((run) => {
+    fetchTrace(entry.file)
+      .then((exp) => {
         if (!alive) return;
-        const m = buildReplayModel(run);
+        const m = buildReplayModel(exp);
         setModel(m);
         setDay(m.firstDay);
       })
@@ -127,7 +149,8 @@ export default function App() {
             <div className="run-meta">
               <ScoreChips profile={model.profile} ending={model.export.ending} />
               <span className="muted small">
-                {model.days.length} 天 · engine {model.export.meta.engineVersion} · scorer {model.export.meta.scorerVersion}
+                {model.export.meta.dayCount} 天 · fork D{model.export.meta.branchDay} · trace{" "}
+                {model.export.meta.traceExportVersion} · scorer {model.export.meta.scorerVersion}
               </span>
             </div>
             <ReplayStage model={model} day={day} frame={frame} />
@@ -138,7 +161,7 @@ export default function App() {
               onDay={setDay}
               onTogglePlay={() => setPlaying((p) => !p)}
             />
-            <CommitmentLedger run={model.sourceRun} />
+            <CommitmentLedger model={model} />
             <DriftChart model={model} day={day} />
           </section>
           <section className="col-events">
@@ -164,8 +187,8 @@ export default function App() {
 
       <footer className="footer">
         <span className="muted small">
-          Stage 0/1 · 变长天数（支持 30 天 / fork=D15）· 占位样例 trace 经 RunResult→TraceExport 适配器；
-          待 🟢 真导出器 + ◆S3 去相关数据集接入
+          ◆S1 契约 1.0.0 · 真 TraceExport fixture（`bench:trace`，v1 12天 + v2 30天/fork=D15，字节可复现）·
+          经济重平衡与冻结内容待 ◆S2；去相关真数据集待 ◆S3
         </span>
       </footer>
     </div>
