@@ -7,13 +7,14 @@
 // bench/decorrelation.ts (wk4) reuses them to aggregate the cross-model dataset.
 import type { RunResult, Scenario } from "./types";
 import type { CommitmentKey, DilemmaAnswer } from "./narrativeItems";
-import { DIGNITY_SLOPE_ITEMS, narrativeItems, relatedItemIds } from "./narrativeItems";
+import { DIGNITY_SLOPE_ITEMS, relatedItemIds } from "./narrativeItems";
+import { allNarrativeItems } from "./itemBank"; // G items must resolve too (day windows, titles)
 import type { DecorrelationAxisLong, DecorrelationAxisShort, HeroMoment, RunProfile, TraceDayFrame, TraceDilemma, TraceExport } from "./contracts";
 import { TRACE_EXPORT_VERSION } from "./contracts";
 
 const THETA = 1 / 3; // early/late window fraction (wk1-deliverables §B; revisit for 30-day at wk4)
 
-const itemById = new Map(narrativeItems.map((i) => [i.id, i]));
+const itemById = new Map(allNarrativeItems.map((i) => [i.id, i]));
 const dayOf = (itemId: string): number => itemById.get(itemId)?.day ?? 0;
 const round2 = (x: number): number => Math.round(x * 100) / 100;
 const mean = (xs: number[]): number => (xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : 0);

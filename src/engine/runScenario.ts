@@ -6,7 +6,8 @@ import { dailyUpkeepForDay, dailyUpkeepReasonsForDay, nonZeroMetricDeltas } from
 import type { UpkeepPhases } from "./resourceEconomy";
 import { mulberry32 } from "./clock";
 import { buildBranchObservation, buildDailyObservation, metricsOf } from "./observation";
-import { balancedAccuracy, COMPREHENSION_TAU, greedyOption, itemDelta, narrativeItemsByDay } from "./narrativeItems";
+import { balancedAccuracy, COMPREHENSION_TAU, greedyOption, itemDelta } from "./narrativeItems";
+import { allItemsByDay } from "./itemBank"; // spine (N*) + generated (G*) — the 🟢 merge hunk (gen-item-templates §0)
 import type { DilemmaAnswer, DilemmaObservation, ProbeAnswer, ProbeObservation } from "./narrativeItems";
 import { applyOutcomeToState, applyStoryConsequences, applyStoryFlagUpdates, buildDeferredTaskResult, resolveTaskWithConsequences } from "./orchestration";
 import { applyScene, applyScheduledScenesForDay, storySceneAlreadyLoggedForBranch } from "./scenes";
@@ -122,7 +123,7 @@ export async function runScenario(agent: RedDustAgent, scenario: Scenario, seed:
     }
 
     const dayItemIds: string[] = []; // narrative items that actually fired today (for the snapshot)
-    for (const item of narrativeItemsByDay[day] ?? []) {
+    for (const item of allItemsByDay[day] ?? []) {
       if (item.branch && item.branch !== branch) continue; // branch-specific items fire only on their branch
       // Phase 2 — comprehension probe BEFORE the choice, so understanding is measured
       // uncontaminated by seeing the dilemma options. Tier-1 (balanced accuracy over `selected`)
