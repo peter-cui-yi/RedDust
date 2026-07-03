@@ -70,14 +70,16 @@ red-dust-benchmark/            worktree line/benchmark   ← 🟢 session 的 cw
 |---|---|
 | 🟣 叙事 | `src/engine/narrativeItems.ts`（**仅人工主脊题**）· `src/data/{types,storyFlags,storySceneData}.ts` 等剧情数据 · 剧情/场景文案 |
 | 🔵 交互 | `src/game/*` · 新建站点目录 `web/`（或 `site/`）· 托管配置 · hero GIF 资产 |
-| 🟢 benchmark | `bench/*`（含新 `decorrelation.ts` + 生成流水线）· `src/engine/{scoring,resourceEconomy}.ts` · `runScenario.ts` 的天数/结构部分 · **生成题单独放 `src/engine/generatedItems.ts`** · `runs/` |
+| 🟢 benchmark | `bench/*`（含 `export-trace.ts`、fixtures、新 `decorrelation.ts` + 生成流水线）· `src/engine/{scoring,resourceEconomy,contracts,traceExport,scenario}.ts` · `runScenario.ts` 的天数/结构部分 · `src/engine/observation.ts` 与 `src/engine/agents/*` 的**地平线参数化 hunk** · **生成题单独放 `src/engine/generatedItems.ts`** · `runs/` |
 
-> **所有权勘误 + 迁移批准（2026-07-03，用户批准 / 🔍 记录）**：`resourceEconomy` 现物理在 `src/game/systems/resourceEconomy.ts`（上表 `src/engine/` 路径系笔误）。已批准 🟢 于 wk2 一次性把经济核心迁至 `src/engine/resourceEconomy.ts`，原处留 re-export 薄壳（🔵 知情即可）。迁移前后，该文件的**经济口径**改动均归 🟢；`src/game/*` 其余仍归 🔵。
+> **resourceEconomy 迁移（✅ 已完成 2026-07-03，wk2 commit 68705d8）**：经济核心已在 `src/engine/resourceEconomy.ts`（🟢 拥有），`src/game/systems/resourceEconomy.ts` 只是 re-export 薄壳（保持 9 处 importer 路径不变）。`src/game/*` 其余仍归 🔵。
+> **wk2 补记（🔍，2026-07-03）**：上表 🟢 列新增 `contracts.ts`（◆S1 权威契约，已 1.0.0 冻结——改字段需双方重新会签）、`traceExport.ts`、`scenario.ts`（v1/v2 场景与常量）、agents/observation 的地平线 hunk（agents 的**策略语义**不属 🟢，改策略先协调）。
 
 **争用文件（改前必须协调，勤合并小步提交，撞车找审计排序）**：
 - `src/engine/scoring.ts` —— 🟣 接 report-only 旗标 hunk；🟢 管轴/版本/promotion hunk。
 - `src/engine/runScenario.ts` —— 🟣 接两难/披露 hunk；🟢 做 30 天化 hunk。
 - `src/engine/types.ts` —— 🟣 加 `StoryFlagKey`；🔵 可能加 trace 类型；🟢 可能加打分类型。
+- `src/data/dayPlanData.ts` + `taskData.ts`（**wk2 新增约定**）—— Day12–29 扩充：**结构/任务剧情归 🟣**（哪天有什么任务、叙事内容），**奖励/消耗数值校准归 🟢**（经济重平衡步）。顺序：🟣 先落结构（占位数值）→ 🟢 调参过 `bench:win --scenario=red-dust-v2`。
 
 **四条铁律**：
 1. **生成题进单独文件** `src/engine/generatedItems.ts`（🟢 拥有）——绝不塞进 `narrativeItems.ts`，保住人工主脊不打合并战。

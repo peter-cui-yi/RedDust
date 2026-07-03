@@ -35,6 +35,26 @@
 
 ---
 
+## 决策执行记录 · wk2（2026-07-03，wk2 审计四项建议全部落地）——**◆S1 正式闭环 1.0.0**
+
+执行者：🔍 审计（用户明示授权「把事办了」）。全程实跑验证，无一步凭申报。
+
+**① 🟢 提交 + 合并**：wk2 工作原样入 `68705d8`（24 文件）；◆S1 闭环另行 `1c6e9c5` + fixup `8a72d2a`。
+- 执行中发现并修复：`bench:trace` 默认只重产 v1 fixture——v2 四条曾带 rc1 旧戳提交，已用 `--scenario=red-dust-v2` 重产并**重新验证 v2 字节可复现**（wk2 审计的"字节可复现 ✓"实际只覆盖了 v1×4，本次补上 v2×4——审计自我更正）。
+
+**② ◆S1 三步闭环 → `1.0.0` 冻结**：
+- 🟢 侧：`TRACE_EXPORT_VERSION`/`DECORRELATION_DATASET_VERSION` → `1.0.0`；`S1-contract-cosign.md` 记正式会签（🔵 的三项"待确认"均已被其自身提交行动确认：`690571c` 迁投影、`2c3f0c5` 嵌套消费）；8 fixture 按 1.0.0 重产。
+- 🔵 侧：merge main 后 hero enum 3 kind 改名（`fork`/`relationship_rupture`/`survival_rupture`）+ **适配器补 rc1 新增字段**（`profile.auditReportWatered` 取自 narrativeParts；`meta.lastActionableDay = finalDay-1` 近似并注明）→ root build + `build:web` 实跑绿 → `b6e56ce`。类型检查在改名前确实报错（漂移被编译器拦截，印证 wk2 审计预判）。
+- 冻结口径：字段名/类型不变；增字段走 1.1 增补；改字段需双方重新会签（记入 cosign 文档）。
+
+**③ 🟣 Hold 解除 + 新任务边界**：wk2 spec 文档入 `8911789`；merge main（拿到 red-dust-v2 + 契约 1.0.0）后 typecheck + 4 验证器**实跑全绿**；PROGRESS 更新（`6fa27ff`）：wk3 开工清单 = 30 天重落位 + **Day12–29 dayPlan/任务结构**（新分工：结构/剧情归 🟣，数值校准归 🟢——已写进所有权地图争用文件节）。
+
+**④ 所有权地图补记**（orchestration/README.md）：🟢 列补 `contracts/traceExport/scenario/export-trace` + agents/observation 地平线 hunk（注明 agents 策略语义不属 🟢）；resourceEconomy 迁移标记已完成；新增 `dayPlanData/taskData` 的 🟣🟢 分工约定。
+
+**收尾状态**：main = 三线 wk2 全量 + ◆S1 1.0.0（见下方集成验证）；三条线工作树全干净、全部与 main 同步。**wk3 关键路径：🟣 的 30 天重落位 + Day12–29 结构 → 🟢 经济重平衡（`bench:win` v2 过）→ ◆S2。**
+
+---
+
 ## 审计 · wk2（2026-07-03，第二波三线 session 完工后）
 
 **总览**：🟣 on-track（按用户指示 Hold，转交付引擎 spec）｜ 🔵 on-track（超前，纪律最好）｜ 🟢 实质 on-track / **流程红旗复发（17 文件未提交，含 ◆S1 rc1 契约与 fixture）**｜ **◆S1 门禁：实质完成、形式未闭环 → 有条件放行**｜ **新关键路径浮出：30 天任务内容（`src/data/dayPlanData.ts` D12–29 空档，🟣 地界）**。
