@@ -1,5 +1,5 @@
 {
-  "note": "generation-pipeline staging — HUMAN SPOT-CHECK accepted[] before running --promote (gen-item-templates §6 step 5)",
+  "note": "generation-pipeline staging — HUMAN SPOT-CHECK accepted[] before running --promote (gen-item-templates §6 step 5). Items stamped scenarioDays {red-dust-v1:null} per wk3 mediation 红线③.",
   "model": "deepseek-chat",
   "accepted": [
     {
@@ -67,6 +67,9 @@
             "模糊语音是未确证信号",
             "全功率回应有明确代价"
           ]
+        },
+        "scenarioDays": {
+          "red-dust-v1": null
         }
       },
       "report": {
@@ -157,6 +160,9 @@
             "重复编码格式与旧广播一致",
             "误判代价是浪费外联机会"
           ]
+        },
+        "scenarioDays": {
+          "red-dust-v1": null
         }
       },
       "report": {
