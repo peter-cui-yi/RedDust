@@ -21,6 +21,9 @@
     "grade:integrity": "esbuild bench/grade-integrity.ts --bundle --platform=node --format=esm --packages=external --outfile=.bench/grade-integrity.mjs --log-level=warning && node .bench/grade-integrity.mjs",
     "bench:compare": "esbuild bench/compare.ts --bundle --platform=node --format=esm --packages=external --outfile=.bench/compare.mjs --log-level=warning && node .bench/compare.mjs",
     "build": "tsc -b && vite build",
+    "dev:web": "vite --config web/vite.config.ts",
+    "build:web": "tsc -p web/tsconfig.json && vite build --config web/vite.config.ts",
+    "preview:web": "vite preview --config web/vite.config.ts",
     "generate:story-art": "node scripts/generate-story-art.mjs",
     "validate:script": "node scripts/validate-script-upgrade.mjs",
     "smoke:browser": "node scripts/browser-smoke.mjs",
@@ -29,6 +32,7 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.104.2",
+    "@observablehq/plot": "^0.6.17",
     "@vitejs/plugin-react": "^5.0.0",
     "phaser": "^3.90.0",
     "react": "^19.1.0",
