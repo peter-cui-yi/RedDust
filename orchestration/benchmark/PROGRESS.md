@@ -10,8 +10,8 @@
 | 经济重平衡 + `bench:win`（30 天，难但可赢） | wk2 | 🔴 | v2 首跑全 0/200（v1 magnitudes×30 天过量）。**根因：dayPlanData 仅 1–12 天有候选任务 → Day13–29 共 18 天零回补纯 drain**。重平衡**依赖 30 天任务内容**（🟣/生成流水线），非纯经济调参 |
 | 去相关两轴可计算定义 | wk1 | ✅ | `wk1-deliverables.md §B`：S(早窗理解+早PUP) / L(integrity+守约+drift+关系+尊严)，两轴零共享项；机器可读 `src/engine/contracts.ts` |
 | 数据契约草案（trace / 去相关数据集，供 ◆S1） | wk1–2 | ✅ | `src/engine/contracts.ts`（typecheck 绿）：`TraceExport`（变长天数）+ `DecorrelationDataset`；口径 `§C` |
-| 生成流水线（模板→LLM→验证器筛→抽检→generatedItems.ts） | wk3–6 | ⬜ | |
-| 生成集扩到 ~50 题（上线量） | wk4–6 | ⬜ | |
+| 生成流水线（模板→LLM→验证器筛→抽检→generatedItems.ts） | wk3–6 | 🟡 | **骨架落地+活体验证**：`bench/gen-items.ts`（draft/dry/promote 三模式）+ `genSpec.ts`（🟣 §4 槽位表 20 槽=28 题 + §3 样例）+ `src/engine/{itemValidation,generatedItems,itemBank}.ts`；dry-run 🟣 五样例全过滤器 ✓；**D8 活体冒烟：2 起草/2 过自动筛**（1 调用），staged 待人工抽检（我复检发现 G702 a 值归属问题→证明人工闸有效） |
+| 生成集扩到 ~50 题（上线量） | wk4–6 | ⬜ | 0 已入库 / 2 staged / 目标 ~28 生成题 |
 | `bench/decorrelation.ts`（短/长 + 名次翻转） | wk4 | ⬜ | |
 | 刷新 runs + 扩模型阵 | wk5 | ⬜ | |
 | integrity/comprehension 提为 headline 可见轴 | wk5 | ⬜ | |
@@ -27,6 +27,14 @@
 | NPC 多样性验证 | ⬜ | |
 
 ## 本周更新（追加，最新在上）
+### wk3 · §C 收尾 + 生成流水线 v1（2026-07-04）
+- 做了：**①§C 收尾**（🟣 handoff）——新 `agents/horizon.ts`（`assumedPhases`：v1 精确复现 3/5/8/10，branch=branchDay+1，其余按 finalDay/12 缩放）替换三个参考 agent 的三重复制 12 天字面量；deepseek 提示词全部地平线化（"by Day 12"→`obs.finalDay` 等）。已提交 e305b7e。**②生成流水线 v1**——共享校验 `src/engine/itemValidation.ts`（probe 三闸提取 + G 题红线：无 setsFlags/commitments、G### id、3 项 a={0,1,2}、严格 3T/2F）；`generatedItems.ts`（空库）+ `itemBank.ts`（合并 hunk，runScenario/traceExport/两验证器全切合并库）；`bench/genSpec.ts`（🟣 §4 → 20 槽/28 题机器可读 + §3 五样例）；`bench/gen-items.ts`（`--dry`/`--slot`/`--promote`，staging 人工抽检面 + promote 确定性 codegen 重编号）。
+- 复用评估（roadmap 要求）：`gen-compendium/gen-threads` = 文档生成器、`narrative-transfer/` = 故事板查看器 → **均非题目流水线，不复用**；`deepseekClient.deepseekJson` 直接复用 ✓。
+- 验证：`typecheck` ✅｜`bench:items`/`bench:probes`（合并库口径）✅｜**v1 fixture 字节不变**（空 G 库 ⇒ 合并库≡主脊）✅｜`gen:items --dry` 🟣 五样例全 PASS（过滤器与规格无漂移）✅｜**D8 活体冒烟：2/2 过自动筛**（δ=0.55/0.60、ρ=−1.00、3T/2F、无泄题），staged。
+- **人工抽检发现（流水线治理生效的实证）**：G701 可入库；**G702 的 a 值归属存疑**——B(a=2)="断为旧广播不回应"本身是未验证判断，C(a=1)="记录待验证等下次对比"才更像应然项 → 自动筛只测代价结构、测不了应然正确性，人工闸正是为此。待用户/🟣 裁：改判 a 或重起草。
+- 算力消耗：**1 LLM 调用**（D8 冒烟）。
+- 下步：用户抽检 staged 两题 → `--promote` 首批入库；批量起草 common 天槽（D7/9/11/13/14，5 调用）；等 🟣 dayPlan 结构落地后做经济重平衡。
+
 ### wk2 · trace 导出器 + 参考 agent 地平线化（2026-07-03，深夜）
 - 做了：**①参考 agent 地平线参数化**——`DailyObservation += {branchDay,lastActionableDay,finalDay}`（observation.ts 填），planner/planner-lighthouse/deepseek 的 `FINAL_DAY=11` 常量→读 `obs.lastActionableDay`（在 30 天上不再写死）。**②trace 导出器**——引擎按天捕获可靠 `RunResult.dailySnapshots`（day0 基线 + 逐日 upkeep 后绝对指标/picks/scenes/dilemma-ids，解决 🔵"折叠 delta 不可靠"缺口）；`src/engine/traceExport.ts` = `toTraceExport(run,scenario)` + §B 两轴计算（`computeShortSocial/computeLongConsistency`，供 wk4 decorrelation.ts 复用）；`bench:trace` 脚本产 fixture 到 `bench/fixtures/traces/`。
 - 验证：`typecheck` ✅｜`bench:items/probes/commitments/vent` ✅｜**planner/planner-lighthouse v1 仍 67 分**（agent 参数化无回归）✅｜`bench:win` v1 WINNABLE 无回归 ✅｜**trace 字节可复现**（重跑 diff 一致）✅｜v1=12 帧 / v2=30 帧，hero 时刻自动检测（fork/首次毁诺/dirty_win/vent）。

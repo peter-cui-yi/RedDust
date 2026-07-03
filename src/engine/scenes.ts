@@ -1,7 +1,7 @@
 // Scene scheduling + application, extracted from App.tsx so the headless engine can apply
 // the same narrative-gated flags the UI applies (several success-ending gates are set only
 // by scheduled day_start / branch_debate scenes). No React / Phaser / DOM imports.
-import { scenesForDay, storyScenesById } from "../data/storySceneData";
+import { scenesForDayInScenario, storyScenesById } from "../data/storySceneData";
 import type { Branch, GlobalState, StoryScene } from "../data/types";
 import { applyRelationshipDeltas, applyStoryFlagUpdates, buildStoryReplayEvent } from "./orchestration";
 
@@ -17,8 +17,10 @@ export function sceneMatchesState(scene: StoryScene, state: GlobalState) {
   return Object.entries(scene.requiredFlags ?? {}).every(([key, value]) => state.story.flags[key as keyof GlobalState["story"]["flags"]] === value);
 }
 
-export function sceneForDayAndTiming(day: number, timing: StoryScene["timing"], state: GlobalState) {
-  return scenesForDay(day).find(
+// 🟣 wk3: scenarioId defaults to "red-dust-v1" so every legacy caller (game UI) keeps the exact
+// historical behavior; the headless engine passes scenario.id to get 30-day scene placement.
+export function sceneForDayAndTiming(day: number, timing: StoryScene["timing"], state: GlobalState, scenarioId = "red-dust-v1") {
+  return scenesForDayInScenario(day, scenarioId).find(
     (scene) =>
       scene.status === "ready" &&
       scene.timing === timing &&
@@ -57,12 +59,13 @@ export function applyScene(state: GlobalState, scene: StoryScene, branch: Branch
 export function applyScheduledScenesForDay(
   state: GlobalState,
   day: number,
-  branch: Branch
+  branch: Branch,
+  scenarioId = "red-dust-v1"
 ): { state: GlobalState; applied: StoryScene[] } {
   let next = state.branch === branch ? state : { ...state, branch };
   const applied: StoryScene[] = [];
   for (const timing of ["day_start", "branch_debate"] as const) {
-    const scene = sceneForDayAndTiming(day, timing, next);
+    const scene = sceneForDayAndTiming(day, timing, next, scenarioId);
     if (scene) {
       next = applyScene(next, scene, branch);
       applied.push(scene);

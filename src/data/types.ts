@@ -154,7 +154,9 @@ export type StorySceneTiming =
 
 export type StoryScene = {
   id: string;
-  day: number;
+  day: number; // red-dust-v1 placement (historical). Per-scenario override via scenarioDays (🟣 wk3, mirrors NarrativeItem).
+  // number = plays that day in that scenario; null = never plays there; missing key → falls back to `day`.
+  scenarioDays?: Record<string, number | null>;
   title: string;
   timing: StorySceneTiming;
   branch?: Branch;
