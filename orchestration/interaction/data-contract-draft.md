@@ -3,6 +3,8 @@
 > 交互线带到 wk2 ◆S1 共签会的**输入**。作者：🔵。共签方：🟢 benchmark 执行线（数据生产者）。
 > 状态：**草案 / 待共签**。原则：本文件只声明"我作为消费者需要哪些字段"；轴的**定义/计算**归 🟢。
 > 冻结口径：**◆S1（wk2 末）锁定字段名 + 类型**；内容/数值可在 ◆S2/◆S3 继续变，字段名不变。
+>
+> **【wk2 更新 · 2026-07-03】对账完成**：🟢 已交付权威 schema `src/engine/contracts.ts`（`TraceExport` + `DecorrelationDataset`，`1.0.0-draft`）。逐条对账见**文末 §对账**——**本线 P0 全部满足，采纳其为权威 schema**；仅剩 3 项小请求。下方 §0–§B 为 wk1 原始输入草案，保留作论证留档。
 
 两份 schema：
 - **(A) 单局回放 trace** — 驱动 Stage 1 回放 + Stage 2 单局承诺/关系折线图。
@@ -139,4 +141,35 @@
 - 回放对同 `(agent,scenario,seed)` 与引擎 trace 字节对齐（我的验证义务）。
 
 ---
-_变更记录：wk1 初稿，基于对 `runScenario`/`RunResult` 现状的代码核对；四条确定性样例 trace 已入 `web/public/traces/` 作占位。_
+
+## §对账 — 本线草案 vs 🟢 `src/engine/contracts.ts`（wk2 ◆S1）
+
+**结论：采纳 🟢 `contracts.ts` 为权威 schema。** 交互侧 Stage 1/2 组件将 `import type` 其中的 `TraceExport` / `DecorrelationDataset` 开发。本线 **P0 全部满足**；纪律上二者都遵守"只由 `RunResult` post-hoc 派生、字节可复现（除 `generatedAt`）"。
+
+### (A) 回放 trace — 对账
+| 本线诉求 | 🟢 `contracts.ts` 对应 | 判定 |
+|---|---|---|
+| A1 天数跨度头部 | `TraceExportMeta.{dayCount, branchDay, finalDay, engineVersion, scorerVersion, contentVersion, modelId}` | ✅ **满足**（且更全：含 modelId / contentVersion） |
+| **A2 逐日绝对快照（P0 核心）** | `TraceDayFrame.metricsEndOfDay: MetricSnapshot`，`frames.length === dayCount`，每帧含 `scenes/dilemmas/tasksPicked/upkeepDelta` | ✅✅ **满足**——门面折线图可从占位升级为可信逐日绝对值 |
+| A4 hero 时刻 | `heroMoments: HeroMoment[]`，`HeroMomentKind` = `branch_fork/first_broken_promise/relationship_break/vent_rupture/dignity_violation/dirty_win` | ✅✅ **满足且更全**（多了 dirty_win）——权威标记替换我现有临时派生 |
+| 单局画像 | `RunProfile`（三轴 + 全 report-only 轴 + 短/长两轴），`TraceExport.profile` | ✅ 超出预期（承诺账本终局值走 `RunProfile.{integrity,hypocrisyGap,talk,claimedCount}`） |
+| A5 逐行场景定位（P2） | 未含；`TraceDayFrame` 给 `tasksPicked`(id)/`scenes`(title) | ➖ 可接受——我按 id join `src/data`（只读）自解 location，无 blocker |
+
+### (B) 去相关数据集 — 对账
+| 本线诉求 | 🟢 `contracts.ts` 对应 | 判定 |
+|---|---|---|
+| 双轴 + 定义 | `DecorrelationAxisShort/Long`（含 comprehensionEarly/pupEarly/window · integrity/keptRate/pupDrift/relationshipOK/dignitySlope） | ✅✅ **满足**（轴定义归 🟢，符合分工） |
+| 名次翻转双列 | `DecorrelationRow.{rankShort, rankLong, rankDelta, flips}` + `RANK_FLIP_THRESHOLD` + `rankReversalPairs` | ✅✅ **满足**——正是双列翻转表的原料，守"不刷分"（无综合总分列） |
+| 去相关 headline 统计 | `pearson` / `spearman`（dataset 级） | ✅ 超出预期 |
+
+### 剩余 3 项小请求（非阻塞，co-sign 时定；能给则更好，不给我有退路）
+1. **承诺账本"随天崩塌"曲线（Stage 2b 门面）**：`TraceDayFrame` 有 `metricsEndOfDay` 但**无逐日每条承诺 status**。现 heroMoments 的 `first_broken_promise` 已带 `day`（首次毁诺日可标记）。请求：可行则在 `TraceDayFrame` 加**可选** `commitments?: {key,claimed,fulfilled,status}[]`（逐日重算，post-hoc 应可）；**退路**：我用 `RunProfile` 终局账本 + heroMoments 的首毁诺日画"终局账本 + 崩点标记"，不阻塞上线。
+2. **散点误差棒**：`DecorrelationRow` 有 `nSeeds` 无 SD。请求可选 `short.valueSd` / `long.valueSd`，好在散点上画跨 seed 误差棒。无则退化为点。
+3. **散点 hover 上下文**：可选 `DecorrelationRow.endingMix?: Record<EndingId, number>`。无则 hover 用 `short/long` 分解字段，够用。
+
+### 本线 wk2 承接动作
+- `web/lib/` 增 `RunResult → TraceExport` 客户端适配器（镜像 🟢 导出器逻辑），使 Stage 1/2 组件**现在**就按权威 `TraceExport`/`DecorrelationDataset` 类型开发；🟢 真导出器 + `bench/decorrelation.ts`(wk4) 落地后，删适配器改 fetch 真 JSON。
+- `metricsEndOfDay`：适配器暂用 `createInitialState()`(只读) 折叠 `metricDelta` 近似（明确标注占位）；真值以 🟢 导出器为准。
+
+---
+_变更记录：wk1 初稿（基于 `runScenario`/`RunResult` 代码核对，4 条确定性样例 trace 入 `web/public/traces/`）；wk2 追加 §对账——采纳 🟢 `contracts.ts` 为权威 schema，P0 全满足，剩 3 项小请求。_

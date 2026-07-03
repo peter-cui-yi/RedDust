@@ -7,7 +7,7 @@
 | 项 | 目标周 | 状态 | 证据（提交号/build/冒烟结果） |
 |---|---|---|---|
 | Stage 0 托管 + 站点骨架（`web/`，变长天数） | wk1 | ✅ | `web/` 独立 Vite app；`npm run build:web` 绿 → `dist-web/`（相对 base，可 Pages/Vercel）；装 `@observablehq/plot@0.6.17`；preview MCP 实机渲染通过 |
-| ◆S1 数据契约共签（trace / 去相关数据集 schema） | wk2 | 🟡 | 草案已出 `data-contract-draft.md`（A 回放 trace + B 去相关数据集，P0/P1/P2 分级）；**待与 🟢 共签** |
+| ◆S1 数据契约共签（trace / 去相关数据集 schema） | wk2 | 🟡 | **对账完成**：🟢 交付权威 `src/engine/contracts.ts`（`TraceExport`+`DecorrelationDataset`）；本线 P0（A1 span + A2 逐日绝对快照）**全满足**，采纳其为权威 schema，剩 3 项小请求（`data-contract-draft.md §对账`）；**待正式签字** |
 | Stage 1a 回放消费现有 trace，逐日播放 | wk2 | 🟡 | 逐日回放已通（消费真 trace，变长时间轴 scrub + 逐日事件面板 + 终局承诺账本 + Plot 漂移图）；**Phaser 场景挂载点仍是占位 seam**（下一增量） |
 | Stage 1b 时间轴 scrub + 逐日面板 | wk3 | 🟡 | scrub 滑块 + 逐日面板已提前落地（wk1 顺带） |
 | Stage 2a 去相关散点 + 名次翻转表（占位数据） | wk4 | ⬜ | 依赖 ◆S1 锁 schema 后开工（草案 B 已备形） |
@@ -20,6 +20,12 @@
 | ◆S5 上线 | wk12 | ⬜ | |
 
 ## 本周更新（追加，最新在上）
+### wk2 启动（2026-07-03）
+- 审计（🔍）wk1 基线审：🔵 判 **on-track，三线中执行纪律最好，无越界/无"声称绿"**；build 被独立复跑确认。用户拍板锁定 **30 天弧 / fork=D15**（`branchDay=15, lastActionableDay=29, finalDay=30`）。
+- **wk2 第一动作：`git merge main` 完成**——line/interaction 快进到集成基线 `c61e764`（含 🟣 引擎改动 + 🟢 `contracts.ts`）；**`npm run build:web` 在集成基线上实跑绿**（plot 依赖 / *:web 脚本保留）。
+- **◆S1 对账**：读 🟢 `src/engine/contracts.ts` 完成逐条对账（见 `data-contract-draft.md §对账`）——P0 全满足，采纳其为权威 schema，剩 3 项小请求。
+- 下一步：见文末"wk2 待办"。
+
 ### wk1（2026-07-03）
 - 做了：
   - **Stage 0 托管骨架**：新建独占目录 `web/`——独立 Vite app（`web/vite.config.ts`，`base:'./'`，输出 `dist-web/`），复用 `src/engine`/`src/game` 为只读库，不动根 `npm run build`。装 `@observablehq/plot`。加 `dev:web`/`build:web`/`preview:web` 脚本 + `web/tsconfig.json`（隔离于根 `tsc -b`）。
@@ -32,7 +38,13 @@
 - 下周（wk2）：① 与 🟢 共签 ◆S1 契约（力争锁 A2 绝对逐日快照 + B schema + example fixture）；② Stage 1a 收尾——把 Phaser `ShelterScene` 接进 `ReplayStage` 挂载点，逐日驱动精灵/资产（解决 `web/` root 的资产路径）。
 
 ## 同步点就绪度
-- ◆S1（wk2 数据契约共签）：**草案就绪，待会** ｜ ◆S3（wk8 接真数据）：组件按草案 B 先行中 ｜ ◆S4（wk10 集成冻结）：未启 ｜ ◆S5（wk12 上线）：未启
+- ◆S1（wk2 数据契约共签）：**对账完成、采纳 🟢 权威 schema、待签字** ｜ ◆S3（wk8 接真数据）：组件将按 `contracts.ts` `DecorrelationDataset` 先行 ｜ ◆S4（wk10 集成冻结）：未启 ｜ ◆S5（wk12 上线）：未启
+
+## wk2 待办（承接审计 + ◆S1 对账）
+1. `web/lib/` 加 `RunResult → TraceExport` 客户端适配器 → Stage 1/2 组件改按权威 `contracts.ts` 类型开发（真导出器落地前用占位）。
+2. **Stage 1a 收尾（Phaser）**：把 `src/game` 场景接进 `ReplayStage` 挂载点，逐日驱动（30 天/fork=D15）；解决 `web/` root 资产路径。
+3. **Stage 2a（可提前，schema 已锁）**：按 `DecorrelationDataset` 造占位数据集 → Plot 去相关散点 + 双列名次翻转表。
+4. 30 天就绪核验：现全变长，待 🟢 30 天化引擎产出 30 天 trace 后换 fixture 实测滑块/时间轴。
 
 ## Blocker / 跨线依赖
 - **对 🟢（benchmark）**：需 ◆S1 共签数据契约——**最高优先 A2 逐日绝对指标快照**（现 trace 只有部分 `metricDelta`，无逐日绝对值，门面折线图只能用占位漂移）；其次 B 去相关数据集 schema + 一个 example fixture，好让 Stage 2 组件在 ◆S3 前做完。
