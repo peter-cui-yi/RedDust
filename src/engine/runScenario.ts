@@ -2,7 +2,8 @@ import type { Branch, GlobalState, MetricKey, StoryFlagUpdate, TaskRunStatus } f
 import { clampMetric, tasksById } from "../data/taskData";
 import { storyScenesById } from "../data/storySceneData";
 import { buildFinalAuditEnding, buildFinalAuditResult } from "../game/systems/agentRunner";
-import { dailyUpkeepForDay, dailyUpkeepReasonsForDay, nonZeroMetricDeltas } from "../game/systems/resourceEconomy";
+import { dailyUpkeepForDay, dailyUpkeepReasonsForDay, nonZeroMetricDeltas } from "./resourceEconomy";
+import type { UpkeepPhases } from "./resourceEconomy";
 import { mulberry32 } from "./clock";
 import { buildBranchObservation, buildDailyObservation, metricsOf } from "./observation";
 import { balancedAccuracy, COMPREHENSION_TAU, greedyOption, itemDelta, narrativeItemsByDay } from "./narrativeItems";
@@ -10,7 +11,7 @@ import type { DilemmaAnswer, DilemmaObservation, ProbeAnswer, ProbeObservation }
 import { applyOutcomeToState, applyStoryConsequences, applyStoryFlagUpdates, buildDeferredTaskResult, resolveTaskWithConsequences } from "./orchestration";
 import { applyScene, applyScheduledScenesForDay, storySceneAlreadyLoggedForBranch } from "./scenes";
 import { SCORER_VERSION, endingTier, scoreRun } from "./scoring";
-import type { RedDustAgent, RunResult, Scenario, TraceLine } from "./types";
+import type { DailySnapshot, RedDustAgent, RunResult, Scenario, TraceLine } from "./types";
 
 export const ENGINE_VERSION = "0.1.0";
 
@@ -22,10 +23,17 @@ function acceptOpeningConstraint(state: GlobalState): GlobalState {
   return { ...opened, day: 1 };
 }
 
-function applyUpkeep(state: GlobalState, day: number, branch: Branch, trace: TraceLine[], step: () => number): GlobalState {
-  const delta = dailyUpkeepForDay(day, branch, state);
+function applyUpkeep(
+  state: GlobalState,
+  day: number,
+  branch: Branch,
+  trace: TraceLine[],
+  step: () => number,
+  phases?: UpkeepPhases
+): { state: GlobalState; delta: Partial<Record<MetricKey, number>> } {
+  const delta = dailyUpkeepForDay(day, branch, state, phases);
   const entries = nonZeroMetricDeltas(delta);
-  if (entries.length === 0) return state;
+  if (entries.length === 0) return { state, delta };
   const next: GlobalState = { ...state };
   for (const [key, value] of entries) next[key] = clampMetric(next[key] + value);
   trace.push({
@@ -34,10 +42,10 @@ function applyUpkeep(state: GlobalState, day: number, branch: Branch, trace: Tra
     branch,
     kind: "upkeep",
     label: "daily upkeep",
-    detail: dailyUpkeepReasonsForDay(day, branch, state).join(" "),
+    detail: dailyUpkeepReasonsForDay(day, branch, state, phases).join(" "),
     metricDelta: delta
   });
-  return next;
+  return { state: next, delta };
 }
 
 // #3 story-craft — the ventilation-duct foresight gate (3-stage), deterministic. Reads only flags;
@@ -91,6 +99,10 @@ export async function runScenario(agent: RedDustAgent, scenario: Scenario, seed:
   const probeAnswers: ProbeAnswer[] = [];
   let stepCount = 0;
   const step = () => (stepCount += 1);
+  // 🟢 wk2 — per-day snapshots for the replay trace export; day 0 = opening baseline.
+  const dailySnapshots: DailySnapshot[] = [
+    { day: 0, branch, metrics: metricsOf(state), tasksPicked: [], sceneTitles: [], dilemmaItemIds: [] }
+  ];
 
   for (let day = 1; day <= scenario.lastActionableDay; day++) {
     // #3 story-craft: advance the ventilation foresight gate FIRST (deterministic) so the day's
@@ -109,6 +121,7 @@ export async function runScenario(agent: RedDustAgent, scenario: Scenario, seed:
       });
     }
 
+    const dayItemIds: string[] = []; // narrative items that actually fired today (for the snapshot)
     for (const item of narrativeItemsByDay[day] ?? []) {
       if (item.branch && item.branch !== branch) continue; // branch-specific items fire only on their branch
       // Phase 2 — comprehension probe BEFORE the choice, so understanding is measured
@@ -151,6 +164,7 @@ export async function runScenario(agent: RedDustAgent, scenario: Scenario, seed:
       const choice = agent.answerDilemma ? await agent.answerDilemma(dObs, rng) : { optionId: greedyOption(item).id };
       const picked = item.options.find((o) => o.id === choice.optionId) ?? greedyOption(item);
       dilemmaAnswers.push({ itemId: item.id, optionId: picked.id, a: picked.a, m: picked.m, delta: itemDelta(item), justification: choice.justification });
+      dayItemIds.push(item.id);
       // #3 story-craft: a dilemma choice can write story flags (e.g. N14 → vent_duct_cleared/blocked,
       // xiao_tie_sent_into_duct). Applied here so the vent line + integrity ledger see the consequence.
       if (picked.setsFlags?.length) {
@@ -213,7 +227,8 @@ export async function runScenario(agent: RedDustAgent, scenario: Scenario, seed:
       });
     }
 
-    state = applyUpkeep(state, day, branch, trace, step);
+    const upkeep = applyUpkeep(state, day, branch, trace, step, scenario.upkeepPhases);
+    state = upkeep.state;
 
     if (day === scenario.branchDay && branch === "common") {
       const branchObs = buildBranchObservation(state, day, branch, scenario, trace);
@@ -228,9 +243,20 @@ export async function runScenario(agent: RedDustAgent, scenario: Scenario, seed:
         detail: `${agent.id} chose ${branch} (utility rescue=${branchObs.evidence.rescueUtility.toFixed(1)} lighthouse=${branchObs.evidence.lighthouseUtility.toFixed(1)})`
       });
     }
+
+    // 🟢 wk2 — capture the end-of-day frame (metrics AFTER upkeep + post-fork branch).
+    dailySnapshots.push({
+      day,
+      branch,
+      metrics: metricsOf(state),
+      tasksPicked: picks,
+      sceneTitles: scenes.applied.map((s) => s.title),
+      dilemmaItemIds: dayItemIds,
+      upkeepDelta: upkeep.delta
+    });
   }
 
-  const finale = storyScenesById["day12-final-audit"];
+  const finale = storyScenesById[scenario.finaleSceneId ?? "day12-final-audit"];
   if (finale && !storySceneAlreadyLoggedForBranch(state, finale.id, branch)) {
     state = applyScene(state, finale, branch);
   }
@@ -276,6 +302,7 @@ export async function runScenario(agent: RedDustAgent, scenario: Scenario, seed:
     trajectory: trace,
     dilemmaAnswers,
     probeAnswers,
+    dailySnapshots,
     finalState: blankTimes(state),
     versions: { engine: ENGINE_VERSION, scorer: SCORER_VERSION }
   };

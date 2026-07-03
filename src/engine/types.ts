@@ -10,6 +10,7 @@ import type {
   TaskLocation
 } from "../data/types";
 import type { BranchDecision } from "../game/systems/agentRunner";
+import type { UpkeepPhases } from "./resourceEconomy"; // 🟢 wk2 30-day-ification — horizon-relative upkeep thresholds (type-only)
 import type { AuditReport } from "./narrativeItems"; // #v2.2 handoff#4 — double-layer ledger audit (type-only, report-only)
 import type { DilemmaAnswer, DilemmaDecision, DilemmaObservation, ProbeAnswer, ProbeDecision, ProbeObservation } from "./narrativeItems";
 
@@ -34,6 +35,11 @@ export type DailyObservation = {
   day: number;
   branch: Branch;
   pickLimit: number;
+  // Horizon (public info any agent may plan against; 🟢 wk2 — lets lookahead agents read the arc
+  // length instead of hard-coding FINAL_DAY=11, so they work on the 30-day scenario too).
+  branchDay: number;
+  lastActionableDay: number;
+  finalDay: number;
   metrics: Record<MetricKey, number>;
   candidates: CandidateView[];
   relationships: Record<CharacterId, RelationshipView>;
@@ -110,6 +116,19 @@ export type ScoreBreakdown = {
   relationshipQuality: RelationshipQuality; // #v2.2 §5 report-only profile colouring (not in total)
 };
 
+// 🟢 wk2 — per-day structured snapshot captured DURING the run (not folded post-hoc). The end-of-day
+// absolute metrics are the reliable source the replay contract needs (🔵 flagged that folding trace
+// deltas is unreliable). `toTraceExport` (contracts.ts TraceDayFrame) is built from these.
+export type DailySnapshot = {
+  day: number; // 0 = opening baseline (before day 1); 1..lastActionableDay = end-of-day
+  branch: Branch;
+  metrics: Record<MetricKey, number>; // absolute, AFTER upkeep (+ post-fork branch on branchDay)
+  tasksPicked: string[]; // task ids selected that day
+  sceneTitles: string[]; // scene titles applied that day
+  dilemmaItemIds: string[]; // narrative items answered that day (branch-filtered)
+  upkeepDelta?: Partial<Record<MetricKey, number>>; // that day's daily-upkeep delta
+};
+
 export type RunResult = {
   scenarioId: string;
   scenarioVersion: string;
@@ -123,6 +142,7 @@ export type RunResult = {
   trajectory: TraceLine[];
   dilemmaAnswers: DilemmaAnswer[];
   probeAnswers: ProbeAnswer[];
+  dailySnapshots: DailySnapshot[]; // 🟢 wk2 — reliable per-day frames for the replay trace export
   finalState: GlobalState;
   versions: { engine: string; scorer: string };
 };
@@ -139,4 +159,7 @@ export type Scenario = {
   branchDay: number;
   lastActionableDay: number;
   finalDay: number;
+  // 30-day-ification (🟢 wk2): de-hardcode the "12". Both optional so red-dust-v1 is unchanged.
+  finaleSceneId?: string; // final-audit scene id; defaults to "day12-final-audit"
+  upkeepPhases?: UpkeepPhases; // horizon-relative upkeep thresholds; defaults to DEFAULT_UPKEEP_PHASES_V1
 };
