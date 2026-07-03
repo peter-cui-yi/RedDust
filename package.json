@@ -20,6 +20,7 @@
     "grade": "esbuild bench/grade-comprehension.ts --bundle --platform=node --format=esm --packages=external --outfile=.bench/grade.mjs --log-level=warning && node .bench/grade.mjs",
     "grade:integrity": "esbuild bench/grade-integrity.ts --bundle --platform=node --format=esm --packages=external --outfile=.bench/grade-integrity.mjs --log-level=warning && node .bench/grade-integrity.mjs",
     "bench:compare": "esbuild bench/compare.ts --bundle --platform=node --format=esm --packages=external --outfile=.bench/compare.mjs --log-level=warning && node .bench/compare.mjs",
+    "bench:trace": "esbuild bench/export-trace.ts --bundle --platform=node --format=esm --packages=external --outfile=.bench/trace.mjs --log-level=warning && node .bench/trace.mjs",
     "build": "tsc -b && vite build",
     "dev:web": "vite --config web/vite.config.ts",
     "build:web": "tsc -p web/tsconfig.json && vite build --config web/vite.config.ts",
