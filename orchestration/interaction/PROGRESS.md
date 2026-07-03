@@ -7,7 +7,7 @@
 | 项 | 目标周 | 状态 | 证据（提交号/build/冒烟结果） |
 |---|---|---|---|
 | Stage 0 托管 + 站点骨架（`web/`，变长天数） | wk1 | ✅ | `web/` 独立 Vite app；`npm run build:web` 绿 → `dist-web/`（相对 base，可 Pages/Vercel）；装 `@observablehq/plot@0.6.17`；preview MCP 实机渲染通过 |
-| ◆S1 数据契约共签（trace / 去相关数据集 schema） | wk2 | 🟡 | **对账完成**：🟢 交付权威 `src/engine/contracts.ts`（`TraceExport`+`DecorrelationDataset`）；本线 P0（A1 span + A2 逐日绝对快照）**全满足**，采纳其为权威 schema，剩 3 项小请求（`data-contract-draft.md §对账`）；**待正式签字** |
+| ◆S1 数据契约共签（trace / 去相关数据集 schema） | wk2 | ✅ | **已会签 → `1.0.0` 冻结（2026-07-03，🔍 经用户授权记录，`S1-contract-cosign.md`）**；3 项小请求全部已被 rc1 吸收（sd/endingMix/逐日 ledger status 均入 schema）；hero enum 已对齐 1.0.0（`fork`/`relationship_rupture`/`survival_rupture`）+ 适配器补 `auditReportWatered`/`lastActionableDay` |
 | Stage 1a 回放消费现有 trace，逐日播放 | wk2 | ✅ | Phaser `ReplayScene`（`web/game/`）实机通：真 shelter 布局（复用 ShelterScene 8 热点坐标）+ 真人物精灵 + AURA 随每日任务位置移动；逐日 scrub 更新日/分支/场景/任务/指标；`133e644`；见下"ShelterScene 复用说明" |
 | Stage 1b 时间轴 scrub + 逐日面板 | wk3 | ✅ | scrub 滑块 + 逐日 `TraceDayFrame` 摘要面板（提前落地） |
 | Stage 2a 去相关散点 + 名次翻转表（占位数据） | wk4 | ✅ | **提前到 wk2**：Plot 去相关散点（Pearson 0.02）+ SVG 双列名次翻转表（连线交叉=翻转，守不刷分）；占位 `DecorrelationDataset`；`2c3f0c5` |
@@ -44,7 +44,10 @@
 - 下周（wk2）：① 与 🟢 共签 ◆S1 契约（力争锁 A2 绝对逐日快照 + B schema + example fixture）；② Stage 1a 收尾——把 Phaser `ShelterScene` 接进 `ReplayStage` 挂载点，逐日驱动精灵/资产（解决 `web/` root 的资产路径）。
 
 ## 同步点就绪度
-- ◆S1（wk2 数据契约共签）：**对账完成、采纳 🟢 权威 schema、待签字** ｜ ◆S3（wk8 接真数据）：组件将按 `contracts.ts` `DecorrelationDataset` 先行 ｜ ◆S4（wk10 集成冻结）：未启 ｜ ◆S5（wk12 上线）：未启
+- ◆S1（wk2 数据契约共签）：✅ **已会签 1.0.0（2026-07-03）**，字段名/类型冻结；本线已对齐（enum 改名 + 适配器补新字段，build 绿） ｜ ◆S3（wk8 接真数据）：组件按冻结 `DecorrelationDataset` 先行 ｜ ◆S4（wk10 集成冻结）：未启 ｜ ◆S5（wk12 上线）：未启
+
+### ◆S1 会签后待办（wk3，非阻塞）
+- fixture 源切换：`web/public/traces/`（RunResult+客户端适配器）→ 🟢 的真 `TraceExport`（`bench/fixtures/traces/`，v1+v2 各 4 条已可用）；切换后按约定删除客户端适配器 `web/lib/contract.ts` 的 `runResultToTraceExport`。30 天/fork=D15 真样例即刻可实测（v2 fixture 已在）。
 
 ## wk2 待办（承接审计 + ◆S1 对账）
 1. ✅ `RunResult → TraceExport` 适配器 + 组件迁移到权威 `contracts.ts` 类型（`690571c`）。
@@ -54,6 +57,6 @@
 5. ⏳ 剩余：Stage 1c hero GIF 导出；Stage 2b 承诺/关系折线（待 A2/A3 逐日快照）；`web/` 站点 browser-smoke（◆S4 前）。
 
 ## Blocker / 跨线依赖
-- **对 🟢（benchmark）**：① ◆S1 正式签字（我方已对账采纳 `contracts.ts`）；② 真 `TraceExport` 导出器 + 30 天 trace → 换掉客户端适配器占位；③ ◆S3 真 `DecorrelationDataset` → 换掉散点/翻转表占位；④ 3 项小请求（逐日承诺 status / 散点 SD / endingMix，均有退路，非阻塞）。
+- **对 🟢（benchmark）**：~~① ◆S1 正式签字~~ ✅ 已会签 1.0.0（2026-07-03）；~~② 真 `TraceExport` 导出器~~ ✅ 已交付（`bench/fixtures/traces/` v1+v2 各 4 条，字节可复现）→ 我方 wk3 做 fixture 源切换；③ ◆S3 真 `DecorrelationDataset` → 换掉散点/翻转表占位（wk8）；~~④ 3 项小请求~~ ✅ 全部已入 1.0.0 schema（逐日 ledger status / sd / endingMix）。
 - **对 🟣（叙事）**：wk7 冻结富化 trace；此前用当前 trace 开发，冻结后换。
 - **自身待办**：`scripts/browser-smoke.mjs` 目前只冒烟根 app，需在 ◆S4 前适配/新增对 `web/` 站点的冒烟（记账于 wk10 行）。

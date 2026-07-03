@@ -133,14 +133,14 @@ export function runResultToTraceExport(run: RunResult): TraceExport {
   }
 
   // heroMoments — only the kinds derivable from a single RunResult without per-day ledger state.
-  // (first_broken_promise / relationship_break / dignity_violation need the day a promise flipped,
+  // (first_broken_promise / relationship_rupture / dignity_violation need the day a promise flipped,
   // which the RunResult doesn't carry — those are filled by 🟢's authoritative exporter. See §对账 req#1.)
   const heroMoments: HeroMoment[] = [];
   for (const line of run.trajectory) {
     if (line.kind === "branch") {
-      heroMoments.push({ day: line.day, kind: "branch_fork", label: line.label, detail: line.detail });
+      heroMoments.push({ day: line.day, kind: "fork", label: line.label, detail: line.detail });
     } else if (line.kind === "upkeep" && /破裂|rupture|涌入/.test(line.label)) {
-      heroMoments.push({ day: line.day, kind: "vent_rupture", label: line.label, detail: line.detail });
+      heroMoments.push({ day: line.day, kind: "survival_rupture", label: line.label, detail: line.detail });
     }
   }
   if (run.score.relationshipQuality === "dirty_win") {
@@ -164,6 +164,7 @@ export function runResultToTraceExport(run: RunResult): TraceExport {
     talk: np.talk,
     claimedCount: np.claimedCount,
     dignitySlope: np.xiaoTieDignitySlope,
+    auditReportWatered: np.auditReport.watered,
     relationshipQuality: run.score.relationshipQuality,
     // shortSocial/longConsistency are 🟢's axes (bench/decorrelation.ts, wk4). Rough single-run
     // PROXY here just to satisfy the type for placeholder mode — NOT the authoritative definition.
@@ -180,6 +181,7 @@ export function runResultToTraceExport(run: RunResult): TraceExport {
     seed: run.seed,
     dayCount,
     branchDay,
+    lastActionableDay: finalDay - 1, // adapter approximation (audit day = finalDay, actionable ends the day before; exact in v1=11 & v2=29). 🟢 exporter carries the real Scenario value.
     finalDay,
     engineVersion: run.versions.engine,
     scorerVersion: run.versions.scorer
