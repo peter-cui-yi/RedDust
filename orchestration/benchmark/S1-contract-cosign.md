@@ -1,6 +1,6 @@
-# ◆S1 数据契约共签 — 🟢↔🔵 对账（rc1）
+# ◆S1 数据契约共签 — 🟢↔🔵 对账
 
-> 状态：**rc1，待 🔵 会签**（会签后两个版本常量 → `1.0.0`，字段名/类型冻结）。
+> 状态：**✅ 已会签 → `1.0.0`（2026-07-03，字段名/类型冻结；内容/数值可在 ◆S2/◆S3 变）**。🔵 已以行动采纳 rc1 实质（`690571c` 迁 `TraceExport` 投影 + Stage 2a 按嵌套 `short/long` 消费）；正式签字由 🔍 审计经用户授权代表双方记录。fixture 已按 `1.0.0` 重产。
 > 权威 schema：`src/engine/contracts.ts`（typecheck 绿）。🔵 消费者草案：`orchestration/interaction/data-contract-draft.md`。
 > 裁定原则：字段**消费需求**归 🔵；轴/账本的**定义与计算**归 🟢（数据生产方）。变长天数、字节可复现、消费者只读 = 双方共识约束。
 
@@ -36,7 +36,8 @@
    - 🔵 从 `bench/fixtures/traces/` 导入 `web/`（site dir 归 🔵）。**去相关数据集** fixture 待 wk4 `decorrelation.ts`。
 2. **字段名+类型冻结** —— 本 rc1 即冻结候选；🔵 会签后升 `1.0.0`。**内容/数值可在 ◆S2/◆S3 继续变，字段名不变**。fixture 已按 rc1 字段名产出，🔵 可直接对齐消费代码。
 
-## 遗留 / 待 🔵 确认
-- `TraceExport` 独立投影 vs 追加 RunResult 的顶层裁定，请 🔵 确认切换 OK（预计低成本）。
-- `short/long` 嵌套（取 `.value`）vs 扁平数字，请 🔵 确认消费方式。
-- A5（location/characterRefs）暂不冻结，🔵 若需要请在会签时提。
+## 遗留 → 会签时全部关闭（2026-07-03）
+- `TraceExport` 独立投影：✅ 🔵 已确认（`690571c` 已把全组件迁到 `TraceExport` 投影 + 客户端适配器）。
+- `short/long` 嵌套（取 `.value`）：✅ 🔵 已确认（Stage 2a `2c3f0c5` 按嵌套结构消费）。
+- A5（location/characterRefs）：维持**不冻结**，🔵 自 `src/data` 只读 join；如未来要入 schema 走 1.1 增补（增字段不破 1.0.0 冻结——冻结口径=已有字段名/类型不变）。
+- 会签后 🔵 侧遗留动作（非契约阻塞）：hero enum 3 个 kind 改名对齐 1.0.0（`branch_fork→fork`/`relationship_break→relationship_rupture`/`vent_rupture→survival_rupture`，`web/lib/{labels,contract}.ts`）；fixture 源切到 `bench/fixtures/traces/`。

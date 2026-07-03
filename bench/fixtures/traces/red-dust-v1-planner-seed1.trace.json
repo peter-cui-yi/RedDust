@@ -1,6 +1,6 @@
 {
   "meta": {
-    "traceExportVersion": "1.0.0-rc1",
+    "traceExportVersion": "1.0.0",
     "scenarioId": "red-dust-v1",
     "scenarioVersion": "0.1.0",
     "contentVersion": "unfrozen",

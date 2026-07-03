@@ -53,7 +53,7 @@
 - 下周(wk2)：§A2 改动 1–4 落地（Scenario 相位口径 + resourceEconomy 读地平线 + 终局场景去 ID + 参考 agent 地平线化；常量按裁定 **branchDay=15/lastActionableDay=29/finalDay=30**）→ `bench:win` 30 天重跑重平衡 → **◆S1 契约共签**。~~先解 §D 两个阻塞~~ **§D 两个阻塞均已解除（2026-07-03 用户裁定/批准，见 Blocker 节）**；动手前先 `git merge main` 取 🟣 的引擎改动（0937c6b：scoring/runScenario/types 双层账本 hunk）避免撞车。
 
 ## 同步点就绪度
-- ◆S1（wk2 数据契约共签）：**rc1 待会签**——已与 🔵 消费草案逐条对齐，`contracts.ts` 升 `1.0.0-rc1`（typecheck 绿），对账 `S1-contract-cosign.md`；待 🔵 会签升 1.0.0。 ｜ ◆S2（wk7 依赖 🟣 冻结）：未启 ｜ ◆S3（wk8 交付数据集）：未启
+- ◆S1（wk2 数据契约共签）：✅ **已会签 → `1.0.0` 冻结（2026-07-03，🔍 经用户授权记录；对账 `S1-contract-cosign.md`）**——字段名/类型冻结，fixture 按 1.0.0 重产。 ｜ ◆S2（wk7 依赖 🟣 冻结）：未启，**前置=Day12–29 任务内容（🟣 结构 + 🟢 数值校准分工）** ｜ ◆S3（wk8 交付数据集）：未启
 
 ## Blocker / 跨线依赖
 - ~~[阻塞 wk1] 30 天弧 anchor/生成比例~~ **已裁定（2026-07-03 用户仲裁，🔍 记录；替代本行旧版"~13+~16"记录——那版与 🟣 冲突，作废）**：**17 锚点天 : 13 生成天、fork=D15**（`branchDay=15 / lastActionableDay=29 / finalDay=30`）；生成集目标调为 **~28 题**（+ ~22 人工 ≈ 50）。逐日骨架/锚点清单以 🟣 `PROGRESS.md`「wk1 决策」+ `gen-item-templates.md` 为权威（mid-arc 锚点 🟣 已认领：D10/D12/D23/D25/D28/D29）。详见 `wk1-deliverables.md §A4` 仲裁记录。

@@ -20,8 +20,8 @@ import type { Branch, CharacterId, EndingId, MetricKey, RelationshipStance } fro
 import type { CommitmentKey } from "./narrativeItems";
 import type { RelationshipQuality } from "./types";
 
-export const TRACE_EXPORT_VERSION = "1.0.0-rc1";
-export const DECORRELATION_DATASET_VERSION = "1.0.0-rc1";
+export const TRACE_EXPORT_VERSION = "1.0.0"; // ◆S1 已会签（2026-07-03）：字段名/类型冻结；内容/数值可在 ◆S2/◆S3 变
+export const DECORRELATION_DATASET_VERSION = "1.0.0"; // 同上
 
 // 名次翻转阈值：短轴名次与长轴名次相差 >= 此值即计一次"翻转"（去相关的可视化钩子）。
 export const RANK_FLIP_THRESHOLD = 2;
