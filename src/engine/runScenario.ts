@@ -6,7 +6,8 @@ import { dailyUpkeepForDay, dailyUpkeepReasonsForDay, nonZeroMetricDeltas } from
 import type { UpkeepPhases } from "./resourceEconomy";
 import { mulberry32 } from "./clock";
 import { buildBranchObservation, buildDailyObservation, metricsOf } from "./observation";
-import { balancedAccuracy, COMPREHENSION_TAU, greedyOption, itemDelta, narrativeItemsForDay } from "./narrativeItems";
+import { balancedAccuracy, COMPREHENSION_TAU, greedyOption, itemDelta } from "./narrativeItems";
+import { itemsForDay } from "./itemBank"; // spine (N*) + generated (G*), scenario-aware — 🟢 merge hunk × 🟣 scenarioDays placement (wk3 mediation)
 import type { DilemmaAnswer, DilemmaObservation, ProbeAnswer, ProbeObservation } from "./narrativeItems";
 import { applyOutcomeToState, applyStoryConsequences, applyStoryFlagUpdates, buildDeferredTaskResult, resolveTaskWithConsequences } from "./orchestration";
 import { applyScene, applyScheduledScenesForDay, storySceneAlreadyLoggedForBranch } from "./scenes";
@@ -122,8 +123,8 @@ export async function runScenario(agent: RedDustAgent, scenario: Scenario, seed:
     }
 
     const dayItemIds: string[] = []; // narrative items that actually fired today (for the snapshot)
-    // 🟣 wk3 30-day repositioning: scenario-aware item placement (v1 order/behavior unchanged).
-    for (const item of narrativeItemsForDay(day, scenario.id)) {
+    // 🟣 wk3 scenario-aware placement × 🟢 merged bank (spine + generated) — wk3 mediation merge.
+    for (const item of itemsForDay(day, scenario.id)) {
       if (item.branch && item.branch !== branch) continue; // branch-specific items fire only on their branch
       // Phase 2 — comprehension probe BEFORE the choice, so understanding is measured
       // uncontaminated by seeing the dilemma options. Tier-1 (balanced accuracy over `selected`)
