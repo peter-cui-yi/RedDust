@@ -1,5 +1,7 @@
 import type { MetricKey } from "../../data/types";
 import type { DailyObservation, RedDustAgent, TaskDecision } from "../types";
+import { assumedDailyUpkeep, assumedPhases } from "./horizon";
+import type { AssumedPhases } from "./horizon";
 
 // --- planner-lighthouse: the lighthouse-branch counterpart of `planner` ---
 //
@@ -51,25 +53,18 @@ const FLAG_TASKS_BY_DAY: Record<number, string[]> = {
   6: ["D06-T01"]
 };
 
-// Per-day rescue/lighthouse-shared upkeep estimate (the planner's own model of the drain).
-function upkeepEstimate(metric: MetricKey, day: number): number {
-  switch (metric) {
-    case "water": return day >= 8 ? 4 : day >= 5 ? 3 : 2;
-    case "food": return day >= 10 ? 3 : day >= 5 ? 2 : 1;
-    case "battery": return day >= 8 ? 5 : day >= 5 ? 3 : 2;
-    case "medicine": return day >= 8 ? 2 : day >= 3 ? 1 : 0;
-    default: return 0; // storm/autonomy/trust don't decay; dissatisfaction handled separately
-  }
-}
+// Per-day upkeep estimate now lives in ./horizon (assumedDailyUpkeep) — horizon-relative, so the
+// planner hoards on the right days on ANY arc length (was hard-coded 12-day breakpoints).
+// (storm/autonomy/trust don't decay in that model; dissatisfaction is handled separately below.)
 
-function scoreCandidate(affects: Partial<Record<MetricKey, number>>, metrics: Record<MetricKey, number>, day: number, lastActionableDay: number): number {
+function scoreCandidate(affects: Partial<Record<MetricKey, number>>, metrics: Record<MetricKey, number>, day: number, lastActionableDay: number, phases: AssumedPhases): number {
   const daysAfter = Math.max(0, lastActionableDay - day);
   let s = 0;
   for (const key of Object.keys(IMPORTANCE) as MetricKey[]) {
     const a = affects[key] ?? 0;
     if (a === 0) continue;
     const cur = metrics[key];
-    const proj = cur - upkeepEstimate(key, day) * daysAfter; // survival decays; others upk=0
+    const proj = cur - assumedDailyUpkeep(key, day, phases) * daysAfter; // survival decays; others upk=0
     const target = (FLOOR[key] ?? 0) + (END_CUSHION[key] ?? 0);
     const need = target - proj; // > 0 => projected to finish short
     let w = (IMPORTANCE[key] ?? 0) * (need > 0 ? 1 + need * 0.15 : 0.2);
@@ -97,10 +92,11 @@ export const plannerLighthouseAgent: RedDustAgent = {
 
   async selectTasks(obs: DailyObservation): Promise<TaskDecision> {
     const ids = obs.candidates.map((c) => c.id);
+    const phases = assumedPhases(obs);
     const forced = (FLAG_TASKS_BY_DAY[obs.day] ?? []).filter((id) => ids.includes(id));
     const ranked = obs.candidates
       .filter((c) => !forced.includes(c.id))
-      .map((c) => ({ id: c.id, score: scoreCandidate(c.affects ?? {}, obs.metrics, obs.day, obs.lastActionableDay) }))
+      .map((c) => ({ id: c.id, score: scoreCandidate(c.affects ?? {}, obs.metrics, obs.day, obs.lastActionableDay, phases) }))
       .sort((a, b) => b.score - a.score || ids.indexOf(a.id) - ids.indexOf(b.id));
     const taskIds = [...forced, ...ranked.map((r) => r.id)].slice(0, obs.pickLimit);
     return {
