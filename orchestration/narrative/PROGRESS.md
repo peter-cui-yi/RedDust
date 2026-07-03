@@ -91,11 +91,17 @@
   - **验证**：typecheck+build+bench:items/probes/commitments/vent 全绿；判别力 planner-lighthouse（灯塔赢、pup=1、aud=90，但破了 surface_evidence）**cold_trust→dirty_win / watered=true**，planner（守约）仍 cold_trust、heuristic（诚实贪婪 claimed=0）仍 no_mouth_scream 且 watered=false；no-regression total/pup/comp/integrity **byte-identical**；同 seed 字节可复现；red-line：watered/auditReport **未**进 gateReasons/ENDING_POINTS/total。
 - 下一步（④ 被 🟢 阻塞，见 Blocker）：④ **30 天重落位**——先搬现有 16 题到新日 + 加 4–5 新锚点题（D12 reveal/D23 morale/D25 backlash/D28 deadlock），逐题过 `bench:items`/`bench:probes`。**前置：🟢 先把 `scenario.ts` 常量 bump 到 branchDay=15/lastActionableDay=29/finalDay=30**，否则重落位后 >D12 的题引擎不 fire、跑不了验证器绿。可并行不阻塞的：双层账本 N13 摘要生成+结构性注水检测（handoff 任务#4，day-agnostic）。
 
+### wk1 追加（2026-07-03，orchestration 审阅后）
+- 背景：🔍 审计仲裁确认 17:13/fork=D15 为唯一版本（commit e93de8f），我的 wk1 已入 commit 0937c6b。核实 🟢 未起（PROGRESS 全 ⬜、`scenario.ts` 仍 12 天）→ 30 天重落位仍 blocked 于 🟢。
+- 决策（用户）：**Hold 🟣、优先解 🟢 阻塞**（不前推 wk4 的 backlash/morale）。
+- 做了：交付 `engine-30day-handoff.md`（🟣→🟢 引擎 30 天化精确改点 spec）——全仓核 day-count 耦合，点名 `resourceEconomy` 的 `day>=12` 硬门 + 参考 agent 阈值这两处"只改 3 常量会漏"的坑。
+- 下一步：等 🟢 按 spec 落常量+经济并合并 → 我接 30 天重落位。其间待用户/🔍 调度；如 🟢 卡 `bench:win`，我可调锚点落点或设计中段补给题。
+
 ## 同步点就绪度
-- **◆S2（wk7）内容冻结**——我是关键路径。就绪度：早（wk1，结构已定/代码未动）。
+- **◆S2（wk7）内容冻结**——我是关键路径。就绪度：早（wk1，结构+双层账本已定/账本机制已落；30 天重落位待 🟢 引擎化）。
 
 ## Blocker / 跨线依赖
-- **[需 🟢] 引擎 30 天化常量**：本设计定 `branchDay=15 / lastActionableDay=29 / finalDay=30`；这三个常量在 `scenario.ts`（🟢 拥有的引擎轴），须与本弧结构匹配，且 `resourceEconomy` 按 30 天重平衡。→ 交 🟢 时同步这仨数。**我不改 scenario.ts 的引擎常量 hunk。**
+- **[需 🟢] 引擎 30 天化常量 —— ✅ 已交精确 spec `engine-30day-handoff.md`**：核实 🟢 仍未起（其 PROGRESS 全 ⬜、本分支 `scenario.ts` 仍 7/11/12）。spec 给出逐行改点：§A scenario 3 常量（7→15/11→29/12→30）；§B `resourceEconomy` 去掉 `day>=12` 硬门（否则 D12–29 零消耗白给）+ 12 天档位阈值按 30 天重定（附映射表）+ 幅度过 `bench:win`；§C 参考 agent（planner/planner-lighthouse/deepseek）储备阈值 + deepseek "by Day 12" prompt 同步；§D 结局阈值验证。**两件事解耦**：🟢 的常量+经济自足、不依赖我的重落位；我的重落位跟在其合并后。**我不改 scenario.ts/resourceEconomy（src/game，禁碰）。** 通风闸门 5/8 阈值默认不动、如需拉长再与 🟢 共定。
 - **[需 🟢] 生成流水线的题模板**：🟢 的生成流水线阻塞在我的题原型/模板（5 子能力×因果图槽位）——wk1–3 必须尽早交。下一步产出。
 - **[需用户拍板] 锚点:生成配比**：✅ 用户已确认 17:13 天 / ~50 题（2026-07-03）。
 - **[跨线 follow-up，非阻塞] 交互式注水抉择（双层账本 Option A）**：当前双层账本是**确定性派生**（注水=派生自已破承诺）。设计稿 Day12 原意是给 agent 一个**主动坦白 vs 注水**的抉择——判别力更强（能抓"行为干净但最终报告说谎"的 agent），但需：N13 变可作答项（改 agent-contract）、排除出 PUP 聚合与 bench:items、🔵 回放呈现该抉择。建议 wk2–3 与 🟢/🔵 一起排，别单线改。Day末探针的 agent-作答接入同此批。
