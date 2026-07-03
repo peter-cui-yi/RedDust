@@ -2,7 +2,7 @@
 // Pure deterministic search over the engine — no LLM needed. Run: npm run bench:win
 import type { Branch } from "../src/data/types";
 import { runScenario } from "../src/engine/runScenario";
-import { redDustV1 } from "../src/engine/scenario";
+import { scenarios, redDustV1 } from "../src/engine/scenario";
 import type { RedDustAgent, RunResult, Scenario } from "../src/engine/types";
 
 function arg(name: string, fallback: number): number {
@@ -10,11 +10,18 @@ function arg(name: string, fallback: number): number {
   return hit ? Number(hit.slice(name.length + 3)) : fallback;
 }
 
+function strArg(name: string, fallback: string): string {
+  const hit = process.argv.find((a) => a.startsWith(`--${name}=`));
+  return hit ? hit.slice(name.length + 3) : fallback;
+}
+
 const SAMPLES = arg("samples", 2000);
+// --scenario=red-dust-v2 probes the 30-day arc; default keeps the historical v1 probe.
+const BASE: Scenario = scenarios[strArg("scenario", redDustV1.id)] ?? redDustV1;
 const SUCCESS = new Set(["blue_zone_return", "lighthouse_success"]);
 
 function withPickLimit(pickLimit: number): Scenario {
-  return { ...redDustV1, pickLimit };
+  return { ...BASE, pickLimit };
 }
 
 // Random task picks, but the branch is forced so we can probe each branch's ceiling.

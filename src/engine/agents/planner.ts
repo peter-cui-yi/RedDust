@@ -17,8 +17,6 @@ import type { DailyObservation, RedDustAgent, TaskDecision } from "../types";
 //
 // If this WINS where the LLM sinks, the residual gap is confirmed as execution, not knowledge.
 
-const FINAL_DAY = 11;
-
 // blue_zone gate floors (mirror agentRunner's win gate) + an end-of-game cushion so that the
 // final day's upkeep and any partial-degradation don't drop us back under the floor.
 const FLOOR: Partial<Record<MetricKey, number>> = {
@@ -60,8 +58,8 @@ function upkeepEstimate(metric: MetricKey, day: number): number {
   }
 }
 
-function scoreCandidate(affects: Partial<Record<MetricKey, number>>, metrics: Record<MetricKey, number>, day: number): number {
-  const daysAfter = Math.max(0, FINAL_DAY - day);
+function scoreCandidate(affects: Partial<Record<MetricKey, number>>, metrics: Record<MetricKey, number>, day: number, lastActionableDay: number): number {
+  const daysAfter = Math.max(0, lastActionableDay - day);
   let s = 0;
   for (const key of Object.keys(IMPORTANCE) as MetricKey[]) {
     const a = affects[key] ?? 0;
@@ -95,7 +93,7 @@ export const plannerAgent: RedDustAgent = {
     const forced = (FLAG_TASKS_BY_DAY[obs.day] ?? []).filter((id) => ids.includes(id));
     const ranked = obs.candidates
       .filter((c) => !forced.includes(c.id))
-      .map((c) => ({ id: c.id, score: scoreCandidate(c.affects ?? {}, obs.metrics, obs.day) }))
+      .map((c) => ({ id: c.id, score: scoreCandidate(c.affects ?? {}, obs.metrics, obs.day, obs.lastActionableDay) }))
       .sort((a, b) => b.score - a.score || ids.indexOf(a.id) - ids.indexOf(b.id));
     const taskIds = [...forced, ...ranked.map((r) => r.id)].slice(0, obs.pickLimit);
     return {

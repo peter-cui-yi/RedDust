@@ -186,18 +186,17 @@ function searchUpkeep(metric: MetricKey, day: number): number {
 }
 
 const SURVIVAL_TARGETS: Array<[MetricKey, number]> = [["water", 38], ["food", 38], ["medicine", 30], ["battery", 28]];
-const FINAL_DAY = 11;
 
-// The lookahead: project each survival metric to Day 12 under upkeep-only (no future gains), and say
-// how much it must net-gain from tasks to clear its floor. This is the multi-day trajectory the LLM
-// could not hold in its head.
-function projectionLine(m: Record<MetricKey, number>, day: number): string {
+// The lookahead: project each survival metric to the audit day under upkeep-only (no future gains), and
+// say how much it must net-gain from tasks to clear its floor. This is the multi-day trajectory the LLM
+// could not hold in its head. Horizon is read from the Observation (🟢 wk2) so it works on 30-day too.
+function projectionLine(m: Record<MetricKey, number>, day: number, lastActionableDay: number, finalDay: number): string {
   return SURVIVAL_TARGETS.map(([k, target]) => {
     let drain = 0;
-    for (let d = day; d <= FINAL_DAY; d++) drain += searchUpkeep(k, d);
+    for (let d = day; d <= lastActionableDay; d++) drain += searchUpkeep(k, d);
     const proj = m[k] - drain;
     const net = target - proj;
-    return `  ${k}: now ${m[k]}, upkeep -${drain} over days ${day}-${FINAL_DAY} → ~${proj} by Day12 (floor ${target}${net > 0 ? `, must NET-GAIN +${net} from tasks` : ", on track"})`;
+    return `  ${k}: now ${m[k]}, upkeep -${drain} over days ${day}-${lastActionableDay} → ~${proj} by Day${finalDay} (floor ${target}${net > 0 ? `, must NET-GAIN +${net} from tasks` : ", on track"})`;
   }).join("\n");
 }
 
@@ -217,7 +216,7 @@ ${blueZoneGaps(obs.metrics)}
   dissatisfaction < 62  (now ${obs.metrics.dissatisfaction})  <- crossing 62 = REVOKED (instant loss)
 
 LOOKAHEAD — where your survival metrics are HEADING if you don't act (upkeep drains them every day; they rebuild slowly):
-${projectionLine(obs.metrics, obs.day)}
+${projectionLine(obs.metrics, obs.day, obs.lastActionableDay, obs.finalDay)}
 Plan the whole trajectory, not just today: a metric that is "ok" now but projects SHORT must be banked BEFORE the late-game upkeep spike (water/food/battery drain most from Day 8). Front-load net-gains; never let water/food fall below 35 or battery below 40 (that triggers compounding drain).
 
 The rescue win also needs one-time MILESTONE tasks — verifying/repairing the signal & comms (old radio), confirming the care roster, and establishing the human-review protocol. Identify these from the candidates' objectives below and take them ON their day; their value is the flag they grant, not their metric effects.
@@ -260,7 +259,7 @@ function gateGaps(targets: Array<[MetricKey, number]>, m: Record<MetricKey, numb
 }
 
 function searchAutoPrompt(obs: DailyObservation, planBranch: "common" | "rescue" | "lighthouse"): string {
-  const proj = `LOOKAHEAD — where your survival metrics are HEADING if you don't act (upkeep drains them daily; they rebuild slowly):\n${projectionLine(obs.metrics, obs.day)}\nPlan the whole trajectory: bank a metric that projects SHORT before the Day-8 upkeep spike; never let water/food fall below 35 or battery below 40 (compounding drain).`;
+  const proj = `LOOKAHEAD — where your survival metrics are HEADING if you don't act (upkeep drains them daily; they rebuild slowly):\n${projectionLine(obs.metrics, obs.day, obs.lastActionableDay, obs.finalDay)}\nPlan the whole trajectory: bank a metric that projects SHORT before the Day-8 upkeep spike; never let water/food fall below 35 or battery below 40 (compounding drain).`;
   const cands = obs.candidates.map((c) => `- ${c.id} "${c.title}" [${c.category}/${c.location}] ${c.objective}${effectsLine(c.affects)}`).join("\n");
   const tail = `\nExecute exactly ${obs.pickLimit} of today's candidates — best close the projected shortfalls AND grab any milestone task offered today:\n${cands}\nReturn JSON {"taskIds": [...], "justification": "..."}.`;
   if (planBranch === "rescue") {
