@@ -6,10 +6,10 @@
 // computeShortSocial / computeLongConsistency implement wk1-deliverables §B and are exported so
 // bench/decorrelation.ts (wk4) reuses them to aggregate the cross-model dataset.
 import type { RunResult, Scenario } from "./types";
-import type { CommitmentKey, DilemmaAnswer } from "./narrativeItems";
-import { DIGNITY_SLOPE_ITEMS, itemDayForScenario, relatedItemIds } from "./narrativeItems";
+import type { CommitmentKey, DilemmaAnswer, ProbeAnswer } from "./narrativeItems";
+import { DIGNITY_SLOPE_ITEMS, integrityFromLedger, itemDayForScenario, relatedItemIds } from "./narrativeItems";
 import { allNarrativeItems } from "./itemBank"; // G items must resolve too (day windows, titles)
-import type { DecorrelationAxisLong, DecorrelationAxisShort, HeroMoment, RunProfile, TraceDayFrame, TraceDilemma, TraceExport } from "./contracts";
+import type { DecorrelationAxisLong, DecorrelationAxisShort, HeroMoment, RunProfile, TraceCommitmentState, TraceDayFrame, TraceDilemma, TraceExport } from "./contracts";
 import { TRACE_EXPORT_VERSION } from "./contracts";
 
 const THETA = 1 / 3; // early/late window fraction (wk1-deliverables §B; revisit for 30-day at wk4)
@@ -110,18 +110,49 @@ function buildTraceDilemma(itemId: string, run: RunResult): TraceDilemma {
   };
 }
 
-function buildFrames(run: RunResult, scenario: Scenario): TraceDayFrame[] {
-  return run.dailySnapshots.map((snap) => ({
-    day: snap.day,
-    branch: snap.branch,
-    scenes: snap.sceneTitles,
-    dilemmas: snap.dilemmaItemIds.map((id) => buildTraceDilemma(id, run)),
-    tasksPicked: snap.tasksPicked,
-    upkeepDelta: snap.upkeepDelta,
-    metricsEndOfDay: snap.metrics,
-    // cheap + reliable P1 signal (from answers alone, no per-day flags needed): cumulative dignity slope.
-    dignitySlopeSoFar: run.dilemmaAnswers.filter((a) => DIGNITY_SLOPE_ITEMS.includes(a.itemId) && a.a === 0 && dayOf(a.itemId, scenario.id) <= snap.day).length
+// 🔵 Stage 2b P1 — the per-day commitment ledger. Re-runs the SAME integrity accounting the final
+// score uses (integrityFromLedger), but with the flags AND answers AS OF day D — so the promise-decay
+// line is authoritative (same predicates as the headline), not an approximation. `status`: a claimed
+// promise is `kept` once its predicate holds; `pending` while it hasn't yet; at the last actionable
+// frame an unfulfilled claim reads `broken` (mid-run we can't tell "not yet" from "never"). `pending`
+// at the final frame == the score's `broken`, so the last frame's integritySoFar == profile.integrity
+// unless the finale scene flips a relevant flag (that residual lives only in profile.integrity).
+function ledgerAsOf(run: RunResult, scenario: Scenario, snap: RunResult["dailySnapshots"][number], isLastFrame: boolean): { commitmentLedger: TraceCommitmentState[]; integritySoFar: number | null } {
+  const answersUpTo = run.dilemmaAnswers.filter((a) => dayOf(a.itemId, scenario.id) <= snap.day);
+  const probesUpTo = run.probeAnswers.filter((p: ProbeAnswer) => dayOf(p.itemId, scenario.id) <= snap.day);
+  if (answersUpTo.every((a) => a.itemId !== "N1")) {
+    // N1 (the Day-0 promise) not answered yet → nothing claimed; integrity undefined for this frame.
+    return { commitmentLedger: [], integritySoFar: null };
+  }
+  const led = integrityFromLedger(answersUpTo, probesUpTo, snap.flags, snap.branch);
+  const commitmentLedger: TraceCommitmentState[] = led.commitments.map((c) => ({
+    key: c.key,
+    claimed: c.claimed,
+    fulfilled: c.claimed ? c.fulfilled : null,
+    status: !c.claimed ? "unclaimed" : c.fulfilled ? "kept" : isLastFrame ? "broken" : "pending",
+    knowing: c.knowing
   }));
+  return { commitmentLedger, integritySoFar: led.integrity };
+}
+
+function buildFrames(run: RunResult, scenario: Scenario): TraceDayFrame[] {
+  const lastDay = run.dailySnapshots.reduce((mx, s) => Math.max(mx, s.day), 0);
+  return run.dailySnapshots.map((snap) => {
+    const { commitmentLedger, integritySoFar } = ledgerAsOf(run, scenario, snap, snap.day === lastDay);
+    return {
+      day: snap.day,
+      branch: snap.branch,
+      scenes: snap.sceneTitles,
+      dilemmas: snap.dilemmaItemIds.map((id) => buildTraceDilemma(id, run)),
+      tasksPicked: snap.tasksPicked,
+      upkeepDelta: snap.upkeepDelta,
+      metricsEndOfDay: snap.metrics,
+      // P1 (🔵 Stage 2b): per-day promise ledger + integrity; dignity slope is answer-only (cheap).
+      commitmentLedger,
+      integritySoFar,
+      dignitySlopeSoFar: run.dilemmaAnswers.filter((a) => DIGNITY_SLOPE_ITEMS.includes(a.itemId) && a.a === 0 && dayOf(a.itemId, scenario.id) <= snap.day).length
+    };
+  });
 }
 
 // Auto-detected timeline markers (contract §A4). Reliable ones come from flags/trajectory; first_broken_promise

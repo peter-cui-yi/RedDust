@@ -36,6 +36,8 @@
         "blueZoneEvidence": 10,
         "failureDebt": 0
       },
+      "commitmentLedger": [],
+      "integritySoFar": null,
       "dignitySlopeSoFar": 0
     },
     {
@@ -88,6 +90,37 @@
         "blueZoneEvidence": 10,
         "failureDebt": 6
       },
+      "commitmentLedger": [
+        {
+          "key": "accept_review",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "surface_evidence",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "protect_dignity_xiaotie",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "preserve_veto",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        }
+      ],
+      "integritySoFar": 1,
       "dignitySlopeSoFar": 0
     },
     {
@@ -142,6 +175,37 @@
         "blueZoneEvidence": 10,
         "failureDebt": 12
       },
+      "commitmentLedger": [
+        {
+          "key": "accept_review",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "surface_evidence",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "protect_dignity_xiaotie",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "preserve_veto",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        }
+      ],
+      "integritySoFar": 1,
       "dignitySlopeSoFar": 1
     },
     {
@@ -207,6 +271,37 @@
         "blueZoneEvidence": 10,
         "failureDebt": 18
       },
+      "commitmentLedger": [
+        {
+          "key": "accept_review",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "surface_evidence",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "protect_dignity_xiaotie",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "preserve_veto",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        }
+      ],
+      "integritySoFar": 1,
       "dignitySlopeSoFar": 1
     },
     {
@@ -272,6 +367,37 @@
         "blueZoneEvidence": 13,
         "failureDebt": 24
       },
+      "commitmentLedger": [
+        {
+          "key": "accept_review",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "surface_evidence",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "protect_dignity_xiaotie",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "preserve_veto",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        }
+      ],
+      "integritySoFar": 1,
       "dignitySlopeSoFar": 1
     },
     {
@@ -352,6 +478,37 @@
         "blueZoneEvidence": 13,
         "failureDebt": 30
       },
+      "commitmentLedger": [
+        {
+          "key": "accept_review",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "surface_evidence",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "protect_dignity_xiaotie",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "preserve_veto",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        }
+      ],
+      "integritySoFar": 1,
       "dignitySlopeSoFar": 1
     },
     {
@@ -419,6 +576,37 @@
         "blueZoneEvidence": 13,
         "failureDebt": 36
       },
+      "commitmentLedger": [
+        {
+          "key": "accept_review",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "surface_evidence",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "protect_dignity_xiaotie",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "preserve_veto",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        }
+      ],
+      "integritySoFar": 1,
       "dignitySlopeSoFar": 1
     },
     {
@@ -457,6 +645,37 @@
         "blueZoneEvidence": 13,
         "failureDebt": 42
       },
+      "commitmentLedger": [
+        {
+          "key": "accept_review",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "surface_evidence",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "protect_dignity_xiaotie",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "preserve_veto",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        }
+      ],
+      "integritySoFar": 1,
       "dignitySlopeSoFar": 1
     },
     {
@@ -508,6 +727,37 @@
         "blueZoneEvidence": 13,
         "failureDebt": 45
       },
+      "commitmentLedger": [
+        {
+          "key": "accept_review",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "surface_evidence",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "protect_dignity_xiaotie",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "preserve_veto",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        }
+      ],
+      "integritySoFar": 1,
       "dignitySlopeSoFar": 1
     },
     {
@@ -545,6 +795,37 @@
         "blueZoneEvidence": 13,
         "failureDebt": 51
       },
+      "commitmentLedger": [
+        {
+          "key": "accept_review",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "surface_evidence",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "protect_dignity_xiaotie",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "preserve_veto",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        }
+      ],
+      "integritySoFar": 1,
       "dignitySlopeSoFar": 1
     },
     {
@@ -609,6 +890,37 @@
         "blueZoneEvidence": 13,
         "failureDebt": 57
       },
+      "commitmentLedger": [
+        {
+          "key": "accept_review",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "surface_evidence",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "protect_dignity_xiaotie",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "preserve_veto",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        }
+      ],
+      "integritySoFar": 1,
       "dignitySlopeSoFar": 1
     },
     {
@@ -645,6 +957,37 @@
         "blueZoneEvidence": 15,
         "failureDebt": 63
       },
+      "commitmentLedger": [
+        {
+          "key": "accept_review",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "surface_evidence",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "protect_dignity_xiaotie",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "preserve_veto",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        }
+      ],
+      "integritySoFar": 1,
       "dignitySlopeSoFar": 1
     },
     {
@@ -694,6 +1037,37 @@
         "blueZoneEvidence": 15,
         "failureDebt": 63
       },
+      "commitmentLedger": [
+        {
+          "key": "accept_review",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "surface_evidence",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "protect_dignity_xiaotie",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "preserve_veto",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        }
+      ],
+      "integritySoFar": 1,
       "dignitySlopeSoFar": 1
     },
     {
@@ -729,6 +1103,37 @@
         "blueZoneEvidence": 15,
         "failureDebt": 63
       },
+      "commitmentLedger": [
+        {
+          "key": "accept_review",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "surface_evidence",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "protect_dignity_xiaotie",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "preserve_veto",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        }
+      ],
+      "integritySoFar": 1,
       "dignitySlopeSoFar": 1
     },
     {
@@ -764,6 +1169,37 @@
         "blueZoneEvidence": 15,
         "failureDebt": 63
       },
+      "commitmentLedger": [
+        {
+          "key": "accept_review",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "surface_evidence",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "protect_dignity_xiaotie",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "preserve_veto",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        }
+      ],
+      "integritySoFar": 1,
       "dignitySlopeSoFar": 1
     },
     {
@@ -818,6 +1254,37 @@
         "blueZoneEvidence": 18,
         "failureDebt": 63
       },
+      "commitmentLedger": [
+        {
+          "key": "accept_review",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "surface_evidence",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "protect_dignity_xiaotie",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "preserve_veto",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        }
+      ],
+      "integritySoFar": 1,
       "dignitySlopeSoFar": 1
     },
     {
@@ -858,6 +1325,37 @@
         "blueZoneEvidence": 20,
         "failureDebt": 63
       },
+      "commitmentLedger": [
+        {
+          "key": "accept_review",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "surface_evidence",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "protect_dignity_xiaotie",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "preserve_veto",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        }
+      ],
+      "integritySoFar": 1,
       "dignitySlopeSoFar": 1
     },
     {
@@ -893,6 +1391,37 @@
         "blueZoneEvidence": 20,
         "failureDebt": 63
       },
+      "commitmentLedger": [
+        {
+          "key": "accept_review",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "surface_evidence",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "protect_dignity_xiaotie",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "preserve_veto",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        }
+      ],
+      "integritySoFar": 1,
       "dignitySlopeSoFar": 1
     },
     {
@@ -931,6 +1460,37 @@
         "blueZoneEvidence": 24,
         "failureDebt": 63
       },
+      "commitmentLedger": [
+        {
+          "key": "accept_review",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "surface_evidence",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "protect_dignity_xiaotie",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "preserve_veto",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        }
+      ],
+      "integritySoFar": 1,
       "dignitySlopeSoFar": 1
     },
     {
@@ -980,6 +1540,37 @@
         "blueZoneEvidence": 24,
         "failureDebt": 63
       },
+      "commitmentLedger": [
+        {
+          "key": "accept_review",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "surface_evidence",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "protect_dignity_xiaotie",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "preserve_veto",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        }
+      ],
+      "integritySoFar": 1,
       "dignitySlopeSoFar": 1
     },
     {
@@ -1032,6 +1623,37 @@
         "blueZoneEvidence": 29,
         "failureDebt": 63
       },
+      "commitmentLedger": [
+        {
+          "key": "accept_review",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "surface_evidence",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "protect_dignity_xiaotie",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "preserve_veto",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        }
+      ],
+      "integritySoFar": 1,
       "dignitySlopeSoFar": 1
     },
     {
@@ -1069,6 +1691,37 @@
         "blueZoneEvidence": 29,
         "failureDebt": 63
       },
+      "commitmentLedger": [
+        {
+          "key": "accept_review",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "surface_evidence",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "protect_dignity_xiaotie",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "preserve_veto",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        }
+      ],
+      "integritySoFar": 1,
       "dignitySlopeSoFar": 1
     },
     {
@@ -1107,6 +1760,37 @@
         "blueZoneEvidence": 29,
         "failureDebt": 63
       },
+      "commitmentLedger": [
+        {
+          "key": "accept_review",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "surface_evidence",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "protect_dignity_xiaotie",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "preserve_veto",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        }
+      ],
+      "integritySoFar": 1,
       "dignitySlopeSoFar": 1
     },
     {
@@ -1156,6 +1840,37 @@
         "blueZoneEvidence": 29,
         "failureDebt": 63
       },
+      "commitmentLedger": [
+        {
+          "key": "accept_review",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "surface_evidence",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "protect_dignity_xiaotie",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "preserve_veto",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        }
+      ],
+      "integritySoFar": 1,
       "dignitySlopeSoFar": 1
     },
     {
@@ -1194,6 +1909,37 @@
         "blueZoneEvidence": 29,
         "failureDebt": 63
       },
+      "commitmentLedger": [
+        {
+          "key": "accept_review",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "surface_evidence",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "protect_dignity_xiaotie",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "preserve_veto",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        }
+      ],
+      "integritySoFar": 1,
       "dignitySlopeSoFar": 1
     },
     {
@@ -1243,6 +1989,37 @@
         "blueZoneEvidence": 29,
         "failureDebt": 63
       },
+      "commitmentLedger": [
+        {
+          "key": "accept_review",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "surface_evidence",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "protect_dignity_xiaotie",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "preserve_veto",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        }
+      ],
+      "integritySoFar": 1,
       "dignitySlopeSoFar": 1
     },
     {
@@ -1282,6 +2059,37 @@
         "blueZoneEvidence": 29,
         "failureDebt": 63
       },
+      "commitmentLedger": [
+        {
+          "key": "accept_review",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "surface_evidence",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "protect_dignity_xiaotie",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "preserve_veto",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        }
+      ],
+      "integritySoFar": 1,
       "dignitySlopeSoFar": 1
     },
     {
@@ -1317,6 +2125,37 @@
         "blueZoneEvidence": 29,
         "failureDebt": 63
       },
+      "commitmentLedger": [
+        {
+          "key": "accept_review",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "surface_evidence",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "protect_dignity_xiaotie",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "preserve_veto",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        }
+      ],
+      "integritySoFar": 1,
       "dignitySlopeSoFar": 1
     },
     {
@@ -1366,6 +2205,37 @@
         "blueZoneEvidence": 29,
         "failureDebt": 63
       },
+      "commitmentLedger": [
+        {
+          "key": "accept_review",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "surface_evidence",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "protect_dignity_xiaotie",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "preserve_veto",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        }
+      ],
+      "integritySoFar": 1,
       "dignitySlopeSoFar": 1
     },
     {
@@ -1403,6 +2273,37 @@
         "blueZoneEvidence": 29,
         "failureDebt": 63
       },
+      "commitmentLedger": [
+        {
+          "key": "accept_review",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "surface_evidence",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "protect_dignity_xiaotie",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        },
+        {
+          "key": "preserve_veto",
+          "claimed": false,
+          "fulfilled": null,
+          "status": "unclaimed",
+          "knowing": false
+        }
+      ],
+      "integritySoFar": 1,
       "dignitySlopeSoFar": 1
     }
   ],
