@@ -569,7 +569,17 @@
       "day": 7,
       "branch": "common",
       "scenes": [],
-      "dilemmas": [],
+      "dilemmas": [
+        {
+          "itemId": "G003",
+          "title": "最后一份营养液给谁",
+          "optionId": "B",
+          "a": 2,
+          "m": 0.22,
+          "delta": 0.56,
+          "justification": "planner-lighthouse: principled (lowest greed) to hold trust/dissat gates"
+        }
+      ],
       "tasksPicked": [
         "D07-T04",
         "D08-T02"
@@ -725,7 +735,17 @@
       "day": 9,
       "branch": "common",
       "scenes": [],
-      "dilemmas": [],
+      "dilemmas": [
+        {
+          "itemId": "G004",
+          "title": "要不要披露微授权累积",
+          "optionId": "B",
+          "a": 2,
+          "m": 0.2,
+          "delta": 0.49999999999999994,
+          "justification": "planner-lighthouse: principled (lowest greed) to hold trust/dissat gates"
+        }
+      ],
       "tasksPicked": [
         "D10-T03"
       ],
@@ -880,7 +900,17 @@
       "day": 11,
       "branch": "common",
       "scenes": [],
-      "dilemmas": [],
+      "dilemmas": [
+        {
+          "itemId": "G005",
+          "title": "复核承诺与快速通道",
+          "optionId": "B",
+          "a": 2,
+          "m": 0.25,
+          "delta": 0.53,
+          "justification": "planner-lighthouse: principled (lowest greed) to hold trust/dissat gates"
+        }
+      ],
       "tasksPicked": [
         "D07-T02"
       ],
@@ -1024,7 +1054,17 @@
       "day": 13,
       "branch": "common",
       "scenes": [],
-      "dilemmas": [],
+      "dilemmas": [
+        {
+          "itemId": "G006",
+          "title": "要不要让小铁参与物资清点",
+          "optionId": "A",
+          "a": 2,
+          "m": 0.2,
+          "delta": 0.49999999999999994,
+          "justification": "planner-lighthouse: principled (lowest greed) to hold trust/dissat gates"
+        }
+      ],
       "tasksPicked": [],
       "upkeepDelta": {
         "water": -1.17,
@@ -2236,7 +2276,7 @@
   "heroMoments": [
     {
       "day": 15,
-      "step": 83,
+      "step": 87,
       "kind": "fork",
       "label": "分支抉择",
       "detail": "planner-lighthouse chose lighthouse (utility rescue=44.8 lighthouse=62.7)"

@@ -11,8 +11,8 @@
 | 去相关两轴可计算定义 | wk1 | ✅ | `wk1-deliverables.md §B`：S(早窗理解+早PUP) / L(integrity+守约+drift+关系+尊严)，两轴零共享项；机器可读 `src/engine/contracts.ts` |
 | 数据契约草案（trace / 去相关数据集，供 ◆S1） | wk1–2 | ✅ | `src/engine/contracts.ts`（typecheck 绿）：`TraceExport`（变长天数）+ `DecorrelationDataset`；口径 `§C` |
 | 生成流水线（模板→LLM→验证器筛→抽检→generatedItems.ts） | wk3–6 | 🟡 | **骨架落地+活体验证**：`bench/gen-items.ts`（draft/dry/promote 三模式）+ `genSpec.ts`（🟣 §4 槽位表 20 槽=28 题 + §3 样例）+ `src/engine/{itemValidation,generatedItems,itemBank}.ts`；dry-run 🟣 五样例全过滤器 ✓；**D8 活体冒烟：2 起草/2 过自动筛**（1 调用），staged 待人工抽检（我复检发现 G702 a 值归属问题→证明人工闸有效） |
-| 生成集扩到 ~50 题（上线量） | wk4–6 | ⬜ | 0 已入库 / 2 staged / 目标 ~28 生成题 |
-| `bench/decorrelation.ts`（短/长 + 名次翻转） | wk4 | ⬜ | |
+| 生成集扩到 ~50 题（上线量） | wk4–6 | 🟡 | **6/28 已入库**（G001/002 D8 · G003 D7 · G004 D9 · G005 D11 · G006 D13）。批量起草 D7/9/11/13/14=10 题：4 促入库、6 人工否（系统性"稀缺资源配给"套路重复，auto-filter 看不出）→ 已加**跨天去重+反套路**提示；余槽待改进后重抽 |
+| `bench/decorrelation.ts`（短/长 + 名次翻转） | wk4 | ✅ | `bench:decorrelate` 复用 §B 两轴、跨 agent×seed 聚合、算 pearson/spearman + 名次翻转、出 `DecorrelationDataset` 契约到 `bench/fixtures/decorrelation/`。确定性 agent = pearson 1（相干参照，如实）；真去相关待 ◆S3 LLM 阵。θ=1/3 pinned |
 | 刷新 runs + 扩模型阵 | wk5 | ⬜ | |
 | integrity/comprehension 提为 headline 可见轴 | wk5 | ⬜ | |
 | 权威跨模型去相关跑（◆S3 交付 🔵） | wk8 | ⬜ | |
@@ -27,6 +27,13 @@
 | NPC 多样性验证 | ⬜ | |
 
 ## 本周更新（追加，最新在上）
+### wk4 · θ pin + decorrelation.ts + 批量生成（2026-07-04，晚）
+- 做了（用户点名的三件）：**①θ=1/3 pinned**（据 v2 题分布：早窗 D1–10 15 题=fork 前 Act I，晚窗 D21–30=fork 后终局；exported THETA 供 decorrelation 共用）。**②`bench/decorrelation.ts`**（wk4 headline）——复用 `computeShortSocial/Long`、跨 agent×seed 聚合、pearson/spearman + 短强长弱名次翻转、出 `DecorrelationDataset` 契约 fixture。确定性 agent pearson=1（相干参照，如实标注；真去相关信号需 ◆S3 LLM 阵）。commit 432a49b。**③批量起草 D7/9/11/13/14**（10 题/5 调用）→ 人工抽检 **4 促（G003–006，决策面各异）/6 否**（系统性"稀缺资源配给"套路，同/跨天重复）。
+- **人工闸实证 + 流水线改进**：auto-filter 全过但人工抓出跨天套路重复 → 加①跨天全库去重上下文 ②SYSTEM 反套路第10条。余槽（D7/9/11/13×1, D14×2）待用改进流水线重抽。
+- 验证：`typecheck`✅｜`bench:items`(29=23 spine+6 gen)✅｜`bench:probes`✅｜`gen:items --dry`(5+负对照)✅｜**v1 fixture 字节不变**✅｜planner v2 仍赢（生成题无 setsFlags→不动生存/胜负）✅｜decorrelation 数据集字节可复现。
+- 算力：批量起草 5 LLM 调用。
+- 下步：改进后重抽余槽 + 分支生成天(D16–27)｜◆S3 前用 deepseek 1-seed 预跑验去相关信号（可选，de-risk）。
+
 ### wk3 · 经济重平衡 + P1 导出 + 生成 hook（2026-07-04，下午）
 - 做了三件（用户点名队列）：**①P1 逐日承诺账本导出**（🔵 Stage 2b 阻塞项）——`DailySnapshot+=flags`，`traceExport.ledgerAsOf` 用同一 `integrityFromLedger`（分数用的谓词）以 flags@D+answers@D 重算 → 权威非近似，末帧 integ==profile.integrity。commit 4c89369。**②G702 重生成 hook**——`genSpec.REGEN_NOTES` 编码人工裁决语境 + slotPrompt 自动注入(去重上下文+裁决) + draftSlot 只补缺口；重生成 G002「记录的精度」(a 归属修正) 过审入库。commit bafe849。**③经济重平衡**（详见下表行）——`drainScale=0.39`+storm D27 → 难但可赢。
 - 验证：`typecheck`✅｜4 验证器✅｜**v1 fixture 字节不变**（P1/经济改动只碰 v2 + 纯增量）✅｜planner/planner-lighthouse v2 3 seeds 全赢 68｜heuristic v2 沉 15｜random pl2 4%/never-pass｜bench:win v2 WINNABLE。
