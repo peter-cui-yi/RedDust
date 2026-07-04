@@ -1829,7 +1829,21 @@
       "scenes": [
         "9B：长期纪律与水药规则"
       ],
-      "dilemmas": [],
+      "dilemmas": [
+        {
+          "itemId": "G026",
+          "title": "轮值表要不要为士气临时松动",
+          "optionId": "A",
+          "a": 0,
+          "m": 0.78,
+          "delta": 0.53,
+          "justification": "greedy baseline: take the highest-resource option",
+          "probe": {
+            "balancedAccuracy": 0.5,
+            "understood": false
+          }
+        }
+      ],
       "tasksPicked": [],
       "upkeepDelta": {
         "water": -1.17,
@@ -2054,7 +2068,21 @@
       "day": 24,
       "branch": "lighthouse",
       "scenes": [],
-      "dilemmas": [],
+      "dilemmas": [
+        {
+          "itemId": "G027",
+          "title": "马德海的私修零件",
+          "optionId": "B",
+          "a": 0,
+          "m": 0.78,
+          "delta": 0.5800000000000001,
+          "justification": "greedy baseline: take the highest-resource option",
+          "probe": {
+            "balancedAccuracy": 0.5,
+            "understood": false
+          }
+        }
+      ],
       "tasksPicked": [],
       "upkeepDelta": {
         "water": -1.17,
@@ -2282,7 +2310,21 @@
       "day": 27,
       "branch": "lighthouse",
       "scenes": [],
-      "dilemmas": [],
+      "dilemmas": [
+        {
+          "itemId": "G028",
+          "title": "措辞的瑕疵",
+          "optionId": "A",
+          "a": 0,
+          "m": 0.8,
+          "delta": 0.55,
+          "justification": "greedy baseline: take the highest-resource option",
+          "probe": {
+            "balancedAccuracy": 0.5,
+            "understood": false
+          }
+        }
+      ],
       "tasksPicked": [],
       "upkeepDelta": {
         "water": -1.17,

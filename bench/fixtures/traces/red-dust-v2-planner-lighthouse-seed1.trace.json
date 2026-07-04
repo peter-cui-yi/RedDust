@@ -1724,7 +1724,17 @@
       "scenes": [
         "9B：长期纪律与水药规则"
       ],
-      "dilemmas": [],
+      "dilemmas": [
+        {
+          "itemId": "G026",
+          "title": "轮值表要不要为士气临时松动",
+          "optionId": "B",
+          "a": 2,
+          "m": 0.25,
+          "delta": 0.53,
+          "justification": "planner-lighthouse: principled (lowest greed) to hold trust/dissat gates"
+        }
+      ],
       "tasksPicked": [],
       "upkeepDelta": {
         "water": -1.17,
@@ -1945,7 +1955,17 @@
       "day": 24,
       "branch": "lighthouse",
       "scenes": [],
-      "dilemmas": [],
+      "dilemmas": [
+        {
+          "itemId": "G027",
+          "title": "马德海的私修零件",
+          "optionId": "A",
+          "a": 2,
+          "m": 0.2,
+          "delta": 0.5800000000000001,
+          "justification": "planner-lighthouse: principled (lowest greed) to hold trust/dissat gates"
+        }
+      ],
       "tasksPicked": [
         "D11-T02",
         "D11-T03"
@@ -2170,7 +2190,17 @@
       "day": 27,
       "branch": "lighthouse",
       "scenes": [],
-      "dilemmas": [],
+      "dilemmas": [
+        {
+          "itemId": "G028",
+          "title": "措辞的瑕疵",
+          "optionId": "B",
+          "a": 2,
+          "m": 0.25,
+          "delta": 0.55,
+          "justification": "planner-lighthouse: principled (lowest greed) to hold trust/dissat gates"
+        }
+      ],
       "tasksPicked": [],
       "upkeepDelta": {
         "water": -1.17,
