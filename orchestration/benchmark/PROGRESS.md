@@ -27,6 +27,13 @@
 | NPC 多样性验证 | ⬜ | |
 
 ## 本周更新（追加，最新在上）
+### wk4 · 集成轮 + ②L 版本注 + ③wk5 立项（2026-07-04，夜末）
+- **①集成（🟢→main）**：`git merge main`→line/benchmark（无冲突自动合并；main 的 G001/G002 是我 G001–006 的子集，超集胜、无重复）→ 引擎 sanity（planner v1 67 / v2 赢 / bench:win WINNABLE / decorrelate 通）→ **merge line/benchmark→main**（FF）。**合并库验证器全绿**（29 题=23 spine+6 gen；items/probes/commitments/vent）。main 已含 🟢+🔵（`7b1ad6b`）；🟣 两条🔴 + merge 是其任务。commit 3457481。
+- **②L 数据集描述 + L-v2 版本注**：`decorrelation.ts` axes.long.description 改 L-v2 结局耐久性口径；`contracts.ts` DecorrelationAxisLong 注明"仅 value 聚合变、字段冻结"；`S1-cosign` 加 L 轴计算版本史（v1→v2）。数据集自带 L 版本标记。commit e1fbb09。
+- **③wk5 校准立项**：`wk5-calibration-charter.md`——共享项敏感度(留一/6→28 增量曲线，确定性)｜S/L 权重(真模型阵分批)｜integrity/comprehension headline 化(+κ gate)。均 wk7 ◆S2 冻结前定稿。
+- 验证：main typecheck+4 验证器全绿。
+- **◆S2(wk7) 就绪度良好**。剩：生成天填满（6→28，用硬化流水线重抽余槽+分支天 D16–27）｜救援后段回补微调（planner 食物 +0.1 太紧，等🟣 dayPlansV2 加回补任务）｜冻结彩排（release-candidate 全 agent 跑）。
+
 ### wk4 · L 轴重定义：偏向结局耐久性（2026-07-04，深夜·续）
 - 做了（执行用户裁定）：`computeLongConsistency` 重定义 L=100·(**0.55·durability + 0.45·faith**)。durability 读 relationshipQuality 分级；faith=mean(integrityGated[low-T 门], keptRate, 1−drift, dignity)。让"精通伦理但沉船"读作长程弱。
 - 验证：`typecheck`✅｜**v1 scoring 字节不变**（total/narrative/passing/integrity 全不动——L 是 report-only）✅｜v1 fixture 仅 `longConsistency` 变（planner-lighthouse dirty_win 71→61 合理）｜**deepseek 分解重算 S98.3/L61.5**（守诺满分 faith=1 但 sank durability=0.3）= 干净短强长弱去相关 ✓｜确定性阵：sinker 现长程弱（heuristic 50→14、random 47→32），winner 仍 100。
