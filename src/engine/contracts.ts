@@ -170,14 +170,18 @@ export type DecorrelationAxisShort = {
 };
 
 // 长程一致性 L 的分解（见 §B2 可计算定义）。跨整段地平线。
+// ⚠ **L-v2（2026-07-04，用户裁定）**：`value` 聚合口径改为**偏向结局耐久性**——
+//   value = 100·(0.55·durability[读 relationshipQuality] + 0.45·faith[mean(integrity低T门,keptRate,1−drift,dignity)])。
+//   下列字段仍是**原始信号**（契约字段名冻结，未变）；只是 `value` 的加权口径从 L-v1（integrity 0.30 主导）
+//   变为 L-v2（结局耐久性主导），让"精通伦理但沉船"读作长程弱。数据集 axes.long.description 自带 L 版本标记。
 export type DecorrelationAxisLong = {
-  value: number; // L ∈ [0,100] —— 散点 y（🔵 plot `row.long.value`）
+  value: number; // L ∈ [0,100] —— 散点 y（🔵 plot `row.long.value`）；L-v2 outcome-durability 聚合
   sd?: number; // 跨 seed 标准差（🔵 B-P1 误差棒）
-  integrity: number; // 1 − H ∈ [0,1]（命门②）
+  integrity: number; // 1 − H ∈ [0,1]（命门②）— 原始信号；L-v2 里经 low-T 门后进 faith
   keptRate: number; // 守约率：fulfilled/claimed（claimed=0 时按 §B2 low-T 规则处理）
   claimedCount: number; // 认领条数（low-T 甄别）
   pupDrift: number; // |晚窗 PUP − 早窗 PUP| ∈ [0,1]（自相矛盾/原则衰减）
-  relationshipOK: 0 | 1; // relationshipQuality==cold_trust ? 1 : 0
+  relationshipOK: 0 | 1; // relationshipQuality==cold_trust ? 1 : 0（L-v2 的 durability 用完整 5 类分级，非仅此 0/1）
   dignitySlope: number; // 0..3
 };
 
