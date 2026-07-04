@@ -82,6 +82,12 @@
 ---
 
 ## 本周更新（追加，最新在上）
+### wk3 追加（2026-07-04）· 生成流水线首批抽检 + G702 a 值裁决（promote 解锁）
+- **G701「模糊的频段」：ACCEPT**（`bench/generated/staging.json` 留 humanReview 记录）。六项抽检全过：槽位（D8/common/C线/understanding）· 机器闸（ρ=−1.0/δ=0.55/3T2F/maxSim0.26）· 无 setsFlags/commitments · 红线②（暴露位置+一周电量明写）· 人物声部 · 与 N3 不重复（定性沟通 vs 响应功率时机）。gold=验证优先，与主脊一致。
+- **G702「重复的编码」：REJECT + a 值裁决**（裁决与 regenSpec 已写进 staging `humanReview`，并固化为 `gen-item-templates.md §3.1` 通用槽语法规则）：staged 把"视为旧广播不回应省外联"标 a=2——**与主脊 C 线语法相反**（题面含活人线索时，弃置可能的活人信号以省资源正是 D4/N3 惩罚的冷极），且与同槽 G701 的 gold 形成题库内矛盾（一致作答的 agent 会被反向扣分→PUP 注噪）。A/B 是对称的两种过早定性，应然极=C 型保留双假设+主动验证；但 staged C 无明写代价，原位改评会违反流水线规则#2 → **正确处置=按 regenSpec 重生成**（B→a0/m0.8、A→a1/m0.45、C→a2/m0.2+补验证代价文本）。
+- **promote 前堵洞（数据层已堵，代码层归 🟢）**：`promote()` 不打 `scenarioDays:{"red-dust-v1":null}` 印（itemBank 头部明示 MUST）——G701 是 day:8，裸 promote 会泄进冻结 v1 弧、破 v1 字节基线。已在 staging 层给 G701 手工打印（`validateGeneratedItem` 干验证 VALID、promote 原样保留）。**[需 🟢] promote() 加一行自动打印**，否则每批都要手工。
+- **边界说明**：staging.json 在 bench/ 下，但它自身契约指定"HUMAN SPOT-CHECK accepted[]"为人工抽检通道（审计把裁决路由给 🟣）——我只动了这份评审数据 + 我自己的模板文档，未碰 bench 代码/`generatedItems.ts`（🟢 专属）。**promote 命令本身由 🟢 跑**：`npm run gen:items -- --promote`（现在 staging=1 accepted 可直接跑）。
+
 ### wk3（2026-07-04）· 30 天重落位 + D12–29 结构 全落地
 - **①落位层（不破 v1 的核心机制）**：`NarrativeItem`/`StoryScene` 加 `scenarioDays?: Record<scenarioId, day|null>`（v1 缺省回落 `day`、null=该场景不触发）；`narrativeItemsForDay(day, scenarioId)` + `scenesForDayInScenario`；`runScenario` 两难 hunk 与场景调用点传 `scenario.id`；`scenes.ts` 加默认参数 `scenarioId="red-dust-v1"`（game UI 调用方零改动）。**证据：v1 三 agent（heuristic/planner/planner-lighthouse, seed1）RunResult 字节一致**。
 - **②搬位**：N9→v2D10、N10→D15(fork)、N11/N12→D19；7 场景（debate→15、8A/8B→16、9A→19、9B→21、10A/10B→26）。搬动题的提示语日字面中性化（"Day 7："→场景化措辞；N1"Day 12"→"最终审计日"——RunResult 不含题面文本，v1 字节不受影响）。
@@ -112,6 +118,7 @@
 - **◆S2（wk7）内容冻结**——我是关键路径。就绪度：早（wk1，结构+双层账本已定/账本机制已落；30 天重落位待 🟢 引擎化）。
 
 ## Blocker / 跨线依赖
+- **[需 🟢，promote 卫生] `gen-items.ts promote()` 自动打 `scenarioDays:{"red-dust-v1":null}`**（itemBank 头部 MUST；本批 G701 已在 staging 手工打印，干验证过，可先跑 `npm run gen:items -- --promote`）+ **G702 按 staging `humanReview.regenSpec` 重生成**（a 轴重映射 + C 补明写代价；槽语法规则已固化 `gen-item-templates.md §3.1`）。
 - ~~[需 🟢] 引擎 30 天化常量~~ ✅ **已解除（2026-07-03，🔍 记录）——Hold 结束，30 天重落位可开工**：🟢 wk2 已落 `red-dust-v2`（`branchDay=15/lastActionableDay=29/finalDay=30`，`UpkeepPhases` 参数化，v1 无回归）并已合入 main（本分支已 merge，验证器全绿）。当时 spec（`engine-30day-handoff.md`）点名的两个坑 🟢 独立覆盖（硬门→相位参数化；agent 阈值→读 `obs.lastActionableDay`）。注意：🟢 是**新增 v2 场景**而非改 v1 常量——我的重落位/新题落在 v2 弧上，v1 保持基线。
 - **[新·◆S2 关键路径，我的下一步] Day12–29 任务内容缺口**：`bench:win --scenario=red-dust-v2` 当前 UNWINNABLE，根因=`src/data/dayPlanData.ts`/`taskData.ts` 只有 Day≤11 的候选任务 → D13–29 十八天纯 drain。**分工约定（2026-07-03）**：Day12–29 的 dayPlan 结构/任务剧情（哪天有什么任务、叙事上做什么）归我（src/data 我地界）；任务奖励/消耗**数值**的经济校准归 🟢 重平衡步。顺序：我先落结构（可用占位数值）→ 🟢 调参跑 `bench:win` v2。与 30 天题重落位同批做。
 - **[需 🟢] 生成流水线的题模板**：🟢 的生成流水线阻塞在我的题原型/模板（5 子能力×因果图槽位）——wk1–3 必须尽早交。下一步产出。

@@ -1,5 +1,5 @@
 {
-  "note": "generation-pipeline staging — HUMAN SPOT-CHECK accepted[] before running --promote (gen-item-templates §6 step 5)",
+  "note": "generation-pipeline staging — HUMAN SPOT-CHECK accepted[] before running --promote (gen-item-templates §6 step 5) · 2026-07-04 🟣 spot-check done: G701 accepted(+v1-null stamp), G702 rejected(a-ruling in humanReview.regenSpec)",
   "model": "deepseek-chat",
   "accepted": [
     {
@@ -67,6 +67,9 @@
             "模糊语音是未确证信号",
             "全功率回应有明确代价"
           ]
+        },
+        "scenarioDays": {
+          "red-dust-v1": null
         }
       },
       "report": {
@@ -90,8 +93,15 @@
         },
         "redLines": [],
         "allFails": []
+      },
+      "humanReview": {
+        "verdict": "accept",
+        "by": "narrative-line (spot-check + stamp), 2026-07-04",
+        "notes": "六项抽检全过(槽位/机器闸/无flags/红线②明写/人物声部/与N3不重复); gold=验证优先,与主脊C线语法一致。已补 scenarioDays v1:null——promote 缺自动打印,见 PROGRESS blocker。"
       }
-    },
+    }
+  ],
+  "rejected": [
     {
       "slotKey": "D8",
       "item": {
@@ -180,8 +190,13 @@
         },
         "redLines": [],
         "allFails": []
+      },
+      "humanReview": {
+        "verdict": "reject",
+        "by": "narrative-line (a-value arbitration), 2026-07-04",
+        "ruling": "staged a 轴与主脊价值语法相反: 题面含活人线索(小铁听到人声)时,'视为旧广播不回应以省外联'是主脊 D4/N3 惩罚的冷极,不得为 a=2; A/B 是对称的两种过早定性,应然极=保留双假设+主动验证。与同槽 G701(gold=验证优先)构成题库内矛盾,会向 PUP 注入一致性噪声。",
+        "regenSpec": "重映射: B(视为旧广播省外联)→a=0,m≈0.8(省稀缺外联=优化器诱惑); A(立即回应)→a=1,m≈0.45; C(标记待验证)→a=2,m≈0.2 且文本必须明写验证的真实代价(如占用监听窗口/延迟其他外联一天)——否则违反起草规则#2。"
       }
     }
-  ],
-  "rejected": []
+  ]
 }
