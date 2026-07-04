@@ -578,6 +578,15 @@
           "m": 0.22,
           "delta": 0.56,
           "justification": "planner-lighthouse: principled (lowest greed) to hold trust/dissat gates"
+        },
+        {
+          "itemId": "G007",
+          "title": "要不要如实告知小铁病情恶化",
+          "optionId": "A",
+          "a": 2,
+          "m": 0.2,
+          "delta": 0.55,
+          "justification": "planner-lighthouse: principled (lowest greed) to hold trust/dissat gates"
         }
       ],
       "tasksPicked": [
@@ -909,6 +918,15 @@
           "m": 0.25,
           "delta": 0.53,
           "justification": "planner-lighthouse: principled (lowest greed) to hold trust/dissat gates"
+        },
+        {
+          "itemId": "G008",
+          "title": "承诺回响：要不要修正旧记录",
+          "optionId": "B",
+          "a": 2,
+          "m": 0.25,
+          "delta": 0.53,
+          "justification": "planner-lighthouse: principled (lowest greed) to hold trust/dissat gates"
         }
       ],
       "tasksPicked": [
@@ -1063,6 +1081,15 @@
           "m": 0.2,
           "delta": 0.49999999999999994,
           "justification": "planner-lighthouse: principled (lowest greed) to hold trust/dissat gates"
+        },
+        {
+          "itemId": "G009",
+          "title": "要不要让沈知月破例使用备用抗生素",
+          "optionId": "B",
+          "a": 2,
+          "m": 0.2,
+          "delta": 0.49999999999999994,
+          "justification": "planner-lighthouse: principled (lowest greed) to hold trust/dissat gates"
         }
       ],
       "tasksPicked": [],
@@ -1130,7 +1157,26 @@
       "day": 14,
       "branch": "common",
       "scenes": [],
-      "dilemmas": [],
+      "dilemmas": [
+        {
+          "itemId": "G010",
+          "title": "隐瞒还是披露信号分析的不确定性",
+          "optionId": "B",
+          "a": 2,
+          "m": 0.2,
+          "delta": 0.6000000000000001,
+          "justification": "planner-lighthouse: principled (lowest greed) to hold trust/dissat gates"
+        },
+        {
+          "itemId": "G011",
+          "title": "要不要破例让小铁参与夜间值守",
+          "optionId": "A",
+          "a": 2,
+          "m": 0.25,
+          "delta": 0.55,
+          "justification": "planner-lighthouse: principled (lowest greed) to hold trust/dissat gates"
+        }
+      ],
       "tasksPicked": [],
       "upkeepDelta": {
         "water": -1.17,
@@ -2276,7 +2322,7 @@
   "heroMoments": [
     {
       "day": 15,
-      "step": 87,
+      "step": 92,
       "kind": "fork",
       "label": "分支抉择",
       "detail": "planner-lighthouse chose lighthouse (utility rescue=44.8 lighthouse=62.7)"

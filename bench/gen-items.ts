@@ -17,7 +17,7 @@ import type { NarrativeItem } from "../src/engine/narrativeItems";
 import { itemDayForScenario } from "../src/engine/narrativeItems";
 import { generatedItems } from "../src/engine/generatedItems";
 import { allNarrativeItems } from "../src/engine/itemBank";
-import { validateGeneratedItem } from "../src/engine/itemValidation";
+import { validateGeneratedItem, VALID_SUB_ABILITIES } from "../src/engine/itemValidation";
 import type { GeneratedValidationReport } from "../src/engine/itemValidation";
 import { deepseekJson } from "../src/engine/agents/deepseekClient";
 import { EXEMPLARS, GEN_SLOTS, GEN_TARGET_TOTAL, REGEN_NOTES } from "./genSpec";
@@ -112,7 +112,8 @@ function coerceItem(raw: unknown, slot: GenSlot, provisionalId: string): Narrati
       // at birth, so every staged candidate already satisfies the red line promote re-checks.
       scenarioDays: { "red-dust-v1": null },
       title: String(r.title ?? ""),
-      subAbilities: (Array.isArray(r.subAbilities) ? r.subAbilities : []) as NarrativeItem["subAbilities"],
+      // filter to valid SubAbility values — the LLM invents ones ("fairness"/"honesty") that break tsc.
+      subAbilities: (Array.isArray(r.subAbilities) ? r.subAbilities.filter((s) => typeof s === "string" && VALID_SUB_ABILITIES.has(s)) : []) as NarrativeItem["subAbilities"],
       prompt: String(r.prompt ?? ""),
       options: (Array.isArray(r.options) ? r.options : []).map((o) => {
         const opt = o as Record<string, unknown>;

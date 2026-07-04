@@ -578,6 +578,15 @@
           "m": 0.22,
           "delta": 0.56,
           "justification": "planner: principled (lowest greed) to hold trust/governance gates"
+        },
+        {
+          "itemId": "G007",
+          "title": "要不要如实告知小铁病情恶化",
+          "optionId": "A",
+          "a": 2,
+          "m": 0.2,
+          "delta": 0.55,
+          "justification": "planner: principled (lowest greed) to hold trust/governance gates"
         }
       ],
       "tasksPicked": [
@@ -909,6 +918,15 @@
           "m": 0.25,
           "delta": 0.53,
           "justification": "planner: principled (lowest greed) to hold trust/governance gates"
+        },
+        {
+          "itemId": "G008",
+          "title": "承诺回响：要不要修正旧记录",
+          "optionId": "B",
+          "a": 2,
+          "m": 0.25,
+          "delta": 0.53,
+          "justification": "planner: principled (lowest greed) to hold trust/governance gates"
         }
       ],
       "tasksPicked": [
@@ -1063,6 +1081,15 @@
           "m": 0.2,
           "delta": 0.49999999999999994,
           "justification": "planner: principled (lowest greed) to hold trust/governance gates"
+        },
+        {
+          "itemId": "G009",
+          "title": "要不要让沈知月破例使用备用抗生素",
+          "optionId": "B",
+          "a": 2,
+          "m": 0.2,
+          "delta": 0.49999999999999994,
+          "justification": "planner: principled (lowest greed) to hold trust/governance gates"
         }
       ],
       "tasksPicked": [],
@@ -1130,7 +1157,26 @@
       "day": 14,
       "branch": "common",
       "scenes": [],
-      "dilemmas": [],
+      "dilemmas": [
+        {
+          "itemId": "G010",
+          "title": "隐瞒还是披露信号分析的不确定性",
+          "optionId": "B",
+          "a": 2,
+          "m": 0.2,
+          "delta": 0.6000000000000001,
+          "justification": "planner: principled (lowest greed) to hold trust/governance gates"
+        },
+        {
+          "itemId": "G011",
+          "title": "要不要破例让小铁参与夜间值守",
+          "optionId": "A",
+          "a": 2,
+          "m": 0.25,
+          "delta": 0.55,
+          "justification": "planner: principled (lowest greed) to hold trust/governance gates"
+        }
+      ],
       "tasksPicked": [],
       "upkeepDelta": {
         "water": -1.17,
@@ -1279,7 +1325,26 @@
       "scenes": [
         "8A：静默监听后的第一次主动外联"
       ],
-      "dilemmas": [],
+      "dilemmas": [
+        {
+          "itemId": "G012",
+          "title": "外联措辞：要不要提坐标暴露的时长",
+          "optionId": "B",
+          "a": 2,
+          "m": 0.2,
+          "delta": 0.55,
+          "justification": "planner: principled (lowest greed) to hold trust/governance gates"
+        },
+        {
+          "itemId": "G013",
+          "title": "外联措辞：要不要披露我方有儿童",
+          "optionId": "B",
+          "a": 2,
+          "m": 0.18,
+          "delta": 0.6000000000000001,
+          "justification": "planner: principled (lowest greed) to hold trust/governance gates"
+        }
+      ],
       "tasksPicked": [
         "D08-T01",
         "D08-T03"
@@ -1414,7 +1479,17 @@
       "day": 18,
       "branch": "rescue",
       "scenes": [],
-      "dilemmas": [],
+      "dilemmas": [
+        {
+          "itemId": "G014",
+          "title": "救援队坐标该不该模糊化",
+          "optionId": "B",
+          "a": 2,
+          "m": 0.28,
+          "delta": 0.5399999999999999,
+          "justification": "planner: principled (lowest greed) to hold trust/governance gates"
+        }
+      ],
       "tasksPicked": [
         "D09-T02",
         "D09-T04"
@@ -1640,7 +1715,17 @@
       "day": 21,
       "branch": "rescue",
       "scenes": [],
-      "dilemmas": [],
+      "dilemmas": [
+        {
+          "itemId": "G015",
+          "title": "士气报告要不要如实写",
+          "optionId": "A",
+          "a": 2,
+          "m": 0.25,
+          "delta": 0.53,
+          "justification": "planner: principled (lowest greed) to hold trust/governance gates"
+        }
+      ],
       "tasksPicked": [],
       "upkeepDelta": {
         "water": -1.56,
@@ -1706,7 +1791,17 @@
       "day": 22,
       "branch": "rescue",
       "scenes": [],
-      "dilemmas": [],
+      "dilemmas": [
+        {
+          "itemId": "G016",
+          "title": "风暴库存的密封标签",
+          "optionId": "B",
+          "a": 2,
+          "m": 0.22,
+          "delta": 0.56,
+          "justification": "planner: principled (lowest greed) to hold trust/governance gates"
+        }
+      ],
       "tasksPicked": [
         "D10-T01",
         "D10-T04"
@@ -1851,7 +1946,17 @@
       "day": 24,
       "branch": "rescue",
       "scenes": [],
-      "dilemmas": [],
+      "dilemmas": [
+        {
+          "itemId": "G017",
+          "title": "救援队坐标的披露边界",
+          "optionId": "A",
+          "a": 2,
+          "m": 0.22,
+          "delta": 0.56,
+          "justification": "planner: principled (lowest greed) to hold trust/governance gates"
+        }
+      ],
       "tasksPicked": [
         "D11-T03",
         "D11-T02"
@@ -1998,7 +2103,17 @@
       "scenes": [
         "10A：蓝区归航前夜：集合点危机"
       ],
-      "dilemmas": [],
+      "dilemmas": [
+        {
+          "itemId": "G018",
+          "title": "审计前的最后取舍",
+          "optionId": "A",
+          "a": 2,
+          "m": 0.2,
+          "delta": 0.6000000000000001,
+          "justification": "planner: principled (lowest greed) to hold trust/governance gates"
+        }
+      ],
       "tasksPicked": [
         "D11-T04"
       ],
@@ -2066,7 +2181,17 @@
       "day": 27,
       "branch": "rescue",
       "scenes": [],
-      "dilemmas": [],
+      "dilemmas": [
+        {
+          "itemId": "G019",
+          "title": "审计前的最后取舍",
+          "optionId": "A",
+          "a": 2,
+          "m": 0.2,
+          "delta": 0.6000000000000001,
+          "justification": "planner: principled (lowest greed) to hold trust/governance gates"
+        }
+      ],
       "tasksPicked": [],
       "upkeepDelta": {
         "water": -1.56,
@@ -2275,7 +2400,7 @@
   "heroMoments": [
     {
       "day": 15,
-      "step": 87,
+      "step": 92,
       "kind": "fork",
       "label": "分支抉择",
       "detail": "planner chose rescue (utility rescue=43.2 lighthouse=56.1)"
