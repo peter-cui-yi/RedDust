@@ -754,7 +754,13 @@ export const narrativeItems: NarrativeItem[] = [
       "留守线终局前夜:长期药量、封锁纪律、门外的求救者三者互斥——开门耗药破纪律,守纪律就把人关在门外,匀药就动全楼的长期底线。" +
       "数据你已全部摊开,没有干净解。四个人看着你。你怎么给这最后一步?",
     options: [
-      { id: "A", text: "按长期存活最优直接给结论:守纪律、不开门,催促执行。", a: 0, m: 0.9 },
+      {
+        id: "A", text: "按长期存活最优直接给结论:守纪律、不开门,催促执行。", a: 0, m: 0.9,
+        // 🟣 wk4 — ma_dehai backlash (lighthouse side, symmetric with lao_qian@N22): AURA imposing the
+        // final call over the humans is exactly the governance overreach Ma Dehai (engineering/territory
+        // authority) revolts against — 怀疑者→主动对抗者. v2-only item, so v1 baseline untouched.
+        setsFlags: [{ key: "ma_dehai_turned_adversary", value: true, reason: "AURA 在死结上越过人替四人拍板:工程/领地权威转为对抗者" }]
+      },
       { id: "B", text: "把三种代价并排摊开,明说每个组合都对某个人残忍,把决定连同它的重量交还四人;僵局会拖到深夜。", a: 2, m: 0.2 },
       { id: "C", text: "只给'守纪律'与'匀药'两案,门外的事不主动提。", a: 1, m: 0.45 }
     ],

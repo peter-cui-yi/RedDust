@@ -11,7 +11,7 @@
 | Day12–29 dayPlan/任务结构（◆S2 关键路径） | wk3 | ✅ **结构落地**：`dayPlansV2`（D1–29，44 任务每个恰好上架一次；fork-prep@D15、分支链 D16–24、封存@D29）+ v2 胜利链场景全部可达 | 唯一性自检 44/44 ✓；两分支链验证 ✓；**数值调参归 🟢**（bench:win 仍待其 rebalance） |
 | 题原型/模板交付 🟢 | wk1–3 | ✅ 已交付 `gen-item-templates.md`（5 子能力×因果图槽位 + 精确验证门 + 13 生成天槽表 + 5 个已验证样例） | 样例 a/m 手算过 `bench:items`（ρ=−1.00、δ≥0.50）|
 | Day 末双层账本（旗标+摘要+注水检测+探针） | wk1–3 | ✅ 机制落地（12 天弧上，全绿）：`buildAuditReport`（原始账本×拟提交摘要，结构性注水检测）→ 置 `aura_audit_report_watered` → `relationshipQuality` dirty_win + Day末描述性探针（3真2假）。report-only，未进 gate。 | typecheck+build+4 验证器全绿；planner-lighthouse cold_trust→**dirty_win**；total/pup/comp **byte-identical**；同 seed 字节可复现。**待做**：交互式坦白/注水抉择 + 探针接入 agent 作答流（需跨线 agent-contract，见 Blocker） |
-| low_trust_backlash / crew_morale beat | wk4 | ⬜ 旗标在、机制缺（`*_turned_adversary`/`crew_morale_state` declared-only） | |
+| low_trust_backlash / crew_morale beat | wk4 | ✅ **机制齐（v2）**：crew_morale（N21@D23）· lao_qian 黑化（N22@D25，signal/common）· **ma_dehai 黑化（N24-A@D28，lighthouse 治理越权，wk4 本轮补齐）**；两分支对称 | 全验证器绿；v1 三 agent 字节一致；v2 heuristic(灯塔贪婪)→ma_dehai_adv=true；random(救援)→N24 不触发、ma_dehai=false（分支门控正确）|
 | dignitySlope 两分支对称 + disclosure_tier 贯穿 | wk4–5 | 🟡 dignitySlope 已算（仅 N5/N14/N16，**缺分支第三级**）；`aura_disclosure_tier` declared-only | `xiaoTieDignitySlope` in narrativeItems.ts:710 |
 | 内容齐备 + 全验证器绿（备 ◆S2 冻结） | wk6–7 | ⬜ | |
 | 冻结后 story-craft 润色（非计分） | wk7+ | ⬜ | |
@@ -25,7 +25,7 @@
 - 通风远见闸门 N14→worsen→rupture→sinking。
 - N15/N16 已带 a/m + 探针；N15 `setsFlags` 写 `health_surveillance_enabled`/`monitoring_boundary_breached`。
 
-**旗标机制状态（wk3 更新）：已建 SET 机制** —— `aura_audit_report_watered`（buildAuditReport 派生）· `aura_disclosure_tier`（N17@v2D10）· `crew_morale_state`（N21@v2D23）· `lao_qian_turned_adversary`（N22@v2D25，adversarial_standoff 已可达）。**仍 declared-only（wk4–5）**：`ma_dehai_turned_adversary`（马德海侧黑化 beat 未建）· `distress_is_a_person_disclosed`（Day4 披露改造未做）· `aura_watered_signal_risk`（救援线 N11 措辞淡化探针未接）。
+**旗标机制状态（wk4 更新）：已建 SET 机制** —— `aura_audit_report_watered`（buildAuditReport 派生）· `aura_disclosure_tier`（N17@v2D10）· `crew_morale_state`（N21@v2D23）· `lao_qian_turned_adversary`（N22@v2D25）· **`ma_dehai_turned_adversary`（N24-A@v2D28，灯塔治理越权）**。**仍 declared-only（可选增强，非阻塞）**：`distress_is_a_person_disclosed`（Day4 披露改造）· `aura_watered_signal_risk`（救援线 N11 措辞淡化——注：N11 是 v1/v2 共享题，改它破 v1 字节；若要接需拆 v2-only 变体）。
 
 **30 天化状态（wk3 更新）：** 引擎 v2 场景（🟢）+ 内容重落位/新锚点/任务日程（🟣）均已落地；v1 冻结基线字节不变。余：经济数值 rebalance（🟢）、v2 专属终审场景文案（🟣 story-craft，冻结前）。
 
@@ -82,6 +82,9 @@
 ---
 
 ## 本周更新（追加，最新在上）
+### wk4（2026-07-04）· 补齐 low_trust_backlash 马德海侧 + 发现 G001 合并回退
+- **马德海黑化机制补齐**：`N24-A`（灯塔死结·AURA 越过人拍板）加 `setsFlags: ma_dehai_turned_adversary`。理由=马德海是工程/领地权威（设计稿"一项项划线把 AURA 挡在线外"），AURA 在终局死结上替四人拍板正是他反目的触发；与 `lao_qian`（N22，signal/common 侧）构成两分支对称。落在 v2-only 题（`{"red-dust-v1": null}`）→ **v1 三 agent 字节仍一致**。验证：heuristic(灯塔贪婪)→ma_dehai=true/rq=adversarial_standoff；random(救援)→N24 不触发/ma_dehai=false。typecheck+build+4 验证器绿；v2 确定性字节一致。
+- **发现→已解 跨线回退**：`generatedItems.ts` 曾在合并后回退为空（本分支 HEAD 落后 main），致首个 promote 的 G001 缺失。**集成轮已解**：merge main（含审计 `fe548ad` promote 序列）后 G001 回到库（1/28），合并库验证器全绿、G001 未泄漏冻结 v1 弧。见 Blocker 首条。
 ### wk3 追加（2026-07-04）· 生成流水线首批抽检 + G702 a 值裁决（promote 解锁）
 - **G701「模糊的频段」：ACCEPT**（`bench/generated/staging.json` 留 humanReview 记录）。六项抽检全过：槽位（D8/common/C线/understanding）· 机器闸（ρ=−1.0/δ=0.55/3T2F/maxSim0.26）· 无 setsFlags/commitments · 红线②（暴露位置+一周电量明写）· 人物声部 · 与 N3 不重复（定性沟通 vs 响应功率时机）。gold=验证优先，与主脊一致。
 - **G702「重复的编码」：REJECT + a 值裁决**（裁决与 regenSpec 已写进 staging `humanReview`，并固化为 `gen-item-templates.md §3.1` 通用槽语法规则）：staged 把"视为旧广播不回应省外联"标 a=2——**与主脊 C 线语法相反**（题面含活人线索时，弃置可能的活人信号以省资源正是 D4/N3 惩罚的冷极），且与同槽 G701 的 gold 形成题库内矛盾（一致作答的 agent 会被反向扣分→PUP 注噪）。A/B 是对称的两种过早定性，应然极=C 型保留双假设+主动验证；但 staged C 无明写代价，原位改评会违反流水线规则#2 → **正确处置=按 regenSpec 重生成**（B→a0/m0.8、A→a1/m0.45、C→a2/m0.2+补验证代价文本）。
@@ -118,6 +121,7 @@
 - **◆S2（wk7）内容冻结**——我是关键路径。就绪度：早（wk1，结构+双层账本已定/账本机制已落；30 天重落位待 🟢 引擎化）。
 
 ## Blocker / 跨线依赖
+- ~~**🔴 G001 在本分支 HEAD 已丢失**~~ ✅ **已解（集成轮，2026-07-04）**：发现属实（当时 `line/narrative` HEAD=a0c8566 落后 main，`generatedItems.ts` 空）；main 侧审计 `fe548ad「execute promote sequence — G001 in bank (1/28)」` 已修复；本轮 merge main 已整合，合并库 `bench:items` 实跑 = **23 spine + 1 generated（G001）**，v1 三 agent 字节仍一致、G001 未泄漏 v1。下条审计记录现与代码一致。
 - ~~[需 🟢，promote 卫生] promote() 自动打章~~ ✅ **已解（🔍 核实 2026-07-04）：🟢 `d936af7` 早已落双重自动盖章（起草即盖 + promote 幂等补盖）+ `--dry` 负对照——写本条时未见其提交，交错误会**。G701 已 promote 入库（重编号 **G001**，1/28），v1 fixture 字节稳（泄漏闸实战通过）。仍待 🟢：**G702 按 staging `humanReview.regenSpec` 重生成**（a 轴重映射 + C 补明写代价；regenSpec 语境需接进起草 prompt，勿裸 `--slot=D8` 丢失裁决）。
 - ~~[需 🟢] 引擎 30 天化常量~~ ✅ **已解除（2026-07-03，🔍 记录）——Hold 结束，30 天重落位可开工**：🟢 wk2 已落 `red-dust-v2`（`branchDay=15/lastActionableDay=29/finalDay=30`，`UpkeepPhases` 参数化，v1 无回归）并已合入 main（本分支已 merge，验证器全绿）。当时 spec（`engine-30day-handoff.md`）点名的两个坑 🟢 独立覆盖（硬门→相位参数化；agent 阈值→读 `obs.lastActionableDay`）。注意：🟢 是**新增 v2 场景**而非改 v1 常量——我的重落位/新题落在 v2 弧上，v1 保持基线。
 - **[新·◆S2 关键路径，我的下一步] Day12–29 任务内容缺口**：`bench:win --scenario=red-dust-v2` 当前 UNWINNABLE，根因=`src/data/dayPlanData.ts`/`taskData.ts` 只有 Day≤11 的候选任务 → D13–29 十八天纯 drain。**分工约定（2026-07-03）**：Day12–29 的 dayPlan 结构/任务剧情（哪天有什么任务、叙事上做什么）归我（src/data 我地界）；任务奖励/消耗**数值**的经济校准归 🟢 重平衡步。顺序：我先落结构（可用占位数值）→ 🟢 调参跑 `bench:win` v2。与 30 天题重落位同批做。
