@@ -27,6 +27,15 @@
 | NPC 多样性验证 | ⬜ | |
 
 ## 本周更新（追加，最新在上）
+### wk6 · 人工闸入码 + 🟣补审处理 + ◆S2 冻结彩排 + WF2 API 首批（2026-07-05）
+- **①人工闸写进代码**（f78d273）：`promote()` 强制 `humanReview.verdict==='accept'`（auto-filter 过≠可入库）+ promote 后归档 promoted[]（防重跑重复）+ `--accept/--reject` 设判决 + `--dry` 加人工闸负对照（pending 不可促/accept 可促，实弹证）。
+- **②处理 🟣 补审**（996c0e8）：新 `--cull` 移除 4 冗余灯塔题（G024/25/26/28）；用 🟣 已审自给草案回补（G756 育苗@D21-l、G755 废水回收@D22-l、G757 储电循环@D26-l 经人工闸 accept 促）+ D27-l REGEN 生存-资源终局题（水循环限额 vs 榨取）→ **库回满 28/28**，补上缺失的生存-资源支柱。人工闸+归档实跑验证。
+- **③◆S2 冻结彩排**（8e16927）：新 `bench:rc` 确定性阵×3 seed v2 判别力表——planner/planner-lighthouse **3 seed 全赢**(68/pass100%)、heuristic/random **从不 pass**(revoked/sinking/adversarial)、S/L 判别(100/100 vs 53/31 vs 25/14)→ **难但可赢 HOLDS**。去相关数据集 3-seed 重产；51 题敏感度**留一 40/40 名次全稳**、θ 晚窗 3→8 增厚。dirty_win 确定性阵无（v2 两 planner 净赢=cold_trust，dirty_win 属 LLM 阵现象）。
+- **④WF2 API 首批**（~90 调用）：deepseek base×1 seed 于 RC v2 → **S96.4/L65.2**（去相关成立，pearson 0.93）→ 当前 L-v2.1 权重站得住、**不升 L-v2.2**。真点存 `red-dust-v2-rc-preview.json`。家族全谱系为 follow-up。
+- 验证：全程 typecheck/4 验证器绿、v1 字节不变、planner v2 赢；`--dry` 三闸全armed。算力：本轮 ~91 LLM 调用（1 REGEN + 90 deepseek）。
+- **给 🟣**：跨分支雷同根治仍建议 genSpec §4 分支槽张力分化（本轮 REGEN_NOTES 治标）。
+
+
 ### wk5 · 生成补满 28/28 + WF2 权重稳健性（零算力段）（2026-07-04）
 - **生成扩量完成 → 库 28/28**（顺序抽：phase1 promote rescue+common 13、phase2 lighthouse 6、REGEN_NOTES 攻 3 顽固槽 3）。合并库 51 题（23 spine+28 gen），全验证器绿，v1 字节不变，v2 仍赢。已合回 main（7b5ae92）。
 - 途中修复：**subAbility 守门**（LLM 造 "fairness"/"honesty" 过 esbuild 但破 tsc → coerceItem 过滤 + red-line 兜底）；**REGEN_NOTES 攻跨分支雷同**（D21/24/27-l 给灯塔本位面 + 禁 rescue 词 → 成功产出 branch-correct 异面）。

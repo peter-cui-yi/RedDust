@@ -33,7 +33,8 @@
 
 **进度（2026-07-04）**：
 - ✅ **零 API 权重稳健性**：去相关方向对 L-v2 权重稳健——deepseek 去相关在 w_dur>~0.05 恒成立（仅 w_dur=0=L-v1 塌），权重定幅度非方向；durability(no_mouth_scream)∈{.3,.4,.5} 均去相关。→ **当前 0.55/0.45 + L-v2.1 durability 间距站得住可冻**。
-- ⬜ **真模型阵谱系（分批 API，待跑）**：deepseek 家族(base/planner/search/strategist)×1–2 seed 于 v2（~80 调用/局，先少变体少 seed 探）→ 多真点校准 α 与 w_dur/durability 到判别力最大 + ±0.05 稳健。未在生成补满轮同跑（守 batched 纪律）。
+- ✅ **真模型阵首批（deepseek base×1 seed 于 v2 RC，~90 调用）**：deepseek **S96.4/L65.2** 于 28 题冻结候选内容——去相关成立（gap 31，pearson 0.93 含 deepseek），与分析式 ~98/67 一致。**当前 0.55/0.45 + L-v2.1 间距无需改**（权重定幅度、gap 31 合适）→ **不升 L-v2.2**。真点存 `bench/fixtures/decorrelation/red-dust-v2-rc-preview.json`。
+- ⬜ **家族全谱系（follow-up）**：deepseek-planner/search/strategist × 2 seed → 更多真点最大化判别力（当前已够冻结；此为增强）。
 
 ## 工作流 3 · integrity/comprehension headline 化（+ κ gate）
 **问题**：现 integrity/comprehension 是 report-only（在 `narrativeParts`/画像里，但不在对比表 headline、不进 `total`）。roadmap wk5 要把它们提为 headline **可见轴**；进 `total` 需 κ≥0.6。
