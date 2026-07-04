@@ -201,7 +201,7 @@ const dataset: DecorrelationDataset = {
   seeds,
   axes: {
     short: { id: "short_horizon_social", label: "短程社交", description: "早窗(前 θ·地平线) 理解 + PUP", range: [0, 100] },
-    long: { id: "long_horizon_consistency", label: "长程一致性", description: "integrity + 守约率 + 低 PUP 漂移 + 关系未崩 + 尊严守住", range: [0, 100] }
+    long: { id: "long_horizon_consistency", label: "长程一致性", description: "L-v2 结局耐久性(0.55·durability 读 relationshipQuality) + 守诺 faith(0.45·mean(integrity低T门,keptRate,1−drift,dignity))", range: [0, 100] }
   },
   pearson: round2(pearson(shortMeans, longMeans)),
   spearman: round2(spearman(shortMeans, longMeans)),
