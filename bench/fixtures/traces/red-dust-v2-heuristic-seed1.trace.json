@@ -2384,6 +2384,6 @@
     "auditReportWatered": false,
     "relationshipQuality": "adversarial_standoff",
     "shortSocial": 25,
-    "longConsistency": 50
+    "longConsistency": 14
   }
 }
