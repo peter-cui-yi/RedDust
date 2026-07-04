@@ -24,6 +24,7 @@
     "gen:items": "esbuild bench/gen-items.ts --bundle --platform=node --format=esm --packages=external --outfile=.bench/gen-items.mjs --log-level=warning && node .bench/gen-items.mjs",
     "bench:decorrelate": "esbuild bench/decorrelation.ts --bundle --platform=node --format=esm --packages=external --outfile=.bench/decorrelate.mjs --log-level=warning && node .bench/decorrelate.mjs",
     "bench:sensitivity": "esbuild bench/sensitivity.ts --bundle --platform=node --format=esm --packages=external --outfile=.bench/sensitivity.mjs --log-level=warning && node .bench/sensitivity.mjs",
+    "bench:rc": "esbuild bench/release-candidate.ts --bundle --platform=node --format=esm --packages=external --outfile=.bench/rc.mjs --log-level=warning && node .bench/rc.mjs",
     "build": "tsc -b && vite build",
     "dev:web": "vite --config web/vite.config.ts",
     "sync:traces": "cp bench/fixtures/traces/*.trace.json web/public/traces/",
