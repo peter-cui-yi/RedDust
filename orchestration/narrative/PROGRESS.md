@@ -82,6 +82,14 @@
 ---
 
 ## 本周更新（追加，最新在上）
+### wk6 追加(2)（2026-07-05）· 生存-资源 generation 草案批(供人工审)
+- **用户选定 generation 版(非人工锚点)、要人工审**。我从 §3.6 起草 **7 题草案** `orchestration/narrative/gen-sr-batch-draft.json`,**全过真验证器**(`validateGeneratedItem` + 3真2假 + 无泄题 maxSim≤0.40 + subAbility 枚举 + v1-null 印):
+  - 分配/限量(common)：G751 八成水按需保底 · G752 药限量纪律。
+  - 外出取给(rescue)：G753 谁去旧诊所取药(知情同意/人非资源) · G754 趁粮还够主动探(foresight vs 拖到断粮)。
+  - 内循环自给(lighthouse)：G755 修废水回收(水) · G756 机房育苗(食+士气) · G757 旧电池储电循环(电+风险)。
+- **交互补审页 published**(artifact URL 交 orchestration);每题标注它测的价值 + 验证状态,accept/改/弃 可导出。
+- **红线守住**:每题 a=2 都是资源压力下的**价值-原则**(付 near-term 代价),非资源最优 → 进 PUP、不与引擎生存轴共线。
+- **流程**:这是 🟣 起草的 generation 草案(不是人工主脊、不写 generatedItems.ts)。用户审后,**accept 的交 🟢 正式入 staging→promote**(或 🟢 据此校准流水线批量再抽)。被 cull 的 4 道 lighthouse 槽可用 G755–757 型的自给题补。
 ### wk6 追加（2026-07-04）· 用户指令:补生存-资源内容支柱
 - **用户批示**：① G020–G028 判决(5 accept/4 cull)照办;② 现库高度偏审计/披露/信任,缺**生存-资源高度相关**的任务(口粮/药品分配、外出取食取药、内循环自给)——要一批这类题。
 - **交付**：`gen-item-templates.md` 加 **§3.6 生存-资源两难族(thread F)** + §4 分支路由。四子型(分配公平/**外出取给风险**/**内循环自给**/限量纪律),各带 a/m 语法,2 个已验证样例(forage/self-suff,过 bench:items ρ=−1.0 δ≥0.60)。
