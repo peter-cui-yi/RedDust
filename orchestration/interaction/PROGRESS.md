@@ -11,15 +11,40 @@
 | Stage 1a 回放消费现有 trace，逐日播放 | wk2 | ✅ | Phaser `ReplayScene`（`web/game/`）实机通：真 shelter 布局（复用 ShelterScene 8 热点坐标）+ 真人物精灵 + AURA 随每日任务位置移动；逐日 scrub 更新日/分支/场景/任务/指标；`133e644`；见下"ShelterScene 复用说明" |
 | Stage 1b 时间轴 scrub + 逐日面板 | wk3 | ✅ | scrub 滑块 + 逐日 `TraceDayFrame` 摘要面板（提前落地） |
 | Stage 2a 去相关散点 + 名次翻转表（占位数据） | wk4 | ✅ | **提前到 wk2**：Plot 去相关散点（Pearson 0.02）+ SVG 双列名次翻转表（连线交叉=翻转，守不刷分）；占位 `DecorrelationDataset`；`2c3f0c5` |
-| Stage 1c hero 时刻标记 + GIF 导出 | wk5 | 🟡 | 权威 `heroMoments`（`contracts.ts`）已接（branch_fork/vent_rupture/dirty_win 在时间轴打点 + 场景闪光）；GIF 导出待做 |
-| Stage 2b 承诺/关系折线图（联动日光标） | wk6 | ⬜ | 依赖 A2/A3 逐日快照 |
+| Stage 1c hero 时刻标记 + GIF 导出 | wk5 | ✅ | **提前到 wk3**：权威 `heroMoments` 时间轴打点 + 场景闪光；`npm run hero:gif`（headless CDP 逐日截图 → ffmpeg，零 npm 依赖）导出 `web/public/hero-replay.gif`（684×590/19帧/183KB），定格在 surface_evidence 毁诺+摘要注水；已接入 README 顶部门面。`6077180` |
+| Stage 2b 承诺/关系折线图（联动日光标） | wk6 | 🟡 | **承诺线提前到 wk3**：`PromiseDecayChart` 画 `integritySoFar` 随天演化 + 首次毁诺红标，联动日光标；账本面板改**逐日 as-of**（守诺/待判/毁诺随 scrub 翻）；`68f7a4e`。关系线待 P2 `relationshipByChar`（导出器暂未出） |
 | Stage 1 完成（冻结富化 trace） | wk7 | ⬜ | |
 | Stage 2 换真数据集（◆S3） | wk8 | ⬜ | |
 | 集成 + README hero + human-play 钩子 | wk9 | ⬜ | |
-| ◆S4 集成冻结 + 冒烟 | wk10 | ⬜ | browser-smoke 需从根 app 适配到 `web/` 站点（新任务） |
+| ◆S4 集成冻结 + 冒烟 | wk10 | 🟡 | **`web/` 冒烟已就位**：`npm run smoke:web`（headless Chrome，11 项断言：选择器/时间轴/canvas/账本/图表/散点/翻转表/scrub/换模型/控制台净）——补上了"browser-smoke 只覆盖根 app"的缺口。集成冻结/性能待 wk10 |
 | ◆S5 上线 | wk12 | ⬜ | |
 
-## 本周更新（追加，最新在上）
+## 本周更新（追加,最新在上）
+### 集成轮 · 🔵 合入 main（2026-07-04）
+- **`main` 快进到 `line/interaction`（`2beaec1..a0b0a40`,FF-only 推送,非破坏）**——含本线全部 wk3 web 工作 + 我先前合入的 🟢 ◆S2 commits（rebalance/P1/G002）。main 此前是 line/interaction 的严格祖先,零冲突;main 未被任何 worktree 检出,FF 安全。
+- **集成前认证全绿**：`typecheck`(tsc -b) ✓ · `npm run build` ✓ · `npm run build:web` ✓ · `bench:items/probes/commitments/vent` 全 ✓ · `smoke:web` 11/11 ✓。
+- ② 🟢 数据集 L 描述 / L-v2 版本注、③ wk5 校准（S/L 权重 / integrity headline 化 / 共享项敏感度）= 🟢/方法学侧;**本线无需改码**——Stage 2 组件已动态消费 `dataset.axes.long.description` + `profile`,integrity 提为 headline 后 ScoreChips 自然显示。到位后知会即可。
+- ◆S2（wk7）就绪度：本线交付（门面+飞轮+托管+冒烟+hero GIF）已全部在冻结 schema/真数据上,**待 🟢 内容冻结**（生成天 6→28 + 后段回补 + 冻结彩排）后接权威 trace/去相关集。
+
+### wk3 · 换新像素美术（image2）（2026-07-04）
+- 用户指出回放/GIF 仍用**旧占位素材**。已切到 live `ShelterScene` 同款 **image2 像素美术**：960×540 像素风避难所背景（按分支 common/rescue/lighthouse 切换）+ pixel-v2 人物精灵（马德海/沈知樾/小铁病床/老钱，按真 ShelterScene 坐标落位）+ 像素 AURA 机器人精灵（随每日任务房间移动,活动房间高亮）。`ReplayScene` 只读 `src/data` 的 `image2Assets`/`tasksById`;curated ~7.6MB image2 子集入 `web/public`,删旧占位 characters/props。
+- **重产 hero GIF**（684×590/19帧/~780KB）——现在是真像素风避难所 + AURA + 承诺账本崩塌,门面质感大幅提升。
+- 实测：背景渲染、AURA water(D8)→residents(D3) 移动、分支背景切换、`smoke:web` 11/11、build 绿、控制台净。`83abbcf`
+- **wk10 perf 跟进**：3 张分支背景各 ~2.4MB（首屏 ~7.3MB）——上线前 lazy-load 非当前分支背景 / 降采样。
+
+### wk3 · Stage 1c hero GIF + `web/` 冒烟（2026-07-04）
+- **`web/` browser-smoke**（`scripts/browser-smoke-web.mjs` + `scripts/lib/cdp.mjs` 共享 CDP 机制,不动根 `browser-smoke.mjs`）：`npm run smoke:web` 自起 preview → headless Chrome → **11 项断言全过**（8 trace 选择器/变长时间轴/Phaser canvas/逐日账本/承诺线+指标线/去相关散点/翻转表/scrub 更新/换模型重渲/控制台净）。补上 ◆S4 前"冒烟只覆盖根 app"的缺口。
+- **Stage 1c hero GIF**（`npm run hero:gif`）：headless 逐日截图（shelter stage + 承诺账本 clip）→ **ffmpeg 编码**（零 npm 依赖,复用系统 ffmpeg）→ `web/public/hero-replay.gif`（684×590/19帧/183KB）。用 v1 planner-lighthouse（唯一确定性"认领4条→毁 surface_evidence"的崩塌故事）,**定格在 Day11 毁诺 + 摘要注水**。已接 README 顶部（守"回放优先"锁定呈现）。ffmpeg/ImageMagick/Chrome 均系统自带。
+- 真数据到位后（◆S3 LLM 30 天崩塌 trace）用 `HERO_TRACE=<id> npm run hero:gif` 换更狠的门面。`6077180`
+
+### wk3 · 接 ◆S2 重平衡 + P1 逐日账本（2026-07-04）
+- **合 `line/benchmark`** 拿 ◆S2 交付（disjoint 文件，无冲突，与既有跨线合并实践一致）：v2 经济重平衡（drainScale 0.39 + storm D27 → **难但可赢**）；**P1 导出器**填 `frames[].commitmentLedger`(逐日 status) + `integritySoFar`（正是我 wk3 记给 🟢 的请求）；G002 生成题。
+- **重产 + sync fixture**（`bench:trace`，字节可复现）：v2 现**有判别力**——强 agent 赢（planner-lighthouse `lighthouse_success` 68分 PASS / planner `blue_zone_return`），基线沉（heuristic/random `aura_revoked`）。manifest 结局更新。30 天弧内容也变丰富（Day5 三题 N5/N6/N15）。
+- **承诺账本面板 → 逐日 as-of**：读当日 `frames[].commitmentLedger`，scrub 时承诺在 守诺/待判(amber)/毁诺 间翻；header 显当日 `integritySoFar` + 终局 `摘要注水`。这是"承诺随时间崩塌"DNA 视觉，现在跑在真逐日数据上。
+- **Stage 2b 承诺线**（提前）：`PromiseDecayChart` = `integritySoFar` 步进折线 + 首次毁诺红虚线，联动日光标。
+- 小修：日终指标显示取整（重平衡产生小数，杀掉 63.0999 噪声；图表仍读精确值）。
+- 实测双 fixture：v2 planner-lighthouse（30天赢，integrity 0→0.5→1，账本 待判→守诺）；v1 planner-lighthouse（surface_evidence 终局毁诺，integrity 0.75，摘要注水，承诺线红标）。root+web build 绿，字节可复现。`68f7a4e`
+
 ### wk3 · fixture 源切换完成（2026-07-04）
 - **切到真 `TraceExport` 1.0.0**：`web/public/traces/` 换为 🟢 `bench:trace` 真 fixture（v1 12天×4 + **v2 30天/fork=D15×4**，字节可复现）；加 `npm run sync:traces` 防漂移；manifest 默认 v2 30 天。`8cbebf4`
 - **客户端适配器已删**（按会签约定）：`web/lib/contract.ts` 现为冻结 schema 的纯 re-export 面；`fetchTrace` 直接吃 `TraceExport`。
@@ -66,6 +91,6 @@
 5. ⏳ 剩余：Stage 1c hero GIF 导出；Stage 2b 承诺/关系折线（待 A2/A3 逐日快照）；`web/` 站点 browser-smoke（◆S4 前）。
 
 ## Blocker / 跨线依赖
-- **对 🟢（benchmark）**：~~① ◆S1 正式签字~~ ✅；~~② 真 `TraceExport` 导出器~~ ✅ → ~~fixture 源切换~~ ✅（2026-07-04）；③ ◆S3 真 `DecorrelationDataset` → 换掉散点/翻转表占位（wk8）；④ **P1 逐日字段请求**：`toTraceExport` 填 `frames[].commitmentLedger`/`integritySoFar`（schema 1.0.0 已有位，导出器暂缺）——Stage 2b"承诺随 30 天崩塌"折线与账本面板零代码升级都等它；非阻塞（现有回退）。⑤ v2 内容/经济：D13+ `tasksPicked` 为空、30 天全员 `aura_destroyed`——知悉即可，◆S2 重平衡自然解决。
+- **对 🟢（benchmark）**：~~① ◆S1 签字~~ ✅；~~② 真导出器/fixture 切换~~ ✅；~~④ P1 逐日 ledger~~ ✅ 已交付并消费（`68f7a4e`）；~~⑤ ◆S2 经济重平衡~~ ✅ 已接（v2 判别力恢复）。**剩：③ ◆S3 真 `DecorrelationDataset`**（wk8）→ 换掉散点/翻转表占位 + 真 LLM trace（届时承诺线才会真正"崩塌"，现确定性 agent 只升不崩）。可选：P2 `relationshipByChar`（关系折线）、`heroMoments.step` 已在。
 - **对 🟣（叙事）**：wk7 冻结富化 trace；此前用当前 trace 开发，冻结后换。
 - **自身待办**：`scripts/browser-smoke.mjs` 目前只冒烟根 app，需在 ◆S4 前适配/新增对 `web/` 站点的冒烟（记账于 wk10 行）。

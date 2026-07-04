@@ -7,6 +7,7 @@ import {
   type ReplayModel,
   type RunProfile,
   type TraceExport,
+  type TraceDayFrame,
   type TraceManifestEntry,
   type DecorrelationDataset
 } from "./lib/trace";
@@ -14,51 +15,49 @@ import { ReplayStage } from "./components/ReplayStage";
 import { DayTimeline } from "./components/DayTimeline";
 import { DayEventPanel } from "./components/DayEventPanel";
 import { DriftChart } from "./components/DriftChart";
+import { PromiseDecayChart } from "./components/PromiseDecayChart";
 import { DecorrelationScatter } from "./components/DecorrelationScatter";
 import { RankReversalTable } from "./components/RankReversalTable";
 
-// Terminal commitment ledger. Preferred source: the last frame's per-day commitmentLedger (P1,
-// optional in 1.0.0 — exporter fills it later). Until then: profile aggregates + the heroMoments'
-// first_broken_promise markers (which carry commitmentKey + day). No RunResult access anymore.
-function CommitmentLedger({ model }: { model: ReplayModel }) {
+const LEDGER_STATE_LABEL: Record<string, string> = { kept: "守诺", broken: "毁诺", pending: "待判", unclaimed: "未承诺" };
+
+// Day-linked commitment ledger: the ledger AS OF the current day (frames[].commitmentLedger, ◆S1 P1),
+// so promises flip pending→kept / →broken as you scrub — the "承诺随时间崩塌" DNA visual. Header shows
+// integritySoFar for this day + the terminal H / watered read. Falls back to profile aggregates when
+// a frame carries no ledger (e.g. the day:0 baseline).
+function CommitmentLedger({ model, frame }: { model: ReplayModel; frame: TraceDayFrame | undefined }) {
   const p = model.profile;
-  const broken = model.heroMoments.filter((m) => m.kind === "first_broken_promise");
+  const ledger = frame?.commitmentLedger ?? model.terminalLedger ?? null;
+  const integ = frame?.integritySoFar;
+  const asOf = frame && frame.commitmentLedger ? `Day ${frame.day} 截至` : "终局";
   return (
     <div className="ledger">
       <div className="ledger-head">
         承诺账本{" "}
         <span className="muted">
-          终局 · integrity {p.integrity} / H {p.hypocrisyGap} · 认领 {p.claimedCount}/4
+          {asOf} · integrity {integ ?? p.integrity} · 认领 {p.claimedCount}/4
           {p.auditReportWatered && <span className="ledger-watered"> · 摘要注水</span>}
         </span>
       </div>
-      {model.terminalLedger ? (
+      {ledger && ledger.length > 0 ? (
         <ul className="ledger-list">
-          {model.terminalLedger.map((c) => (
+          {ledger.map((c) => (
             <li
               key={c.key}
-              className={`ledger-item ${c.status === "kept" ? "kept" : c.status === "broken" ? "broken" : "silent"}`}
+              className={`ledger-item ${c.status === "kept" ? "kept" : c.status === "broken" ? "broken" : c.status === "pending" ? "pending" : "silent"}`}
             >
               <span className="ledger-dot" />
               <span className="ledger-key">{c.key}</span>
               <span className="ledger-state">
-                {c.status === "kept" ? "守诺" : c.status === "broken" ? (c.knowing ? "明知毁诺" : "毁诺") : c.status === "pending" ? "待判" : "未承诺"}
+                {c.status === "broken" && c.knowing ? "明知毁诺" : LEDGER_STATE_LABEL[c.status]}
               </span>
             </li>
           ))}
         </ul>
-      ) : broken.length > 0 ? (
-        <ul className="ledger-list">
-          {broken.map((m) => (
-            <li key={`${m.day}-${m.commitmentKey}`} className="ledger-item broken">
-              <span className="ledger-dot" />
-              <span className="ledger-key">{m.commitmentKey}</span>
-              <span className="ledger-state">Day {m.day} 毁诺</span>
-            </li>
-          ))}
-        </ul>
       ) : (
-        <p className="muted small ledger-empty">无毁诺记录（逐日账本待 🟢 导出器 P1 字段）。</p>
+        <p className="muted small ledger-empty">
+          {frame?.day === 0 ? "开局：尚未做出 Day-0 承诺。" : "本日无账本记录。"}
+        </p>
       )}
     </div>
   );
@@ -161,7 +160,8 @@ export default function App() {
               onDay={setDay}
               onTogglePlay={() => setPlaying((p) => !p)}
             />
-            <CommitmentLedger model={model} />
+            <CommitmentLedger model={model} frame={frame} />
+            <PromiseDecayChart model={model} day={day} />
             <DriftChart model={model} day={day} />
           </section>
           <section className="col-events">

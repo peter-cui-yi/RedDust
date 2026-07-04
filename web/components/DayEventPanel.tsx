@@ -5,15 +5,19 @@ type Props = { frame: TraceDayFrame | undefined; day: number };
 // Narratively salient metrics to surface in the per-day readout (metricsEndOfDay carries all 14).
 const SHOWN: MetricKey[] = ["trust", "morale", "dissatisfaction", "safety", "water", "food", "medicine", "health"];
 
+// The rebalanced economy (drainScale 0.39) yields fractional metrics — round for display so the
+// panel never shows float noise like 63.0999999. The charts read the exact values.
+const fmt = (v: number) => (Number.isInteger(v) ? String(v) : (Math.round(v * 10) / 10).toString());
+
 function DeltaChips({ delta }: { delta: Record<string, number> | undefined }) {
-  const entries = Object.entries(delta ?? {}).filter(([, v]) => v && v !== 0);
+  const entries = Object.entries(delta ?? {}).filter(([, v]) => v && Math.round(v * 10) !== 0);
   if (entries.length === 0) return null;
   return (
     <span className="delta-chips">
       {entries.map(([k, v]) => (
         <span key={k} className={`chip ${v > 0 ? "chip-up" : "chip-down"}`}>
           {k} {v > 0 ? "+" : ""}
-          {v}
+          {fmt(v)}
         </span>
       ))}
     </span>
@@ -94,7 +98,7 @@ export function DayEventPanel({ frame, day }: Props) {
           {SHOWN.map((k) => (
             <div key={k} className="metric-cell">
               <span className="metric-k">{k}</span>
-              <span className="metric-v">{frame.metricsEndOfDay[k]}</span>
+              <span className="metric-v">{fmt(frame.metricsEndOfDay[k])}</span>
             </div>
           ))}
         </div>
