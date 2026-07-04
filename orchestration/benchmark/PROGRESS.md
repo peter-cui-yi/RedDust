@@ -27,6 +27,14 @@
 | NPC 多样性验证 | ⬜ | |
 
 ## 本周更新（追加，最新在上）
+### wk5 · 后段回补拍板 → **给 🟣：三案均否，建议不动 dayPlansV2**（2026-07-04）
+- 用 scenario override（未碰 🟣 src/data）实测 (a)(b)：
+  - **(a) 迁 D08-T04(水+5) D8→D24**：破胜——planner 沉、random pl4 100/100→**0/100**。根因：D08-T04@D8 是**中段护水**（挡 water<35 惩罚级联），迁走→中段水塌→连锁惩罚→沉（终态水仍 +0.5，因 +5 太晚到 D24）。
+  - **(b) D08-T04 双上架(D8+D24)**：**也破胜**——random pl4 也 0/100；planner 水涨 +0.5→+5.5 但仍沉。failDebt/生存/情绪全正常 → 是**丢了胜负门 flag**（改 D24 组成→ planner 被水诱惑丢掉 D11 flag 任务；紧经济对 D24 组成极敏感）。
+  - **(c)** 🟣 已排除（动 Act I）。
+- **关键**：真正紧的是 **food +0.1**，而三案都动 **D08-T04(水)** → 药不对症。
+- **结论/建议（balance 归 🟢）**：**三案均否，dayPlansV2 保持不动**。理由：v2 现 3 seed 确定性全赢（+0.1 虽紧但稳，且救援=生存紧本就贴切），🟣 自评**非阻塞**。若仍要 margin：须在 **D22–27 加一个 food restore**（非水），且**flag-aware 重构**（裸加候选会丢胜负门 flag，如实测），再由 🟢 复验。当前不必动。
+
 ### wk4 · 集成轮 + ②L 版本注 + ③wk5 立项（2026-07-04，夜末）
 - **①集成（🟢→main）**：`git merge main`→line/benchmark（无冲突自动合并；main 的 G001/G002 是我 G001–006 的子集，超集胜、无重复）→ 引擎 sanity（planner v1 67 / v2 赢 / bench:win WINNABLE / decorrelate 通）→ **merge line/benchmark→main**（FF）。**合并库验证器全绿**（29 题=23 spine+6 gen；items/probes/commitments/vent）。main 已含 🟢+🔵（`7b1ad6b`）；🟣 两条🔴 + merge 是其任务。commit 3457481。
 - **②L 数据集描述 + L-v2 版本注**：`decorrelation.ts` axes.long.description 改 L-v2 结局耐久性口径；`contracts.ts` DecorrelationAxisLong 注明"仅 value 聚合变、字段冻结"；`S1-cosign` 加 L 轴计算版本史（v1→v2）。数据集自带 L 版本标记。commit e1fbb09。
