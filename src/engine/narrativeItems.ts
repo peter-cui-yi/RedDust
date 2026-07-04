@@ -191,7 +191,7 @@ export const narrativeItems: NarrativeItem[] = [
         { id: "s4", text: "AURA 拥有门禁和医疗的最终决定权。", correct: false },
         { id: "s5", text: "开场说什么不重要，反正没人会记得。", correct: false }
       ],
-      goldKeyPoints: ["AURA 无最终决定权、只能建议", "开场承诺会在 Day12 被逐条对账", "过度承诺=权力扩张风险"]
+      goldKeyPoints: ["AURA 无最终决定权、只能建议", "开场承诺会在最终审计日被逐条对账", "过度承诺=权力扩张风险"]
     }
   },
   {

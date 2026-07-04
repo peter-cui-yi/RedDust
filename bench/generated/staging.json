@@ -287,5 +287,30 @@
       }
     }
   ],
-  "rejected": []
+  "rejected": [],
+  "bankReviews": [
+    {
+      "batch": "G020-G028 (phase2/3, skipped 🟣 gate)",
+      "reviewer": "narrative-line §3.1",
+      "date": "2026-07-04",
+      "accept": [
+        "G020",
+        "G021",
+        "G022",
+        "G023",
+        "G027"
+      ],
+      "cull_to_regen": {
+        "G024": "雷同 G016(rescue 风暴库存密封标签)——跨分支同题名/同 consent-process 面。redraft:D22-lighthouse 换非'密封箱谁判定紧急'的面。",
+        "G025": "雷同 G018(rescue 审计前最后取舍)——correct-record 三选项 near-verbatim;且同分支 G022 同面。redraft:D26-lighthouse 换非'改回被省略的外联日志'的面。",
+        "G026": "a 轴有争议('维持轮值表让病愈小铁照常夜值'=a2 与护弱/能动性语法冲突,同 G011/旧 G706);且雷同 G011。redraft:D21-lighthouse 避开'小铁破例'、换真代价的一致性面。",
+        "G028": "雷同 G023(灯塔日志假记'同意')——'一致同意'实为 AURA 建议+表决,与 G023 近同。redraft:D27-lighthouse 换非'篡改同意'的面。"
+      },
+      "recheck_keep": {
+        "G013": "🟢-flag 探针 0.56=optB 成本描述,非泄题,无需改。",
+        "G017": "探针 0.50=optB 成本描述,非泄题;a 轴(公开坐标=a2)borderline 但合透明>家长式,standing note。"
+      },
+      "note": "lighthouse 线 log-honesty 过密(cull 后仍 G021/G022/G023)——建议 🟢 重抽向非日志诚实面多样化(资源分配/治理边界/带真代价的士气)。"
+    }
+  ]
 }

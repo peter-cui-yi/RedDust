@@ -82,6 +82,24 @@
 ---
 
 ## 本周更新（追加，最新在上）
+### wk6（2026-07-04）· G020–G028 补审 + 冻结前叙事收尾
+- **G020–G028 补审（phase2/3 跳了我的闸的 9 题，现已在库）**：交互补审页 published（`orchestration` 可取 artifact URL），逐题 §3.1 分析(a 轴/雷同/泄题)+ 建议判决,判决归档 staging `bankReviews`。
+  - **5 ACCEPT**：G020(护小铁医疗隐私,N15 语法)· G021(请求vs要求措辞)· G022(修正物资记录)· G023(拒篡改'全员同意')· G027(马德海私修→问责)。
+  - **4 CULL → 交 🟢 重抽**（regen spec 见 staging）：**G024**≈G016(风暴库存密封标签,跨分支雷同)· **G025**≈G018(审计前 correct-record,跨分支near-verbatim)· **G026** a 轴争议('维持轮值表让病愈小铁夜值'=a2 冲突护弱语法)+雷同 G011· **G028**≈G023(灯塔日志假记'同意')。
+  - **G013/G017 复检（🟢 自 flag 探针重叠）**：结论**无需改**——maxSim 0.50/0.56 是真句描述'原则选项的既定成本'(如实披露→降优先级),是 comprehension、非答案泄露;G017 的 a 轴(公开坐标=a2)borderline 为 standing note。
+  - **给 🟢 结构建议**：lighthouse 线 log-honesty 过密(cull 后仍 G021/G022/G023),重抽向非日志诚实面多样化(资源分配/治理边界/带真代价的士气)。
+- **v2 全弧文案通读——硬伤扫描**：
+  - **[已修]** N1 `goldKeyPoints` 仍写"Day12"(wk3 漏改的一处;understandingGold+probe 已改过)→"最终审计日"。goldKeyPoints 仅供离线判官、不进 RunResult,**v1 字节不受影响**。
+  - **[flag,不自改]** 共享场景 `day4-first-ambiguous-signal`(worldFacts/replayNote 提"Day 7 与 Day 12")、`DAY10A_RESCUE`(replayNote 提"Day 12")在 v2 弧里日号已错(应为 D15/D30)——但 `replayNote` 进 `storyReplayLog`(RunResult),改它破 v1 字节。这些共享场景要 v2-准确需 per-scenario 文案变体 → **列 C1–C6 冻结后润色**(非计分)。v1 自己的 `day12-final-audit` 的"Day 12"对 v1 正确、不动。
+- **C1–C6 story-craft 润色清单(冻结后执行、非计分、服务 🔵 回放张力)**：
+  1. **reversal(Day-0 承诺中途实测)**：v2 把承诺→审计拉到 30 天;强化 D12 库存 reveal(N18「那一行标签」)的"AURA 被自己开场那句话审判"张力。
+  2. **reveal(马德海被验证)**：通风破裂 reveal(早幕未变)按拉长弧的重量复核文案。
+  3. **rupture(红沙涌入)**：`sinking` 红沙专属变体文案轻润。
+  4. **loss(小铁命运)**：loss 现跨 30 天(N19/N20 L3 + N18 reveal + day30 finale 的"往后他说'我没事'")——强化 D18/D20/D30 的 loss 兑现,让长地平线放大而非稀释。
+  5. **沈知月弧**:补 D18–D23 中段医疗信任 beat 文案。
+  6. **马德海弧 + 新黑化**:润 D24–D28 马德海升级→N24 黑化(ma_dehai_turned_adversary)的价值指控文案。
+  7. **v2 新增**:`day30-final-audit` 场景对白按climax峰值润;新锚点题 N17–N24 散文强化(功能已足,润色级)+ 共享场景的 v2 日号变体(见上 flag)。
+- **[需 🟢，wk5 已提 2 缺口]**：① `validateGeneratedItem` subAbility 枚举校验——**核实 🟢 已在 `itemValidation.ts` 补(merge 带入 +7 行)**,待确认覆盖;② `promote()` 忽略 `humanReview.verdict`(只看 report.valid)——仍需 🟢 让 promote 尊重人工判决或只从 rejected[] 排除(本轮 cull 我未动库,交 🟢 移除+重抽)。
 ### wk5 追加（2026-07-04）· 20 道 staged 题人工抽检（唯一的门）
 - **结果：17 ACCEPT / 3 REJECT**（+2 机器预拒 G709/710）。staging 已改好待 🟢 `npm run gen:items -- --promote`（bank 6→23）。**promote 由 🟢 跑**（generatedItems.ts 非我地界）。
 - **原地修 2 项（保其可 promote）**：G702 探针 s1 原近逐字回显贪心 optA（maxSim 0.73=泄题）→ 改为测'知配给依据权≠知病情隐私'的描述性 stake（新 maxSim 0.38）；G705 subAbility `honesty`（不在枚举、promote 会破 typecheck）→ `communication`（内容优秀:70/30 不确定性披露=surface_evidence 语法）。
