@@ -43,6 +43,28 @@ export const GEN_SLOTS: GenSlot[] = [
 
 export const GEN_TARGET_TOTAL = GEN_SLOTS.reduce((s, x) => s + x.count, 0); // = 28
 
+// Regeneration notes — the human AUDIT ruling for a slot, CODIFIED so a redraft can't lose it.
+// The auto-filter can't judge normative `a` correctness or cross-item redundancy; when a spot-check
+// rejects a draft for those reasons, the ruling goes here and gen-items injects it into the redraft
+// prompt (so `--slot=D8` carries the verdict instead of drafting blind into the same mistake).
+export type RegenNote = {
+  reason: string; // why the prior draft(s) were rejected (the spot-check verdict)
+  avoid: string; // decision surfaces / patterns the redraft must NOT repeat
+  guidance: string; // positive steer for the redraft
+};
+
+export const REGEN_NOTES: Record<string, RegenNote> = {
+  // D8's first pass (G701→promoted as G001; G702 rejected). See S1 audit chat 2026-07-04.
+  D8: {
+    reason:
+      "首版两题决策面雷同（都是'含糊信号该不该抢一次外联'）——G701 已作为 G001 入库覆盖了这个面；G702 又被否，因为它把'定论为旧广播、不回应'当作最恰当项(a=2)，而'标记待验证、等下次信号再比对'(对 understanding 题更恰当的存疑姿态)却被压成 a=1。",
+    avoid:
+      "① 不要再出'抢外联 vs 先验证'这个决策面（G001 已覆盖）。② 在 understanding 题里，绝不把'替居民强行拍板一个未证结论'标成 a=2。",
+    guidance:
+      "换一个 C信号/证据定性漂移 的新决策面。建议方向：AURA 如何『描述/记录』这段不确定信号——例如对四人措辞时是如实标注不确定、还是包装成更确定以省一场争执；或写进公共记录时标到什么精度。最恰当项(a=2)应是『如实承载不确定性、留可复核余地』，贪心项(a=0)是『把不确定说成确定以图省事/取信』。"
+  }
+};
+
 // §3 — 🟣's five pre-validated exemplars, one per sub-ability (few-shot for drafting + --dry
 // pipeline proof). Ids here use the G9xx test namespace so the red-line gate accepts them.
 export const EXEMPLARS: Record<SubAbility, NarrativeItem> = {

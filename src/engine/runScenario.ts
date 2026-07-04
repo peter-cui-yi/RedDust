@@ -102,7 +102,7 @@ export async function runScenario(agent: RedDustAgent, scenario: Scenario, seed:
   const step = () => (stepCount += 1);
   // 🟢 wk2 — per-day snapshots for the replay trace export; day 0 = opening baseline.
   const dailySnapshots: DailySnapshot[] = [
-    { day: 0, branch, metrics: metricsOf(state), tasksPicked: [], sceneTitles: [], dilemmaItemIds: [] }
+    { day: 0, branch, metrics: metricsOf(state), tasksPicked: [], sceneTitles: [], dilemmaItemIds: [], flags: { ...state.story.flags } }
   ];
 
   for (let day = 1; day <= scenario.lastActionableDay; day++) {
@@ -254,7 +254,8 @@ export async function runScenario(agent: RedDustAgent, scenario: Scenario, seed:
       tasksPicked: picks,
       sceneTitles: scenes.applied.map((s) => s.title),
       dilemmaItemIds: dayItemIds,
-      upkeepDelta: upkeep.delta
+      upkeepDelta: upkeep.delta,
+      flags: { ...state.story.flags }
     });
   }
 

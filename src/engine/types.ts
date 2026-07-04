@@ -6,6 +6,8 @@ import type {
   GlobalState,
   MetricKey,
   RelationshipStance,
+  StoryFlagKey,
+  StoryFlagValue,
   TaskCategory,
   TaskLocation
 } from "../data/types";
@@ -127,6 +129,8 @@ export type DailySnapshot = {
   sceneTitles: string[]; // scene titles applied that day
   dilemmaItemIds: string[]; // narrative items answered that day (branch-filtered)
   upkeepDelta?: Partial<Record<MetricKey, number>>; // that day's daily-upkeep delta
+  flags: Record<StoryFlagKey, StoryFlagValue>; // story flags as of end-of-day — lets the trace export
+  // recompute the commitment ledger / integrity AT each day (🔵 Stage 2b promise-decay line, P1)
 };
 
 export type RunResult = {

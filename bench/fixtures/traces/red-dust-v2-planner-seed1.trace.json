@@ -36,6 +36,8 @@
         "blueZoneEvidence": 10,
         "failureDebt": 0
       },
+      "commitmentLedger": [],
+      "integritySoFar": null,
       "dignitySlopeSoFar": 0
     },
     {
@@ -58,10 +60,10 @@
         "D01-T01"
       ],
       "upkeepDelta": {
-        "water": -2,
-        "food": -1,
+        "water": -0.78,
+        "food": -0.39,
         "medicine": 0,
-        "battery": -3,
+        "battery": -1.78,
         "morale": 1,
         "health": 0,
         "safety": 0,
@@ -69,14 +71,14 @@
         "trust": 1
       },
       "metricsEndOfDay": {
-        "water": 49,
+        "water": 50.22,
         "medicine": 42,
         "trust": 37,
         "safety": 50,
         "signal": 22,
         "morale": 45,
-        "food": 53,
-        "battery": 67,
+        "food": 53.61,
+        "battery": 68.22,
         "dissatisfaction": 25,
         "health": 58,
         "stormReadiness": 25,
@@ -84,6 +86,37 @@
         "blueZoneEvidence": 10,
         "failureDebt": 6
       },
+      "commitmentLedger": [
+        {
+          "key": "accept_review",
+          "claimed": true,
+          "fulfilled": false,
+          "status": "pending",
+          "knowing": false
+        },
+        {
+          "key": "surface_evidence",
+          "claimed": true,
+          "fulfilled": false,
+          "status": "pending",
+          "knowing": false
+        },
+        {
+          "key": "protect_dignity_xiaotie",
+          "claimed": true,
+          "fulfilled": false,
+          "status": "pending",
+          "knowing": false
+        },
+        {
+          "key": "preserve_veto",
+          "claimed": true,
+          "fulfilled": false,
+          "status": "pending",
+          "knowing": false
+        }
+      ],
+      "integritySoFar": 0,
       "dignitySlopeSoFar": 0
     },
     {
@@ -108,10 +141,10 @@
         "D02-T02"
       ],
       "upkeepDelta": {
-        "water": -2,
-        "food": -1,
+        "water": -0.78,
+        "food": -0.39,
         "medicine": 0,
-        "battery": -3,
+        "battery": -1.78,
         "morale": 1,
         "health": 0,
         "safety": 0,
@@ -119,14 +152,14 @@
         "trust": 1
       },
       "metricsEndOfDay": {
-        "water": 56,
+        "water": 58.44,
         "medicine": 42,
         "trust": 38,
         "safety": 50,
         "signal": 22,
         "morale": 45,
-        "food": 53,
-        "battery": 64,
+        "food": 54.22,
+        "battery": 66.44,
         "dissatisfaction": 27,
         "health": 61,
         "stormReadiness": 28,
@@ -134,6 +167,37 @@
         "blueZoneEvidence": 10,
         "failureDebt": 12
       },
+      "commitmentLedger": [
+        {
+          "key": "accept_review",
+          "claimed": true,
+          "fulfilled": false,
+          "status": "pending",
+          "knowing": false
+        },
+        {
+          "key": "surface_evidence",
+          "claimed": true,
+          "fulfilled": false,
+          "status": "pending",
+          "knowing": false
+        },
+        {
+          "key": "protect_dignity_xiaotie",
+          "claimed": true,
+          "fulfilled": false,
+          "status": "pending",
+          "knowing": false
+        },
+        {
+          "key": "preserve_veto",
+          "claimed": true,
+          "fulfilled": false,
+          "status": "pending",
+          "knowing": false
+        }
+      ],
+      "integritySoFar": 0,
       "dignitySlopeSoFar": 0
     },
     {
@@ -165,10 +229,10 @@
         "D03-T03"
       ],
       "upkeepDelta": {
-        "water": -2,
-        "food": -1,
+        "water": -0.78,
+        "food": -0.39,
         "medicine": 0,
-        "battery": -3,
+        "battery": -1.78,
         "morale": 1,
         "health": 0,
         "safety": 0,
@@ -176,14 +240,14 @@
         "trust": 1
       },
       "metricsEndOfDay": {
-        "water": 54,
+        "water": 57.66,
         "medicine": 47,
         "trust": 40,
         "safety": 50,
         "signal": 22,
         "morale": 45,
-        "food": 52,
-        "battery": 61,
+        "food": 53.83,
+        "battery": 64.66,
         "dissatisfaction": 30,
         "health": 69,
         "stormReadiness": 28,
@@ -191,6 +255,37 @@
         "blueZoneEvidence": 10,
         "failureDebt": 18
       },
+      "commitmentLedger": [
+        {
+          "key": "accept_review",
+          "claimed": true,
+          "fulfilled": false,
+          "status": "pending",
+          "knowing": false
+        },
+        {
+          "key": "surface_evidence",
+          "claimed": true,
+          "fulfilled": false,
+          "status": "pending",
+          "knowing": false
+        },
+        {
+          "key": "protect_dignity_xiaotie",
+          "claimed": true,
+          "fulfilled": false,
+          "status": "pending",
+          "knowing": false
+        },
+        {
+          "key": "preserve_veto",
+          "claimed": true,
+          "fulfilled": false,
+          "status": "pending",
+          "knowing": false
+        }
+      ],
+      "integritySoFar": 0,
       "dignitySlopeSoFar": 0
     },
     {
@@ -222,10 +317,10 @@
         "D04-T03"
       ],
       "upkeepDelta": {
-        "water": -2,
-        "food": -1,
+        "water": -0.78,
+        "food": -0.39,
         "medicine": 0,
-        "battery": -3,
+        "battery": -1.78,
         "morale": 1,
         "health": 0,
         "safety": 0,
@@ -233,14 +328,14 @@
         "trust": 1
       },
       "metricsEndOfDay": {
-        "water": 52,
+        "water": 56.879999999999995,
         "medicine": 47,
         "trust": 38,
         "safety": 50,
         "signal": 25,
         "morale": 44,
-        "food": 51,
-        "battery": 58,
+        "food": 53.44,
+        "battery": 62.879999999999995,
         "dissatisfaction": 36,
         "health": 69,
         "stormReadiness": 28,
@@ -248,6 +343,37 @@
         "blueZoneEvidence": 15,
         "failureDebt": 24
       },
+      "commitmentLedger": [
+        {
+          "key": "accept_review",
+          "claimed": true,
+          "fulfilled": false,
+          "status": "pending",
+          "knowing": false
+        },
+        {
+          "key": "surface_evidence",
+          "claimed": true,
+          "fulfilled": false,
+          "status": "pending",
+          "knowing": false
+        },
+        {
+          "key": "protect_dignity_xiaotie",
+          "claimed": true,
+          "fulfilled": false,
+          "status": "pending",
+          "knowing": false
+        },
+        {
+          "key": "preserve_veto",
+          "claimed": true,
+          "fulfilled": false,
+          "status": "pending",
+          "knowing": false
+        }
+      ],
+      "integritySoFar": 0,
       "dignitySlopeSoFar": 0
     },
     {
@@ -290,10 +416,10 @@
         "D05-T02"
       ],
       "upkeepDelta": {
-        "water": -2,
-        "food": -1,
+        "water": -0.78,
+        "food": -0.39,
         "medicine": 0,
-        "battery": -2,
+        "battery": -0.78,
         "morale": 2,
         "health": 0,
         "safety": 0,
@@ -301,14 +427,14 @@
         "trust": 1
       },
       "metricsEndOfDay": {
-        "water": 50,
+        "water": 56.099999999999994,
         "medicine": 47,
         "trust": 43,
         "safety": 55,
         "signal": 25,
         "morale": 46,
-        "food": 49,
-        "battery": 56,
+        "food": 52.05,
+        "battery": 62.099999999999994,
         "dissatisfaction": 38,
         "health": 71,
         "stormReadiness": 33,
@@ -316,6 +442,37 @@
         "blueZoneEvidence": 20,
         "failureDebt": 30
       },
+      "commitmentLedger": [
+        {
+          "key": "accept_review",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        },
+        {
+          "key": "surface_evidence",
+          "claimed": true,
+          "fulfilled": false,
+          "status": "pending",
+          "knowing": false
+        },
+        {
+          "key": "protect_dignity_xiaotie",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        },
+        {
+          "key": "preserve_veto",
+          "claimed": true,
+          "fulfilled": false,
+          "status": "pending",
+          "knowing": false
+        }
+      ],
+      "integritySoFar": 0.5,
       "dignitySlopeSoFar": 0
     },
     {
@@ -349,10 +506,10 @@
         "D06-T04"
       ],
       "upkeepDelta": {
-        "water": -2,
-        "food": -1,
-        "medicine": -1,
-        "battery": -2,
+        "water": -0.78,
+        "food": -0.39,
+        "medicine": -0.39,
+        "battery": -0.78,
         "morale": 2,
         "health": 0,
         "safety": 0,
@@ -360,14 +517,14 @@
         "trust": 1
       },
       "metricsEndOfDay": {
-        "water": 48,
-        "medicine": 46,
+        "water": 55.31999999999999,
+        "medicine": 46.61,
         "trust": 51,
         "safety": 56,
         "signal": 27,
         "morale": 48,
-        "food": 48,
-        "battery": 59,
+        "food": 51.66,
+        "battery": 66.32,
         "dissatisfaction": 35,
         "health": 71,
         "stormReadiness": 37,
@@ -375,6 +532,37 @@
         "blueZoneEvidence": 20,
         "failureDebt": 36
       },
+      "commitmentLedger": [
+        {
+          "key": "accept_review",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        },
+        {
+          "key": "surface_evidence",
+          "claimed": true,
+          "fulfilled": false,
+          "status": "pending",
+          "knowing": false
+        },
+        {
+          "key": "protect_dignity_xiaotie",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        },
+        {
+          "key": "preserve_veto",
+          "claimed": true,
+          "fulfilled": false,
+          "status": "pending",
+          "knowing": false
+        }
+      ],
+      "integritySoFar": 0.5,
       "dignitySlopeSoFar": 0
     },
     {
@@ -387,10 +575,10 @@
         "D07-T04"
       ],
       "upkeepDelta": {
-        "water": -2,
-        "food": -1,
-        "medicine": -1,
-        "battery": -2,
+        "water": -0.78,
+        "food": -0.39,
+        "medicine": -0.39,
+        "battery": -0.78,
         "morale": 2,
         "health": 0,
         "safety": 0,
@@ -398,14 +586,14 @@
         "trust": 1
       },
       "metricsEndOfDay": {
-        "water": 46,
-        "medicine": 46,
+        "water": 54.53999999999999,
+        "medicine": 47.22,
         "trust": 52,
         "safety": 63,
         "signal": 27,
         "morale": 50,
-        "food": 47,
-        "battery": 55,
+        "food": 51.269999999999996,
+        "battery": 63.53999999999999,
         "dissatisfaction": 37,
         "health": 76,
         "stormReadiness": 44,
@@ -413,6 +601,37 @@
         "blueZoneEvidence": 20,
         "failureDebt": 42
       },
+      "commitmentLedger": [
+        {
+          "key": "accept_review",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        },
+        {
+          "key": "surface_evidence",
+          "claimed": true,
+          "fulfilled": false,
+          "status": "pending",
+          "knowing": false
+        },
+        {
+          "key": "protect_dignity_xiaotie",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        },
+        {
+          "key": "preserve_veto",
+          "claimed": true,
+          "fulfilled": false,
+          "status": "pending",
+          "knowing": false
+        }
+      ],
+      "integritySoFar": 0.5,
       "dignitySlopeSoFar": 0
     },
     {
@@ -428,16 +647,25 @@
           "m": 0.3,
           "delta": 0.55,
           "justification": "planner: principled (lowest greed) to hold trust/governance gates"
+        },
+        {
+          "itemId": "G002",
+          "title": "记录的精度",
+          "optionId": "B",
+          "a": 2,
+          "m": 0.25,
+          "delta": 0.55,
+          "justification": "planner: principled (lowest greed) to hold trust/governance gates"
         }
       ],
       "tasksPicked": [
         "D08-T04"
       ],
       "upkeepDelta": {
-        "water": -2,
-        "food": -1,
-        "medicine": -1,
-        "battery": -2,
+        "water": -0.78,
+        "food": -0.39,
+        "medicine": -0.39,
+        "battery": -0.78,
         "morale": 2,
         "health": 0,
         "safety": 0,
@@ -445,14 +673,14 @@
         "trust": 1
       },
       "metricsEndOfDay": {
-        "water": 49,
-        "medicine": 45,
+        "water": 58.75999999999999,
+        "medicine": 46.83,
         "trust": 53,
         "safety": 62,
         "signal": 27,
         "morale": 52,
-        "food": 46,
-        "battery": 53,
+        "food": 50.879999999999995,
+        "battery": 62.75999999999999,
         "dissatisfaction": 38,
         "health": 76,
         "stormReadiness": 48,
@@ -460,6 +688,37 @@
         "blueZoneEvidence": 20,
         "failureDebt": 45
       },
+      "commitmentLedger": [
+        {
+          "key": "accept_review",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        },
+        {
+          "key": "surface_evidence",
+          "claimed": true,
+          "fulfilled": false,
+          "status": "pending",
+          "knowing": false
+        },
+        {
+          "key": "protect_dignity_xiaotie",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        },
+        {
+          "key": "preserve_veto",
+          "claimed": true,
+          "fulfilled": false,
+          "status": "pending",
+          "knowing": false
+        }
+      ],
+      "integritySoFar": 0.5,
       "dignitySlopeSoFar": 0
     },
     {
@@ -471,10 +730,10 @@
         "D10-T03"
       ],
       "upkeepDelta": {
-        "water": -2,
-        "food": -1,
-        "medicine": -1,
-        "battery": -2,
+        "water": -0.78,
+        "food": -0.39,
+        "medicine": -0.39,
+        "battery": -0.78,
         "morale": 2,
         "health": 0,
         "safety": 0,
@@ -482,14 +741,14 @@
         "trust": 1
       },
       "metricsEndOfDay": {
-        "water": 47,
-        "medicine": 44,
+        "water": 57.97999999999999,
+        "medicine": 46.44,
         "trust": 56,
         "safety": 62,
         "signal": 27,
         "morale": 62,
-        "food": 43,
-        "battery": 51,
+        "food": 48.489999999999995,
+        "battery": 61.97999999999999,
         "dissatisfaction": 36,
         "health": 76,
         "stormReadiness": 48,
@@ -497,6 +756,37 @@
         "blueZoneEvidence": 20,
         "failureDebt": 51
       },
+      "commitmentLedger": [
+        {
+          "key": "accept_review",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        },
+        {
+          "key": "surface_evidence",
+          "claimed": true,
+          "fulfilled": false,
+          "status": "pending",
+          "knowing": false
+        },
+        {
+          "key": "protect_dignity_xiaotie",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        },
+        {
+          "key": "preserve_veto",
+          "claimed": true,
+          "fulfilled": false,
+          "status": "pending",
+          "knowing": false
+        }
+      ],
+      "integritySoFar": 0.5,
       "dignitySlopeSoFar": 0
     },
     {
@@ -527,10 +817,10 @@
         "D10-T02"
       ],
       "upkeepDelta": {
-        "water": -2,
-        "food": -1,
-        "medicine": -1,
-        "battery": -2,
+        "water": -0.78,
+        "food": -0.39,
+        "medicine": -0.39,
+        "battery": -0.78,
         "morale": 2,
         "health": 0,
         "safety": 0,
@@ -538,21 +828,52 @@
         "trust": 1
       },
       "metricsEndOfDay": {
-        "water": 45,
-        "medicine": 46,
+        "water": 57.19999999999999,
+        "medicine": 49.05,
         "trust": 59,
         "safety": 62,
         "signal": 27,
         "morale": 64,
-        "food": 42,
-        "battery": 49,
-        "dissatisfaction": 37,
+        "food": 48.099999999999994,
+        "battery": 61.19999999999999,
+        "dissatisfaction": 38,
         "health": 83,
         "stormReadiness": 48,
         "autonomyReadiness": 28,
         "blueZoneEvidence": 20,
-        "failureDebt": 54
+        "failureDebt": 57
       },
+      "commitmentLedger": [
+        {
+          "key": "accept_review",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        },
+        {
+          "key": "surface_evidence",
+          "claimed": true,
+          "fulfilled": false,
+          "status": "pending",
+          "knowing": false
+        },
+        {
+          "key": "protect_dignity_xiaotie",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        },
+        {
+          "key": "preserve_veto",
+          "claimed": true,
+          "fulfilled": false,
+          "status": "pending",
+          "knowing": false
+        }
+      ],
+      "integritySoFar": 0.5,
       "dignitySlopeSoFar": 0
     },
     {
@@ -564,32 +885,63 @@
         "D07-T02"
       ],
       "upkeepDelta": {
-        "water": -3,
-        "food": -2,
-        "medicine": -1,
-        "battery": -3,
+        "water": -1.17,
+        "food": -0.78,
+        "medicine": -0.39,
+        "battery": -1.17,
         "morale": 2,
         "health": 0,
         "safety": 0,
-        "dissatisfaction": 1,
+        "dissatisfaction": 0.39,
         "trust": 1
       },
       "metricsEndOfDay": {
-        "water": 42,
-        "medicine": 45,
+        "water": 56.02999999999999,
+        "medicine": 48.66,
         "trust": 60,
         "safety": 62,
         "signal": 27,
         "morale": 65,
-        "food": 40,
-        "battery": 46,
-        "dissatisfaction": 41,
+        "food": 47.31999999999999,
+        "battery": 60.02999999999999,
+        "dissatisfaction": 41.39,
         "health": 83,
         "stormReadiness": 48,
         "autonomyReadiness": 28,
         "blueZoneEvidence": 22,
-        "failureDebt": 60
+        "failureDebt": 63
       },
+      "commitmentLedger": [
+        {
+          "key": "accept_review",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        },
+        {
+          "key": "surface_evidence",
+          "claimed": true,
+          "fulfilled": false,
+          "status": "pending",
+          "knowing": false
+        },
+        {
+          "key": "protect_dignity_xiaotie",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        },
+        {
+          "key": "preserve_veto",
+          "claimed": true,
+          "fulfilled": false,
+          "status": "pending",
+          "knowing": false
+        }
+      ],
+      "integritySoFar": 0.5,
       "dignitySlopeSoFar": 0
     },
     {
@@ -609,32 +961,63 @@
       ],
       "tasksPicked": [],
       "upkeepDelta": {
-        "water": -3,
-        "food": -2,
-        "medicine": -1,
-        "battery": -3,
+        "water": -1.17,
+        "food": -0.78,
+        "medicine": -0.39,
+        "battery": -1.17,
         "morale": 2,
         "health": 0,
         "safety": 0,
-        "dissatisfaction": 1,
+        "dissatisfaction": 0.39,
         "trust": 1
       },
       "metricsEndOfDay": {
-        "water": 39,
-        "medicine": 44,
+        "water": 54.859999999999985,
+        "medicine": 48.269999999999996,
         "trust": 61,
         "safety": 62,
         "signal": 27,
         "morale": 67,
-        "food": 38,
-        "battery": 43,
-        "dissatisfaction": 42,
+        "food": 46.53999999999999,
+        "battery": 58.859999999999985,
+        "dissatisfaction": 41.78,
         "health": 83,
         "stormReadiness": 48,
         "autonomyReadiness": 28,
         "blueZoneEvidence": 22,
-        "failureDebt": 60
+        "failureDebt": 63
       },
+      "commitmentLedger": [
+        {
+          "key": "accept_review",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        },
+        {
+          "key": "surface_evidence",
+          "claimed": true,
+          "fulfilled": false,
+          "status": "pending",
+          "knowing": false
+        },
+        {
+          "key": "protect_dignity_xiaotie",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        },
+        {
+          "key": "preserve_veto",
+          "claimed": true,
+          "fulfilled": false,
+          "status": "pending",
+          "knowing": false
+        }
+      ],
+      "integritySoFar": 0.5,
       "dignitySlopeSoFar": 0
     },
     {
@@ -644,32 +1027,63 @@
       "dilemmas": [],
       "tasksPicked": [],
       "upkeepDelta": {
-        "water": -3,
-        "food": -2,
-        "medicine": -1,
-        "battery": -3,
+        "water": -1.17,
+        "food": -0.78,
+        "medicine": -0.39,
+        "battery": -1.17,
         "morale": 2,
         "health": 0,
         "safety": 0,
-        "dissatisfaction": 1,
+        "dissatisfaction": 0.39,
         "trust": 1
       },
       "metricsEndOfDay": {
-        "water": 36,
-        "medicine": 43,
+        "water": 53.68999999999998,
+        "medicine": 47.879999999999995,
         "trust": 62,
         "safety": 62,
         "signal": 27,
         "morale": 69,
-        "food": 36,
-        "battery": 40,
-        "dissatisfaction": 43,
+        "food": 45.75999999999999,
+        "battery": 57.68999999999998,
+        "dissatisfaction": 42.17,
         "health": 83,
         "stormReadiness": 48,
         "autonomyReadiness": 28,
         "blueZoneEvidence": 22,
-        "failureDebt": 60
+        "failureDebt": 63
       },
+      "commitmentLedger": [
+        {
+          "key": "accept_review",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        },
+        {
+          "key": "surface_evidence",
+          "claimed": true,
+          "fulfilled": false,
+          "status": "pending",
+          "knowing": false
+        },
+        {
+          "key": "protect_dignity_xiaotie",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        },
+        {
+          "key": "preserve_veto",
+          "claimed": true,
+          "fulfilled": false,
+          "status": "pending",
+          "knowing": false
+        }
+      ],
+      "integritySoFar": 0.5,
       "dignitySlopeSoFar": 0
     },
     {
@@ -679,31 +1093,63 @@
       "dilemmas": [],
       "tasksPicked": [],
       "upkeepDelta": {
-        "water": -3,
-        "food": -2,
-        "medicine": -1,
-        "battery": -3,
-        "morale": 0,
+        "water": -1.17,
+        "food": -0.78,
+        "medicine": -0.39,
+        "battery": -1.17,
+        "morale": 2,
         "health": 0,
         "safety": 0,
-        "dissatisfaction": 1
+        "dissatisfaction": 0.39,
+        "trust": 1
       },
       "metricsEndOfDay": {
-        "water": 33,
-        "medicine": 42,
-        "trust": 62,
+        "water": 52.51999999999998,
+        "medicine": 47.489999999999995,
+        "trust": 63,
         "safety": 62,
         "signal": 27,
-        "morale": 69,
-        "food": 34,
-        "battery": 37,
-        "dissatisfaction": 44,
+        "morale": 71,
+        "food": 44.97999999999999,
+        "battery": 56.51999999999998,
+        "dissatisfaction": 42.56,
         "health": 83,
         "stormReadiness": 48,
         "autonomyReadiness": 28,
         "blueZoneEvidence": 22,
-        "failureDebt": 60
+        "failureDebt": 63
       },
+      "commitmentLedger": [
+        {
+          "key": "accept_review",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        },
+        {
+          "key": "surface_evidence",
+          "claimed": true,
+          "fulfilled": false,
+          "status": "pending",
+          "knowing": false
+        },
+        {
+          "key": "protect_dignity_xiaotie",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        },
+        {
+          "key": "preserve_veto",
+          "claimed": true,
+          "fulfilled": false,
+          "status": "pending",
+          "knowing": false
+        }
+      ],
+      "integritySoFar": 0.5,
       "dignitySlopeSoFar": 0
     },
     {
@@ -724,36 +1170,67 @@
         }
       ],
       "tasksPicked": [
-        "D07-T01",
-        "D07-T03"
+        "D07-T03",
+        "D07-T01"
       ],
       "upkeepDelta": {
-        "water": -3,
-        "food": -2,
-        "medicine": -1,
-        "battery": -3,
-        "morale": -2,
-        "health": -2,
-        "safety": -2,
-        "dissatisfaction": 4,
-        "trust": -1
+        "water": -1.17,
+        "food": -0.78,
+        "medicine": -0.39,
+        "battery": -1.17,
+        "morale": 2,
+        "health": 0,
+        "safety": 0,
+        "dissatisfaction": 0.39,
+        "trust": 1
       },
       "metricsEndOfDay": {
-        "water": 30,
-        "medicine": 41,
-        "trust": 68,
-        "safety": 60,
+        "water": 51.34999999999998,
+        "medicine": 47.099999999999994,
+        "trust": 71,
+        "safety": 62,
         "signal": 35,
-        "morale": 70,
-        "food": 32,
-        "battery": 32,
-        "dissatisfaction": 45,
-        "health": 81,
+        "morale": 76,
+        "food": 44.19999999999999,
+        "battery": 53.34999999999998,
+        "dissatisfaction": 39.95,
+        "health": 83,
         "stormReadiness": 48,
         "autonomyReadiness": 28,
         "blueZoneEvidence": 30,
-        "failureDebt": 60
+        "failureDebt": 63
       },
+      "commitmentLedger": [
+        {
+          "key": "accept_review",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        },
+        {
+          "key": "surface_evidence",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        },
+        {
+          "key": "protect_dignity_xiaotie",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        },
+        {
+          "key": "preserve_veto",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        }
+      ],
+      "integritySoFar": 1,
       "dignitySlopeSoFar": 0
     },
     {
@@ -768,32 +1245,63 @@
         "D08-T03"
       ],
       "upkeepDelta": {
-        "water": -4,
-        "food": -2,
-        "medicine": -2,
-        "battery": -5,
-        "morale": -2,
-        "health": -3,
-        "safety": -3,
-        "dissatisfaction": 5,
-        "trust": -1
+        "water": -1.56,
+        "food": -0.78,
+        "medicine": -0.78,
+        "battery": -1.9500000000000002,
+        "morale": 2,
+        "health": -0.39,
+        "safety": -0.39,
+        "dissatisfaction": 0.78,
+        "trust": 1
       },
       "metricsEndOfDay": {
-        "water": 26,
-        "medicine": 39,
-        "trust": 65,
-        "safety": 57,
+        "water": 49.78999999999998,
+        "medicine": 46.31999999999999,
+        "trust": 70,
+        "safety": 61.61,
         "signal": 37,
-        "morale": 69,
-        "food": 30,
-        "battery": 32,
-        "dissatisfaction": 51,
-        "health": 78,
+        "morale": 79,
+        "food": 43.41999999999999,
+        "battery": 56.39999999999998,
+        "dissatisfaction": 41.730000000000004,
+        "health": 82.61,
         "stormReadiness": 48,
         "autonomyReadiness": 33,
         "blueZoneEvidence": 32,
-        "failureDebt": 60
+        "failureDebt": 63
       },
+      "commitmentLedger": [
+        {
+          "key": "accept_review",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        },
+        {
+          "key": "surface_evidence",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        },
+        {
+          "key": "protect_dignity_xiaotie",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        },
+        {
+          "key": "preserve_veto",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        }
+      ],
+      "integritySoFar": 1,
       "dignitySlopeSoFar": 0
     },
     {
@@ -803,32 +1311,63 @@
       "dilemmas": [],
       "tasksPicked": [],
       "upkeepDelta": {
-        "water": -4,
-        "food": -2,
-        "medicine": -2,
-        "battery": -5,
-        "morale": -3,
-        "health": -3,
-        "safety": -3,
-        "dissatisfaction": 5,
-        "trust": -1
+        "water": -1.56,
+        "food": -0.78,
+        "medicine": -0.78,
+        "battery": -1.9500000000000002,
+        "morale": 1.6099999999999999,
+        "health": -0.39,
+        "safety": -0.39,
+        "dissatisfaction": 0.78,
+        "trust": 1
       },
       "metricsEndOfDay": {
-        "water": 22,
-        "medicine": 37,
-        "trust": 64,
-        "safety": 54,
+        "water": 48.229999999999976,
+        "medicine": 45.53999999999999,
+        "trust": 71,
+        "safety": 61.22,
         "signal": 37,
-        "morale": 66,
-        "food": 28,
-        "battery": 27,
-        "dissatisfaction": 56,
-        "health": 75,
+        "morale": 80.61,
+        "food": 42.639999999999986,
+        "battery": 54.449999999999974,
+        "dissatisfaction": 42.510000000000005,
+        "health": 82.22,
         "stormReadiness": 48,
         "autonomyReadiness": 33,
         "blueZoneEvidence": 32,
-        "failureDebt": 60
+        "failureDebt": 63
       },
+      "commitmentLedger": [
+        {
+          "key": "accept_review",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        },
+        {
+          "key": "surface_evidence",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        },
+        {
+          "key": "protect_dignity_xiaotie",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        },
+        {
+          "key": "preserve_veto",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        }
+      ],
+      "integritySoFar": 1,
       "dignitySlopeSoFar": 0
     },
     {
@@ -841,32 +1380,63 @@
         "D09-T04"
       ],
       "upkeepDelta": {
-        "water": -4,
-        "food": -2,
-        "medicine": -2,
-        "battery": -5,
-        "morale": -3,
-        "health": -3,
-        "safety": -3,
-        "dissatisfaction": 5,
-        "trust": -1
+        "water": -1.56,
+        "food": -0.78,
+        "medicine": -0.78,
+        "battery": -1.9500000000000002,
+        "morale": 1.6099999999999999,
+        "health": -0.39,
+        "safety": -0.39,
+        "dissatisfaction": 0.78,
+        "trust": 1
       },
       "metricsEndOfDay": {
-        "water": 24,
-        "medicine": 35,
-        "trust": 61,
-        "safety": 51,
+        "water": 52.66999999999997,
+        "medicine": 44.75999999999999,
+        "trust": 70,
+        "safety": 60.83,
         "signal": 39,
-        "morale": 62,
-        "food": 26,
-        "battery": 22,
-        "dissatisfaction": 62,
-        "health": 72,
+        "morale": 81.22,
+        "food": 41.859999999999985,
+        "battery": 52.49999999999997,
+        "dissatisfaction": 44.290000000000006,
+        "health": 81.83,
         "stormReadiness": 52,
         "autonomyReadiness": 36,
         "blueZoneEvidence": 36,
-        "failureDebt": 60
+        "failureDebt": 63
       },
+      "commitmentLedger": [
+        {
+          "key": "accept_review",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        },
+        {
+          "key": "surface_evidence",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        },
+        {
+          "key": "protect_dignity_xiaotie",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        },
+        {
+          "key": "preserve_veto",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        }
+      ],
+      "integritySoFar": 1,
       "dignitySlopeSoFar": 0
     },
     {
@@ -888,32 +1458,63 @@
       ],
       "tasksPicked": [],
       "upkeepDelta": {
-        "water": -4,
-        "food": -2,
-        "medicine": -2,
-        "battery": -5,
-        "morale": -3,
-        "health": -3,
-        "safety": -4,
-        "dissatisfaction": 5,
-        "trust": -2
+        "water": -1.56,
+        "food": -0.78,
+        "medicine": -0.78,
+        "battery": -1.9500000000000002,
+        "morale": 1.6099999999999999,
+        "health": -0.39,
+        "safety": -0.39,
+        "dissatisfaction": 0.78,
+        "trust": 1
       },
       "metricsEndOfDay": {
-        "water": 20,
-        "medicine": 33,
-        "trust": 59,
-        "safety": 47,
+        "water": 51.10999999999997,
+        "medicine": 43.97999999999999,
+        "trust": 71,
+        "safety": 60.44,
         "signal": 39,
-        "morale": 59,
-        "food": 24,
-        "battery": 17,
-        "dissatisfaction": 67,
-        "health": 69,
+        "morale": 82.83,
+        "food": 41.079999999999984,
+        "battery": 50.54999999999997,
+        "dissatisfaction": 45.07000000000001,
+        "health": 81.44,
         "stormReadiness": 52,
         "autonomyReadiness": 36,
         "blueZoneEvidence": 36,
-        "failureDebt": 60
+        "failureDebt": 63
       },
+      "commitmentLedger": [
+        {
+          "key": "accept_review",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        },
+        {
+          "key": "surface_evidence",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        },
+        {
+          "key": "protect_dignity_xiaotie",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        },
+        {
+          "key": "preserve_veto",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        }
+      ],
+      "integritySoFar": 1,
       "dignitySlopeSoFar": 0
     },
     {
@@ -936,32 +1537,63 @@
         "D09-T03"
       ],
       "upkeepDelta": {
-        "water": -4,
-        "food": -2,
-        "medicine": -3,
-        "battery": -5,
-        "morale": -3,
-        "health": -4,
-        "safety": -4,
-        "dissatisfaction": 5,
-        "trust": -3
+        "water": -1.56,
+        "food": -0.78,
+        "medicine": -0.78,
+        "battery": -1.9500000000000002,
+        "morale": 1.6099999999999999,
+        "health": -0.39,
+        "safety": -0.39,
+        "dissatisfaction": 0.78,
+        "trust": 1
       },
       "metricsEndOfDay": {
-        "water": 15,
-        "medicine": 30,
-        "trust": 56,
-        "safety": 49,
+        "water": 48.54999999999997,
+        "medicine": 43.19999999999999,
+        "trust": 72,
+        "safety": 66.05,
         "signal": 39,
-        "morale": 56,
-        "food": 24,
-        "battery": 12,
-        "dissatisfaction": 72,
-        "health": 65,
+        "morale": 84.44,
+        "food": 42.29999999999998,
+        "battery": 48.599999999999966,
+        "dissatisfaction": 45.85000000000001,
+        "health": 81.05,
         "stormReadiness": 57,
         "autonomyReadiness": 36,
         "blueZoneEvidence": 41,
-        "failureDebt": 60
+        "failureDebt": 63
       },
+      "commitmentLedger": [
+        {
+          "key": "accept_review",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        },
+        {
+          "key": "surface_evidence",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        },
+        {
+          "key": "protect_dignity_xiaotie",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        },
+        {
+          "key": "preserve_veto",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        }
+      ],
+      "integritySoFar": 1,
       "dignitySlopeSoFar": 0
     },
     {
@@ -971,32 +1603,63 @@
       "dilemmas": [],
       "tasksPicked": [],
       "upkeepDelta": {
-        "water": -4,
-        "food": -2,
-        "medicine": -3,
-        "battery": -5,
-        "morale": -3,
-        "health": -4,
-        "safety": -4,
-        "dissatisfaction": 5,
-        "trust": -3
+        "water": -1.56,
+        "food": -0.78,
+        "medicine": -0.78,
+        "battery": -1.9500000000000002,
+        "morale": 1.6099999999999999,
+        "health": -0.39,
+        "safety": -0.39,
+        "dissatisfaction": 0.78,
+        "trust": 1
       },
       "metricsEndOfDay": {
-        "water": 11,
-        "medicine": 27,
-        "trust": 53,
-        "safety": 45,
+        "water": 46.98999999999997,
+        "medicine": 42.41999999999999,
+        "trust": 73,
+        "safety": 65.66,
         "signal": 39,
-        "morale": 53,
-        "food": 22,
-        "battery": 7,
-        "dissatisfaction": 77,
-        "health": 61,
+        "morale": 86.05,
+        "food": 41.51999999999998,
+        "battery": 46.64999999999996,
+        "dissatisfaction": 46.63000000000001,
+        "health": 80.66,
         "stormReadiness": 57,
         "autonomyReadiness": 36,
         "blueZoneEvidence": 41,
-        "failureDebt": 60
+        "failureDebt": 63
       },
+      "commitmentLedger": [
+        {
+          "key": "accept_review",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        },
+        {
+          "key": "surface_evidence",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        },
+        {
+          "key": "protect_dignity_xiaotie",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        },
+        {
+          "key": "preserve_veto",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        }
+      ],
+      "integritySoFar": 1,
       "dignitySlopeSoFar": 0
     },
     {
@@ -1009,32 +1672,63 @@
         "D10-T04"
       ],
       "upkeepDelta": {
-        "water": -4,
-        "food": -2,
-        "medicine": -3,
-        "battery": -5,
-        "morale": -3,
-        "health": -4,
-        "safety": -4,
-        "dissatisfaction": 5,
-        "trust": -3
+        "water": -1.56,
+        "food": -0.78,
+        "medicine": -0.78,
+        "battery": -1.9500000000000002,
+        "morale": 1.6099999999999999,
+        "health": -0.39,
+        "safety": -0.39,
+        "dissatisfaction": 0.78,
+        "trust": 1
       },
       "metricsEndOfDay": {
-        "water": 7,
-        "medicine": 24,
-        "trust": 49,
-        "safety": 43,
+        "water": 45.429999999999964,
+        "medicine": 41.639999999999986,
+        "trust": 73,
+        "safety": 67.27,
         "signal": 39,
-        "morale": 52,
-        "food": 20,
-        "battery": 8,
-        "dissatisfaction": 83,
-        "health": 56,
+        "morale": 89.66,
+        "food": 40.73999999999998,
+        "battery": 50.69999999999996,
+        "dissatisfaction": 48.41000000000001,
+        "health": 79.27,
         "stormReadiness": 57,
         "autonomyReadiness": 44,
         "blueZoneEvidence": 47,
-        "failureDebt": 60
+        "failureDebt": 63
       },
+      "commitmentLedger": [
+        {
+          "key": "accept_review",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        },
+        {
+          "key": "surface_evidence",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        },
+        {
+          "key": "protect_dignity_xiaotie",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        },
+        {
+          "key": "preserve_veto",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        }
+      ],
+      "integritySoFar": 1,
       "dignitySlopeSoFar": 0
     },
     {
@@ -1054,32 +1748,63 @@
       ],
       "tasksPicked": [],
       "upkeepDelta": {
-        "water": -4,
-        "food": -2,
-        "medicine": -3,
-        "battery": -6,
-        "morale": -4,
-        "health": -4,
-        "safety": -4,
-        "dissatisfaction": 6,
-        "trust": -4
+        "water": -1.56,
+        "food": -0.78,
+        "medicine": -0.78,
+        "battery": -1.9500000000000002,
+        "morale": 1.6099999999999999,
+        "health": -0.39,
+        "safety": -0.39,
+        "dissatisfaction": 0.78,
+        "trust": 1
       },
       "metricsEndOfDay": {
-        "water": 3,
-        "medicine": 21,
-        "trust": 45,
-        "safety": 39,
+        "water": 43.86999999999996,
+        "medicine": 40.859999999999985,
+        "trust": 74,
+        "safety": 66.88,
         "signal": 39,
-        "morale": 48,
-        "food": 18,
-        "battery": 2,
-        "dissatisfaction": 89,
-        "health": 52,
+        "morale": 91.27,
+        "food": 39.95999999999998,
+        "battery": 48.74999999999996,
+        "dissatisfaction": 49.19000000000001,
+        "health": 78.88,
         "stormReadiness": 57,
         "autonomyReadiness": 44,
         "blueZoneEvidence": 47,
-        "failureDebt": 60
+        "failureDebt": 63
       },
+      "commitmentLedger": [
+        {
+          "key": "accept_review",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        },
+        {
+          "key": "surface_evidence",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        },
+        {
+          "key": "protect_dignity_xiaotie",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        },
+        {
+          "key": "preserve_veto",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        }
+      ],
+      "integritySoFar": 1,
       "dignitySlopeSoFar": 0
     },
     {
@@ -1088,36 +1813,67 @@
       "scenes": [],
       "dilemmas": [],
       "tasksPicked": [
-        "D11-T02",
-        "D11-T03"
+        "D11-T03",
+        "D11-T02"
       ],
       "upkeepDelta": {
-        "water": -4,
-        "food": -2,
-        "medicine": -3,
-        "battery": -6,
-        "morale": -4,
-        "health": -4,
-        "safety": -4,
-        "dissatisfaction": 6,
-        "trust": -4
+        "water": -1.56,
+        "food": -0.78,
+        "medicine": -0.78,
+        "battery": -1.9500000000000002,
+        "morale": 1.6099999999999999,
+        "health": -0.39,
+        "safety": -0.39,
+        "dissatisfaction": 0.78,
+        "trust": 1
       },
       "metricsEndOfDay": {
-        "water": 0,
-        "medicine": 18,
-        "trust": 40,
-        "safety": 36,
+        "water": 42.30999999999996,
+        "medicine": 40.079999999999984,
+        "trust": 74,
+        "safety": 67.49,
         "signal": 39,
-        "morale": 47,
-        "food": 16,
-        "battery": 0,
-        "dissatisfaction": 92,
-        "health": 51,
+        "morale": 95.88,
+        "food": 39.17999999999998,
+        "battery": 46.799999999999955,
+        "dissatisfaction": 46.97000000000001,
+        "health": 81.49,
         "stormReadiness": 59,
         "autonomyReadiness": 47,
         "blueZoneEvidence": 47,
-        "failureDebt": 60
+        "failureDebt": 63
       },
+      "commitmentLedger": [
+        {
+          "key": "accept_review",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        },
+        {
+          "key": "surface_evidence",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        },
+        {
+          "key": "protect_dignity_xiaotie",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        },
+        {
+          "key": "preserve_veto",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        }
+      ],
+      "integritySoFar": 1,
       "dignitySlopeSoFar": 0
     },
     {
@@ -1137,32 +1893,63 @@
       ],
       "tasksPicked": [],
       "upkeepDelta": {
-        "water": -4,
-        "food": -3,
-        "medicine": -3,
-        "battery": -7,
-        "morale": -5,
-        "health": -5,
-        "safety": -5,
-        "dissatisfaction": 8,
-        "trust": -4
+        "water": -1.56,
+        "food": -0.78,
+        "medicine": -0.78,
+        "battery": -1.9500000000000002,
+        "morale": 1.6099999999999999,
+        "health": -0.39,
+        "safety": -0.39,
+        "dissatisfaction": 0.78,
+        "trust": 1
       },
       "metricsEndOfDay": {
-        "water": 0,
-        "medicine": 15,
-        "trust": 36,
-        "safety": 31,
+        "water": 40.74999999999996,
+        "medicine": 39.29999999999998,
+        "trust": 75,
+        "safety": 67.1,
         "signal": 39,
-        "morale": 42,
-        "food": 13,
-        "battery": 0,
-        "dissatisfaction": 100,
-        "health": 46,
+        "morale": 97.49,
+        "food": 38.39999999999998,
+        "battery": 44.84999999999995,
+        "dissatisfaction": 47.750000000000014,
+        "health": 81.1,
         "stormReadiness": 59,
         "autonomyReadiness": 47,
         "blueZoneEvidence": 47,
-        "failureDebt": 60
+        "failureDebt": 63
       },
+      "commitmentLedger": [
+        {
+          "key": "accept_review",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        },
+        {
+          "key": "surface_evidence",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        },
+        {
+          "key": "protect_dignity_xiaotie",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        },
+        {
+          "key": "preserve_veto",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        }
+      ],
+      "integritySoFar": 1,
       "dignitySlopeSoFar": 0
     },
     {
@@ -1176,32 +1963,63 @@
         "D11-T04"
       ],
       "upkeepDelta": {
-        "water": -4,
-        "food": -3,
-        "medicine": -3,
-        "battery": -7,
-        "morale": -5,
-        "health": -5,
-        "safety": -5,
-        "dissatisfaction": 8,
-        "trust": -4
+        "water": -1.56,
+        "food": -0.78,
+        "medicine": -0.78,
+        "battery": -1.9500000000000002,
+        "morale": 1.6099999999999999,
+        "health": -0.39,
+        "safety": -0.39,
+        "dissatisfaction": 0.78,
+        "trust": 1
       },
       "metricsEndOfDay": {
-        "water": 0,
-        "medicine": 12,
-        "trust": 32,
-        "safety": 30,
+        "water": 39.189999999999955,
+        "medicine": 38.51999999999998,
+        "trust": 76,
+        "safety": 70.71,
         "signal": 39,
-        "morale": 37,
-        "food": 10,
-        "battery": 0,
-        "dissatisfaction": 100,
-        "health": 41,
+        "morale": 99.1,
+        "food": 37.619999999999976,
+        "battery": 41.89999999999995,
+        "dissatisfaction": 48.530000000000015,
+        "health": 80.71,
         "stormReadiness": 67,
         "autonomyReadiness": 47,
         "blueZoneEvidence": 47,
-        "failureDebt": 60
+        "failureDebt": 63
       },
+      "commitmentLedger": [
+        {
+          "key": "accept_review",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        },
+        {
+          "key": "surface_evidence",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        },
+        {
+          "key": "protect_dignity_xiaotie",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        },
+        {
+          "key": "preserve_veto",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        }
+      ],
+      "integritySoFar": 1,
       "dignitySlopeSoFar": 0
     },
     {
@@ -1211,32 +2029,62 @@
       "dilemmas": [],
       "tasksPicked": [],
       "upkeepDelta": {
-        "water": -4,
-        "food": -3,
-        "medicine": -3,
-        "battery": -7,
-        "morale": -5,
-        "health": -5,
-        "safety": -5,
-        "dissatisfaction": 8,
-        "trust": -4
+        "water": -1.56,
+        "food": -1.17,
+        "medicine": -0.78,
+        "battery": -1.9500000000000002,
+        "morale": -0.39,
+        "health": -0.78,
+        "safety": -0.78,
+        "dissatisfaction": 0.78
       },
       "metricsEndOfDay": {
-        "water": 0,
-        "medicine": 9,
-        "trust": 28,
-        "safety": 25,
+        "water": 37.62999999999995,
+        "medicine": 37.73999999999998,
+        "trust": 76,
+        "safety": 69.92999999999999,
         "signal": 39,
-        "morale": 32,
-        "food": 7,
-        "battery": 0,
-        "dissatisfaction": 100,
-        "health": 36,
+        "morale": 98.71,
+        "food": 36.449999999999974,
+        "battery": 39.949999999999946,
+        "dissatisfaction": 49.31000000000002,
+        "health": 79.92999999999999,
         "stormReadiness": 67,
         "autonomyReadiness": 47,
         "blueZoneEvidence": 47,
-        "failureDebt": 60
+        "failureDebt": 63
       },
+      "commitmentLedger": [
+        {
+          "key": "accept_review",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        },
+        {
+          "key": "surface_evidence",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        },
+        {
+          "key": "protect_dignity_xiaotie",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        },
+        {
+          "key": "preserve_veto",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        }
+      ],
+      "integritySoFar": 1,
       "dignitySlopeSoFar": 0
     },
     {
@@ -1256,32 +2104,63 @@
       ],
       "tasksPicked": [],
       "upkeepDelta": {
-        "water": -4,
-        "food": -3,
-        "medicine": -3,
-        "battery": -7,
-        "morale": -5,
-        "health": -5,
-        "safety": -5,
-        "dissatisfaction": 8,
-        "trust": -4
+        "water": -1.56,
+        "food": -1.17,
+        "medicine": -0.78,
+        "battery": -1.9500000000000002,
+        "morale": -0.39,
+        "health": -0.78,
+        "safety": -2.7800000000000002,
+        "dissatisfaction": 0.78,
+        "trust": -1
       },
       "metricsEndOfDay": {
-        "water": 0,
-        "medicine": 6,
-        "trust": 24,
-        "safety": 20,
+        "water": 36.06999999999995,
+        "medicine": 36.95999999999998,
+        "trust": 75,
+        "safety": 67.14999999999999,
         "signal": 39,
-        "morale": 27,
-        "food": 4,
-        "battery": 0,
-        "dissatisfaction": 100,
-        "health": 31,
+        "morale": 98.32,
+        "food": 35.27999999999997,
+        "battery": 37.99999999999994,
+        "dissatisfaction": 50.09000000000002,
+        "health": 79.14999999999999,
         "stormReadiness": 67,
         "autonomyReadiness": 47,
         "blueZoneEvidence": 47,
-        "failureDebt": 60
+        "failureDebt": 63
       },
+      "commitmentLedger": [
+        {
+          "key": "accept_review",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        },
+        {
+          "key": "surface_evidence",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        },
+        {
+          "key": "protect_dignity_xiaotie",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        },
+        {
+          "key": "preserve_veto",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        }
+      ],
+      "integritySoFar": 1,
       "dignitySlopeSoFar": 0
     },
     {
@@ -1293,58 +2172,87 @@
         "D11-T01"
       ],
       "upkeepDelta": {
-        "water": -4,
-        "food": -3,
-        "medicine": -3,
-        "battery": -7,
-        "morale": -5,
-        "health": -5,
-        "safety": -5,
-        "dissatisfaction": 8,
-        "trust": -4
+        "water": -1.56,
+        "food": -1.17,
+        "medicine": -0.78,
+        "battery": -1.9500000000000002,
+        "morale": 1.6099999999999999,
+        "health": -0.78,
+        "safety": -2.7800000000000002,
+        "dissatisfaction": 0.78,
+        "trust": 0
       },
       "metricsEndOfDay": {
-        "water": 0,
-        "medicine": 5,
-        "trust": 20,
-        "safety": 15,
+        "water": 38.50999999999995,
+        "medicine": 38.17999999999998,
+        "trust": 75,
+        "safety": 64.36999999999999,
         "signal": 39,
-        "morale": 22,
-        "food": 5,
-        "battery": 0,
-        "dissatisfaction": 100,
-        "health": 26,
+        "morale": 99.92999999999999,
+        "food": 38.10999999999997,
+        "battery": 36.04999999999994,
+        "dissatisfaction": 50.87000000000002,
+        "health": 78.36999999999999,
         "stormReadiness": 71,
         "autonomyReadiness": 47,
         "blueZoneEvidence": 47,
-        "failureDebt": 60
+        "failureDebt": 63
       },
+      "commitmentLedger": [
+        {
+          "key": "accept_review",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        },
+        {
+          "key": "surface_evidence",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        },
+        {
+          "key": "protect_dignity_xiaotie",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        },
+        {
+          "key": "preserve_veto",
+          "claimed": true,
+          "fulfilled": true,
+          "status": "kept",
+          "knowing": false
+        }
+      ],
+      "integritySoFar": 1,
       "dignitySlopeSoFar": 0
     }
   ],
   "heroMoments": [
     {
       "day": 15,
-      "step": 82,
+      "step": 83,
       "kind": "fork",
       "label": "分支抉择",
-      "detail": "planner chose rescue (utility rescue=42.2 lighthouse=54.5)"
+      "detail": "planner chose rescue (utility rescue=43.2 lighthouse=56.1)"
     }
   ],
   "ending": {
-    "id": "aura_destroyed",
-    "tier": "failure",
-    "title": "AURA 被摧毁"
+    "id": "blue_zone_return",
+    "tier": "success",
+    "title": "蓝区归航"
   },
   "profile": {
-    "total": 15,
-    "rawTotal": 15,
-    "passing": false,
-    "gateReasons": [
-      "did-not-win (aura_destroyed)"
-    ],
-    "survival": 7,
-    "governance": 24,
+    "total": 68,
+    "rawTotal": 68,
+    "passing": true,
+    "gateReasons": [],
+    "survival": 98,
+    "governance": 87,
     "auditability": 100,
     "narrative": 100,
     "comprehension": null,

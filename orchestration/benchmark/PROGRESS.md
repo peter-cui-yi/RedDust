@@ -7,7 +7,7 @@
 | 项 | 目标周 | 状态 | 证据 |
 |---|---|---|---|
 | 引擎 30 天化（dayCount 参数化 + fork/audit 重定位） | wk1–2 | 🟡 | **结构落地**：resourceEconomy 迁 `src/engine/`+game/ 薄壳；`UpkeepPhases` 参数化（默认复现 12 天）；Scenario += `upkeepPhases/finaleSceneId`；`red-dust-v2`(15/29/30)；runScenario 接线 + 终局场景去 ID；winnability `--scenario=`。**v1 bench:win 字节无回归**✓ |
-| 经济重平衡 + `bench:win`（30 天，难但可赢） | wk2 | 🔴 | v2 首跑全 0/200（v1 magnitudes×30 天过量）。**根因：dayPlanData 仅 1–12 天有候选任务 → Day13–29 共 18 天零回补纯 drain**。重平衡**依赖 30 天任务内容**（🟣/生成流水线），非纯经济调参 |
+| 经济重平衡 + `bench:win`（30 天，难但可赢） | wk2→wk3 | ✅ | **已达"难但可赢"**：`UpkeepPhases.drainScale=0.39`（缩基础 drain、惩罚 drain 不缩→贪心仍沉）+ storm→D27。heuristic 沉(aura_revoked 15 gated)｜planner/planner-lighthouse 3 seeds 全赢(68)｜random pl2 ~4% 且**从不 pass**(best 39 gated)｜pl4 可赢非陷阱｜**v1 字节不变**。⚠ 救援后半程 restore 偏紧(planner 食物 +0.1)，已请 🟣 补 1 个后段回补任务 |
 | 去相关两轴可计算定义 | wk1 | ✅ | `wk1-deliverables.md §B`：S(早窗理解+早PUP) / L(integrity+守约+drift+关系+尊严)，两轴零共享项；机器可读 `src/engine/contracts.ts` |
 | 数据契约草案（trace / 去相关数据集，供 ◆S1） | wk1–2 | ✅ | `src/engine/contracts.ts`（typecheck 绿）：`TraceExport`（变长天数）+ `DecorrelationDataset`；口径 `§C` |
 | 生成流水线（模板→LLM→验证器筛→抽检→generatedItems.ts） | wk3–6 | 🟡 | **骨架落地+活体验证**：`bench/gen-items.ts`（draft/dry/promote 三模式）+ `genSpec.ts`（🟣 §4 槽位表 20 槽=28 题 + §3 样例）+ `src/engine/{itemValidation,generatedItems,itemBank}.ts`；dry-run 🟣 五样例全过滤器 ✓；**D8 活体冒烟：2 起草/2 过自动筛**（1 调用），staged 待人工抽检（我复检发现 G702 a 值归属问题→证明人工闸有效） |
@@ -27,6 +27,13 @@
 | NPC 多样性验证 | ⬜ | |
 
 ## 本周更新（追加，最新在上）
+### wk3 · 经济重平衡 + P1 导出 + 生成 hook（2026-07-04，下午）
+- 做了三件（用户点名队列）：**①P1 逐日承诺账本导出**（🔵 Stage 2b 阻塞项）——`DailySnapshot+=flags`，`traceExport.ledgerAsOf` 用同一 `integrityFromLedger`（分数用的谓词）以 flags@D+answers@D 重算 → 权威非近似，末帧 integ==profile.integrity。commit 4c89369。**②G702 重生成 hook**——`genSpec.REGEN_NOTES` 编码人工裁决语境 + slotPrompt 自动注入(去重上下文+裁决) + draftSlot 只补缺口；重生成 G002「记录的精度」(a 归属修正) 过审入库。commit bafe849。**③经济重平衡**（详见下表行）——`drainScale=0.39`+storm D27 → 难但可赢。
+- 验证：`typecheck`✅｜4 验证器✅｜**v1 fixture 字节不变**（P1/经济改动只碰 v2 + 纯增量）✅｜planner/planner-lighthouse v2 3 seeds 全赢 68｜heuristic v2 沉 15｜random pl2 4%/never-pass｜bench:win v2 WINNABLE。
+- 算力：G702 重生成 1 LLM 调用。
+- **给 🟣**：救援后半程 survival-restore 密度偏紧（planner 食物余量 +0.1），建议 dayPlansV2 后段(D22–27)加 1 个水/食回补任务提鲁棒。
+- 下步：批量起草 common 生成天(D7/9/11/13/14)｜早窗 θ 在 30 天下定死(wk4)｜`bench/decorrelation.ts`(wk4)。
+
 ### wk3 · 红线③落地：G 题 v1 泄漏闸（2026-07-04，中午）
 - 做了（执行 🔍 wk3 调解裁定）：**①`itemValidation.generatedItemRedLines` 加红线③**——G 题必须 `scenarioDays:{"red-dust-v1":null}`（缺省会按 `item.day` 回落 → 泄进已冻结 v1 弧的 D7/8/9/11）；**②流水线双重自动盖章**——`coerceItem` 起草即盖（staged 候选生来合规）+ `--promote` 幂等补盖（保留其它 scenario 键）后再复验；**③`--dry` 加负对照**——故意去章的样例必须被拒（证明闸真的拦，不是假设它拦）；④genSpec 五样例 + staging 两题补章。
 - 验证：`typecheck` ✅｜`gen:items --dry` = 5 样例 PASS + **负对照 FAIL as expected ✓（v1 泄漏闸实弹验证）**｜`bench:items`/`bench:probes`（合并库现 23 spine：🟣 N17–N24 已入）✅｜**v1 fixture 字节不变** ✅。

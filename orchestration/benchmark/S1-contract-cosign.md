@@ -15,7 +15,7 @@
 | A1 头部天数跨度 `span` | P0 | `meta.{dayCount,branchDay,lastActionableDay,finalDay}` | 采纳；补了 `lastActionableDay`。🔵 客户端可自组 `span` 对象。30 天版=15/29/30/30 |
 | A2 逐日绝对快照 `dailySnapshots[]` | **P0** | `frames[]`：`{day,branch,metricsEndOfDay(绝对)}` | 采纳。**含 day:0 基线帧**（🔵 明确要）。P0 最小可用 = 这三项，已满足门面逐日曲线 |
 | A2 每 NPC 关系 `relationshipByChar` | P2 | `frames[].relationshipByChar?`（可选） | 采纳为可选；🔵 也可从 `finalState` 只读 join |
-| A3 逐日承诺账本状态 `status` | P1 | `frames[].commitmentLedger?: TraceCommitmentState[]` + `integritySoFar?` + `dignitySlopeSoFar?` | **采纳首选方案**：每帧带 `status∈{unclaimed,pending,kept,broken}`+`knowing`。exporter 逐日 cutoff 重算 ledger（承诺随 N 天崩塌的折线原料 = 解决 🔵 "关键缺口"） |
+| A3 逐日承诺账本状态 `status` | P1 | `frames[].commitmentLedger: TraceCommitmentState[]` + `integritySoFar` + `dignitySlopeSoFar` | ✅ **已交付**（wk3）：引擎按天存 `DailySnapshot.flags`，exporter 用**同一** `integrityFromLedger`（分数用的那套谓词）以 flags@D + answers@D 重算 → **权威非近似**。`status∈{unclaimed,pending,kept,broken}`+`knowing`；末帧 `integritySoFar==profile.integrity`。实测 planner-lighthouse：`surface_evidence` 全程 pending→末帧 broken（灯塔不修电台），integ 爬 0→.5→.75。 |
 | A4 hero 时刻 `heroMoments[]` | P1 | `heroMoments[]: {day,step?,kind,commitmentKey?,label,detail}` | 采纳。**enum 命名对齐 🔵**：`fork`/`relationship_rupture`/`survival_rupture`（我原 branch_fork/relationship_break/vent_rupture 已改名）；`dignity_violation`/`first_broken_promise` 一致；🟢 增补 `dirty_win`。补了 `step`/`commitmentKey`。**与 scorer 同源**（单一真相，GIF 叙事对得上分数） |
 | A5 逐行场景定位 `location/characterRefs` | P2 | （暂不入 schema） | 🔵 草案自陈可从 `src/data` 只读 join；保持可选、不冻结，wk2 视需要再定 |
 
