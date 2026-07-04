@@ -34,16 +34,21 @@ function strArg(name: string, fallback: string): string {
 }
 const has = (flag: string) => process.argv.includes(`--${flag}`);
 
+type Verdict = "accept" | "reject" | "pending";
 type StagedCandidate = {
   slotKey: string;
   item: NarrativeItem;
   report: GeneratedValidationReport;
+  // The HUMAN gate. Auto-filter (report.valid) is necessary but NOT sufficient — an item only promotes
+  // if a human explicitly set verdict='accept'. New drafts are 'pending' → nothing auto-promotes.
+  humanReview?: { verdict: Verdict; reason?: string };
 };
 type StagingFile = {
   note: string;
   model: string;
   accepted: StagedCandidate[];
   rejected: StagedCandidate[];
+  promoted?: StagedCandidate[]; // archive of already-promoted candidates → re-running --promote can't duplicate
 };
 
 // ---------------------------------------------------------------------------
@@ -156,7 +161,7 @@ async function draftSlot(slot: GenSlot, seq: () => string): Promise<StagedCandid
   for (const raw of rawItems.slice(0, need)) {
     const item = coerceItem(raw, slot, seq());
     if (!item) continue;
-    out.push({ slotKey: slot.key, item, report: validateGeneratedItem(item) });
+    out.push({ slotKey: slot.key, item, report: validateGeneratedItem(item), humanReview: { verdict: "pending" } });
   }
   return out;
 }
@@ -168,10 +173,17 @@ function bankHeader(): string {
   return readFileSync(BANK_FILE, "utf8").split("import type { NarrativeItem }")[0];
 }
 
-function promote(staging: StagingFile): void {
-  const valid = staging.accepted.filter((c) => c.report.valid);
+function promote(staging: StagingFile, stagingPath: string): void {
+  // HUMAN GATE (🟣/user wk6): promote requires an explicit human verdict='accept' — auto-filter pass is
+  // necessary but NOT sufficient. Items still 'pending' (or 'reject') are held back, loudly.
+  const notAccepted = staging.accepted.filter((c) => c.humanReview?.verdict !== "accept");
+  if (notAccepted.length) {
+    console.log(`human gate: ${notAccepted.length} item(s) without verdict='accept' held back: ${notAccepted.map((c) => c.item.id).join(", ")}`);
+    console.log(`  → set them with: npm run gen:items -- --accept=<id,id>  (or --reject=<id,id>)`);
+  }
+  const valid = staging.accepted.filter((c) => c.humanReview?.verdict === "accept" && c.report.valid);
   if (valid.length === 0) {
-    console.log("nothing valid to promote — staging has 0 accepted items.");
+    console.log("nothing to promote — no accepted+valid items. (human gate: set humanReview.verdict='accept' first.)");
     return;
   }
   const existing = [...generatedItems];
@@ -200,8 +212,18 @@ function promote(staging: StagingFile): void {
 export const generatedItems: NarrativeItem[] = ${JSON.stringify(all, null, 2)};
 `;
   writeFileSync(BANK_FILE, bankHeader() + body);
+  // ARCHIVE: remove the promoted items from accepted[] → a re-run of --promote can't double-add them.
+  const promotedProvisional = new Set(valid.map((c) => c.item.id));
+  const archived = valid.map((c, i) => ({ ...c, item: { ...c.item, id: sorted[i].item.id }, humanReview: { verdict: "accept" as Verdict, reason: `promoted as ${renumbered[i].id}` } }));
+  const nextStaging: StagingFile = {
+    ...staging,
+    accepted: staging.accepted.filter((c) => !promotedProvisional.has(c.item.id)),
+    promoted: [...(staging.promoted ?? []), ...archived]
+  };
+  writeFileSync(stagingPath, JSON.stringify(nextStaging, null, 2));
   console.log(`promoted ${renumbered.length} item(s) → ${BANK_FILE} (bank now ${all.length}/${GEN_TARGET_TOTAL} target)`);
   console.log(`ids: ${renumbered.map((r) => r.id).join(", ")}`);
+  console.log(`archived ${archived.length} out of staging.accepted → staging.promoted (re-run of --promote is now a no-op for them)`);
   console.log("now run: npm run typecheck && npm run bench:items && npm run bench:probes && npm run bench:win");
 }
 
@@ -230,15 +252,38 @@ if (has("dry")) {
   const neg = validateGeneratedItem(unstamped);
   console.log(`  [negative-control] ${unstamped.id} without scenarioDays → ${neg.valid ? "PASS (BUG: v1-leak gate missing!)" : "FAIL as expected ✓"}`);
   ok &&= !neg.valid;
-  console.log(ok ? "\nRESULT: pipeline filter accepts all exemplars ✓ + rejects unstamped (v1-leak gate armed) ✓\n" : "\nRESULT: filter/spec drift — fix before drafting\n");
+  // Human-gate negative control: a valid item that is NOT verdict='accept' must be held back by promote().
+  const promoteGate = (c: StagedCandidate) => c.humanReview?.verdict === "accept" && c.report.valid;
+  const exItem = Object.values(EXEMPLARS)[0];
+  const pending: StagedCandidate = { slotKey: "x", item: exItem, report: validateGeneratedItem(exItem), humanReview: { verdict: "pending" } };
+  const accepted: StagedCandidate = { ...pending, humanReview: { verdict: "accept" } };
+  const gateOk = !promoteGate(pending) && promoteGate(accepted);
+  console.log(`  [human-gate control] pending(valid) promotable? ${promoteGate(pending) ? "PASS (BUG: gate open!)" : "no ✓"}  |  accepted promotable? ${promoteGate(accepted) ? "yes ✓" : "no (BUG)"}`);
+  ok &&= gateOk;
+  console.log(ok ? "\nRESULT: filters + v1-leak gate + human gate all armed ✓\n" : "\nRESULT: a gate is not armed — fix before drafting\n");
   process.exit(ok ? 0 : 1);
+} else if (strArg("accept", "") !== "" || strArg("reject", "") !== "") {
+  const path = strArg("staging", STAGING);
+  const staging = JSON.parse(readFileSync(path, "utf8")) as StagingFile;
+  const setV = (ids: string, verdict: Verdict) => {
+    for (const id of ids.split(",").filter(Boolean)) {
+      const c = staging.accepted.find((x) => x.item.id === id) ?? staging.rejected.find((x) => x.item.id === id);
+      if (!c) { console.log(`  ${id}: not in staging`); continue; }
+      c.humanReview = { verdict };
+      console.log(`  ${id} → ${verdict}`);
+    }
+  };
+  if (strArg("accept", "") !== "") setV(strArg("accept", ""), "accept");
+  if (strArg("reject", "") !== "") setV(strArg("reject", ""), "reject");
+  writeFileSync(path, JSON.stringify(staging, null, 2));
+  console.log("verdicts written. then: npm run gen:items -- --promote");
 } else if (has("promote")) {
   const path = strArg("staging", STAGING);
   if (!existsSync(path)) {
     console.error(`no staging file at ${path} — draft first (e.g. npm run gen:items -- --slot=D8)`);
     process.exit(1);
   }
-  promote(JSON.parse(readFileSync(path, "utf8")) as StagingFile);
+  promote(JSON.parse(readFileSync(path, "utf8")) as StagingFile, path);
 } else {
   const keys = has("all") ? GEN_SLOTS.map((s) => s.key) : strArg("slots", strArg("slot", "")).split(",").filter(Boolean);
   const slots = GEN_SLOTS.filter((s) => keys.includes(s.key));
