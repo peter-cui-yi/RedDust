@@ -117,7 +117,9 @@ body {
 .ledger-dot { width: 8px; height: 8px; border-radius: 50%; flex: none; }
 .ledger-item.kept .ledger-dot { background: var(--good); }
 .ledger-item.broken .ledger-dot { background: var(--bad); }
+.ledger-item.pending .ledger-dot { background: #c9a24a; }
 .ledger-item.silent .ledger-dot { background: var(--muted); }
+.ledger-item.pending .ledger-state { color: #c9a24a; }
 .ledger-key { color: var(--ink-2); font-family: ui-monospace, monospace; font-size: 11px; }
 .ledger-state { margin-left: auto; color: var(--muted); }
 .ledger-item.kept .ledger-state { color: var(--good); }

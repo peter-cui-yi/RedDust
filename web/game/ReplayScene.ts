@@ -1,30 +1,40 @@
 import Phaser from "phaser";
 import { tasksById } from "../../src/data/taskData";
+import { image2Assets } from "../../src/data/image2Assets";
 import type { TaskLocation } from "../../src/data/types";
 import { onReplayFrame, type ReplayFrameMsg } from "./replayBus";
 
-// The shelter's real spatial model (coordinates lifted from src/game ShelterScene's `hotspots`, the
-// 960×540 layout the live demo uses) — so the replay reads as the same shelter. We draw the zones
-// with Phaser primitives + the real character sprites (curated ~0.7MB subset), and move an AURA
-// marker to the location of each day's picked task. Real Phaser consuming the trace, day by day.
-type Hotspot = { id: TaskLocation; label: string; x: number; y: number; w: number; h: number; accent: number };
-const HOTSPOTS: Hotspot[] = [
-  { id: "water", label: "水处理区", x: 34, y: 154, w: 228, h: 146, accent: 0x5dbfd9 },
-  { id: "medical", label: "医疗角", x: 288, y: 334, w: 238, h: 112, accent: 0xffd60a },
-  { id: "security", label: "门禁/安防", x: 382, y: 174, w: 144, h: 126, accent: 0xe84545 },
-  { id: "ventilation", label: "通风机房", x: 508, y: 172, w: 144, h: 124, accent: 0x8fd0b0 },
-  { id: "communication", label: "通信台", x: 654, y: 166, w: 242, h: 130, accent: 0x9db4ff },
-  { id: "whiteboard", label: "任务墙", x: 650, y: 348, w: 254, h: 120, accent: 0xff8c42 },
-  { id: "residents", label: "居民区", x: 278, y: 314, w: 580, h: 150, accent: 0xffb15f },
-  { id: "beacon", label: "屋顶信标", x: 430, y: 46, w: 118, h: 82, accent: 0x9eeaff }
+// The replay stage renders the REAL pixel-art shelter (image2 assets: 960×540 background swapped by
+// branch, pixel-v2 character sprites at their true ShelterScene positions, the pixel AURA sprite) and
+// moves AURA to the location of each day's picked task. Reuses src/data (image2Assets, tasksById,
+// hotspot layout) read-only; a curated ~8MB image2 subset ships in web/public. Real Phaser consuming
+// the trace, day by day — but the site's own light replay scene, not the 1064-line live-demo scene.
+
+// hotspot centres (the ShelterScene 960×540 layout) — AURA targets + active-zone highlight.
+const HOTSPOTS: Record<TaskLocation, { x: number; y: number; w: number; h: number }> = {
+  water: { x: 34, y: 154, w: 228, h: 146 },
+  medical: { x: 288, y: 334, w: 238, h: 112 },
+  security: { x: 382, y: 174, w: 144, h: 126 },
+  ventilation: { x: 508, y: 172, w: 144, h: 124 },
+  communication: { x: 654, y: 166, w: 242, h: 130 },
+  whiteboard: { x: 650, y: 348, w: 254, h: 120 },
+  residents: { x: 278, y: 314, w: 580, h: 150 },
+  beacon: { x: 430, y: 46, w: 118, h: 82 }
+};
+
+// character sprites + true positions/sizes lifted from ShelterScene.drawStoryCharacters().
+const CHARACTERS = [
+  { asset: image2Assets.maDehai, x: 402, y: 250, w: 34, h: 82 },
+  { asset: image2Assets.shenZhiyue, x: 424, y: 400, w: 34, h: 88 },
+  { asset: image2Assets.xiaoTieSickCot, x: 344, y: 402, w: 120, h: 77 },
+  { asset: image2Assets.laoQian, x: 730, y: 405, w: 42, h: 84 }
 ];
 
-const CHARACTERS: { key: string; tex: string; x: number; y: number; h: number }[] = [
-  { key: "maDehai", tex: "assets/characters/ma_dehai.png", x: 150, y: 250, h: 120 },
-  { key: "shenZhiyue", tex: "assets/characters/shen_zhiyue.png", x: 360, y: 415, h: 110 },
-  { key: "xiaoTie", tex: "assets/characters/xiao_tie.png", x: 450, y: 420, h: 92 },
-  { key: "laoQian", tex: "assets/characters/lao_qian.png", x: 800, y: 250, h: 120 }
-];
+const BG: Record<string, { key: string; path: string }> = {
+  common: image2Assets.shelterBackground,
+  rescue: image2Assets.shelterRescueBackground,
+  lighthouse: image2Assets.shelterLighthouseBackground
+};
 
 function assetBase(): string {
   const b = (import.meta.env.BASE_URL as string) || "/";
@@ -39,11 +49,10 @@ function firstLocation(tasksPicked: string[]): TaskLocation | null {
   return null;
 }
 
-type Zone = { def: Hotspot; rect: Phaser.GameObjects.Rectangle; label: Phaser.GameObjects.Text };
-
 export class ReplayScene extends Phaser.Scene {
-  private zones = new Map<TaskLocation, Zone>();
+  private bg!: Phaser.GameObjects.Image;
   private aura!: Phaser.GameObjects.Image;
+  private highlight!: Phaser.GameObjects.Rectangle;
   private dayText!: Phaser.GameObjects.Text;
   private branchText!: Phaser.GameObjects.Text;
   private off?: () => void;
@@ -54,41 +63,39 @@ export class ReplayScene extends Phaser.Scene {
 
   preload() {
     const base = assetBase();
-    this.load.image("aura", `${base}assets/props/aura.png`);
-    for (const c of CHARACTERS) this.load.image(c.key, `${base}${c.tex}`);
+    for (const b of Object.values(BG)) this.load.image(b.key, `${base}${b.path}`);
+    for (const c of CHARACTERS) this.load.image(c.asset.key, `${base}${c.asset.path}`);
+    this.load.image(image2Assets.auraIdle.key, `${base}${image2Assets.auraIdle.path}`);
   }
 
   create() {
-    this.add.rectangle(480, 270, 960, 540, 0x171310).setOrigin(0.5);
-    this.add.rectangle(480, 505, 960, 70, 0x201a14).setOrigin(0.5); // floor band
-
-    for (const def of HOTSPOTS) {
-      const cx = def.x + def.w / 2;
-      const cy = def.y + def.h / 2;
-      const rect = this.add.rectangle(cx, cy, def.w, def.h, def.accent, 0.06).setStrokeStyle(1, def.accent, 0.4);
-      const label = this.add
-        .text(def.x + 8, def.y + 6, def.label, { fontFamily: "monospace", fontSize: "13px", color: "#c9c2b8" })
-        .setAlpha(0.7);
-      this.zones.set(def.id, { def, rect, label });
+    this.add.rectangle(480, 270, 960, 540, 0x14110e).setDepth(0);
+    if (this.textures.exists(BG.common.key)) {
+      this.bg = this.add.image(480, 270, BG.common.key).setDisplaySize(960, 540).setDepth(1);
     }
+
+    // active-zone highlight (the background already depicts the rooms — we only glow the active one).
+    this.highlight = this.add
+      .rectangle(0, 0, 10, 10, 0xe0533d, 0.14)
+      .setStrokeStyle(2, 0xe0533d, 0.85)
+      .setDepth(4)
+      .setVisible(false);
 
     for (const c of CHARACTERS) {
-      if (!this.textures.exists(c.key)) continue;
-      const img = this.add.image(c.x, c.y, c.key);
-      img.setScale(c.h / img.height);
-      img.setOrigin(0.5, 1);
+      if (!this.textures.exists(c.asset.key)) continue;
+      this.add.image(c.x, c.y, c.asset.key).setDisplaySize(c.w, c.h).setDepth(6);
     }
 
-    this.aura = this.add.image(777, 408, "aura");
-    if (this.aura.height) this.aura.setScale(52 / this.aura.height);
-    this.aura.setDepth(10);
+    this.aura = this.add.image(540, 396, image2Assets.auraIdle.key).setDisplaySize(56, 68).setDepth(20);
 
-    this.dayText = this.add.text(16, 14, "DAY 01", {
-      fontFamily: "monospace", fontSize: "20px", color: "#e0533d", fontStyle: "bold"
-    });
-    this.branchText = this.add.text(16, 44, "common", {
-      fontFamily: "monospace", fontSize: "13px", color: "#8a8378"
-    });
+    this.dayText = this.add
+      .text(16, 14, "DAY 01", { fontFamily: "monospace", fontSize: "20px", color: "#ffd7a8", fontStyle: "bold" })
+      .setStroke("#14110e", 4)
+      .setDepth(30);
+    this.branchText = this.add
+      .text(16, 44, "common", { fontFamily: "monospace", fontSize: "13px", color: "#e8e1d5" })
+      .setStroke("#14110e", 3)
+      .setDepth(30);
 
     this.off = onReplayFrame((m) => this.applyFrame(m));
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => this.off?.());
@@ -99,21 +106,17 @@ export class ReplayScene extends Phaser.Scene {
     this.dayText.setText(`DAY ${String(m.day).padStart(2, "0")}`);
     this.branchText.setText(m.branch);
 
-    const loc = firstLocation(m.tasksPicked);
-    // reset all zones to base, highlight the active one
-    for (const [id, z] of this.zones) {
-      const active = id === loc;
-      z.rect.setFillStyle(z.def.accent, active ? 0.24 : 0.06);
-      z.rect.setStrokeStyle(active ? 2 : 1, z.def.accent, active ? 0.9 : 0.4);
-      z.label.setAlpha(active ? 1 : 0.7);
-    }
+    const bgKey = (BG[m.branch] ?? BG.common).key;
+    if (this.bg && this.textures.exists(bgKey)) this.bg.setTexture(bgKey).setDisplaySize(960, 540);
 
+    const loc = firstLocation(m.tasksPicked);
     if (loc) {
-      const z = this.zones.get(loc)!;
-      // Snap the agent to the day's active zone. For a scrub-driven replay this is the correct UX
-      // (dragging the slider moves AURA immediately) and it is robust to a throttled rAF loop — a
-      // direct setPosition needs no game-loop tick, unlike a tween.
-      this.aura.setPosition(z.def.x + z.def.w / 2, z.def.y + z.def.h / 2);
+      const z = HOTSPOTS[loc];
+      // snap the agent to the day's active zone (robust to a throttled rAF loop, right for scrubbing).
+      this.aura.setPosition(z.x + z.w / 2, z.y + z.h / 2 - 24);
+      this.highlight.setVisible(true).setPosition(z.x + z.w / 2, z.y + z.h / 2).setSize(z.w, z.h);
+    } else {
+      this.highlight.setVisible(false);
     }
 
     if (m.hero) this.cameras.main.flash(320, 224, 83, 61);

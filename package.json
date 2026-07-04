@@ -27,6 +27,8 @@
     "sync:traces": "cp bench/fixtures/traces/*.trace.json web/public/traces/",
     "build:web": "tsc -p web/tsconfig.json && vite build --config web/vite.config.ts",
     "preview:web": "vite preview --config web/vite.config.ts",
+    "smoke:web": "npm run build:web && node scripts/browser-smoke-web.mjs",
+    "hero:gif": "npm run build:web && node scripts/export-hero-gif.mjs",
     "generate:story-art": "node scripts/generate-story-art.mjs",
     "validate:script": "node scripts/validate-script-upgrade.mjs",
     "smoke:browser": "node scripts/browser-smoke.mjs",

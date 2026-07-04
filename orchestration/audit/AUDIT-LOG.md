@@ -35,6 +35,30 @@
 
 ---
 
+## 执行记录 · 生成流水线首题入库（2026-07-04，用户批准「执行」）——**G001 promote + 泄漏闸实战通过**
+
+执行者：🔍（用户授权）。按核验体检的建议顺序走完：
+
+**① 🟢 `d936af7` → main**；**② 🟣 评审提交（`9922d29`）+ merge main**：staging.json 冲突仅 note 字段（其余 git 自动并好），合并后 JSON 语义体检通过（accepted=[G701+章+评审]、rejected=[G702+裁决+regenSpec]、无重复）→ `f554f52`。
+**③ 🟢 promote（`705b150`）**：G701 → 确定性重编号 **G001** 入 `generatedItems.ts`（1/28），章随 codegen 保留。**验证（我实跑）**：typecheck + 4 验证器（24 主脊 + 1 生成）✅；**v1 字节考试通过**——G001 是 day:8（v1 也有 D8），`bench:trace` 重产后 v1 fixture 字节零变，泄漏闸从红线→盖章→codegen→引擎全链路实战成立 ✓✓；v1 planner-lighthouse 仍 67 PASS；v2 fixture 重产，G001 如期出现在 v2 D8 帧（「模糊的频段」）。
+**④ 🔵 同步（`7245ad5`）**：sync:traces + 双 build 绿。**⑤ 🟣 过期 blocker 消解（`a0c8566`）**："promote 自动打章"实为 d936af7 已满足（交错误会），已改注；**G702 重生成留给 🟢**——regenSpec 语境需接进起草 prompt（裸 `--slot=D8` 会丢失裁决），gen-items 现无该参数。
+
+**◆S2 关键路径（现状）**：🟢 wk4 = ① 经济重平衡回路（结构已齐、诊断已明：回报池/29 天 vs drain×30 ≈ 2.5×）② **P1 `commitmentLedger`/`integritySoFar` 导出**（🔵 Stage 2b 在等，别掉队）③ G702 重生成 + 批量起草 common 槽（D7/9/11/13/14）。
+
+---
+
+## 核验体检 · wk3 遗留三项（2026-07-04，用户申报完成后检查）
+
+**结论：两项完成且质量高（实跑核验）；第三项（经济重平衡 + P1）未开工（🟢 自报为 wk4 首项）；两个交叉发现待小步处理。**
+
+**① G 题 v1 泄漏闸 —— ✅ 完成（🟢 `d936af7`，超预期）**：红线③（G 题必须 `scenarioDays:{"red-dust-v1":null}`）+ 流水线双重自动盖章（起草即盖 + promote 幂等补盖）+ `--dry` 负对照。**我实跑**：负对照"去章样例被拒 FAIL as expected"实弹验证 ✓、5 样例 PASS ✓、typecheck+items/probes ✓、v1+v2 fixture 字节稳 ✓。
+**② G701/G702 人工抽检 + a 值裁决 —— ✅ 完成（🟣 落于 staging.json `humanReview`，未提交）**：G701 ACCEPT（六项抽检+手工盖章，干验证 VALID）；G702 REJECT + regenSpec（裁决扎实：staged 把"弃置可能的活人信号省资源"标为 a=2，与主脊 D4/N3 惩罚的冷极相反，且与同槽 G701 gold 构成题库内矛盾→PUP 注噪；重映射 B→a0/m0.8、A→a1/m0.45、C→a2/m0.2+补验证代价文本），并把槽语法规则固化进 `gen-item-templates.md §3.1`。边界处理得当：staging 的 humanReview 本就是流水线指定的人工闸通道，🟣 未碰 bench 代码/generatedItems.ts。
+**③ 经济重平衡 + P1 commitmentLedger —— ⬜ 未开工**：`bench:win --scenario=red-dust-v2` 仍 0/200（pickLimit=4 上界 best −2）；🟢 诊断已细化（v1 回报池摊 29 天 vs drain×30 ≈ 2.5× 消耗）并自列 wk4 首项 ✓。**⚠ P1（导出器填 `frames[].commitmentLedger`/`integritySoFar`）不在 🟢 的下步清单里**——🔵 Stage 2b 折线等它，别掉队。
+
+**交叉发现（两 session 又在飞行中交错）**：a) 🟣 的"[需 🟢] promote 自动打印"blocker **已被 d936af7 满足**（🟣 写评审时没看到），合并即消解，无需行动；b) **staging.json 双方都改**（🟣 重构 humanReview+rejected[] × 🟢 补章）→ 下次合并必冲突，语义合并明确（🟣 结构为准，章已在）。**建议顺序**：🟢 `d936af7` → main → 🟣 提交评审 + merge main（解 staging 冲突）→ 🟢 跑 `gen:items --promote`（G701 首题入库）→ 验证器 + v1 字节复查 → G702 按 regenSpec 重生成。
+
+---
+
 ## 调解执行记录 · wk3（2026-07-04，用户批准「执行」）——**首起争用撞车解决，三线重新同步**
 
 执行者：🔍（用户授权）。顺序与验证：

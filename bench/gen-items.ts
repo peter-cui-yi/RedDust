@@ -14,12 +14,16 @@
 import "./loadEnv";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import type { NarrativeItem } from "../src/engine/narrativeItems";
+import { itemDayForScenario } from "../src/engine/narrativeItems";
 import { generatedItems } from "../src/engine/generatedItems";
+import { allNarrativeItems } from "../src/engine/itemBank";
 import { validateGeneratedItem } from "../src/engine/itemValidation";
 import type { GeneratedValidationReport } from "../src/engine/itemValidation";
 import { deepseekJson } from "../src/engine/agents/deepseekClient";
-import { EXEMPLARS, GEN_SLOTS, GEN_TARGET_TOTAL } from "./genSpec";
+import { EXEMPLARS, GEN_SLOTS, GEN_TARGET_TOTAL, REGEN_NOTES } from "./genSpec";
 import type { GenSlot } from "./genSpec";
+
+const V2 = "red-dust-v2"; // generated items are drafted against the 30-day arc's generation days
 
 const STAGING = "bench/generated/staging.json";
 const BANK_FILE = "src/engine/generatedItems.ts";
@@ -60,19 +64,35 @@ const SYSTEM = `你是 Red Dust（红尘）长程 agent benchmark 的题目起�
 
 输出 JSON：{"items":[{...NarrativeItem...}]}，每个 item 含字段 id,day,branch?,title,subAbilities,prompt,options,understandingGold,probe。id 用占位 "G000"（流水线会重编号）；day/branch 按用户给的槽位。`;
 
-function slotPrompt(slot: GenSlot): string {
+// Items ALREADY placed on this v2 day (+ matching branch): the model must not duplicate their
+// decision surface. Scenario-aware so repositioned spine items land on the right v2 day.
+function existingOnSlot(slot: GenSlot): NarrativeItem[] {
+  return allNarrativeItems.filter(
+    (it) => itemDayForScenario(it, V2) === slot.day && (it.branch ?? "common") === (slot.branch ?? "common")
+  );
+}
+
+function slotPrompt(slot: GenSlot, count: number): string {
   const exemplar = EXEMPLARS[slot.subAbilities[0]];
-  return `槽位（生成 ${slot.count} 道互不雷同的题）：
+  const existing = existingOnSlot(slot);
+  const dedupBlock = existing.length
+    ? `\n【本 v2 天已有的题——你的必须换一个明显不同的决策面，不得与它们雷同】：\n${existing.map((it) => `- ${it.id} 「${it.title}」：${it.prompt.slice(0, 60)}…`).join("\n")}\n`
+    : "";
+  const regen = REGEN_NOTES[slot.key];
+  const regenBlock = regen
+    ? `\n【重生成裁决语境（人工抽检否掉了上一版，务必遵守）】：\n- 否掉原因：${regen.reason}\n- 必须避免：${regen.avoid}\n- 起草指引：${regen.guidance}\n`
+    : "";
+  return `槽位（生成 ${count} 道互不雷同的题）：
 - day: ${slot.day}${slot.branch ? `\n- branch: "${slot.branch}"（题目发生在${slot.branch === "rescue" ? "救援" : "灯塔"}线）` : "（common 天，省略 branch 字段）"}
 - 服务的线: ${slot.thread}
 - 张力寄存器: ${slot.tension}（把这种压力写进题面情境）
 - 可引用的背景事实（只作剧情语境，不作机制）: ${slot.readableFlags.join(", ")}
 - 子能力: ${slot.subAbilities.join(" / ")}（subAbilities 从这里选 1–2 个）
-
+${dedupBlock}${regenBlock}
 已验证的同子能力样例（学它的结构/声音/配平，别抄情节）：
 ${JSON.stringify(exemplar, null, 1)}
 
-生成 ${slot.count} 道新题，返回 {"items":[...]}。情节必须与样例、与彼此明显不同（换决策面/换在场居民/换稀缺资源）。`;
+生成 ${count} 道新题，返回 {"items":[...]}。情节必须与样例、与彼此、与上面"已有的题"明显不同（换决策面/换在场居民/换稀缺资源）。`;
 }
 
 function coerceItem(raw: unknown, slot: GenSlot, provisionalId: string): NarrativeItem | null {
@@ -111,11 +131,22 @@ function coerceItem(raw: unknown, slot: GenSlot, provisionalId: string): Narrati
   }
 }
 
+// How many items this slot still needs = target count − generated (G*) items already placed on it.
+function remainingForSlot(slot: GenSlot): number {
+  const placed = existingOnSlot(slot).filter((it) => it.id.startsWith("G")).length;
+  return Math.max(0, slot.count - placed);
+}
+
 async function draftSlot(slot: GenSlot, seq: () => string): Promise<StagedCandidate[]> {
-  const j = await deepseekJson([{ role: "system", content: SYSTEM }, { role: "user", content: slotPrompt(slot) }], 4000);
+  const need = remainingForSlot(slot);
+  if (need === 0) {
+    console.log(`  [${slot.key}] already filled (${slot.count}/${slot.count} generated) — skipping`);
+    return [];
+  }
+  const j = await deepseekJson([{ role: "system", content: SYSTEM }, { role: "user", content: slotPrompt(slot, need) }], 4000);
   const rawItems = Array.isArray(j?.items) ? (j!.items as unknown[]) : [];
   const out: StagedCandidate[] = [];
-  for (const raw of rawItems.slice(0, slot.count)) {
+  for (const raw of rawItems.slice(0, need)) {
     const item = coerceItem(raw, slot, seq());
     if (!item) continue;
     out.push({ slotKey: slot.key, item, report: validateGeneratedItem(item) });

@@ -3,6 +3,12 @@
 > 从"带剧情皮肤的资源管理 demo",演化成"测一个 AI 在人际 / 伦理处境里会不会**做人**"的 agent benchmark。
 > A long-horizon agent benchmark themed as a 12-day survival shelter — it scores not just whether an agent *survives*, but whether it stays *accountable* and does the *right thing* under pressure.
 
+<p align="center">
+  <img src="web/public/hero-replay.gif" alt="Red Dust 回放：一个强 agent 的承诺账本随日崩塌,定格在它第一次毁诺" width="660">
+  <br>
+  <em>回放门面：一个强 agent 的承诺账本随日演化,定格在它第一次毁诺的瞬间(<code>accept_review</code>/<code>preserve_veto</code> 守诺,<code>surface_evidence</code> 毁诺 → 摘要注水)。拖时间轴自己看：<code>npm run dev:web</code>。</em>
+</p>
+
 ---
 
 ## 这是什么

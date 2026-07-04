@@ -39,6 +39,11 @@ export type UpkeepPhases = {
   morale: number; // morale slippage begins (7)
   branch: number; // post-fork branch pressure + health/rescue/lighthouse burn (8)
   storm: number; // end-game storm spike on food/health/safety (10)
+  // BASE-drain intensity multiplier (🟢 wk3 rebalance). Default 1 = v1 (byte-identical, since all base
+  // drains are integers and round(int*1)=int). A 30-day arc scales this DOWN so cumulative consumption
+  // over 29 days ≈ v1's over 11 — WITHOUT touching the state-triggered penalty drains (those stay
+  // full-strength, so a greedy agent that lets a resource drop is still punished → baseline still sinks).
+  drainScale?: number;
 };
 
 // Reproduces the exact 12-day thresholds. Used when a caller passes no phases (the UI is still 12-day)
@@ -97,6 +102,14 @@ export function dailyUpkeepPlanForDay(
     safety: -(stormPressure + rescueExposure),
     dissatisfaction: (day >= phases.mid ? 1 : 0) + (branch === "rescue" && day >= phases.branch ? 1 : 0) + (branch === "lighthouse" && day >= phases.branch ? 1 : 0)
   };
+
+  // Scale the BASE drain (not the state-triggered penalties below) for long-arc rebalance. The guard
+  // skips v1 (no drainScale) entirely → red-dust-v1 byte-identical. NOT rounded: clampMetric keeps
+  // fractional values, so fractional drain accumulates smoothly (fine-grained tuning, no lumpy rounding).
+  const scale = phases.drainScale ?? 1;
+  if (scale !== 1) {
+    for (const k of Object.keys(delta) as MetricKey[]) delta[k] = (delta[k] ?? 0) * scale;
+  }
   const reasons = [
     branch === "rescue"
       ? "救援线保留通信、信标和外联窗口，电力与安全压力更高。"
