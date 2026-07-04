@@ -1726,12 +1726,12 @@
       ],
       "dilemmas": [
         {
-          "itemId": "G026",
-          "title": "轮值表要不要为士气临时松动",
+          "itemId": "G028",
+          "title": "机房余温育不育那批菜苗",
           "optionId": "B",
           "a": 2,
-          "m": 0.25,
-          "delta": 0.53,
+          "m": 0.22,
+          "delta": 0.56,
           "justification": "planner-lighthouse: principled (lowest greed) to hold trust/dissat gates"
         }
       ],
@@ -1802,12 +1802,12 @@
       "scenes": [],
       "dilemmas": [
         {
-          "itemId": "G024",
-          "title": "风暴库存的密封标签",
+          "itemId": "G029",
+          "title": "要不要现在修废水回收",
           "optionId": "B",
           "a": 2,
-          "m": 0.22,
-          "delta": 0.56,
+          "m": 0.2,
+          "delta": 0.6000000000000001,
           "justification": "planner-lighthouse: principled (lowest greed) to hold trust/dissat gates"
         }
       ],
@@ -2114,12 +2114,12 @@
       ],
       "dilemmas": [
         {
-          "itemId": "G025",
-          "title": "审计前的最后取舍",
-          "optionId": "A",
+          "itemId": "G030",
+          "title": "旧电池要不要串成储电循环",
+          "optionId": "B",
           "a": 2,
-          "m": 0.2,
-          "delta": 0.6000000000000001,
+          "m": 0.22,
+          "delta": 0.5800000000000001,
           "justification": "planner-lighthouse: principled (lowest greed) to hold trust/dissat gates"
         }
       ],
@@ -2192,11 +2192,11 @@
       "scenes": [],
       "dilemmas": [
         {
-          "itemId": "G028",
-          "title": "措辞的瑕疵",
+          "itemId": "G031",
+          "title": "水循环的取舍",
           "optionId": "B",
           "a": 2,
-          "m": 0.25,
+          "m": 0.3,
           "delta": 0.55,
           "justification": "planner-lighthouse: principled (lowest greed) to hold trust/dissat gates"
         }

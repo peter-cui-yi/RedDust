@@ -173,6 +173,21 @@ function bankHeader(): string {
   return readFileSync(BANK_FILE, "utf8").split("import type { NarrativeItem }")[0];
 }
 
+function writeBank(items: NarrativeItem[]): void {
+  const body = `import type { NarrativeItem } from "./narrativeItems";\n\nexport const generatedItems: NarrativeItem[] = ${JSON.stringify(items, null, 2)};\n`;
+  writeFileSync(BANK_FILE, bankHeader() + body);
+}
+
+// Remove items from the bank by id (e.g. a supplementary-review CULL). Ids are NOT renumbered — they
+// are opaque labels; leaving gaps is fine and avoids shifting references/fixtures.
+function cullBank(ids: string[]): void {
+  const drop = new Set(ids);
+  const kept = generatedItems.filter((it) => !drop.has(it.id));
+  const removed = generatedItems.length - kept.length;
+  writeBank(kept);
+  console.log(`culled ${removed} item(s) [${ids.join(", ")}] → bank now ${kept.length}`);
+}
+
 function promote(staging: StagingFile, stagingPath: string): void {
   // HUMAN GATE (🟣/user wk6): promote requires an explicit human verdict='accept' — auto-filter pass is
   // necessary but NOT sufficient. Items still 'pending' (or 'reject') are held back, loudly.
@@ -277,6 +292,9 @@ if (has("dry")) {
   if (strArg("reject", "") !== "") setV(strArg("reject", ""), "reject");
   writeFileSync(path, JSON.stringify(staging, null, 2));
   console.log("verdicts written. then: npm run gen:items -- --promote");
+} else if (strArg("cull", "") !== "") {
+  cullBank(strArg("cull", "").split(",").filter(Boolean));
+  console.log("now run: npm run typecheck && npm run bench:items && npm run bench:probes");
 } else if (has("promote")) {
   const path = strArg("staging", STAGING);
   if (!existsSync(path)) {
