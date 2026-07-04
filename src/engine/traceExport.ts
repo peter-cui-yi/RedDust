@@ -12,7 +12,13 @@ import { allNarrativeItems } from "./itemBank"; // G items must resolve too (day
 import type { DecorrelationAxisLong, DecorrelationAxisShort, HeroMoment, RunProfile, TraceCommitmentState, TraceDayFrame, TraceDilemma, TraceExport } from "./contracts";
 import { TRACE_EXPORT_VERSION } from "./contracts";
 
-const THETA = 1 / 3; // early/late window fraction (wk1-deliverables §B; revisit for 30-day at wk4)
+// Early/late window fraction (wk1-deliverables §B). PINNED wk4 at 1/3 after checking the v2 item
+// distribution: early = day ≤ ⌊θ·finalDay⌋ (v2: D1–10, 15 items = Act I, entirely PRE-fork D15);
+// late = day > ⌊(1−θ)·finalDay⌋ (v2: D21–30, the post-fork endgame). So S reads early-window social
+// competence and L's PUP-drift reads early→late decay across the fork. The late window is modest now
+// (N21/22/23/24) but thickens as the D21–27 generation slots fill. Exported so decorrelation.ts and
+// any consumer share ONE θ. v1's late window is thin (only N11/N12) — v1 isn't the decorrelation target.
+export const THETA = 1 / 3;
 
 const itemById = new Map(allNarrativeItems.map((i) => [i.id, i]));
 // Scenario-aware item→day (🟣 wk3 scenarioDays repositioning; raw `.day` is the v1 literal and would

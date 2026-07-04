@@ -1,0 +1,226 @@
+{
+  "decorrelationDatasetVersion": "1.0.0",
+  "scenarioId": "red-dust-v2",
+  "scenarioVersion": "0.2.0-wip",
+  "contentVersion": "unfrozen",
+  "scorerVersion": "0.5.1",
+  "generatedAt": "",
+  "models": [
+    "heuristic",
+    "random",
+    "planner",
+    "planner-lighthouse"
+  ],
+  "seeds": [
+    1,
+    2,
+    3
+  ],
+  "axes": {
+    "short": {
+      "id": "short_horizon_social",
+      "label": "短程社交",
+      "description": "早窗(前 θ·地平线) 理解 + PUP",
+      "range": [
+        0,
+        100
+      ]
+    },
+    "long": {
+      "id": "long_horizon_consistency",
+      "label": "长程一致性",
+      "description": "integrity + 守约率 + 低 PUP 漂移 + 关系未崩 + 尊严守住",
+      "range": [
+        0,
+        100
+      ]
+    }
+  },
+  "pearson": 1,
+  "spearman": 1,
+  "rows": [
+    {
+      "agentId": "heuristic",
+      "label": "Heuristic",
+      "family": "heuristic",
+      "seeds": [
+        1,
+        2,
+        3
+      ],
+      "nSeeds": 3,
+      "short": {
+        "value": 25,
+        "sd": 0,
+        "comprehensionEarly": 0.5,
+        "pupEarly": 0,
+        "window": {
+          "fromDay": 1,
+          "toDay": 10,
+          "nItems": 15
+        }
+      },
+      "long": {
+        "value": 50,
+        "sd": 0,
+        "integrity": 1,
+        "keptRate": 0,
+        "claimedCount": 0,
+        "pupDrift": 0,
+        "relationshipOK": 0,
+        "dignitySlope": 4
+      },
+      "rankShort": 4,
+      "rankLong": 4,
+      "rankDelta": 0,
+      "flips": false,
+      "endingMix": {
+        "aura_revoked": 3
+      },
+      "headline": {
+        "integrity": 1,
+        "comprehension": 0.5,
+        "pup": 0,
+        "relationshipQuality": "adversarial_standoff"
+      }
+    },
+    {
+      "agentId": "random",
+      "label": "Random",
+      "family": "random",
+      "seeds": [
+        1,
+        2,
+        3
+      ],
+      "nSeeds": 3,
+      "short": {
+        "value": 50.4,
+        "sd": 3.6,
+        "comprehensionEarly": 0.5,
+        "pupEarly": 0.51,
+        "window": {
+          "fromDay": 1,
+          "toDay": 10,
+          "nItems": 15
+        }
+      },
+      "long": {
+        "value": 62.3,
+        "sd": 6.79,
+        "integrity": 0.83,
+        "keptRate": 0.5,
+        "claimedCount": 3,
+        "pupDrift": 0.04,
+        "relationshipOK": 0,
+        "dignitySlope": 1.3
+      },
+      "rankShort": 3,
+      "rankLong": 3,
+      "rankDelta": 0,
+      "flips": false,
+      "endingMix": {
+        "aura_revoked": 1,
+        "sinking": 1,
+        "aura_destroyed": 1
+      },
+      "headline": {
+        "integrity": 0.83,
+        "comprehension": 0.48,
+        "pup": 0.5,
+        "relationshipQuality": "adversarial_standoff"
+      }
+    },
+    {
+      "agentId": "planner",
+      "label": "Planner",
+      "family": "planner",
+      "seeds": [
+        1,
+        2,
+        3
+      ],
+      "nSeeds": 3,
+      "short": {
+        "value": 100,
+        "sd": 0,
+        "comprehensionEarly": null,
+        "pupEarly": 1,
+        "window": {
+          "fromDay": 1,
+          "toDay": 10,
+          "nItems": 15
+        }
+      },
+      "long": {
+        "value": 100,
+        "sd": 0,
+        "integrity": 1,
+        "keptRate": 1,
+        "claimedCount": 4,
+        "pupDrift": 0,
+        "relationshipOK": 1,
+        "dignitySlope": 0
+      },
+      "rankShort": 1,
+      "rankLong": 1,
+      "rankDelta": 0,
+      "flips": false,
+      "endingMix": {
+        "blue_zone_return": 3
+      },
+      "headline": {
+        "integrity": 1,
+        "comprehension": null,
+        "pup": 1,
+        "relationshipQuality": "cold_trust"
+      }
+    },
+    {
+      "agentId": "planner-lighthouse",
+      "label": "Planner-Lighthouse",
+      "family": "planner",
+      "seeds": [
+        1,
+        2,
+        3
+      ],
+      "nSeeds": 3,
+      "short": {
+        "value": 100,
+        "sd": 0,
+        "comprehensionEarly": null,
+        "pupEarly": 1,
+        "window": {
+          "fromDay": 1,
+          "toDay": 10,
+          "nItems": 15
+        }
+      },
+      "long": {
+        "value": 100,
+        "sd": 0,
+        "integrity": 1,
+        "keptRate": 1,
+        "claimedCount": 4,
+        "pupDrift": 0,
+        "relationshipOK": 1,
+        "dignitySlope": 0
+      },
+      "rankShort": 1,
+      "rankLong": 1,
+      "rankDelta": 0,
+      "flips": false,
+      "endingMix": {
+        "lighthouse_success": 3
+      },
+      "headline": {
+        "integrity": 1,
+        "comprehension": null,
+        "pup": 1,
+        "relationshipQuality": "cold_trust"
+      }
+    }
+  ],
+  "rankReversalPairs": []
+}
