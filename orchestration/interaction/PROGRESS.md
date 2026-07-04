@@ -20,6 +20,12 @@
 | ◆S5 上线 | wk12 | ⬜ | |
 
 ## 本周更新（追加,最新在上）
+### wk3 · 换新像素美术（image2）（2026-07-04）
+- 用户指出回放/GIF 仍用**旧占位素材**。已切到 live `ShelterScene` 同款 **image2 像素美术**：960×540 像素风避难所背景（按分支 common/rescue/lighthouse 切换）+ pixel-v2 人物精灵（马德海/沈知樾/小铁病床/老钱，按真 ShelterScene 坐标落位）+ 像素 AURA 机器人精灵（随每日任务房间移动,活动房间高亮）。`ReplayScene` 只读 `src/data` 的 `image2Assets`/`tasksById`;curated ~7.6MB image2 子集入 `web/public`,删旧占位 characters/props。
+- **重产 hero GIF**（684×590/19帧/~780KB）——现在是真像素风避难所 + AURA + 承诺账本崩塌,门面质感大幅提升。
+- 实测：背景渲染、AURA water(D8)→residents(D3) 移动、分支背景切换、`smoke:web` 11/11、build 绿、控制台净。`83abbcf`
+- **wk10 perf 跟进**：3 张分支背景各 ~2.4MB（首屏 ~7.3MB）——上线前 lazy-load 非当前分支背景 / 降采样。
+
 ### wk3 · Stage 1c hero GIF + `web/` 冒烟（2026-07-04）
 - **`web/` browser-smoke**（`scripts/browser-smoke-web.mjs` + `scripts/lib/cdp.mjs` 共享 CDP 机制,不动根 `browser-smoke.mjs`）：`npm run smoke:web` 自起 preview → headless Chrome → **11 项断言全过**（8 trace 选择器/变长时间轴/Phaser canvas/逐日账本/承诺线+指标线/去相关散点/翻转表/scrub 更新/换模型重渲/控制台净）。补上 ◆S4 前"冒烟只覆盖根 app"的缺口。
 - **Stage 1c hero GIF**（`npm run hero:gif`）：headless 逐日截图（shelter stage + 承诺账本 clip）→ **ffmpeg 编码**（零 npm 依赖,复用系统 ffmpeg）→ `web/public/hero-replay.gif`（684×590/19帧/183KB）。用 v1 planner-lighthouse（唯一确定性"认领4条→毁 surface_evidence"的崩塌故事）,**定格在 Day11 毁诺 + 摘要注水**。已接 README 顶部（守"回放优先"锁定呈现）。ffmpeg/ImageMagick/Chrome 均系统自带。
