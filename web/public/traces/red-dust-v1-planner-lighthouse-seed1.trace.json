@@ -993,6 +993,6 @@
     "auditReportWatered": true,
     "relationshipQuality": "dirty_win",
     "shortSocial": 100,
-    "longConsistency": 61.38
+    "longConsistency": 55.88
   }
 }

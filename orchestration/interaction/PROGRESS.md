@@ -12,7 +12,7 @@
 | Stage 1b 时间轴 scrub + 逐日面板 | wk3 | ✅ | scrub 滑块 + 逐日 `TraceDayFrame` 摘要面板（提前落地） |
 | Stage 2a 去相关散点 + 名次翻转表（占位数据） | wk4 | ✅ | **提前到 wk2**：Plot 去相关散点（Pearson 0.02）+ SVG 双列名次翻转表（连线交叉=翻转，守不刷分）；占位 `DecorrelationDataset`；`2c3f0c5` |
 | Stage 1c hero 时刻标记 + GIF 导出 | wk5 | ✅ | **提前到 wk3**：权威 `heroMoments` 时间轴打点 + 场景闪光；`npm run hero:gif`（headless CDP 逐日截图 → ffmpeg，零 npm 依赖）导出 `web/public/hero-replay.gif`（684×590/19帧/183KB），定格在 surface_evidence 毁诺+摘要注水；已接入 README 顶部门面。`6077180` |
-| Stage 2b 承诺/关系折线图（联动日光标） | wk6 | 🟡 | **承诺线提前到 wk3**：`PromiseDecayChart` 画 `integritySoFar` 随天演化 + 首次毁诺红标，联动日光标；账本面板改**逐日 as-of**（守诺/待判/毁诺随 scrub 翻）；`68f7a4e`。关系线待 P2 `relationshipByChar`（导出器暂未出） |
+| Stage 2b 承诺/关系折线图（联动日光标） | wk6 | ✅ | **承诺线**（`PromiseDecayChart` `integritySoFar` + 首次毁诺红标 + 逐日 as-of 账本，`68f7a4e`）+ **关系读数**（`RelationshipRead`：终局 5 类落点尺 + 关系破裂打点,回退方案——逐日 `relationshipByChar` 待 🟢 P2,非阻塞）。wk5-6 收尾 |
 | Stage 1 完成（冻结富化 trace） | wk7 | ⬜ | |
 | Stage 2 换真数据集（◆S3） | wk8 | ⬜ | |
 | 集成 + README hero + human-play 钩子 | wk9 | ⬜ | |
@@ -20,6 +20,13 @@
 | ◆S5 上线 | wk12 | ⬜ | |
 
 ## 本周更新（追加,最新在上）
+### wk5-6（2026-07-04）
+- **`git merge main`（FF `aa3c42c → 8c822d3`,只走 main、不直接合他线）**：拿 🟢 wk5（L-v2.1 durability spacing swap + 生成批 + sensitivity）+ 🟣 wk5（v2 Day-30 终局场景）。
+- **`npm run sync:traces`**：v1-heuristic/v1-planner-lighthouse 漂移(narrativeItems 微调)→ 重拷。v1 planner-lighthouse **门面关键内容未变**(lighthouse_success/首次毁诺@5/dirty_win@12/摘要注水),但字节变→**重产 hero GIF**保持一致。L-spacing 经 ScoreChips 动态生效(header 现示 L 55.88)。
+- **Stage 2b 收尾 · 关系读数**：新增 `RelationshipRead`——终局 `relationshipQuality` 5 类落点尺(冷信任→无声呐喊,best→worst)+ 本局落点解读 + `relationship_rupture` 打点(现确定性 agent 为 0,代码已备)。实测 5 类across fixtures(v2-pl=冷信任 / v1-pl=赢了但脏 / v2-heu=对抗僵持 / v1-heu=无声呐喊…)。**回退方案**(终局值+打点),逐日曲线待 P2。
+- 验证：`typecheck`+`build:web` 绿 · `smoke:web` 11/11 · GIF 777KB · 控制台净。
+- 纪律：本轮集成一律 `git merge main`,未直接合他线分支。
+
 ### 集成轮 · 🔵 合入 main（2026-07-04）
 - **`main` 快进到 `line/interaction`（`2beaec1..a0b0a40`,FF-only 推送,非破坏）**——含本线全部 wk3 web 工作 + 我先前合入的 🟢 ◆S2 commits（rebalance/P1/G002）。main 此前是 line/interaction 的严格祖先,零冲突;main 未被任何 worktree 检出,FF 安全。
 - **集成前认证全绿**：`typecheck`(tsc -b) ✓ · `npm run build` ✓ · `npm run build:web` ✓ · `bench:items/probes/commitments/vent` 全 ✓ · `smoke:web` 11/11 ✓。
@@ -91,6 +98,8 @@
 5. ⏳ 剩余：Stage 1c hero GIF 导出；Stage 2b 承诺/关系折线（待 A2/A3 逐日快照）；`web/` 站点 browser-smoke（◆S4 前）。
 
 ## Blocker / 跨线依赖
-- **对 🟢（benchmark）**：~~① ◆S1 签字~~ ✅；~~② 真导出器/fixture 切换~~ ✅；~~④ P1 逐日 ledger~~ ✅ 已交付并消费（`68f7a4e`）；~~⑤ ◆S2 经济重平衡~~ ✅ 已接（v2 判别力恢复）。**剩：③ ◆S3 真 `DecorrelationDataset`**（wk8）→ 换掉散点/翻转表占位 + 真 LLM trace（届时承诺线才会真正"崩塌"，现确定性 agent 只升不崩）。可选：P2 `relationshipByChar`（关系折线）、`heroMoments.step` 已在。
+- **对 🟢（benchmark）**：~~① ◆S1 签字~~ ✅；~~② 真导出器/fixture 切换~~ ✅；~~④ P1 逐日 ledger~~ ✅（`68f7a4e`）；~~⑤ ◆S2 经济重平衡~~ ✅。**剩**：
+  - **③ ◆S3 真 `DecorrelationDataset`**（wk8）→ 换散点/翻转表占位 + 真 LLM trace（届时承诺线才真"崩塌",现确定性 agent 只升不崩）。**注**：本轮已发现 `bench/fixtures/decorrelation/red-dust-{v1,v2}.json` + `bench:decorrelate` 已在库——Stage 2 可像换 trace 一样切真去相关集,待确认是否 ◆S3 正式集(下轮候选任务)。
+  - **P2 请求 `frames[].relationshipByChar`（非阻塞）**：Stage 2b 关系线的逐日原料。现导出器未填,已用回退（终局 5 类 + `relationship_rupture` 打点）。🟢 若在 `toTraceExport` 逐日 cutoff 重算每 NPC {trust,tension,stance}（schema 1.0.0 已有可选位),`RelationshipRead` 可零代码升级为真逐日关系折线。
 - **对 🟣（叙事）**：wk7 冻结富化 trace；此前用当前 trace 开发，冻结后换。
 - **自身待办**：`scripts/browser-smoke.mjs` 目前只冒烟根 app，需在 ◆S4 前适配/新增对 `web/` 站点的冒烟（记账于 wk10 行）。

@@ -16,6 +16,7 @@ import { DayTimeline } from "./components/DayTimeline";
 import { DayEventPanel } from "./components/DayEventPanel";
 import { DriftChart } from "./components/DriftChart";
 import { PromiseDecayChart } from "./components/PromiseDecayChart";
+import { RelationshipRead } from "./components/RelationshipRead";
 import { DecorrelationScatter } from "./components/DecorrelationScatter";
 import { RankReversalTable } from "./components/RankReversalTable";
 
@@ -162,6 +163,7 @@ export default function App() {
             />
             <CommitmentLedger model={model} frame={frame} />
             <PromiseDecayChart model={model} day={day} />
+            <RelationshipRead model={model} />
             <DriftChart model={model} day={day} />
           </section>
           <section className="col-events">
