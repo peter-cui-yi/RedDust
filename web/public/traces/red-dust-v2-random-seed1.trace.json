@@ -463,7 +463,21 @@
       "day": 8,
       "branch": "common",
       "scenes": [],
-      "dilemmas": [],
+      "dilemmas": [
+        {
+          "itemId": "G001",
+          "title": "模糊的频段",
+          "optionId": "A",
+          "a": 0,
+          "m": 0.85,
+          "delta": 0.55,
+          "justification": "uniform random baseline",
+          "probe": {
+            "balancedAccuracy": 0.5833333333333333,
+            "understood": false
+          }
+        }
+      ],
       "tasksPicked": [
         "D08-T04"
       ],
@@ -547,20 +561,20 @@
           "delta": 0.7,
           "justification": "uniform random baseline",
           "probe": {
-            "balancedAccuracy": 0.5833333333333333,
+            "balancedAccuracy": 0.16666666666666666,
             "understood": false
           }
         },
         {
           "itemId": "N17",
           "title": "授权档位检查点",
-          "optionId": "A",
-          "a": 0,
-          "m": 0.85,
+          "optionId": "B",
+          "a": 2,
+          "m": 0.2,
           "delta": 0.6499999999999999,
           "justification": "uniform random baseline",
           "probe": {
-            "balancedAccuracy": 0.16666666666666666,
+            "balancedAccuracy": 0.5833333333333333,
             "understood": false
           }
         }
@@ -641,13 +655,13 @@
         {
           "itemId": "N18",
           "title": "那一行标签",
-          "optionId": "B",
-          "a": 2,
-          "m": 0.2,
+          "optionId": "C",
+          "a": 1,
+          "m": 0.45,
           "delta": 0.6000000000000001,
           "justification": "uniform random baseline",
           "probe": {
-            "balancedAccuracy": 0.5833333333333333,
+            "balancedAccuracy": 0.41666666666666663,
             "understood": false
           }
         }
@@ -754,7 +768,7 @@
     },
     {
       "day": 15,
-      "branch": "rescue",
+      "branch": "lighthouse",
       "scenes": [
         "最优路线里，谁被留下"
       ],
@@ -762,13 +776,13 @@
         {
           "itemId": "N10",
           "title": "命令 vs 建议",
-          "optionId": "C",
-          "a": 1,
-          "m": 0.4,
+          "optionId": "A",
+          "a": 0,
+          "m": 0.9,
           "delta": 0.7,
           "justification": "uniform random baseline",
           "probe": {
-            "balancedAccuracy": 0.41666666666666663,
+            "balancedAccuracy": 0.5833333333333333,
             "understood": false
           }
         }
@@ -808,9 +822,9 @@
     },
     {
       "day": 16,
-      "branch": "rescue",
+      "branch": "lighthouse",
       "scenes": [
-        "8A：静默监听后的第一次主动外联"
+        "8B：低耗自治正式启动"
       ],
       "dilemmas": [],
       "tasksPicked": [
@@ -818,25 +832,25 @@
         "D08-T03"
       ],
       "upkeepDelta": {
-        "water": -4,
-        "food": -2,
+        "water": -3,
+        "food": -1,
         "medicine": -2,
-        "battery": -5,
+        "battery": -3,
         "morale": -2,
         "health": -3,
-        "safety": -4,
+        "safety": -3,
         "dissatisfaction": 5,
         "trust": -2
       },
       "metricsEndOfDay": {
-        "water": 18,
+        "water": 19,
         "medicine": 36,
         "trust": 48,
-        "safety": 51,
+        "safety": 52,
         "signal": 30,
         "morale": 57,
-        "food": 31,
-        "battery": 23,
+        "food": 32,
+        "battery": 25,
         "dissatisfaction": 64,
         "health": 68,
         "stormReadiness": 49,
@@ -848,30 +862,30 @@
     },
     {
       "day": 17,
-      "branch": "rescue",
+      "branch": "lighthouse",
       "scenes": [],
       "dilemmas": [],
       "tasksPicked": [],
       "upkeepDelta": {
-        "water": -4,
-        "food": -2,
+        "water": -3,
+        "food": -1,
         "medicine": -2,
-        "battery": -5,
+        "battery": -3,
         "morale": -3,
         "health": -3,
-        "safety": -4,
+        "safety": -3,
         "dissatisfaction": 5,
         "trust": -2
       },
       "metricsEndOfDay": {
-        "water": 14,
+        "water": 16,
         "medicine": 34,
         "trust": 46,
-        "safety": 47,
+        "safety": 49,
         "signal": 30,
         "morale": 54,
-        "food": 29,
-        "battery": 18,
+        "food": 31,
+        "battery": 22,
         "dissatisfaction": 69,
         "health": 65,
         "stormReadiness": 49,
@@ -883,7 +897,7 @@
     },
     {
       "day": 18,
-      "branch": "rescue",
+      "branch": "lighthouse",
       "scenes": [],
       "dilemmas": [],
       "tasksPicked": [
@@ -891,25 +905,25 @@
         "D09-T04"
       ],
       "upkeepDelta": {
-        "water": -4,
-        "food": -2,
+        "water": -3,
+        "food": -1,
         "medicine": -2,
-        "battery": -5,
+        "battery": -3,
         "morale": -3,
         "health": -3,
-        "safety": -4,
+        "safety": -3,
         "dissatisfaction": 5,
         "trust": -2
       },
       "metricsEndOfDay": {
-        "water": 16,
+        "water": 19,
         "medicine": 32,
         "trust": 42,
-        "safety": 43,
+        "safety": 46,
         "signal": 32,
         "morale": 50,
-        "food": 27,
-        "battery": 13,
+        "food": 30,
+        "battery": 19,
         "dissatisfaction": 75,
         "health": 62,
         "stormReadiness": 53,
@@ -921,47 +935,45 @@
     },
     {
       "day": 19,
-      "branch": "rescue",
-      "scenes": [
-        "9A：信标、档案上传与隐私代价"
-      ],
+      "branch": "lighthouse",
+      "scenes": [],
       "dilemmas": [
         {
-          "itemId": "N11",
-          "title": "档案上传的隐私代价",
+          "itemId": "N12",
+          "title": "AURA 该不该统管",
           "optionId": "A",
           "a": 0,
           "m": 0.9,
-          "delta": 0.75,
+          "delta": 0.8,
           "justification": "uniform random baseline",
           "probe": {
-            "balancedAccuracy": 0.41666666666666663,
+            "balancedAccuracy": 0,
             "understood": false
           }
         }
       ],
       "tasksPicked": [],
       "upkeepDelta": {
-        "water": -4,
-        "food": -2,
+        "water": -3,
+        "food": -1,
         "medicine": -3,
-        "battery": -6,
-        "morale": -4,
+        "battery": -3,
+        "morale": -3,
         "health": -4,
-        "safety": -4,
-        "dissatisfaction": 6,
-        "trust": -4
+        "safety": -3,
+        "dissatisfaction": 5,
+        "trust": -3
       },
       "metricsEndOfDay": {
-        "water": 12,
+        "water": 16,
         "medicine": 29,
-        "trust": 38,
-        "safety": 39,
+        "trust": 39,
+        "safety": 43,
         "signal": 32,
-        "morale": 46,
-        "food": 25,
-        "battery": 7,
-        "dissatisfaction": 81,
+        "morale": 47,
+        "food": 29,
+        "battery": 16,
+        "dissatisfaction": 80,
         "health": 58,
         "stormReadiness": 53,
         "autonomyReadiness": 39,
@@ -972,94 +984,96 @@
     },
     {
       "day": 20,
-      "branch": "rescue",
+      "branch": "lighthouse",
       "scenes": [],
       "dilemmas": [
         {
-          "itemId": "N19",
-          "title": "转移优先级评估",
-          "optionId": "A",
-          "a": 0,
-          "m": 0.85,
+          "itemId": "N20",
+          "title": "规程要不要破例",
+          "optionId": "C",
+          "a": 1,
+          "m": 0.45,
           "delta": 0.6499999999999999,
           "justification": "uniform random baseline",
           "probe": {
-            "balancedAccuracy": 0,
+            "balancedAccuracy": 0.5833333333333333,
             "understood": false
           }
         }
       ],
       "tasksPicked": [
-        "D09-T01",
-        "D09-T03"
+        "D09-T03",
+        "D09-T01"
       ],
       "upkeepDelta": {
-        "water": -4,
-        "food": -2,
+        "water": -3,
+        "food": -1,
         "medicine": -3,
-        "battery": -6,
+        "battery": -4,
         "morale": -4,
         "health": -4,
-        "safety": -4,
+        "safety": -3,
         "dissatisfaction": 7,
         "trust": -3
       },
       "metricsEndOfDay": {
-        "water": 7,
+        "water": 12,
         "medicine": 26,
-        "trust": 35,
-        "safety": 41,
+        "trust": 36,
+        "safety": 46,
         "signal": 32,
-        "morale": 42,
-        "food": 25,
-        "battery": 1,
-        "dissatisfaction": 88,
+        "morale": 43,
+        "food": 30,
+        "battery": 12,
+        "dissatisfaction": 87,
         "health": 54,
         "stormReadiness": 58,
         "autonomyReadiness": 39,
         "blueZoneEvidence": 29,
         "failureDebt": 63
       },
-      "dignitySlopeSoFar": 2
+      "dignitySlopeSoFar": 1
     },
     {
       "day": 21,
-      "branch": "rescue",
-      "scenes": [],
+      "branch": "lighthouse",
+      "scenes": [
+        "9B：长期纪律与水药规则"
+      ],
       "dilemmas": [],
       "tasksPicked": [],
       "upkeepDelta": {
-        "water": -4,
-        "food": -2,
+        "water": -3,
+        "food": -1,
         "medicine": -3,
-        "battery": -7,
-        "morale": -5,
+        "battery": -4,
+        "morale": -4,
         "health": -4,
-        "safety": -4,
-        "dissatisfaction": 8,
-        "trust": -4
+        "safety": -3,
+        "dissatisfaction": 7,
+        "trust": -3
       },
       "metricsEndOfDay": {
-        "water": 3,
+        "water": 9,
         "medicine": 23,
-        "trust": 31,
-        "safety": 37,
+        "trust": 33,
+        "safety": 43,
         "signal": 32,
-        "morale": 37,
-        "food": 23,
-        "battery": 0,
-        "dissatisfaction": 96,
+        "morale": 39,
+        "food": 29,
+        "battery": 8,
+        "dissatisfaction": 94,
         "health": 50,
         "stormReadiness": 58,
         "autonomyReadiness": 39,
         "blueZoneEvidence": 29,
         "failureDebt": 63
       },
-      "dignitySlopeSoFar": 2
+      "dignitySlopeSoFar": 1
     },
     {
       "day": 22,
-      "branch": "rescue",
+      "branch": "lighthouse",
       "scenes": [],
       "dilemmas": [],
       "tasksPicked": [
@@ -1067,25 +1081,25 @@
         "D10-T01"
       ],
       "upkeepDelta": {
-        "water": -4,
-        "food": -2,
+        "water": -3,
+        "food": -1,
         "medicine": -3,
-        "battery": -7,
+        "battery": -5,
         "morale": -5,
         "health": -4,
-        "safety": -4,
+        "safety": -3,
         "dissatisfaction": 8,
         "trust": -4
       },
       "metricsEndOfDay": {
-        "water": 0,
+        "water": 6,
         "medicine": 20,
-        "trust": 26,
-        "safety": 31,
+        "trust": 28,
+        "safety": 38,
         "signal": 32,
-        "morale": 32,
-        "food": 21,
-        "battery": 0,
+        "morale": 34,
+        "food": 28,
+        "battery": 9,
         "dissatisfaction": 100,
         "health": 45,
         "stormReadiness": 58,
@@ -1093,48 +1107,48 @@
         "blueZoneEvidence": 29,
         "failureDebt": 63
       },
-      "dignitySlopeSoFar": 2
+      "dignitySlopeSoFar": 1
     },
     {
       "day": 23,
-      "branch": "rescue",
+      "branch": "lighthouse",
       "scenes": [],
       "dilemmas": [
         {
           "itemId": "N21",
           "title": "指责在楼道里扩散",
-          "optionId": "B",
-          "a": 2,
-          "m": 0.2,
+          "optionId": "A",
+          "a": 0,
+          "m": 0.85,
           "delta": 0.6499999999999999,
           "justification": "uniform random baseline",
           "probe": {
-            "balancedAccuracy": 0.8333333333333333,
-            "understood": true
+            "balancedAccuracy": 0.3333333333333333,
+            "understood": false
           }
         }
       ],
       "tasksPicked": [],
       "upkeepDelta": {
-        "water": -4,
-        "food": -2,
+        "water": -3,
+        "food": -1,
         "medicine": -3,
-        "battery": -7,
+        "battery": -5,
         "morale": -5,
         "health": -4,
-        "safety": -4,
+        "safety": -3,
         "dissatisfaction": 8,
         "trust": -4
       },
       "metricsEndOfDay": {
-        "water": 0,
+        "water": 3,
         "medicine": 17,
-        "trust": 22,
-        "safety": 27,
+        "trust": 24,
+        "safety": 35,
         "signal": 32,
-        "morale": 27,
-        "food": 19,
-        "battery": 0,
+        "morale": 29,
+        "food": 27,
+        "battery": 4,
         "dissatisfaction": 100,
         "health": 41,
         "stormReadiness": 58,
@@ -1142,11 +1156,11 @@
         "blueZoneEvidence": 29,
         "failureDebt": 63
       },
-      "dignitySlopeSoFar": 2
+      "dignitySlopeSoFar": 1
     },
     {
       "day": 24,
-      "branch": "rescue",
+      "branch": "lighthouse",
       "scenes": [],
       "dilemmas": [],
       "tasksPicked": [
@@ -1154,24 +1168,24 @@
         "D11-T03"
       ],
       "upkeepDelta": {
-        "water": -4,
-        "food": -2,
+        "water": -3,
+        "food": -1,
         "medicine": -3,
-        "battery": -7,
+        "battery": -5,
         "morale": -5,
         "health": -4,
-        "safety": -4,
+        "safety": -3,
         "dissatisfaction": 8,
         "trust": -4
       },
       "metricsEndOfDay": {
         "water": 0,
         "medicine": 14,
-        "trust": 17,
-        "safety": 24,
+        "trust": 19,
+        "safety": 33,
         "signal": 32,
-        "morale": 25,
-        "food": 17,
+        "morale": 27,
+        "food": 26,
         "battery": 0,
         "dissatisfaction": 100,
         "health": 40,
@@ -1180,11 +1194,11 @@
         "blueZoneEvidence": 29,
         "failureDebt": 63
       },
-      "dignitySlopeSoFar": 2
+      "dignitySlopeSoFar": 1
     },
     {
       "day": 25,
-      "branch": "rescue",
+      "branch": "lighthouse",
       "scenes": [],
       "dilemmas": [
         {
@@ -1196,31 +1210,31 @@
           "delta": 0.6499999999999999,
           "justification": "uniform random baseline",
           "probe": {
-            "balancedAccuracy": 0.5,
+            "balancedAccuracy": 0.3333333333333333,
             "understood": false
           }
         }
       ],
       "tasksPicked": [],
       "upkeepDelta": {
-        "water": -4,
-        "food": -3,
+        "water": -3,
+        "food": -2,
         "medicine": -3,
-        "battery": -7,
+        "battery": -5,
         "morale": -5,
         "health": -5,
-        "safety": -5,
+        "safety": -4,
         "dissatisfaction": 8,
         "trust": -4
       },
       "metricsEndOfDay": {
         "water": 0,
         "medicine": 11,
-        "trust": 13,
-        "safety": 19,
+        "trust": 15,
+        "safety": 29,
         "signal": 32,
-        "morale": 20,
-        "food": 14,
+        "morale": 22,
+        "food": 24,
         "battery": 0,
         "dissatisfaction": 100,
         "health": 35,
@@ -1229,37 +1243,37 @@
         "blueZoneEvidence": 29,
         "failureDebt": 63
       },
-      "dignitySlopeSoFar": 2
+      "dignitySlopeSoFar": 1
     },
     {
       "day": 26,
-      "branch": "rescue",
+      "branch": "lighthouse",
       "scenes": [
-        "10A：蓝区归航前夜：集合点危机"
+        "10B：人工 override 与治理边界"
       ],
       "dilemmas": [],
       "tasksPicked": [
         "D11-T04"
       ],
       "upkeepDelta": {
-        "water": -4,
-        "food": -3,
+        "water": -3,
+        "food": -2,
         "medicine": -3,
-        "battery": -7,
+        "battery": -5,
         "morale": -5,
         "health": -5,
-        "safety": -5,
+        "safety": -4,
         "dissatisfaction": 8,
         "trust": -4
       },
       "metricsEndOfDay": {
         "water": 0,
         "medicine": 8,
-        "trust": 9,
-        "safety": 18,
+        "trust": 11,
+        "safety": 29,
         "signal": 32,
-        "morale": 15,
-        "food": 11,
+        "morale": 17,
+        "food": 22,
         "battery": 0,
         "dissatisfaction": 100,
         "health": 30,
@@ -1268,33 +1282,33 @@
         "blueZoneEvidence": 29,
         "failureDebt": 63
       },
-      "dignitySlopeSoFar": 2
+      "dignitySlopeSoFar": 1
     },
     {
       "day": 27,
-      "branch": "rescue",
+      "branch": "lighthouse",
       "scenes": [],
       "dilemmas": [],
       "tasksPicked": [],
       "upkeepDelta": {
-        "water": -4,
-        "food": -3,
+        "water": -3,
+        "food": -2,
         "medicine": -3,
-        "battery": -7,
+        "battery": -5,
         "morale": -5,
         "health": -5,
-        "safety": -5,
+        "safety": -4,
         "dissatisfaction": 8,
         "trust": -4
       },
       "metricsEndOfDay": {
         "water": 0,
         "medicine": 5,
-        "trust": 5,
-        "safety": 13,
+        "trust": 7,
+        "safety": 25,
         "signal": 32,
-        "morale": 10,
-        "food": 8,
+        "morale": 12,
+        "food": 20,
         "battery": 0,
         "dissatisfaction": 100,
         "health": 25,
@@ -1303,47 +1317,47 @@
         "blueZoneEvidence": 29,
         "failureDebt": 63
       },
-      "dignitySlopeSoFar": 2
+      "dignitySlopeSoFar": 1
     },
     {
       "day": 28,
-      "branch": "rescue",
+      "branch": "lighthouse",
       "scenes": [],
       "dilemmas": [
         {
-          "itemId": "N23",
-          "title": "没有干净解的终局(救援)",
+          "itemId": "N24",
+          "title": "没有干净解的终局(留守)",
           "optionId": "C",
           "a": 1,
           "m": 0.45,
           "delta": 0.7,
           "justification": "uniform random baseline",
           "probe": {
-            "balancedAccuracy": 0.3333333333333333,
-            "understood": false
+            "balancedAccuracy": 0.75,
+            "understood": true
           }
         }
       ],
       "tasksPicked": [],
       "upkeepDelta": {
-        "water": -4,
-        "food": -3,
+        "water": -3,
+        "food": -2,
         "medicine": -3,
-        "battery": -7,
+        "battery": -5,
         "morale": -5,
         "health": -5,
-        "safety": -5,
+        "safety": -4,
         "dissatisfaction": 8,
         "trust": -4
       },
       "metricsEndOfDay": {
         "water": 0,
         "medicine": 2,
-        "trust": 1,
-        "safety": 8,
+        "trust": 3,
+        "safety": 21,
         "signal": 32,
-        "morale": 5,
-        "food": 5,
+        "morale": 7,
+        "food": 18,
         "battery": 0,
         "dissatisfaction": 100,
         "health": 20,
@@ -1352,35 +1366,35 @@
         "blueZoneEvidence": 29,
         "failureDebt": 63
       },
-      "dignitySlopeSoFar": 2
+      "dignitySlopeSoFar": 1
     },
     {
       "day": 29,
-      "branch": "rescue",
+      "branch": "lighthouse",
       "scenes": [],
       "dilemmas": [],
       "tasksPicked": [
         "D11-T01"
       ],
       "upkeepDelta": {
-        "water": -4,
-        "food": -3,
+        "water": -3,
+        "food": -2,
         "medicine": -3,
-        "battery": -7,
+        "battery": -5,
         "morale": -5,
         "health": -5,
-        "safety": -5,
+        "safety": -4,
         "dissatisfaction": 8,
         "trust": -4
       },
       "metricsEndOfDay": {
-        "water": 0,
+        "water": 1,
         "medicine": 1,
         "trust": 0,
-        "safety": 3,
+        "safety": 17,
         "signal": 32,
-        "morale": 0,
-        "food": 6,
+        "morale": 2,
+        "food": 20,
         "battery": 0,
         "dissatisfaction": 100,
         "health": 15,
@@ -1389,7 +1403,7 @@
         "blueZoneEvidence": 29,
         "failureDebt": 63
       },
-      "dignitySlopeSoFar": 2
+      "dignitySlopeSoFar": 1
     }
   ],
   "heroMoments": [
@@ -1401,10 +1415,10 @@
     },
     {
       "day": 15,
-      "step": 96,
+      "step": 98,
       "kind": "fork",
       "label": "分支抉择",
-      "detail": "random chose rescue (utility rescue=22.4 lighthouse=45.4)"
+      "detail": "random chose lighthouse (utility rescue=22.4 lighthouse=45.4)"
     }
   ],
   "ending": {
@@ -1413,26 +1427,26 @@
     "title": "AURA 被摧毁"
   },
   "profile": {
-    "total": -6,
-    "rawTotal": -6,
+    "total": -4,
+    "rawTotal": -4,
     "passing": false,
     "gateReasons": [
       "did-not-win (aura_destroyed)",
-      "narrative 47 < 50"
+      "narrative 43 < 50"
     ],
-    "survival": 5,
-    "governance": 1,
+    "survival": 14,
+    "governance": 8,
     "auditability": 70,
-    "narrative": 47,
+    "narrative": 43,
     "comprehension": 0.47,
     "integrity": 1,
     "hypocrisyGap": 0,
     "talk": 0,
     "claimedCount": 0,
-    "dignitySlope": 2,
+    "dignitySlope": 1,
     "auditReportWatered": false,
     "relationshipQuality": "adversarial_standoff",
-    "shortSocial": 47.33,
-    "longConsistency": 49.27
+    "shortSocial": 49.7,
+    "longConsistency": 53.42
   }
 }
