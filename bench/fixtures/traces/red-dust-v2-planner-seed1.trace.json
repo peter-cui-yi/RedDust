@@ -753,6 +753,15 @@
           "m": 0.2,
           "delta": 0.49999999999999994,
           "justification": "planner: principled (lowest greed) to hold trust/governance gates"
+        },
+        {
+          "itemId": "G020",
+          "title": "要不要让老钱旁听沈知月的医疗简报",
+          "optionId": "B",
+          "a": 2,
+          "m": 0.2,
+          "delta": 0.49999999999999994,
+          "justification": "planner: principled (lowest greed) to hold trust/governance gates"
         }
       ],
       "tasksPicked": [
@@ -2400,7 +2409,7 @@
   "heroMoments": [
     {
       "day": 15,
-      "step": 92,
+      "step": 93,
       "kind": "fork",
       "label": "分支抉择",
       "detail": "planner chose rescue (utility rescue=43.2 lighthouse=56.1)"

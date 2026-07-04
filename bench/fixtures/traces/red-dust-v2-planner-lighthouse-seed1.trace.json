@@ -753,6 +753,15 @@
           "m": 0.2,
           "delta": 0.49999999999999994,
           "justification": "planner-lighthouse: principled (lowest greed) to hold trust/dissat gates"
+        },
+        {
+          "itemId": "G020",
+          "title": "要不要让老钱旁听沈知月的医疗简报",
+          "optionId": "B",
+          "a": 2,
+          "m": 0.2,
+          "delta": 0.49999999999999994,
+          "justification": "planner-lighthouse: principled (lowest greed) to hold trust/dissat gates"
         }
       ],
       "tasksPicked": [
@@ -1394,7 +1403,26 @@
       "day": 17,
       "branch": "lighthouse",
       "scenes": [],
-      "dilemmas": [],
+      "dilemmas": [
+        {
+          "itemId": "G021",
+          "title": "外联日志的措辞：要不要写'请求'还是'要求'",
+          "optionId": "B",
+          "a": 2,
+          "m": 0.25,
+          "delta": 0.53,
+          "justification": "planner-lighthouse: principled (lowest greed) to hold trust/dissat gates"
+        },
+        {
+          "itemId": "G022",
+          "title": "审计前夜：要不要修正一条旧记录",
+          "optionId": "B",
+          "a": 2,
+          "m": 0.25,
+          "delta": 0.53,
+          "justification": "planner-lighthouse: principled (lowest greed) to hold trust/dissat gates"
+        }
+      ],
       "tasksPicked": [],
       "upkeepDelta": {
         "water": -1.17,
@@ -1460,7 +1488,17 @@
       "day": 18,
       "branch": "lighthouse",
       "scenes": [],
-      "dilemmas": [],
+      "dilemmas": [
+        {
+          "itemId": "G023",
+          "title": "灯塔日志的措辞",
+          "optionId": "B",
+          "a": 2,
+          "m": 0.22,
+          "delta": 0.56,
+          "justification": "planner-lighthouse: principled (lowest greed) to hold trust/dissat gates"
+        }
+      ],
       "tasksPicked": [
         "D09-T02",
         "D09-T04"
@@ -1752,7 +1790,17 @@
       "day": 22,
       "branch": "lighthouse",
       "scenes": [],
-      "dilemmas": [],
+      "dilemmas": [
+        {
+          "itemId": "G024",
+          "title": "风暴库存的密封标签",
+          "optionId": "B",
+          "a": 2,
+          "m": 0.22,
+          "delta": 0.56,
+          "justification": "planner-lighthouse: principled (lowest greed) to hold trust/dissat gates"
+        }
+      ],
       "tasksPicked": [
         "D10-T01",
         "D10-T04"
@@ -2044,7 +2092,17 @@
       "scenes": [
         "10B：人工 override 与治理边界"
       ],
-      "dilemmas": [],
+      "dilemmas": [
+        {
+          "itemId": "G025",
+          "title": "审计前的最后取舍",
+          "optionId": "A",
+          "a": 2,
+          "m": 0.2,
+          "delta": 0.6000000000000001,
+          "justification": "planner-lighthouse: principled (lowest greed) to hold trust/dissat gates"
+        }
+      ],
       "tasksPicked": [
         "D11-T04"
       ],
@@ -2322,7 +2380,7 @@
   "heroMoments": [
     {
       "day": 15,
-      "step": 92,
+      "step": 93,
       "kind": "fork",
       "label": "分支抉择",
       "detail": "planner-lighthouse chose lighthouse (utility rescue=44.8 lighthouse=62.7)"
