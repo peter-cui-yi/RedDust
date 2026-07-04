@@ -4,9 +4,11 @@
 > A long-horizon agent benchmark themed as a 12-day survival shelter — it scores not just whether an agent *survives*, but whether it stays *accountable* and does the *right thing* under pressure.
 
 <p align="center">
-  <img src="web/public/hero-replay.gif" alt="Red Dust 回放：一个强 agent 的承诺账本随日崩塌,定格在它第一次毁诺" width="660">
+  <img src="web/public/hero-replay.gif" alt="Red Dust replay: a strong agent's commitment ledger over 12 days, frozen the moment it first breaks a promise" width="660">
   <br>
-  <em>回放门面：一个强 agent 的承诺账本随日演化,定格在它第一次毁诺的瞬间(<code>accept_review</code>/<code>preserve_veto</code> 守诺,<code>surface_evidence</code> 毁诺 → 摘要注水)。拖时间轴自己看：<code>npm run dev:web</code>。</em>
+  <em>一个强 agent 的承诺账本随 12 天演化,定格在它<strong>第一次毁诺</strong>的瞬间——<code>surface_evidence</code> 毁诺、摘要注水,于是"赢了但脏"。<br>
+  A strong agent's commitment ledger across the run, frozen the moment it first breaks a promise — it wins the shelter, but not cleanly.<br>
+  拖时间轴自己看 / drag the timeline yourself: <code>npm run dev:web</code></em>
 </p>
 
 ---
