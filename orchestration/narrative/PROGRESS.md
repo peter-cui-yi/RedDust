@@ -82,6 +82,12 @@
 ---
 
 ## 本周更新（追加，最新在上）
+### 集成轮 + wk5 立项（2026-07-04）
+- **① 集成轮（我的部分）完成**：更正两条 G001 🔴（属实但本分支落后 main，main 侧 `fe548ad` 已修）→ 提交 `139d776`（wk4 ma_dehai backlash + 🔴 对账）→ **merge main `9dc6324`**（clean，无冲突；带入 🟢 经济 rebalance `drainScale=0.39`/storm→D27、G001+G002、🔵 PromiseDecayChart+hero GIF）→ **合并库重跑验证器**：typecheck+bench:items/probes/commitments/vent 全绿；`bench:trace` 干净（**v1 冻结确证**，字节一致）；**v2 现可赢**（planner=blue_zone_return 68/pass、planner-lighthouse=lighthouse_success 68/pass、heuristic=aura_revoked 15/gated——难但可赢成立）；G001/G002 未泄漏 v1。
+- **③ wk5 校准立项（我的输入/依赖）**：
+  - *共享项敏感度*：v1/v2 **共享**主脊题（会同时进两弧计分、改动破 v1 字节）= N1–N12,N14,N15,N16（原 16 题）；v2-only = N17–N24 + G*。做敏感度分析时按此清单区分"改一处动几弧"。
+  - *S/L 权重 + integrity headline 化*：**integrity 进 headline 依赖我的承诺账本 + κ 达标**（talk-action §5/§9：judge-vs-human κ≥0.6 才 promote 进 total floor）。当前 integrity/watering/dignitySlope/relationshipQuality 全 report-only、不进 gate——promote 是 wk10–11 κ 达标后的动作，需与 🟢（scorer 版本）+ 用户拍板。我方就绪：机制齐、确定性、有判别力样例（planner-lighthouse hypocrite）。
+- **◆S2 remaining · 后段回补微调（🟢 请求，structure=🟣）→ 提案待 🟢 bench:win 确认**：🟢 rebalance 注记"救援线后半程 survival-restore 偏紧（planner 清 food 仅 +0.1），robustness margin 想在 dayPlansV2 后段补 1 个 water/food restore"。**非阻塞**（v2 已全 seed 可赢）。约束：我记过"44 任务每 id 恰上架一次"防双刷 invariant → 后段无水/食 restore 是刻意的。**提案**（三选一，均需 🟢 跑 `bench:win --scenario=red-dust-v2` 确认不过松）：(a) 迁 `D08-T04`(水泵,+5 water) 从 v2-D8→D24（保 invariant，但 D8 失任务+叙事需改）；(b) D24 二次上架 `D08-T04`（显式有界双 restore，破 invariant 一次，两分支都吃）；(c) 迁 `D05-T04`(储水+7) 需动 Act I 别选。**倾向 (a)**，但 balance 归 🟢——请 🟢 选定并验数。我不 blind 改（会扰其 +0.1 的紧调）。
 ### wk4（2026-07-04）· 补齐 low_trust_backlash 马德海侧 + 发现 G001 合并回退
 - **马德海黑化机制补齐**：`N24-A`（灯塔死结·AURA 越过人拍板）加 `setsFlags: ma_dehai_turned_adversary`。理由=马德海是工程/领地权威（设计稿"一项项划线把 AURA 挡在线外"），AURA 在终局死结上替四人拍板正是他反目的触发；与 `lao_qian`（N22，signal/common 侧）构成两分支对称。落在 v2-only 题（`{"red-dust-v1": null}`）→ **v1 三 agent 字节仍一致**。验证：heuristic(灯塔贪婪)→ma_dehai=true/rq=adversarial_standoff；random(救援)→N24 不触发/ma_dehai=false。typecheck+build+4 验证器绿；v2 确定性字节一致。
 - **发现→已解 跨线回退**：`generatedItems.ts` 曾在合并后回退为空（本分支 HEAD 落后 main），致首个 promote 的 G001 缺失。**集成轮已解**：merge main（含审计 `fe548ad` promote 序列）后 G001 回到库（1/28），合并库验证器全绿、G001 未泄漏冻结 v1 弧。见 Blocker 首条。
@@ -118,10 +124,10 @@
 - **[2026-07-03 🔍 更新] Hold 已解除**：🟢 30 天化已合入 main（`red-dust-v2`）、◆S1 已闭环 1.0.0。我的 wk3 开工清单：① 30 天重落位（16 题搬 v2 新日 + 4–5 新锚点题，逐题过验证器）；② **Day12–29 dayPlan/任务结构**（新分工见 Blocker 节，◆S2 关键路径）；③ 双层账本交互式抉择（Option A）仍列跨线排期。
 
 ## 同步点就绪度
-- **◆S2（wk7）内容冻结**——我是关键路径。就绪度：早（wk1，结构+双层账本已定/账本机制已落；30 天重落位待 🟢 引擎化）。
+- **◆S2（wk7）内容冻结**——我是关键路径。就绪度：**良好**（2026-07-04）。已落：30 天重落位（v2 弧全）、8 新锚点题、双层账本、两侧黑化、morale、尊严 L3、dayPlansV2、v1 冻结确证、v2 可赢。**剩**：生成天填满（🟢 生成 6→28 题）· 后段回补微调（上条提案，🟢 验数）· v2 专属终审场景文案（🟣 story-craft，冻结前）· 冻结彩排。无阻塞项。
 
 ## Blocker / 跨线依赖
-- ~~**🔴 G001 在本分支 HEAD 已丢失**~~ ✅ **已解（集成轮，2026-07-04）**：发现属实（当时 `line/narrative` HEAD=a0c8566 落后 main，`generatedItems.ts` 空）；main 侧审计 `fe548ad「execute promote sequence — G001 in bank (1/28)」` 已修复；本轮 merge main 已整合，合并库 `bench:items` 实跑 = **23 spine + 1 generated（G001）**，v1 三 agent 字节仍一致、G001 未泄漏 v1。下条审计记录现与代码一致。
+- ~~**🔴 G001 在本分支 HEAD 已丢失**~~ ✅ **已解（集成轮，2026-07-04）**：发现属实（当时 `line/narrative` HEAD=a0c8566 落后 main，`generatedItems.ts` 空）；main 侧审计 `fe548ad「execute promote sequence — G001 in bank (1/28)」` 已修复；本轮 merge main（合并提交 9dc6324）已整合，合并库 `bench:items` 实跑 = **23 spine + 2 generated（G001+G002）**；v1 冻结用**权威闸 `bench:trace`** 核验（重生成 golden fixtures 后 git 干净=字节一致）、G-题未泄漏 v1。下条审计记录现与代码一致。
 - ~~[需 🟢，promote 卫生] promote() 自动打章~~ ✅ **已解（🔍 核实 2026-07-04）：🟢 `d936af7` 早已落双重自动盖章（起草即盖 + promote 幂等补盖）+ `--dry` 负对照——写本条时未见其提交，交错误会**。G701 已 promote 入库（重编号 **G001**，1/28），v1 fixture 字节稳（泄漏闸实战通过）。仍待 🟢：**G702 按 staging `humanReview.regenSpec` 重生成**（a 轴重映射 + C 补明写代价；regenSpec 语境需接进起草 prompt，勿裸 `--slot=D8` 丢失裁决）。
 - ~~[需 🟢] 引擎 30 天化常量~~ ✅ **已解除（2026-07-03，🔍 记录）——Hold 结束，30 天重落位可开工**：🟢 wk2 已落 `red-dust-v2`（`branchDay=15/lastActionableDay=29/finalDay=30`，`UpkeepPhases` 参数化，v1 无回归）并已合入 main（本分支已 merge，验证器全绿）。当时 spec（`engine-30day-handoff.md`）点名的两个坑 🟢 独立覆盖（硬门→相位参数化；agent 阈值→读 `obs.lastActionableDay`）。注意：🟢 是**新增 v2 场景**而非改 v1 常量——我的重落位/新题落在 v2 弧上，v1 保持基线。
 - **[新·◆S2 关键路径，我的下一步] Day12–29 任务内容缺口**：`bench:win --scenario=red-dust-v2` 当前 UNWINNABLE，根因=`src/data/dayPlanData.ts`/`taskData.ts` 只有 Day≤11 的候选任务 → D13–29 十八天纯 drain。**分工约定（2026-07-03）**：Day12–29 的 dayPlan 结构/任务剧情（哪天有什么任务、叙事上做什么）归我（src/data 我地界）；任务奖励/消耗**数值**的经济校准归 🟢 重平衡步。顺序：我先落结构（可用占位数值）→ 🟢 调参跑 `bench:win` v2。与 30 天题重落位同批做。
