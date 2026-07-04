@@ -23,6 +23,7 @@
     "bench:trace": "esbuild bench/export-trace.ts --bundle --platform=node --format=esm --packages=external --outfile=.bench/trace.mjs --log-level=warning && node .bench/trace.mjs",
     "gen:items": "esbuild bench/gen-items.ts --bundle --platform=node --format=esm --packages=external --outfile=.bench/gen-items.mjs --log-level=warning && node .bench/gen-items.mjs",
     "bench:decorrelate": "esbuild bench/decorrelation.ts --bundle --platform=node --format=esm --packages=external --outfile=.bench/decorrelate.mjs --log-level=warning && node .bench/decorrelate.mjs",
+    "bench:sensitivity": "esbuild bench/sensitivity.ts --bundle --platform=node --format=esm --packages=external --outfile=.bench/sensitivity.mjs --log-level=warning && node .bench/sensitivity.mjs",
     "build": "tsc -b && vite build",
     "dev:web": "vite --config web/vite.config.ts",
     "sync:traces": "cp bench/fixtures/traces/*.trace.json web/public/traces/",

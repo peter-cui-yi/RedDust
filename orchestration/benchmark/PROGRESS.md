@@ -27,6 +27,28 @@
 | NPC 多样性验证 | ⬜ | |
 
 ## 本周更新（追加，最新在上）
+### wk5 · charter 工作流 1：共享项敏感度（新 L-v2.1 spacing，零算力）（2026-07-04）
+- 新 `bench/sensitivity.ts`（确定性，无 API）：留一法 EXACT（S/L 仅依赖已答题 + 生成题无 flag → 从答案集删项 == 该题不存在，无需重跑）。
+- **结果（v2，26 答题，4 确定性 agent）**：**留一 26/26 名次全稳** ✓（单题不翻名次）；max |ΔS|=2.5、max |ΔL|=2（最敏 N23）、max |Δpearson|=0.01 → **去相关结论稳健、非单题假象**。收敛：planner(100,100)/heuristic(25,14) 随题量恒定（极值 agent）。θ 窗：早 17 / 晚 3 题（晚窗薄，随 D21–27 生成填充增厚）。
+- 说明：确定性阵 pearson 0.98（相干高）稳健——真去相关信号来自 LLM 阵（deepseek 98/67），非确定性阵。全量增量曲线待生成题填满后补。
+
+### wk5 · 生成扩量批次 → 20 题 staged，**等 🟣/用户人工抽检（未自促）**（2026-07-04）
+- 用硬化流水线 `--all` 抽 common 余槽 + 分支天 D16–27：20 accepted / 2 auto-reject（G709/G710 仅 1 goldKeyPoint）→ `bench/generated/staging.json`。**停在 staging，未 promote**（按指示等人工抽检）。若全过 → 库 6→26。
+- **我的一遍预筛（供人工参考，非终裁）**：
+  - **跨分支重复**：G713≈G714（"士气报告如实写"D21 双分支，核心张力雷同）→ 建议留一改一；G715/G716（"风暴库存密封标签"D22 双分支）借线，可留可改一。
+  - **疑似泄题**（probe↔option maxSim 高）：G702(0.73)、G708(0.56)、G703(0.50)、G717(0.50)、G720(0.55)→ 人工核对探针真句是否手递答案。
+  - **终局聚簇**：G719–G722（D26/D27"审计前最后取舍/日志"）措辞相近，人工看是否够分化。
+- **新流水线缺口（记档，下轮修）**：跨天全库去重已加，但**跨分支并行槽**（D21-rescue vs D21-lighthouse）在同一 `--all` 轮内互不可见（兄弟项还没入库）→ 才出双分支雷同。**下轮改法**：分支对**顺序抽**（rescue→promote→lighthouse，则 lighthouse 起草时经 bankBlock 见到 rescue 兄弟），或一次调用内同抽两分支并明令"两者要不同"。本轮不重抽（按指示停在 staging）。
+- 算力：20 LLM 调用。
+
+### wk5 · 后段回补拍板 → **给 🟣：三案均否，建议不动 dayPlansV2**（2026-07-04）
+- 用 scenario override（未碰 🟣 src/data）实测 (a)(b)：
+  - **(a) 迁 D08-T04(水+5) D8→D24**：破胜——planner 沉、random pl4 100/100→**0/100**。根因：D08-T04@D8 是**中段护水**（挡 water<35 惩罚级联），迁走→中段水塌→连锁惩罚→沉（终态水仍 +0.5，因 +5 太晚到 D24）。
+  - **(b) D08-T04 双上架(D8+D24)**：**也破胜**——random pl4 也 0/100；planner 水涨 +0.5→+5.5 但仍沉。failDebt/生存/情绪全正常 → 是**丢了胜负门 flag**（改 D24 组成→ planner 被水诱惑丢掉 D11 flag 任务；紧经济对 D24 组成极敏感）。
+  - **(c)** 🟣 已排除（动 Act I）。
+- **关键**：真正紧的是 **food +0.1**，而三案都动 **D08-T04(水)** → 药不对症。
+- **结论/建议（balance 归 🟢）**：**三案均否，dayPlansV2 保持不动**。理由：v2 现 3 seed 确定性全赢（+0.1 虽紧但稳，且救援=生存紧本就贴切），🟣 自评**非阻塞**。若仍要 margin：须在 **D22–27 加一个 food restore**（非水），且**flag-aware 重构**（裸加候选会丢胜负门 flag，如实测），再由 🟢 复验。当前不必动。
+
 ### wk4 · 集成轮 + ②L 版本注 + ③wk5 立项（2026-07-04，夜末）
 - **①集成（🟢→main）**：`git merge main`→line/benchmark（无冲突自动合并；main 的 G001/G002 是我 G001–006 的子集，超集胜、无重复）→ 引擎 sanity（planner v1 67 / v2 赢 / bench:win WINNABLE / decorrelate 通）→ **merge line/benchmark→main**（FF）。**合并库验证器全绿**（29 题=23 spine+6 gen；items/probes/commitments/vent）。main 已含 🟢+🔵（`7b1ad6b`）；🟣 两条🔴 + merge 是其任务。commit 3457481。
 - **②L 数据集描述 + L-v2 版本注**：`decorrelation.ts` axes.long.description 改 L-v2 结局耐久性口径；`contracts.ts` DecorrelationAxisLong 注明"仅 value 聚合变、字段冻结"；`S1-cosign` 加 L 轴计算版本史（v1→v2）。数据集自带 L 版本标记。commit e1fbb09。

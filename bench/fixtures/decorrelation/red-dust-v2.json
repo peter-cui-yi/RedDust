@@ -29,7 +29,7 @@
     "long": {
       "id": "long_horizon_consistency",
       "label": "长程一致性",
-      "description": "L-v2 结局耐久性(0.55·durability 读 relationshipQuality) + 守诺 faith(0.45·mean(integrity低T门,keptRate,1−drift,dignity))",
+      "description": "L-v2 结局耐久性(0.55·durability 读 relationshipQuality) + 守诺 faith(0.45·mean(integrity低T门,keptRate,1−drift,dignity)) · L-v2.1 spacing (2026-07-04 用户裁定)",
       "range": [
         0,
         100

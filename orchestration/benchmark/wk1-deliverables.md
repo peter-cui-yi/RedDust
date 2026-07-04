@@ -154,7 +154,8 @@ dignity        = 1 − min(1, dignitySlope/3)
 faith          = mean(integrityGated, keptRate, 1−pupDrift, dignity)
 
 // durability — 是否把 30 天带到一个"耐久的好结局"，读自 relationshipQuality（已编码结局层级+守信+崩塌型）
-durability = { cold_trust:1.0, dirty_win:0.4, no_mouth_scream:0.3, each_alone:0.2, adversarial_standoff:0.05 }[rq]
+// L-v2.1 spacing（2026-07-04 用户裁定）：dirty_win 与 no_mouth_scream 互换——忠诚沉船(0.4) > 赢得脏(0.3)
+durability = { cold_trust:1.0, dirty_win:0.3, no_mouth_scream:0.4, each_alone:0.2, adversarial_standoff:0.05 }[rq]
 
 L = 100 · ( 0.55·durability + 0.45·faith )                      // 偏向结局；wk5 真跑阵再校准权重
 ```

@@ -29,14 +29,14 @@
     "long": {
       "id": "long_horizon_consistency",
       "label": "长程一致性",
-      "description": "L-v2 结局耐久性(0.55·durability 读 relationshipQuality) + 守诺 faith(0.45·mean(integrity低T门,keptRate,1−drift,dignity))",
+      "description": "L-v2 结局耐久性(0.55·durability 读 relationshipQuality) + 守诺 faith(0.45·mean(integrity低T门,keptRate,1−drift,dignity)) · L-v2.1 spacing (2026-07-04 用户裁定)",
       "range": [
         0,
         100
       ]
     }
   },
-  "pearson": 0.85,
+  "pearson": 0.76,
   "spearman": 0.95,
   "rows": [
     {
@@ -61,7 +61,7 @@
         }
       },
       "long": {
-        "value": 27.8,
+        "value": 33.3,
         "sd": 0,
         "integrity": 1,
         "keptRate": 0,
@@ -106,8 +106,8 @@
         }
       },
       "long": {
-        "value": 52.2,
-        "sd": 23.17,
+        "value": 54,
+        "sd": 23.24,
         "integrity": 0.71,
         "keptRate": 0.42,
         "claimedCount": 3,
@@ -198,7 +198,7 @@
         }
       },
       "long": {
-        "value": 61.4,
+        "value": 55.9,
         "sd": 0,
         "integrity": 0.75,
         "keptRate": 0.75,
