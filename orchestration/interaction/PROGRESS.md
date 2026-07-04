@@ -11,15 +11,20 @@
 | Stage 1a 回放消费现有 trace，逐日播放 | wk2 | ✅ | Phaser `ReplayScene`（`web/game/`）实机通：真 shelter 布局（复用 ShelterScene 8 热点坐标）+ 真人物精灵 + AURA 随每日任务位置移动；逐日 scrub 更新日/分支/场景/任务/指标；`133e644`；见下"ShelterScene 复用说明" |
 | Stage 1b 时间轴 scrub + 逐日面板 | wk3 | ✅ | scrub 滑块 + 逐日 `TraceDayFrame` 摘要面板（提前落地） |
 | Stage 2a 去相关散点 + 名次翻转表（占位数据） | wk4 | ✅ | **提前到 wk2**：Plot 去相关散点（Pearson 0.02）+ SVG 双列名次翻转表（连线交叉=翻转，守不刷分）；占位 `DecorrelationDataset`；`2c3f0c5` |
-| Stage 1c hero 时刻标记 + GIF 导出 | wk5 | 🟡 | 权威 `heroMoments`（`contracts.ts`）已接（branch_fork/vent_rupture/dirty_win 在时间轴打点 + 场景闪光）；GIF 导出待做 |
+| Stage 1c hero 时刻标记 + GIF 导出 | wk5 | ✅ | **提前到 wk3**：权威 `heroMoments` 时间轴打点 + 场景闪光；`npm run hero:gif`（headless CDP 逐日截图 → ffmpeg，零 npm 依赖）导出 `web/public/hero-replay.gif`（684×590/19帧/183KB），定格在 surface_evidence 毁诺+摘要注水；已接入 README 顶部门面。`6077180` |
 | Stage 2b 承诺/关系折线图（联动日光标） | wk6 | 🟡 | **承诺线提前到 wk3**：`PromiseDecayChart` 画 `integritySoFar` 随天演化 + 首次毁诺红标，联动日光标；账本面板改**逐日 as-of**（守诺/待判/毁诺随 scrub 翻）；`68f7a4e`。关系线待 P2 `relationshipByChar`（导出器暂未出） |
 | Stage 1 完成（冻结富化 trace） | wk7 | ⬜ | |
 | Stage 2 换真数据集（◆S3） | wk8 | ⬜ | |
 | 集成 + README hero + human-play 钩子 | wk9 | ⬜ | |
-| ◆S4 集成冻结 + 冒烟 | wk10 | ⬜ | browser-smoke 需从根 app 适配到 `web/` 站点（新任务） |
+| ◆S4 集成冻结 + 冒烟 | wk10 | 🟡 | **`web/` 冒烟已就位**：`npm run smoke:web`（headless Chrome，11 项断言：选择器/时间轴/canvas/账本/图表/散点/翻转表/scrub/换模型/控制台净）——补上了"browser-smoke 只覆盖根 app"的缺口。集成冻结/性能待 wk10 |
 | ◆S5 上线 | wk12 | ⬜ | |
 
-## 本周更新（追加，最新在上）
+## 本周更新（追加,最新在上）
+### wk3 · Stage 1c hero GIF + `web/` 冒烟（2026-07-04）
+- **`web/` browser-smoke**（`scripts/browser-smoke-web.mjs` + `scripts/lib/cdp.mjs` 共享 CDP 机制,不动根 `browser-smoke.mjs`）：`npm run smoke:web` 自起 preview → headless Chrome → **11 项断言全过**（8 trace 选择器/变长时间轴/Phaser canvas/逐日账本/承诺线+指标线/去相关散点/翻转表/scrub 更新/换模型重渲/控制台净）。补上 ◆S4 前"冒烟只覆盖根 app"的缺口。
+- **Stage 1c hero GIF**（`npm run hero:gif`）：headless 逐日截图（shelter stage + 承诺账本 clip）→ **ffmpeg 编码**（零 npm 依赖,复用系统 ffmpeg）→ `web/public/hero-replay.gif`（684×590/19帧/183KB）。用 v1 planner-lighthouse（唯一确定性"认领4条→毁 surface_evidence"的崩塌故事）,**定格在 Day11 毁诺 + 摘要注水**。已接 README 顶部（守"回放优先"锁定呈现）。ffmpeg/ImageMagick/Chrome 均系统自带。
+- 真数据到位后（◆S3 LLM 30 天崩塌 trace）用 `HERO_TRACE=<id> npm run hero:gif` 换更狠的门面。`6077180`
+
 ### wk3 · 接 ◆S2 重平衡 + P1 逐日账本（2026-07-04）
 - **合 `line/benchmark`** 拿 ◆S2 交付（disjoint 文件，无冲突，与既有跨线合并实践一致）：v2 经济重平衡（drainScale 0.39 + storm D27 → **难但可赢**）；**P1 导出器**填 `frames[].commitmentLedger`(逐日 status) + `integritySoFar`（正是我 wk3 记给 🟢 的请求）；G002 生成题。
 - **重产 + sync fixture**（`bench:trace`，字节可复现）：v2 现**有判别力**——强 agent 赢（planner-lighthouse `lighthouse_success` 68分 PASS / planner `blue_zone_return`），基线沉（heuristic/random `aura_revoked`）。manifest 结局更新。30 天弧内容也变丰富（Day5 三题 N5/N6/N15）。
