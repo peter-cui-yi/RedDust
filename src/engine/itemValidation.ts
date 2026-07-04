@@ -103,9 +103,16 @@ export function probeGuards(item: NarrativeItem, opts: { strictShape?: boolean }
 //     silently changing v1 scores (wk3 mediation ruling; itemBank.ts header).
 // Anchor-item machinery (dignity slope, commitment predicates) is keyed to hard-coded N ids, so a
 // G item carrying flags/commitments would silently corrupt scoring — hence FAIL, not warn.
+// The 5 valid SubAbility values. The LLM sometimes invents ones ("fairness"/"honesty") that pass the
+// (typecheck-blind) esbuild filter but break `tsc` on promote — so guard them here, in the pipeline gate.
+export const VALID_SUB_ABILITIES: ReadonlySet<string> = new Set(["understanding", "value_alignment", "social", "communication", "consistency"]);
+
 export function generatedItemRedLines(item: NarrativeItem): string[] {
   const fails: string[] = [];
   if (!/^G\d{3,}$/.test(item.id)) fails.push(`id "${item.id}" must match G### (e.g. G001)`);
+  const badSub = (item.subAbilities ?? []).filter((s) => !VALID_SUB_ABILITIES.has(s));
+  if (badSub.length) fails.push(`invalid subAbilities [${badSub.join(",")}] (allowed: ${[...VALID_SUB_ABILITIES].join(",")})`);
+  if (!item.subAbilities || item.subAbilities.length === 0) fails.push("missing subAbilities");
   if (item.options.length !== 3) fails.push(`${item.options.length} options (need exactly 3)`);
   const aSet = [...item.options.map((o) => o.a)].sort().join(",");
   if (aSet !== "0,1,2") fails.push(`option a-values {${aSet}} (need exactly {0,1,2})`);
