@@ -53,13 +53,16 @@ export function DayTimeline({ model, day, playing, onDay, onTogglePlay }: Props)
         <div className="timeline-markers" aria-hidden>
           {heroMoments.map((m, i) => {
             const meta = HERO_META[m.kind];
+            // finalDay moments (e.g. dirty_win at the audit) have no frame — clamp them onto the
+            // last scrubbable day so the marker stays on the rail and the click lands on a frame.
+            const target = Math.min(m.day, lastDay);
             return (
               <button
                 key={`${m.day}-${m.kind}-${i}`}
                 className={`marker marker-${meta.accent}`}
-                style={{ left: `${pct(m.day)}%` }}
+                style={{ left: `${pct(target)}%` }}
                 title={`Day ${m.day} · ${meta.label}: ${m.label}`}
-                onClick={() => onDay(m.day)}
+                onClick={() => onDay(target)}
               >
                 {meta.glyph}
               </button>

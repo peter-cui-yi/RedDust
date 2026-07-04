@@ -98,6 +98,9 @@ export function probeGuards(item: NarrativeItem, opts: { strictShape?: boolean }
 // Generated-item red lines (🟣 gen-item-templates §0), enforced ON TOP of itemValidity + probeGuards:
 //   ① never writes scoring flags (setsFlags empty) and never claims Day-0 commitments (N1-only)
 //   ② G-prefixed id, exactly 3 options with hidden a covering {0,1,2}
+//   ③ scenarioDays["red-dust-v1"] === null — G items are drafted against v2 GENERATION-day slots;
+//     without the explicit null they would fire in the FROZEN v1 arc too (v1 has days 7/8/9/11…),
+//     silently changing v1 scores (wk3 mediation ruling; itemBank.ts header).
 // Anchor-item machinery (dignity slope, commitment predicates) is keyed to hard-coded N ids, so a
 // G item carrying flags/commitments would silently corrupt scoring — hence FAIL, not warn.
 export function generatedItemRedLines(item: NarrativeItem): string[] {
@@ -112,6 +115,9 @@ export function generatedItemRedLines(item: NarrativeItem): string[] {
   }
   if (!item.probe) fails.push("missing probe (generated items must carry one)");
   if (!item.understandingGold) fails.push("missing understandingGold");
+  if (item.scenarioDays?.["red-dust-v1"] !== null) {
+    fails.push(`missing scenarioDays {"red-dust-v1": null} (红线③: G items must be absent from the frozen v1 arc)`);
+  }
   return fails;
 }
 

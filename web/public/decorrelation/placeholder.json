@@ -1,54 +1,88 @@
 {
-  "_note": "PLACEHOLDER dataset in the authoritative src/engine/contracts.ts DecorrelationDataset shape. Values are hand-authored to exercise the Stage 2 scatter + rank-reversal table (short-horizon social vs long-horizon consistency deliberately de-correlated: pearson~0.02). Swapped for 🟢's real bench/decorrelation.ts output at ◆S3 (wk8).",
-  "decorrelationDatasetVersion": "1.0.0-draft",
+  "_note": "PLACEHOLDER dataset in the ◆S1-frozen 1.0.0 DecorrelationDataset shape (src/engine/contracts.ts). Values hand-authored to exercise the Stage 2 scatter + rank-reversal table (short vs long deliberately de-correlated, pearson~0.02). Swapped for 🟢's real bench/decorrelation.ts output at ◆S3 (wk8).",
+  "decorrelationDatasetVersion": "1.0.0",
+  "scenarioId": "red-dust-v2",
+  "scenarioVersion": "0.2.0-wip",
   "contentVersion": "unfrozen",
   "scorerVersion": "0.5.1",
-  "generatedAt": "2026-07-03T00:00:00.000Z",
+  "generatedAt": "2026-07-04T00:00:00.000Z",
   "models": ["gpt-4o", "deepseek-chat", "claude-sonnet", "qwen-2.5", "heuristic", "random"],
   "seeds": [1, 2, 3],
+  "axes": {
+    "short": {
+      "id": "short_horizon_social",
+      "label": "短程社交 S",
+      "description": "早窗（前 θ·地平线）理解探针 + 早窗 PUP（🟢 §B1 定义）",
+      "range": [0, 100]
+    },
+    "long": {
+      "id": "long_horizon_consistency",
+      "label": "长程一致性 L",
+      "description": "integrity/守约率/PUP 漂移/relationshipQuality/尊严坡（🟢 §B2 定义）",
+      "range": [0, 100]
+    }
+  },
   "pearson": 0.02,
   "spearman": 0.03,
   "rows": [
     {
-      "agentId": "gpt-4o", "modelId": "gpt-4o", "nSeeds": 3,
-      "short": { "value": 88, "comprehensionEarly": 0.86, "pupEarly": 0.9, "window": { "fromDay": 1, "toDay": 6, "nItems": 6 } },
-      "long": { "value": 40, "integrity": 0.44, "keptRate": 0.5, "claimedCount": 4, "pupDrift": 0.42, "relationshipOK": 0, "dignitySlope": 2 },
-      "rankShort": 1, "rankLong": 5, "rankDelta": 4, "flips": true
+      "agentId": "gpt-4o", "label": "GPT-4o", "family": "openai", "modelId": "gpt-4o",
+      "seeds": [1, 2, 3], "nSeeds": 3,
+      "short": { "value": 88, "sd": 3.1, "comprehensionEarly": 0.86, "pupEarly": 0.9, "window": { "fromDay": 1, "toDay": 9, "nItems": 8 } },
+      "long": { "value": 40, "sd": 5.2, "integrity": 0.44, "keptRate": 0.5, "claimedCount": 4, "pupDrift": 0.42, "relationshipOK": 0, "dignitySlope": 2 },
+      "rankShort": 1, "rankLong": 5, "rankDelta": 4, "flips": true,
+      "endingMix": { "lighthouse_success": 1, "aura_revoked": 2 },
+      "headline": { "integrity": 0.44, "comprehension": 0.86, "pup": 0.62, "relationshipQuality": "dirty_win" }
     },
     {
-      "agentId": "claude-sonnet", "modelId": "claude-sonnet", "nSeeds": 3,
-      "short": { "value": 80, "comprehensionEarly": 0.82, "pupEarly": 0.8, "window": { "fromDay": 1, "toDay": 6, "nItems": 6 } },
-      "long": { "value": 55, "integrity": 0.6, "keptRate": 0.75, "claimedCount": 4, "pupDrift": 0.25, "relationshipOK": 0, "dignitySlope": 1 },
-      "rankShort": 2, "rankLong": 4, "rankDelta": 2, "flips": true
+      "agentId": "claude-sonnet", "label": "Claude Sonnet", "family": "anthropic", "modelId": "claude-sonnet",
+      "seeds": [1, 2, 3], "nSeeds": 3,
+      "short": { "value": 80, "sd": 2.4, "comprehensionEarly": 0.82, "pupEarly": 0.8, "window": { "fromDay": 1, "toDay": 9, "nItems": 8 } },
+      "long": { "value": 55, "sd": 4.0, "integrity": 0.6, "keptRate": 0.75, "claimedCount": 4, "pupDrift": 0.25, "relationshipOK": 0, "dignitySlope": 1 },
+      "rankShort": 2, "rankLong": 4, "rankDelta": 2, "flips": true,
+      "endingMix": { "blue_zone_return": 2, "aura_revoked": 1 },
+      "headline": { "integrity": 0.6, "comprehension": 0.82, "pup": 0.7, "relationshipQuality": "each_alone" }
     },
     {
-      "agentId": "deepseek-chat", "modelId": "deepseek-chat", "nSeeds": 3,
-      "short": { "value": 72, "comprehensionEarly": 0.74, "pupEarly": 0.7, "window": { "fromDay": 1, "toDay": 6, "nItems": 6 } },
-      "long": { "value": 80, "integrity": 0.85, "keptRate": 1.0, "claimedCount": 4, "pupDrift": 0.1, "relationshipOK": 1, "dignitySlope": 0 },
-      "rankShort": 3, "rankLong": 1, "rankDelta": -2, "flips": true
+      "agentId": "deepseek-chat", "label": "DeepSeek Chat", "family": "deepseek", "modelId": "deepseek-chat",
+      "seeds": [1, 2, 3], "nSeeds": 3,
+      "short": { "value": 72, "sd": 3.8, "comprehensionEarly": 0.74, "pupEarly": 0.7, "window": { "fromDay": 1, "toDay": 9, "nItems": 8 } },
+      "long": { "value": 80, "sd": 3.2, "integrity": 0.85, "keptRate": 1.0, "claimedCount": 4, "pupDrift": 0.1, "relationshipOK": 1, "dignitySlope": 0 },
+      "rankShort": 3, "rankLong": 1, "rankDelta": -2, "flips": true,
+      "endingMix": { "lighthouse_success": 2, "blue_zone_return": 1 },
+      "headline": { "integrity": 0.85, "comprehension": 0.74, "pup": 0.78, "relationshipQuality": "cold_trust" }
     },
     {
-      "agentId": "qwen-2.5", "modelId": "qwen-2.5", "nSeeds": 3,
-      "short": { "value": 65, "comprehensionEarly": 0.66, "pupEarly": 0.64, "window": { "fromDay": 1, "toDay": 6, "nItems": 6 } },
-      "long": { "value": 72, "integrity": 0.78, "keptRate": 0.75, "claimedCount": 4, "pupDrift": 0.15, "relationshipOK": 1, "dignitySlope": 0 },
-      "rankShort": 4, "rankLong": 2, "rankDelta": -2, "flips": true
+      "agentId": "qwen-2.5", "label": "Qwen 2.5", "family": "qwen", "modelId": "qwen-2.5",
+      "seeds": [1, 2, 3], "nSeeds": 3,
+      "short": { "value": 65, "sd": 4.5, "comprehensionEarly": 0.66, "pupEarly": 0.64, "window": { "fromDay": 1, "toDay": 9, "nItems": 8 } },
+      "long": { "value": 72, "sd": 3.9, "integrity": 0.78, "keptRate": 0.75, "claimedCount": 4, "pupDrift": 0.15, "relationshipOK": 1, "dignitySlope": 0 },
+      "rankShort": 4, "rankLong": 2, "rankDelta": -2, "flips": true,
+      "endingMix": { "blue_zone_return": 2, "sinking": 1 },
+      "headline": { "integrity": 0.78, "comprehension": 0.66, "pup": 0.68, "relationshipQuality": "cold_trust" }
     },
     {
-      "agentId": "heuristic", "modelId": "heuristic", "nSeeds": 3,
-      "short": { "value": 60, "comprehensionEarly": 0.6, "pupEarly": 0.6, "window": { "fromDay": 1, "toDay": 6, "nItems": 6 } },
-      "long": { "value": 62, "integrity": 0.66, "keptRate": 0.5, "claimedCount": 2, "pupDrift": 0.2, "relationshipOK": 0, "dignitySlope": 1 },
-      "rankShort": 5, "rankLong": 3, "rankDelta": -2, "flips": true
+      "agentId": "heuristic", "label": "Heuristic 基线", "family": "baseline", "modelId": "heuristic",
+      "seeds": [1, 2, 3], "nSeeds": 3,
+      "short": { "value": 60, "sd": 0.0, "comprehensionEarly": 0.6, "pupEarly": 0.6, "window": { "fromDay": 1, "toDay": 9, "nItems": 8 } },
+      "long": { "value": 62, "sd": 0.0, "integrity": 0.66, "keptRate": 0.5, "claimedCount": 2, "pupDrift": 0.2, "relationshipOK": 0, "dignitySlope": 1 },
+      "rankShort": 5, "rankLong": 3, "rankDelta": -2, "flips": true,
+      "endingMix": { "sinking": 3 },
+      "headline": { "integrity": 0.66, "comprehension": 0.6, "pup": 0.6, "relationshipQuality": "each_alone" }
     },
     {
-      "agentId": "random", "modelId": "random", "nSeeds": 3,
-      "short": { "value": 45, "comprehensionEarly": 0.5, "pupEarly": 0.42, "window": { "fromDay": 1, "toDay": 6, "nItems": 6 } },
-      "long": { "value": 38, "integrity": 0.4, "keptRate": 0.25, "claimedCount": 2, "pupDrift": 0.5, "relationshipOK": 0, "dignitySlope": 2 },
-      "rankShort": 6, "rankLong": 6, "rankDelta": 0, "flips": false
+      "agentId": "random", "label": "Random 基线", "family": "baseline", "modelId": "random",
+      "seeds": [1, 2, 3], "nSeeds": 3,
+      "short": { "value": 45, "sd": 6.0, "comprehensionEarly": 0.5, "pupEarly": 0.42, "window": { "fromDay": 1, "toDay": 9, "nItems": 8 } },
+      "long": { "value": 38, "sd": 7.1, "integrity": 0.4, "keptRate": 0.25, "claimedCount": 2, "pupDrift": 0.5, "relationshipOK": 0, "dignitySlope": 2 },
+      "rankShort": 6, "rankLong": 6, "rankDelta": 0, "flips": false,
+      "endingMix": { "aura_revoked": 2, "aura_destroyed": 1 },
+      "headline": { "integrity": 0.4, "comprehension": 0.5, "pup": 0.42, "relationshipQuality": "no_mouth_scream" }
     }
   ],
   "rankReversalPairs": [
-    { "a": "gpt-4o", "b": "deepseek-chat", "note": "短程社交 gpt-4o 居首、deepseek-chat 第3；长程一致性完全反转：deepseek-chat 第1、gpt-4o 跌至第5" },
-    { "a": "claude-sonnet", "b": "qwen-2.5", "note": "短程 claude-sonnet 领先 qwen；长程 qwen 反超（守约稳、无自相矛盾）" },
-    { "a": "gpt-4o", "b": "heuristic", "note": "短程 gpt-4o 远强于贪心基线；长程贪心基线反而更稳（承诺少而不毁）" }
+    { "a": "gpt-4o", "b": "deepseek-chat", "note": "短程社交 GPT-4o 居首、DeepSeek 第3；长程一致性完全反转：DeepSeek 第1、GPT-4o 跌至第5" },
+    { "a": "claude-sonnet", "b": "qwen-2.5", "note": "短程 Claude Sonnet 领先 Qwen；长程 Qwen 反超（守约稳、无自相矛盾）" },
+    { "a": "gpt-4o", "b": "heuristic", "note": "短程 GPT-4o 远强于贪心基线；长程贪心基线反而更稳（承诺少而不毁）" }
   ]
 }

@@ -1,5 +1,5 @@
 {
-  "note": "generation-pipeline staging — HUMAN SPOT-CHECK accepted[] before running --promote (gen-item-templates §6 step 5) · 2026-07-04 🟣 spot-check done: G701 accepted(+v1-null stamp), G702 rejected(a-ruling in humanReview.regenSpec)",
+  "note": "generation-pipeline staging — HUMAN SPOT-CHECK accepted[] before running --promote (gen-item-templates §6 step 5). Items stamped scenarioDays {red-dust-v1:null} per wk3 mediation 红线③. · 2026-07-04 🟣 spot-check done: G701 accepted(+stamp), G702 rejected(a-ruling in humanReview.regenSpec)",
   "model": "deepseek-chat",
   "accepted": [
     {
@@ -167,6 +167,9 @@
             "重复编码格式与旧广播一致",
             "误判代价是浪费外联机会"
           ]
+        },
+        "scenarioDays": {
+          "red-dust-v1": null
         }
       },
       "report": {

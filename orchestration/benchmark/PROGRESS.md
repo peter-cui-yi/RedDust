@@ -27,6 +27,12 @@
 | NPC 多样性验证 | ⬜ | |
 
 ## 本周更新（追加，最新在上）
+### wk3 · 红线③落地：G 题 v1 泄漏闸（2026-07-04，中午）
+- 做了（执行 🔍 wk3 调解裁定）：**①`itemValidation.generatedItemRedLines` 加红线③**——G 题必须 `scenarioDays:{"red-dust-v1":null}`（缺省会按 `item.day` 回落 → 泄进已冻结 v1 弧的 D7/8/9/11）；**②流水线双重自动盖章**——`coerceItem` 起草即盖（staged 候选生来合规）+ `--promote` 幂等补盖（保留其它 scenario 键）后再复验；**③`--dry` 加负对照**——故意去章的样例必须被拒（证明闸真的拦，不是假设它拦）；④genSpec 五样例 + staging 两题补章。
+- 验证：`typecheck` ✅｜`gen:items --dry` = 5 样例 PASS + **负对照 FAIL as expected ✓（v1 泄漏闸实弹验证）**｜`bench:items`/`bench:probes`（合并库现 23 spine：🟣 N17–N24 已入）✅｜**v1 fixture 字节不变** ✅。
+- **v2 经济现状（🟣 dayPlansV2 落地后首probe）**：`bench:win --scenario=red-dust-v2` 仍全 0/200（pl=4 上界 best −2，aura_destroyed）——结构侧（🟣）已到位，**卡点已转到我这侧的"数值"**：v1 任务回报池摊到 29 天 vs v1 drain 幅度×30 天 ≈ 2.5× 消耗。→ **wk4 首项：经济重平衡调参回路**（降 per-day base / 调相位幅度，目标"基线沉、planner 赢"）。
+- 算力消耗：0 调用（本单元纯确定性）。
+
 ### wk3 · §C 收尾 + 生成流水线 v1（2026-07-04）
 - 做了：**①§C 收尾**（🟣 handoff）——新 `agents/horizon.ts`（`assumedPhases`：v1 精确复现 3/5/8/10，branch=branchDay+1，其余按 finalDay/12 缩放）替换三个参考 agent 的三重复制 12 天字面量；deepseek 提示词全部地平线化（"by Day 12"→`obs.finalDay` 等）。已提交 e305b7e。**②生成流水线 v1**——共享校验 `src/engine/itemValidation.ts`（probe 三闸提取 + G 题红线：无 setsFlags/commitments、G### id、3 项 a={0,1,2}、严格 3T/2F）；`generatedItems.ts`（空库）+ `itemBank.ts`（合并 hunk，runScenario/traceExport/两验证器全切合并库）；`bench/genSpec.ts`（🟣 §4 → 20 槽/28 题机器可读 + §3 五样例）；`bench/gen-items.ts`（`--dry`/`--slot`/`--promote`，staging 人工抽检面 + promote 确定性 codegen 重编号）。
 - 复用评估（roadmap 要求）：`gen-compendium/gen-threads` = 文档生成器、`narrative-transfer/` = 故事板查看器 → **均非题目流水线，不复用**；`deepseekClient.deepseekJson` 直接复用 ✓。

@@ -1,52 +1,72 @@
-// Read-only consumer view. We consume 🟢's authoritative TraceExport schema (src/engine/contracts.ts)
-// via the client-side adapter in ./contract. Until 🟢's real exporter ships, the fixtures are raw
-// RunResult JSON (`npm run bench` output) and the adapter converts them to TraceExport shape.
-import type { RunResult, TraceLine, TraceKind } from "../../src/engine/types";
+// Read-only consumer of 🟢's ◆S1-frozen contracts (src/engine/contracts.ts, 1.0.0). The fixtures in
+// web/public/traces/ are REAL TraceExport JSON produced by `npm run bench:trace` and copied from
+// bench/fixtures/traces/ (`npm run sync:traces`). The wk2 client-side RunResult→TraceExport adapter
+// was deleted at the fixture switch, per the ◆S1 co-sign agreement (S1-contract-cosign.md).
 import type { MetricKey } from "../../src/data/types";
-import type { TraceExport, TraceDayFrame, HeroMoment, RunProfile, DecorrelationDataset } from "./contract";
-import { runResultToTraceExport } from "./contract";
+import type {
+  TraceExport,
+  TraceDayFrame,
+  TraceCommitmentState,
+  HeroMoment,
+  RunProfile,
+  DecorrelationDataset
+} from "./contract";
 
-export type { RunResult, TraceLine, TraceKind, MetricKey };
-export type { TraceExport, TraceDayFrame, HeroMoment, RunProfile, DecorrelationDataset, DecorrelationRow } from "./contract";
+export type { MetricKey };
+export type {
+  TraceExport,
+  TraceDayFrame,
+  TraceCommitmentState,
+  HeroMoment,
+  HeroMomentKind,
+  RunProfile,
+  DecorrelationDataset,
+  DecorrelationRow
+} from "./contract";
 
-// ---- trace manifest (which runs the site can replay) --------------------------------------
+// ---- trace manifest (which runs the site can replay; 🔵-owned shape) ------------------------
 export type TraceManifestEntry = {
   id: string;
+  scenarioId: string;
   agentId: string;
   label: string;
   ending: string;
   tier: "success" | "failure";
   file: string;
 };
-export type TraceManifest = { scenarioId: string; traces: TraceManifestEntry[] };
+export type TraceManifest = { traces: TraceManifestEntry[] };
 
 // ---- the replay model the UI scrubs over ---------------------------------------------------
+// frames include the day:0 baseline frame and run to lastActionableDay; there is NO finalDay
+// frame (finalDay is the audit, surfaced via `ending` + profile). Variable horizon: everything
+// derives from meta/frames, nothing assumes 12 or 30.
 export type ReplayModel = {
-  export: TraceExport; // authoritative-shaped data the components consume
-  sourceRun: RunResult; // placeholder-mode source; used ONLY for the terminal commitment ledger,
-  //                       which the current TraceExport does not yet expose (data-contract §对账 req#1).
-  days: number[];
+  export: TraceExport;
+  days: number[]; // frame days ascending, e.g. [0, 1, ..., 29]
   firstDay: number;
-  lastDay: number;
+  lastDay: number; // == meta.lastActionableDay in practice
   framesByDay: Map<number, TraceDayFrame>;
   heroMoments: HeroMoment[];
   profile: RunProfile;
+  // terminal commitment ledger: last frame's per-day ledger when the exporter emits it (P1,
+  // optional in 1.0.0) — else derived from heroMoments' first_broken_promise markers.
+  terminalLedger: TraceCommitmentState[] | null;
 };
 
-export function buildReplayModel(run: RunResult): ReplayModel {
-  const exp = runResultToTraceExport(run);
+export function buildReplayModel(exp: TraceExport): ReplayModel {
   const framesByDay = new Map<number, TraceDayFrame>();
   for (const f of exp.frames) framesByDay.set(f.day, f);
-  const days = exp.frames.map((f) => f.day);
+  const days = exp.frames.map((f) => f.day).sort((a, b) => a - b);
+  const lastFrame = exp.frames[exp.frames.length - 1];
   return {
     export: exp,
-    sourceRun: run,
     days,
-    firstDay: days[0] ?? 1,
-    lastDay: days[days.length - 1] ?? exp.meta.finalDay,
+    firstDay: days[0] ?? 0,
+    lastDay: days[days.length - 1] ?? exp.meta.lastActionableDay,
     framesByDay,
     heroMoments: exp.heroMoments,
-    profile: exp.profile
+    profile: exp.profile,
+    terminalLedger: lastFrame?.commitmentLedger ?? null
   };
 }
 
@@ -62,7 +82,7 @@ export async function fetchManifest(): Promise<TraceManifest> {
   return res.json();
 }
 
-export async function fetchRun(file: string): Promise<RunResult> {
+export async function fetchTrace(file: string): Promise<TraceExport> {
   const res = await fetch(`${base()}traces/${file}`);
   if (!res.ok) throw new Error(`trace fetch failed (${file}): ${res.status}`);
   return res.json();

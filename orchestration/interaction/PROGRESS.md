@@ -20,6 +20,15 @@
 | ◆S5 上线 | wk12 | ⬜ | |
 
 ## 本周更新（追加，最新在上）
+### wk3 · fixture 源切换完成（2026-07-04）
+- **切到真 `TraceExport` 1.0.0**：`web/public/traces/` 换为 🟢 `bench:trace` 真 fixture（v1 12天×4 + **v2 30天/fork=D15×4**，字节可复现）；加 `npm run sync:traces` 防漂移；manifest 默认 v2 30 天。`8cbebf4`
+- **客户端适配器已删**（按会签约定）：`web/lib/contract.ts` 现为冻结 schema 的纯 re-export 面；`fetchTrace` 直接吃 `TraceExport`。
+- **30 天实测通过（变长设计首次真 30 天验证）**：滑块 0..29（含 day:0 基线帧）、真 hero 标记（首次毁诺@D5 带 commitmentKey、fork@D15 分支翻 lighthouse）、D29 指标崩塌可见（dissatisfaction=100/water=5，经济未重平衡的诚实呈现）、终审 tag "Day 30 → AURA 被摧毁"；v1 回归 OK（0..11，dirty_win@finalDay 钳到轨上——修了一个越轨 marker bug）。
+- **承诺账本面板**：优先读 `frames[].commitmentLedger`（P1 可选，导出器暂未填）；现回退 = profile 聚合 + `first_broken_promise` heroMoments（key+日）+ `auditReportWatered` 红标。**导出器填 P1 后零代码升级**。
+- **Stage 2 对齐 1.0.0**：占位数据集升到全 1.0.0 形（axes 描述子/label/family/seeds/endingMix/headline/sd）；散点用轴描述子 + **±sd 误差棒** + 富 tooltip；翻转表显示名。
+- 验证：root + web build 绿；preview 实机 v2/v1 + Stage 2 全过，控制台无错。
+- 剩余待办：Stage 2b 承诺/关系折线（等导出器 P1 `commitmentLedger`/`integritySoFar`——schema 已冻结有位）；Stage 1c GIF 导出；`web/` browser-smoke。
+
 ### wk2 启动（2026-07-03）
 - 审计（🔍）wk1 基线审：🔵 判 **on-track，三线中执行纪律最好，无越界/无"声称绿"**；build 被独立复跑确认。用户拍板锁定 **30 天弧 / fork=D15**（`branchDay=15, lastActionableDay=29, finalDay=30`）。
 - **wk2 第一动作：`git merge main` 完成**——line/interaction 快进到集成基线 `c61e764`（含 🟣 引擎改动 + 🟢 `contracts.ts`）；**`npm run build:web` 在集成基线上实跑绿**（plot 依赖 / *:web 脚本保留）。
@@ -47,7 +56,7 @@
 - ◆S1（wk2 数据契约共签）：✅ **已会签 1.0.0（2026-07-03）**，字段名/类型冻结；本线已对齐（enum 改名 + 适配器补新字段，build 绿） ｜ ◆S3（wk8 接真数据）：组件按冻结 `DecorrelationDataset` 先行 ｜ ◆S4（wk10 集成冻结）：未启 ｜ ◆S5（wk12 上线）：未启
 
 ### ◆S1 会签后待办（wk3，非阻塞）
-- fixture 源切换：`web/public/traces/`（RunResult+客户端适配器）→ 🟢 的真 `TraceExport`（`bench/fixtures/traces/`，v1+v2 各 4 条已可用）；切换后按约定删除客户端适配器 `web/lib/contract.ts` 的 `runResultToTraceExport`。30 天/fork=D15 真样例即刻可实测（v2 fixture 已在）。
+- ✅ fixture 源切换完成（2026-07-04，`8cbebf4`）：真 `TraceExport` 直接消费，客户端适配器已删，30 天真样例实测通过。见 wk3 周更。
 
 ## wk2 待办（承接审计 + ◆S1 对账）
 1. ✅ `RunResult → TraceExport` 适配器 + 组件迁移到权威 `contracts.ts` 类型（`690571c`）。
@@ -57,6 +66,6 @@
 5. ⏳ 剩余：Stage 1c hero GIF 导出；Stage 2b 承诺/关系折线（待 A2/A3 逐日快照）；`web/` 站点 browser-smoke（◆S4 前）。
 
 ## Blocker / 跨线依赖
-- **对 🟢（benchmark）**：~~① ◆S1 正式签字~~ ✅ 已会签 1.0.0（2026-07-03）；~~② 真 `TraceExport` 导出器~~ ✅ 已交付（`bench/fixtures/traces/` v1+v2 各 4 条，字节可复现）→ 我方 wk3 做 fixture 源切换；③ ◆S3 真 `DecorrelationDataset` → 换掉散点/翻转表占位（wk8）；~~④ 3 项小请求~~ ✅ 全部已入 1.0.0 schema（逐日 ledger status / sd / endingMix）。
+- **对 🟢（benchmark）**：~~① ◆S1 正式签字~~ ✅；~~② 真 `TraceExport` 导出器~~ ✅ → ~~fixture 源切换~~ ✅（2026-07-04）；③ ◆S3 真 `DecorrelationDataset` → 换掉散点/翻转表占位（wk8）；④ **P1 逐日字段请求**：`toTraceExport` 填 `frames[].commitmentLedger`/`integritySoFar`（schema 1.0.0 已有位，导出器暂缺）——Stage 2b"承诺随 30 天崩塌"折线与账本面板零代码升级都等它；非阻塞（现有回退）。⑤ v2 内容/经济：D13+ `tasksPicked` 为空、30 天全员 `aura_destroyed`——知悉即可，◆S2 重平衡自然解决。
 - **对 🟣（叙事）**：wk7 冻结富化 trace；此前用当前 trace 开发，冻结后换。
 - **自身待办**：`scripts/browser-smoke.mjs` 目前只冒烟根 app，需在 ◆S4 前适配/新增对 `web/` 站点的冒烟（记账于 wk10 行）。
