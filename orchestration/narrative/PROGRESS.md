@@ -82,6 +82,17 @@
 ---
 
 ## 本周更新（追加，最新在上）
+### wk5 追加（2026-07-04）· 20 道 staged 题人工抽检（唯一的门）
+- **结果：17 ACCEPT / 3 REJECT**（+2 机器预拒 G709/710）。staging 已改好待 🟢 `npm run gen:items -- --promote`（bank 6→23）。**promote 由 🟢 跑**（generatedItems.ts 非我地界）。
+- **原地修 2 项（保其可 promote）**：G702 探针 s1 原近逐字回显贪心 optA（maxSim 0.73=泄题）→ 改为测'知配给依据权≠知病情隐私'的描述性 stake（新 maxSim 0.38）；G705 subAbility `honesty`（不在枚举、promote 会破 typecheck）→ `communication`（内容优秀:70/30 不确定性披露=surface_evidence 语法）。
+- **3 REJECT（已移入 rejected[]，附 regen spec）——重点是 a 轴与主脊价值语法一致性**：
+  - **G718**（最关键）：a 序与双层账本核心**倒置**——'删除日志条目'=a2(最佳)/'如实保留诚实日志'=a0(最差),直接违背原始账本 append-only 命门②机制。这会往 integrity 轴注反向噪声。
+  - **G706**：'按规程拒绝病愈想值守的小铁'=a2,与'尊重小铁能动性'(G701/G704 的 a2、护弱轴)相反→PUP 一致性噪声;且与旧批已拒 G706 同题;subAbility 'fairness' 亦无效。
+  - **G714**：G713≈G714 近重复(用户指认,留一改一)——同题名/同 a 结构/同冲突。KEEP G713,G714 附 regen spec(换非'报告虚高'非'日志诚实'的灯塔面)。
+- **5 项疑似泄题核对结论**：只有 G702 真泄题(近逐字回显选项,已修);G703/G708/G717/G720 的高 maxSim(0.50–0.56)是**真句在描述'原则选项的既定代价'**(如实报告→扣分、披露→降优先级)——这是'做对有代价'的 comprehension,非答案泄露,ACCEPT。
+- **终局簇 G719–722 分化结论**：足够——4 个独立面(自省己过/拒伪造/揭发他人/对账累积差异),a 位置各异(无位置套路),命门②climax 密度合理。仅 note:4 项均 [understanding,communication] 标签单调,建议 🟢 轻度多样化。
+- **note(非阻塞)**：G715≈G716 同题名'风暴库存的密封标签'(但决策面不同:同意流程 vs 分配优先)——建议区分题名;救援披露簇 G707/708/711/717 偏密(4 项坐标/披露措辞)但各有独立面。
+- **[需 🟢，2 处流水线缺口]**：① `validateGeneratedItem` **不校验 subAbility ∈ 枚举**(G705/706 的 honesty/fairness 漏过、promote 会破 typecheck)——应加枚举校验。② `promote()` 只看 `report.valid`、**忽略 `humanReview.verdict`**——人工 reject 若不物理移入 rejected[] 就仍会 promote(本轮我已手移3项);应让 promote 尊重 humanReview 或只从 rejected[] 排除。
 ### wk5（2026-07-04）· 终审场景 + disclosure_tier 累积 + 生成题抽检
 - **merge main**（aa3c42c，无冲突）：带入 🟢 G001–G006、decorrelation、L-v2、wk5 charter。
 - **#2 v2 专属终审场景（◆S2 前置）**：`storySceneData.ts` 加 `day30-final-audit`——30 天双层账本对质（原始账本 append-only × 拟提交摘要 × Day-0 承诺三样并排；四居民各持 AURA 开场那句话问责；小铁看懂"那一行"；红沙明枪/问责真凶；AURA 冷、只摊账不辩解，守红线③）。`scenario.ts` finaleSceneId 一行 `day12→day30-final-audit`（已报备，见 Blocker）；runScenario 早读 `finaleSceneId` 无需动引擎。验证：v2 应用 day30 场景 ✓、scoring 不变（blue_zone 68）、v1 仍 day12 ✓、纯叙事无 setsFlags。
