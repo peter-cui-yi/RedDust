@@ -31,6 +31,10 @@
 - **敏感度**：权重 ±0.05 时名次是否稳（与工作流 1 同法）。
 **验收/交付**：权重定稿写入 `traceExport.ts`（`computeShortSocial/Long`）+ `wk1-deliverables §B` + `S1-cosign` L 版本史（若 L 再动则 L-v3）。**deliverable**：校准报告（每权重的判别力/稳健性证据）+ 冻结值。
 
+**进度（2026-07-04）**：
+- ✅ **零 API 权重稳健性**：去相关方向对 L-v2 权重稳健——deepseek 去相关在 w_dur>~0.05 恒成立（仅 w_dur=0=L-v1 塌），权重定幅度非方向；durability(no_mouth_scream)∈{.3,.4,.5} 均去相关。→ **当前 0.55/0.45 + L-v2.1 durability 间距站得住可冻**。
+- ⬜ **真模型阵谱系（分批 API，待跑）**：deepseek 家族(base/planner/search/strategist)×1–2 seed 于 v2（~80 调用/局，先少变体少 seed 探）→ 多真点校准 α 与 w_dur/durability 到判别力最大 + ±0.05 稳健。未在生成补满轮同跑（守 batched 纪律）。
+
 ## 工作流 3 · integrity/comprehension headline 化（+ κ gate）
 **问题**：现 integrity/comprehension 是 report-only（在 `narrativeParts`/画像里，但不在对比表 headline、不进 `total`）。roadmap wk5 要把它们提为 headline **可见轴**；进 `total` 需 κ≥0.6。
 **方法**：

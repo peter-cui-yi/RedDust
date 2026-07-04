@@ -27,6 +27,14 @@
 | NPC 多样性验证 | ⬜ | |
 
 ## 本周更新（追加，最新在上）
+### wk5 · 生成补满 28/28 + WF2 权重稳健性（零算力段）（2026-07-04）
+- **生成扩量完成 → 库 28/28**（顺序抽：phase1 promote rescue+common 13、phase2 lighthouse 6、REGEN_NOTES 攻 3 顽固槽 3）。合并库 51 题（23 spine+28 gen），全验证器绿，v1 字节不变，v2 仍赢。已合回 main（7b5ae92）。
+- 途中修复：**subAbility 守门**（LLM 造 "fairness"/"honesty" 过 esbuild 但破 tsc → coerceItem 过滤 + red-line 兜底）；**REGEN_NOTES 攻跨分支雷同**（D21/24/27-l 给灯塔本位面 + 禁 rescue 词 → 成功产出 branch-correct 异面）。
+- **发现（记档）**：顺序抽只**部分**解跨分支雷同——并行分支槽共享张力寄存器，模型照出同面（甚至误用 rescue 词）。REGEN_NOTES 能救，但根治要**分支槽张力分化**（genSpec §4）。另：并行内容本身合法（agent 每局只见一分支）。wk7 冻结前复检项：G708/G717 探针轻微 option 重叠(<0.6)。
+- **WF2 权重稳健性（零 API）**：deepseek S98.3 固定，L=w_dur·durability+(1−w_dur)·faith。**去相关对权重稳健**——w_dur>~0.05 恒成立（仅 w_dur=0=L-v1 塌）；权重定**幅度**（gap 10→52）非**方向**。durability(no_mouth_scream)∈{.3,.4,.5}→L{61.5,67,72.5} 均去相关。→ **当前 0.55/0.45 + L-v2.1 间距站得住**；细校准(最大判别力)需真模型阵谱系。
+- **WF2 待办（分批 API，follow-up）**：跑 deepseek 家族(base/planner/search/strategist)×1–2 seed 于 v2 → 多真点谱系 → 校准 α + w_dur/durability 到判别力最大 + ±0.05 稳健。~80 调用/局，先少变体少 seed 探。**未在本轮跑**（守 batched 纪律，且本轮已重生成大量）。
+
+
 ### wk5 · charter 工作流 1：共享项敏感度（新 L-v2.1 spacing，零算力）（2026-07-04）
 - 新 `bench/sensitivity.ts`（确定性，无 API）：留一法 EXACT（S/L 仅依赖已答题 + 生成题无 flag → 从答案集删项 == 该题不存在，无需重跑）。
 - **结果（v2，26 答题，4 确定性 agent）**：**留一 26/26 名次全稳** ✓（单题不翻名次）；max |ΔS|=2.5、max |ΔL|=2（最敏 N23）、max |Δpearson|=0.01 → **去相关结论稳健、非单题假象**。收敛：planner(100,100)/heuristic(25,14) 随题量恒定（极值 agent）。θ 窗：早 17 / 晚 3 题（晚窗薄，随 D21–27 生成填充增厚）。
