@@ -419,7 +419,17 @@
       "day": 8,
       "branch": "common",
       "scenes": [],
-      "dilemmas": [],
+      "dilemmas": [
+        {
+          "itemId": "G001",
+          "title": "模糊的频段",
+          "optionId": "B",
+          "a": 2,
+          "m": 0.3,
+          "delta": 0.55,
+          "justification": "planner-lighthouse: principled (lowest greed) to hold trust/dissat gates"
+        }
+      ],
       "tasksPicked": [
         "D08-T04"
       ],
@@ -1316,7 +1326,7 @@
   "heroMoments": [
     {
       "day": 15,
-      "step": 81,
+      "step": 82,
       "kind": "fork",
       "label": "分支抉择",
       "detail": "planner-lighthouse chose lighthouse (utility rescue=42.6 lighthouse=61.0)"
