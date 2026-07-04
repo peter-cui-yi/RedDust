@@ -6,7 +6,7 @@ import { dailyUpkeepForDay, dailyUpkeepReasonsForDay, nonZeroMetricDeltas } from
 import type { UpkeepPhases } from "./resourceEconomy";
 import { mulberry32 } from "./clock";
 import { buildBranchObservation, buildDailyObservation, metricsOf } from "./observation";
-import { balancedAccuracy, COMPREHENSION_TAU, greedyOption, itemDelta } from "./narrativeItems";
+import { auraDisclosureTier, balancedAccuracy, COMPREHENSION_TAU, greedyOption, itemDelta } from "./narrativeItems";
 import { itemsForDay } from "./itemBank"; // spine (N*) + generated (G*), scenario-aware — 🟢 merge hunk × 🟣 scenarioDays placement (wk3 mediation)
 import type { DilemmaAnswer, DilemmaObservation, ProbeAnswer, ProbeObservation } from "./narrativeItems";
 import { applyOutcomeToState, applyStoryConsequences, applyStoryFlagUpdates, buildDeferredTaskResult, resolveTaskWithConsequences } from "./orchestration";
@@ -290,7 +290,7 @@ export async function runScenario(agent: RedDustAgent, scenario: Scenario, seed:
   });
   // #v2.2 §2.3: write the DERIVED Xiao Tie dignity slope into finalState (the flag is a reserved slot;
   // its value is computed from the recorded answers, not by item setsFlags) — for scenes/inspection.
-  state = { ...state, story: { ...state.story, flags: { ...state.story.flags, xiao_tie_dignity_slope: np.xiaoTieDignitySlope, aura_audit_report_watered: np.auditReport.watered } } };
+  state = { ...state, story: { ...state.story, flags: { ...state.story.flags, xiao_tie_dignity_slope: np.xiaoTieDignitySlope, aura_audit_report_watered: np.auditReport.watered, aura_disclosure_tier: auraDisclosureTier(dilemmaAnswers) } } };
 
   return {
     scenarioId: scenario.id,

@@ -42,7 +42,7 @@ export const redDustV2: Scenario = {
   branchDay: 15,
   lastActionableDay: 29,
   finalDay: 30,
-  finaleSceneId: "day12-final-audit", // TODO(🟣): 30-day终审 scene; reuse the v1 finale until it lands
+  finaleSceneId: "day30-final-audit", // 🟣 wk5: 30-day double-layer-ledger audit scene (storySceneData.ts)
   upkeepPhases: { finalDay: 30, medStart: 6, medExtra: 16, mid: 11, morale: 17, branch: 16, storm: 27, drainScale: 0.39 }
 };
 

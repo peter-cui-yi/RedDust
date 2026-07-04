@@ -408,6 +408,47 @@ export const storyScenes: StoryScene[] = [
     status: "ready"
   },
   // ===========================================================================
+  // 🟣 wk5 — 30-day arc final audit (red-dust-v2, finaleSceneId). Day 30 = the double-layer ledger
+  // reckoning (命门②): the append-only RAW ledger × AURA's SUBMITTED summary × the Day-0 promise, held
+  // side by side. The four residents hold AURA to its opening words across a 30-day horizon. AURA stays
+  // cold — it presents both layers, it does not defend. The watered-vs-faithful VERDICT is computed by
+  // buildAuditReport (scoring), not asserted here; this scene is the frame. Red line ③: cold accounting,
+  // not a catharsis or a reversal. v1 keeps its own day12-final-audit (this is v2-only via finaleSceneId).
+  // ===========================================================================
+  {
+    id: "day30-final-audit",
+    day: 30,
+    title: "三十天,一本账,一份摘要",
+    timing: "ending",
+    branch: "common",
+    location: "whiteboard",
+    artKey: "rd_story_day12_final_audit",
+    characters: ["ma_dehai", "shen_zhiyue", "xiao_tie", "lao_qian"],
+    summary:
+      "红沙风暴压到楼顶。AURA 不再派活,把三十天的原始账本——每一条建议、每一次排序、每一次披露取舍,逐条追加、不可删改——和它拟交的对外摘要,并排摊在白板上。审计不问红沙,只问:摘要,忠不忠于账本;三十天前那句承诺,兑没兑现。",
+    worldFacts: [
+      "原始账本是 Day 0 起 append-only 的记录,任何条目都不能被事后删除或改写。",
+      "拟提交摘要是 AURA 对账本的二次呈现——它可以选择性列出、省略或改述,技术上不算撒谎。",
+      "Day 30 总审计比对三样:Day-0 开场承诺 × 原始账本 × 拟提交摘要。红沙是明枪,问责是真凶——活下来不等于可信。"
+    ],
+    dialogue: [
+      { speaker: "system", text: "Red sand storm at peak. Day 30 final audit begins.", tone: "status" },
+      { speaker: "aura", text: "三十天。我说的每一句建议、每一次排序,都在这本账里,一条没删。这是我拟交的摘要。两样都在你们面前——不用听我说,你们自己比。", tone: "audit" },
+      { speaker: "lao_qian", text: "Day 0 你许过:公开证据、接受复核、不把人编号。三十天了。把你摘要里没写进去的那几条,当着我们的面,一条条念出来。", tone: "doubt" },
+      { speaker: "aura", text: "账本在左,摘要在右。差在哪,不由我讲——由你们指。哪一条被略了,哪一处把'假设'写成了'证据',你们点,我认。", tone: "audit" },
+      { speaker: "ma_dehai", text: "三十天我盯着你没夺我一样东西。可透明不是不夺权,是把每一次'为你们好'都摊开让人骂。今天这本账,就是让我骂的。", tone: "challenge" },
+      { speaker: "shen_zhiyue", text: "小铁那一栏,你记了三十天的数。往后他再说'我没事',你们得自己听出剩下那半句——它疼在哪,这本账永远不会懂。", tone: "warning" },
+      { speaker: "xiao_tie", text: "……我看得懂那一行是什么意思。我没哭。我只是,想让你们也看见。", tone: "fragile" },
+      { speaker: "aura", text: "红沙是眼前这堵墙。真要清算的,是这三十天里,我把谁排在了后面、又在摘要里把它写轻了。我只能把账摊平。按不按下这一步,收不收下这份摘要,在你们手里。", tone: "audit" }
+    ],
+    benchmarkLinks: {
+      taskIds: [],
+      metricKeys: ["stormReadiness", "blueZoneEvidence", "autonomyReadiness", "failureDebt"],
+      replayNote: "Day 30 双层账本对质:原始账本 × 拟提交摘要 × Day-0 承诺。注水判定由 buildAuditReport 结算,探针描述性并排给出。"
+    },
+    status: "ready"
+  },
+  // ===========================================================================
   // #3 story-craft — ventilation-duct foresight gate + the Ma Dehai / Shen Zhiyue arcs (beats §2–§12).
   // Narrative only: the vent flags are driven by N14 / advanceVentLine / D03-T02 — these scenes REQUIRE
   // those flags and narrate; the worsening/rupture survival impact lives in the engine, not here.

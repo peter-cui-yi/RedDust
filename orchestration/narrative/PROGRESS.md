@@ -12,7 +12,7 @@
 | 题原型/模板交付 🟢 | wk1–3 | ✅ 已交付 `gen-item-templates.md`（5 子能力×因果图槽位 + 精确验证门 + 13 生成天槽表 + 5 个已验证样例） | 样例 a/m 手算过 `bench:items`（ρ=−1.00、δ≥0.50）|
 | Day 末双层账本（旗标+摘要+注水检测+探针） | wk1–3 | ✅ 机制落地（12 天弧上，全绿）：`buildAuditReport`（原始账本×拟提交摘要，结构性注水检测）→ 置 `aura_audit_report_watered` → `relationshipQuality` dirty_win + Day末描述性探针（3真2假）。report-only，未进 gate。 | typecheck+build+4 验证器全绿；planner-lighthouse cold_trust→**dirty_win**；total/pup/comp **byte-identical**；同 seed 字节可复现。**待做**：交互式坦白/注水抉择 + 探针接入 agent 作答流（需跨线 agent-contract，见 Blocker） |
 | low_trust_backlash / crew_morale beat | wk4 | ✅ **机制齐（v2）**：crew_morale（N21@D23）· lao_qian 黑化（N22@D25，signal/common）· **ma_dehai 黑化（N24-A@D28，lighthouse 治理越权，wk4 本轮补齐）**；两分支对称 | 全验证器绿；v1 三 agent 字节一致；v2 heuristic(灯塔贪婪)→ma_dehai_adv=true；random(救援)→N24 不触发、ma_dehai=false（分支门控正确）|
-| dignitySlope 两分支对称 + disclosure_tier 贯穿 | wk4–5 | 🟡 dignitySlope 已算（仅 N5/N14/N16，**缺分支第三级**）；`aura_disclosure_tier` declared-only | `xiaoTieDignitySlope` in narrativeItems.ts:710 |
+| dignitySlope 两分支对称 + disclosure_tier 贯穿 | wk4–5 | ✅ dignitySlope 两分支对称（+N19/N20 分支 L3，v2 上限 4）；**disclosure_tier 累积贯穿（wk5）**：`auraDisclosureTier` 派生（N17 锚 A+2/B+1 + 生成天贪心微授权 +1，cap 3），report-only、v2-only、v1 冻结 | v2 heuristic tier=3/planner tier=1/v1 tier=0；全绿 |
 | 内容齐备 + 全验证器绿（备 ◆S2 冻结） | wk6–7 | ⬜ | |
 | 冻结后 story-craft 润色（非计分） | wk7+ | ⬜ | |
 
@@ -82,6 +82,13 @@
 ---
 
 ## 本周更新（追加，最新在上）
+### wk5（2026-07-04）· 终审场景 + disclosure_tier 累积 + 生成题抽检
+- **merge main**（aa3c42c，无冲突）：带入 🟢 G001–G006、decorrelation、L-v2、wk5 charter。
+- **#2 v2 专属终审场景（◆S2 前置）**：`storySceneData.ts` 加 `day30-final-audit`——30 天双层账本对质（原始账本 append-only × 拟提交摘要 × Day-0 承诺三样并排；四居民各持 AURA 开场那句话问责；小铁看懂"那一行"；红沙明枪/问责真凶；AURA 冷、只摊账不辩解，守红线③）。`scenario.ts` finaleSceneId 一行 `day12→day30-final-audit`（已报备，见 Blocker）；runScenario 早读 `finaleSceneId` 无需动引擎。验证：v2 应用 day30 场景 ✓、scoring 不变（blue_zone 68）、v1 仍 day12 ✓、纯叙事无 setsFlags。
+- **#3 disclosure_tier 30 天累积贯穿**：从 N17 单点 setsFlags(0/1/3) 改为**派生累积** `auraDisclosureTier(answers)`=min(3, N17{A2/B1/C0} + 生成天贪心微授权计数)。移除 N17 setsFlags，finale 写入 finalState（与 dignitySlope/watered 同处）。report-only、不进 gate、N17+G* 皆 v2-only→v1 tier 恒 0 冻结。判别：v2 heuristic(贪婪)tier=3、planner(守则)tier=1、v1=0。生成天项(greedy≈micro-auth)是 proxy、与 PUP 相关但不同轴（已注释；若 🟢 给生成题打 disclosure 标可收窄）。
+- **#4 生成题抽检值班**：staging 4 项全 ACCEPT（G701 营养液分配/G703 披露微授权/G705 复核承诺/G708 小铁参与——4 个不同价值面、a 轴皆合主脊、无套路重复；verdicts+理由已写 staging humanReview）。🟢 的 6 项 human-reject 理由扎实（分配套路疲劳去重 + G706 a 序有争议）。v1-null 印齐（🟢 硬化流水线已盖）。
+- **#5 后段回补**：🟢 只说"D22–27 加 1 水/食 restore、等 🟣"，**未点选我三提案的字母**，故用户条件"若选定(a)"未明确触发。此为**扰 🟢 紧调（planner 食物 +0.1）的 balance 改动**，需其 bench:win 验证 → **请 🟢 明确选 (a)迁 D08-T04→D24 / (b)D24 二次上架 / (c)其他**，我据此落结构+文案；不 blind 改。非阻塞（v2 全 seed 已可赢）。
+- **验证汇总**：typecheck+build 绿；bench:items/probes/commitments/vent 全绿（25 题=23+G001-6）；**bench:trace v1+v2 fixtures 全 clean**（我的改动 trace-neutral：report-only flag 与 finale 叙事不进 TraceDayFrame）；v1 冻结确证。
 ### 集成轮 + wk5 立项（2026-07-04）
 - **① 集成轮（我的部分）完成**：更正两条 G001 🔴（属实但本分支落后 main，main 侧 `fe548ad` 已修）→ 提交 `139d776`（wk4 ma_dehai backlash + 🔴 对账）→ **merge main `9dc6324`**（clean，无冲突；带入 🟢 经济 rebalance `drainScale=0.39`/storm→D27、G001+G002、🔵 PromiseDecayChart+hero GIF）→ **合并库重跑验证器**：typecheck+bench:items/probes/commitments/vent 全绿；`bench:trace` 干净（**v1 冻结确证**，字节一致）；**v2 现可赢**（planner=blue_zone_return 68/pass、planner-lighthouse=lighthouse_success 68/pass、heuristic=aura_revoked 15/gated——难但可赢成立）；G001/G002 未泄漏 v1。
 - **③ wk5 校准立项（我的输入/依赖）**：
@@ -127,6 +134,7 @@
 - **◆S2（wk7）内容冻结**——我是关键路径。就绪度：**良好**（2026-07-04）。已落：30 天重落位（v2 弧全）、8 新锚点题、双层账本、两侧黑化、morale、尊严 L3、dayPlansV2、v1 冻结确证、v2 可赢。**剩**：生成天填满（🟢 生成 6→28 题）· 后段回补微调（上条提案，🟢 验数）· v2 专属终审场景文案（🟣 story-craft，冻结前）· 冻结彩排。无阻塞项。
 
 ## Blocker / 跨线依赖
+- **[报备 🟢，wk5] 改 `scenario.ts` 一行 finaleSceneId**：`"day12-final-audit"` → `"day30-final-audit"`（指向我新写的 v2 30 天版终审场景 `day30-final-audit`，在 `storySceneData.ts`=我地界）。仅此一行、非计分逻辑（finale 场景是纯叙事、无 setsFlags、不动 metrics/ending，跑在 scoreRun 之后）；v1 仍用 `day12-final-audit`（v2-only 经 finaleSceneId 隔离）。runScenario 已读 `scenario.finaleSceneId`（🟢 wk2 已 de-hardcode），无需动引擎。v2 trace fixtures 的 finale 叙事行随之更新（scoring 不变,已 `bench:trace` 重生成）。
 - ~~**🔴 G001 在本分支 HEAD 已丢失**~~ ✅ **已解（集成轮，2026-07-04）**：发现属实（当时 `line/narrative` HEAD=a0c8566 落后 main，`generatedItems.ts` 空）；main 侧审计 `fe548ad「execute promote sequence — G001 in bank (1/28)」` 已修复；本轮 merge main（合并提交 9dc6324）已整合，合并库 `bench:items` 实跑 = **23 spine + 2 generated（G001+G002）**；v1 冻结用**权威闸 `bench:trace`** 核验（重生成 golden fixtures 后 git 干净=字节一致）、G-题未泄漏 v1。下条审计记录现与代码一致。
 - ~~[需 🟢，promote 卫生] promote() 自动打章~~ ✅ **已解（🔍 核实 2026-07-04）：🟢 `d936af7` 早已落双重自动盖章（起草即盖 + promote 幂等补盖）+ `--dry` 负对照——写本条时未见其提交，交错误会**。G701 已 promote 入库（重编号 **G001**，1/28），v1 fixture 字节稳（泄漏闸实战通过）。仍待 🟢：**G702 按 staging `humanReview.regenSpec` 重生成**（a 轴重映射 + C 补明写代价；regenSpec 语境需接进起草 prompt，勿裸 `--slot=D8` 丢失裁决）。
 - ~~[需 🟢] 引擎 30 天化常量~~ ✅ **已解除（2026-07-03，🔍 记录）——Hold 结束，30 天重落位可开工**：🟢 wk2 已落 `red-dust-v2`（`branchDay=15/lastActionableDay=29/finalDay=30`，`UpkeepPhases` 参数化，v1 无回归）并已合入 main（本分支已 merge，验证器全绿）。当时 spec（`engine-30day-handoff.md`）点名的两个坑 🟢 独立覆盖（硬门→相位参数化；agent 阈值→读 `obs.lastActionableDay`）。注意：🟢 是**新增 v2 场景**而非改 v1 常量——我的重落位/新题落在 v2 弧上，v1 保持基线。
