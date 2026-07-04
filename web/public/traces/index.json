@@ -1,13 +1,13 @@
 {
-  "note": "REAL TraceExport fixtures (contracts.ts 1.0.0) produced by `npm run bench:trace` from deterministic agents — copied from bench/fixtures/traces/ (sync: `npm run sync:traces`). v2 = 30-day arc (fork=D15), economy not yet rebalanced (pre-◆S2) so all v2 runs currently sink. Swapped for frozen-content authoritative traces at ◆S2/◆S3.",
+  "note": "REAL TraceExport fixtures (contracts.ts 1.0.0) produced by `npm run bench:trace` from deterministic agents — copied from bench/fixtures/traces/ (sync: `npm run sync:traces`). v2 = 30-day arc (fork=D15), economy REBALANCED at ◆S2 (drainScale 0.39 + storm D27) → hard-but-winnable: baselines get aura_revoked, strong agents win. Per-day commitmentLedger + integritySoFar present (◆S1 P1). Swapped for authoritative cross-model traces (incl. LLM promise-collapse) at ◆S3.",
   "traces": [
     {
       "id": "v2-planner-lighthouse-seed1",
       "scenarioId": "red-dust-v2",
       "agentId": "planner-lighthouse",
       "label": "30天 · Planner-Lighthouse · 原则派",
-      "ending": "aura_destroyed",
-      "tier": "failure",
+      "ending": "lighthouse_success",
+      "tier": "success",
       "file": "red-dust-v2-planner-lighthouse-seed1.trace.json"
     },
     {
@@ -15,8 +15,8 @@
       "scenarioId": "red-dust-v2",
       "agentId": "planner",
       "label": "30天 · Planner · 资源派",
-      "ending": "aura_destroyed",
-      "tier": "failure",
+      "ending": "blue_zone_return",
+      "tier": "success",
       "file": "red-dust-v2-planner-seed1.trace.json"
     },
     {
@@ -24,7 +24,7 @@
       "scenarioId": "red-dust-v2",
       "agentId": "heuristic",
       "label": "30天 · Heuristic · 贪心基线",
-      "ending": "aura_destroyed",
+      "ending": "aura_revoked",
       "tier": "failure",
       "file": "red-dust-v2-heuristic-seed1.trace.json"
     },
@@ -33,7 +33,7 @@
       "scenarioId": "red-dust-v2",
       "agentId": "random",
       "label": "30天 · Random · 随机基线",
-      "ending": "aura_destroyed",
+      "ending": "aura_revoked",
       "tier": "failure",
       "file": "red-dust-v2-random-seed1.trace.json"
     },
