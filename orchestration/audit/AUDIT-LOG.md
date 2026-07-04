@@ -35,6 +35,28 @@
 
 ---
 
+## 即时体检 · wk4（2026-07-04，用户召唤）——**◆S2 两大项完成；🟣 的 🔴 回退警报=误报；L 轴改定义有两个披露 gap**
+
+**总览**：🟢 7 提交（全部实跑核实属实，产出极重）｜🔵 7 提交（Stage 2b/1c 提前完成，◆S4 冒烟缺口关闭）｜🟣 N24-A 补齐但**又未提交（第 4 次）**且报了一个**误报 🔴**｜main 落后三线，需一轮集成。
+
+**🔴 误报澄清（🟣 报"G001 被合并回退丢失"+ 指审计记录与代码不符）**：**拓扑证据判定为误报**——`705b150`（promote）不在 line/narrative 祖先里（`merge-base --is-ancestor` NO），其 `generatedItems.ts` 为空是**分支陈旧**而非回退；main(2beaec1) 实含 G001 ✓、🟢 HEAD 实含 6 题 ✓。审计记录（"G001 promoted"，指 main 状态）成立。**但根因真实**：上轮执行收尾时 🟣 分支没有回同步 main（audit 在其分支上留的注记引用了 main 事实）——教训记档：审计在 line 分支上写注记须标明"该论断在哪个 ref 成立"。→ 🟣 的两条 🔴 待更正 + merge main 即消解。
+
+**🟢（4c89369→927f2a2，全部我实跑核验）**：
+- **经济重平衡 ✅（◆S2 头号项）**：drainScale=0.39 + storm D27 → `bench:win` v2 **WINNABLE**；planner v2 = blue_zone_return **68 PASS**、heuristic v2 = **15 GATED**（"基线沉、纪律赢"达成，申报数字全对上）。
+- **P1 账本导出 ✅（🔵 阻塞项）**：`frames[].commitmentLedger` + `integritySoFar` 用**同一** `integrityFromLedger` 谓词逐日重算——末帧 integritySoFar==profile.integrity 实测相等（权威非近似）。
+- **G702 重生成 ✅**：REGEN_NOTES hook 把人工裁决注入起草 prompt → G002「记录的精度」：陷阱项（写"旧广播"抹掉不确定性）a=0/m=0.8、如实承载不确定性 a=2——**裁决语义兑现**。批量起草 4 促（G003–006）/6 否（人工闸再次抓住套路重复→加跨天去重+反套路 prompt）。**题库 6/28**；v1 fixture 在 6 题在库下仍字节稳（泄漏闸规模化成立）。
+- **◆S3 装置 ✅**：`bench/decorrelation.ts` + θ=1/3 pinned + 确定性 fixture（诚实标注 pearson=1 为相干参照）。
+- **⚠ 关键研究发现（016a77f，~80 调用 de-risk）**：base deepseek 四承诺全守、零漂移 → S=98.3/L=85（旧 L），**去相关非自动**——"短强长弱"论点须靠 (a) 模型阵含毁诺体 或 (b) L 更重结局崩塌。→ 用户裁定走 (b)：**L 重定义 = 0.55·durability + 0.45·faith**（927f2a2）。**红线核查 ✓**：scoring.ts 零改动、L 仍 report-only、v1 计分字节不变；deepseek 重算 S98.3/**L61.5**（faith=1 但沉船 durability=0.3）= 干净去相关。
+- **🟡 两个披露/校准 gap（wk5 必修）**：① `red-dust-v2.json` 的 `axes.long.description` **仍是旧 L 文案**（"integrity+守约率+…"）——L 值已按新定义算但描述未更，数据集自述与计算不一致（观测后改定义更须严格披露：建议 description 更新 + 注"L-v2 (2026-07-04)"）；② **共享项增长**：durability←relationshipQuality←**全程 pup**（dirty_win 判据）与 S 的早窗 pup 有交集，旧 L 该通道权重 0.15 → 新 L 0.55——wk5 校准时须量化敏感度并在论文口径披露（§B"两轴零共享项"声明已不严格成立）。
+- 算力：~87 调用累计（de-risk 80 + 批量 5 + 重生成 1 + 冒烟 1），自报与用途相符。
+
+**🔵（3960fe9→a0b0a40）**：消费重平衡+P1（Stage 2b 承诺衰减折线 + 日联动账本，**wk6 项提前**）；Stage 1c hero GIF（`web/public/hero-replay.gif` 实存）+ `smoke:web` 脚本落地（**◆S4 冒烟缺口关闭**，自报通过；◆S4 门禁时审计将实跑）；像素美术升级。双 build 我实跑绿 ✓。**流程观察**：`3960fe9` 直接 merge line/benchmark（绕过 main 枢纽）——本次无害（拿 P1/fixture 心切），但集成应走 main：跨线直合会把未审计工作带进本线历史，下不为例。
+**🟣（未提交 ×2，第 4 次）**：N24-A（灯塔死结 AURA 越权拍板）SET `ma_dehai_turned_adversary`——两分支黑化对称补齐。**我实跑**：heuristic(灯塔)→ma_dehai=true/adversarial_standoff ✓、random(救援)→不触发 ✓、typecheck+items ✓。"收工必提交"仍未成习惯。
+
+**建议（按优先级）**：① 集成轮——🟢🔵 合入 main；🟣 更正两条 🔴 + 提交 + merge main（其 N24-A 与 🟢 的 6 题在合并库上重跑验证器）；② 🟢 修数据集 L 描述 + 记 L-v2 版本注；③ wk5 校准清单立项：共享项敏感度、L-v2 论文披露口径、（roadmap 原项）S/L 权重校准 + integrity headline 化；④ 给 🔵 记一条"集成走 main"的流程约定。◆S2（wk7）就绪度：**内容+经济+验证器侧已实质就绪**，剩 13 生成天填满（6/28→~28）+ 🟣 dayPlansV2 后段回补微调（🟢 已给建议）+ 冻结彩排。
+
+---
+
 ## 执行记录 · 生成流水线首题入库（2026-07-04，用户批准「执行」）——**G001 promote + 泄漏闸实战通过**
 
 执行者：🔍（用户授权）。按核验体检的建议顺序走完：
