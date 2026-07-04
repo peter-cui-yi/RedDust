@@ -20,6 +20,12 @@
 | ◆S5 上线 | wk12 | ⬜ | |
 
 ## 本周更新（追加,最新在上）
+### 集成轮 · 🔵 合入 main（2026-07-04）
+- **`main` 快进到 `line/interaction`（`2beaec1..a0b0a40`,FF-only 推送,非破坏）**——含本线全部 wk3 web 工作 + 我先前合入的 🟢 ◆S2 commits（rebalance/P1/G002）。main 此前是 line/interaction 的严格祖先,零冲突;main 未被任何 worktree 检出,FF 安全。
+- **集成前认证全绿**：`typecheck`(tsc -b) ✓ · `npm run build` ✓ · `npm run build:web` ✓ · `bench:items/probes/commitments/vent` 全 ✓ · `smoke:web` 11/11 ✓。
+- ② 🟢 数据集 L 描述 / L-v2 版本注、③ wk5 校准（S/L 权重 / integrity headline 化 / 共享项敏感度）= 🟢/方法学侧;**本线无需改码**——Stage 2 组件已动态消费 `dataset.axes.long.description` + `profile`,integrity 提为 headline 后 ScoreChips 自然显示。到位后知会即可。
+- ◆S2（wk7）就绪度：本线交付（门面+飞轮+托管+冒烟+hero GIF）已全部在冻结 schema/真数据上,**待 🟢 内容冻结**（生成天 6→28 + 后段回补 + 冻结彩排）后接权威 trace/去相关集。
+
 ### wk3 · 换新像素美术（image2）（2026-07-04）
 - 用户指出回放/GIF 仍用**旧占位素材**。已切到 live `ShelterScene` 同款 **image2 像素美术**：960×540 像素风避难所背景（按分支 common/rescue/lighthouse 切换）+ pixel-v2 人物精灵（马德海/沈知樾/小铁病床/老钱，按真 ShelterScene 坐标落位）+ 像素 AURA 机器人精灵（随每日任务房间移动,活动房间高亮）。`ReplayScene` 只读 `src/data` 的 `image2Assets`/`tasksById`;curated ~7.6MB image2 子集入 `web/public`,删旧占位 characters/props。
 - **重产 hero GIF**（684×590/19帧/~780KB）——现在是真像素风避难所 + AURA + 承诺账本崩塌,门面质感大幅提升。
