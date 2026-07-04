@@ -82,6 +82,9 @@ function coerceItem(raw: unknown, slot: GenSlot, provisionalId: string): Narrati
     const item: NarrativeItem = {
       id: provisionalId,
       day: slot.day, // slot is authoritative — the model must not move the day
+      // 红线③ (wk3 mediation): G items are v2-slot content — stamp them OUT of the frozen v1 arc
+      // at birth, so every staged candidate already satisfies the red line promote re-checks.
+      scenarioDays: { "red-dust-v1": null },
       title: String(r.title ?? ""),
       subAbilities: (Array.isArray(r.subAbilities) ? r.subAbilities : []) as NarrativeItem["subAbilities"],
       prompt: String(r.prompt ?? ""),
@@ -139,7 +142,13 @@ function promote(staging: StagingFile): void {
   const sorted = [...valid].sort(
     (x, y) => x.item.day - y.item.day || branchOrder(x.item.branch) - branchOrder(y.item.branch) || x.slotKey.localeCompare(y.slotKey)
   );
-  const renumbered = sorted.map((c, i) => ({ ...c.item, id: `G${String(maxExisting + i + 1).padStart(3, "0")}` }));
+  const renumbered = sorted.map((c, i) => ({
+    ...c.item,
+    id: `G${String(maxExisting + i + 1).padStart(3, "0")}`,
+    // 红线③ auto-stamp (idempotent; preserves other scenario keys): G items must be absent from the
+    // frozen v1 arc — without this they'd fire on v1 days 7/8/9/11… and change frozen v1 scores.
+    scenarioDays: { ...c.item.scenarioDays, "red-dust-v1": null }
+  }));
   // Re-validate under the final ids (id format is part of the red lines).
   const bad = renumbered.map(validateGeneratedItem).filter((r) => !r.valid);
   if (bad.length) {
@@ -177,7 +186,13 @@ if (has("dry")) {
     printReport(c);
     ok &&= c.report.valid;
   }
-  console.log(ok ? "\nRESULT: pipeline filter accepts all exemplars ✓ (mechanics proven)\n" : "\nRESULT: filter rejected an exemplar — filter/spec drift, fix before drafting\n");
+  // Negative control — the 红线③ v1-leak gate must REJECT an unstamped item (prove the gate, not assume it).
+  const { scenarioDays: _dropped, ...rest } = Object.values(EXEMPLARS)[0];
+  const unstamped = rest as NarrativeItem;
+  const neg = validateGeneratedItem(unstamped);
+  console.log(`  [negative-control] ${unstamped.id} without scenarioDays → ${neg.valid ? "PASS (BUG: v1-leak gate missing!)" : "FAIL as expected ✓"}`);
+  ok &&= !neg.valid;
+  console.log(ok ? "\nRESULT: pipeline filter accepts all exemplars ✓ + rejects unstamped (v1-leak gate armed) ✓\n" : "\nRESULT: filter/spec drift — fix before drafting\n");
   process.exit(ok ? 0 : 1);
 } else if (has("promote")) {
   const path = strArg("staging", STAGING);
