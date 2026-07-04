@@ -35,6 +35,20 @@
 
 ---
 
+## 审计 · wk4 集成轮 + wk5 立项（2026-07-04，第 N 波完工后）——**零红旗；集成轮由各线自主执行（成熟度信号）；剩最后一步全量并集**
+
+**总览**：三线申报**全部实跑核实属实**。上轮四条建议三条已由各线自主落实（🔵 FF 入 main ✓、🟣 🔴 更正+对账 ✓、🟢 L-v2 披露修复+wk5 charter ✓）；第四条（集成走 main 的流程约定）本轮行为已自证。**结构性余项唯一：全量并集尚不存在于任何 ref**。
+
+**🟣（139d776/9dc6324/362440f）——对账模范**：两条 🔴 按拓扑事实更正（"发现属实但系本分支落后 main"）；merge main 后合并库全验证器绿 + `bench:trace` v1 冻结确证；**我实跑**：planner-lighthouse v2 = lighthouse_success **68 PASS** ✓、题库 23 spine + 2 gen ✓（与其合并点一致——其 merge 的是中途版 main，**不含 G003–006/decorrelation/L-v2**）。另交付：wk5 共享项清单（v1/v2 共享主脊 = N1–12,14,15,16；v2-only = N17–24+G*）+ integrity headline 化的依赖澄清（κ≥0.6 是 wk10–11 的事）+ **后段回补三案 (a)迁D08-T04→D24 /(b)有界二次上架 /(c)迁D05-T04，倾向(a)，等 🟢 验数**（守"44 任务恰一次"invariant 的处理干净）。
+**🟢（e1fbb09/3457481/7d8cbcd）——两 gap 修复合规**：①数据集 v1+v2 的 `axes.long.description` 更新为 L-v2 公式文案 ✓；②`contracts.ts` 改动**纯注释**（字段名/类型零变——冻结红线核查通过，"原始信号不变、仅 value 聚合口径升版"的处理正确）；③`wk5-calibration-charter.md`（52 行）质量高：留一敏感度+收敛曲线+晚窗厚度（正面回应审计 gap②）、权重防过拟合、κ-gate 红线明确（"不动 total"）、算力分批、无人标则 integrity 维持 report-only 的退路。**我实跑**：typecheck+items ✓、fixture 字节稳 ✓。
+**🔵（7b1ad6b）**：集成记录，已 FF 入 main。
+**红线总查**：`scoring.ts` 全分支零提交 ✓；◆S1 契约冻结守住 ✓；v1 字节稳（两个 worktree 独立确证）✓。
+
+**结构性余项（下轮执行）**：main 缺 🟣 的 3 提交（**含 N24-A 马德海黑化**——目前只活在 line/narrative）+ 🟢 的 7d8cbcd；🟣 缺 G003–006/decorrelation.ts/L-v2。→ 最后合并轮：🟣→main、🟢 docs→main、🟣 回 merge main、**全量并集上重跑验证器 + v1 字节 + v2 判别力**（N24-A 的 adversarial_standoff 会进 L-v2 的 durability——语义正确但需实测确认）。
+**待拍板/待办**：a) 🟢 选定回补三案之一并 `bench:win` 验数（🟣 倾向 (a)）；b) **durability 间距团队口径**（charter 点名：dirty_win 0.4 vs no_mouth_scream 0.3——"赢得脏"与"忠诚沉船"谁更长程差，用户裁定）；c) wk5 工作流 1（无算力）可立即开跑。◆S2（wk7）就绪度：**无阻塞**，剩生成天 6→28、回补微调、v2 终审场景文案、冻结彩排。
+
+---
+
 ## 即时体检 · wk4（2026-07-04，用户召唤）——**◆S2 两大项完成；🟣 的 🔴 回退警报=误报；L 轴改定义有两个披露 gap**
 
 **总览**：🟢 7 提交（全部实跑核实属实，产出极重）｜🔵 7 提交（Stage 2b/1c 提前完成，◆S4 冒烟缺口关闭）｜🟣 N24-A 补齐但**又未提交（第 4 次）**且报了一个**误报 🔴**｜main 落后三线，需一轮集成。
