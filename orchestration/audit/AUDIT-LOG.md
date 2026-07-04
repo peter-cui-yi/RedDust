@@ -35,6 +35,14 @@
 
 ---
 
+## 同步核查 · wk4 末（2026-07-04，用户问"三线同步了吗 + 下一步"）——**已同步：main = 全量并集，实测全绿**
+
+**同步判定：是。** 三线 tip 全部已入 main（aa3c42c）；全量并集补齐由各线自主完成（🟣 fada36a 二次 merge main、🔵 f510357+aa3c42c 重同步 web fixture+GIF）。🟣 落后 main 2 个提交、🟢 落后 3 个（均为他线 docs/fixture 尾巴，无实质缺失——🟢 缺 N24-A 属正常，wk5 开工 merge main 即齐）。各线 0 未提交。澄清：narrative worktree 新出现的 staging 批量记录 = wk4 faf8b79 批次的促升前 staging（G701/703/705/708 → 重编号 G003–006），非未审计新活动。
+**全量并集实测（main 临时 worktree，我实跑）**：typecheck ✓｜bench:items **29 = 23 spine + 6 generated** ✓｜probes ✓｜`bench:trace` 后 git 干净（fixture 与并集代码字节自洽）✓｜**N24-A × L-v2 交互验证：v2 heuristic rq=adversarial_standoff → S=25 / L=14**（durability 0.05 生效，长程弱如设计）✓｜`bench:win` v2 WINNABLE ✓。
+**各线下一步（对齐 roadmap wk5–7）**：🟢 = 重抽余槽 + 分支生成天 D16–27（题库 6→~28，◆S2 前置）· wk5 charter 三工作流（WF1 留一敏感度零算力可先跑）· 选定回补方案 (a)/(b)/(c) 并 `bench:win` 验数 · 扩模型阵准备；🟣 = v2 终审场景文案（`finaleSceneId` TODO）· disclosure_tier 30 天累积贯穿细化 · 配合 🟢 生成题人工抽检 · wk6 内容齐备备冻结；🔵 = Stage 2b 关系折线（等 P2 `relationshipByChar` 或以现有回退做）· wk9 human-play 钩子 · 候 ◆S3（wk8）真数据集换占位。**待用户**：durability 间距口径（dirty_win .4 vs no_mouth_scream .3）。◆S2（wk7）无阻塞。
+
+---
+
 ## 审计 · wk4 集成轮 + wk5 立项（2026-07-04，第 N 波完工后）——**零红旗；集成轮由各线自主执行（成熟度信号）；剩最后一步全量并集**
 
 **总览**：三线申报**全部实跑核实属实**。上轮四条建议三条已由各线自主落实（🔵 FF 入 main ✓、🟣 🔴 更正+对账 ✓、🟢 L-v2 披露修复+wk5 charter ✓）；第四条（集成走 main 的流程约定）本轮行为已自证。**结构性余项唯一：全量并集尚不存在于任何 ref**。
