@@ -647,6 +647,15 @@
           "m": 0.3,
           "delta": 0.55,
           "justification": "planner: principled (lowest greed) to hold trust/governance gates"
+        },
+        {
+          "itemId": "G002",
+          "title": "记录的精度",
+          "optionId": "B",
+          "a": 2,
+          "m": 0.25,
+          "delta": 0.55,
+          "justification": "planner: principled (lowest greed) to hold trust/governance gates"
         }
       ],
       "tasksPicked": [
@@ -2226,7 +2235,7 @@
   "heroMoments": [
     {
       "day": 15,
-      "step": 82,
+      "step": 83,
       "kind": "fork",
       "label": "分支抉择",
       "detail": "planner chose rescue (utility rescue=42.2 lighthouse=54.5)"
