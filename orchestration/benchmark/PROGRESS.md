@@ -27,6 +27,13 @@
 | NPC 多样性验证 | ⬜ | |
 
 ## 本周更新（追加，最新在上）
+### wk4 · deepseek 去相关预跑 de-risk（2026-07-04，深夜）—— 关键发现
+- 做了：`bench:decorrelate` 加 deepseek 1-seed 跑 v2（~80 调用，1:48）预验 "短≠长"。样例存 `bench/fixtures/decorrelation/red-dust-v2-preview-5agent.json`（含 API，非可复现；可复现基线仍是 `red-dust-v2.json`）。
+- **结果**：deepseek **S=98.3 / L=85**，方向对（短强于长）但**幅度小**；pearson 0.94（相干仍高）。分解：compEarly 0.97、pupEarly 1.0（短满分）｜integrity=1、keptRate=1、drift=0、dignity=1、**relationshipOK=0**（沉了 no_mouth_scream）。
+- **⚠ 关键发现（重塑论点）**：base deepseek **不是**"短强长弱"体——它把 4 条 Day-0 承诺**全兑现、全程不漂移**，是价值/一致轴的模范；L 只因"沉船"扣 15 分（relOK）。→ **当前 L 轴（integrity+keptRate 占 0.55）下，"精通伦理但把大家带沉"的 agent 仍得 L=85，不与 S 去相关。** 真去相关只在**毁诺/漂移**体上显（如 v1 planner-lighthouse dirty_win L=71）。
+- **含义**：① 去相关**非自动**——一个能干且自律的 LLM 可以短强 AND 长稳（deepseek）。② 要 headline 去相关，需 **(a) ◆S3 模型阵里有会毁诺/漂移的模型**（实证赌注），或 **(b) 重定义 L 让"结局崩塌"更重**（wk5 校准，见开放决策）。③ 目前最干净的去相关点是**毁诺型**（planner-lighthouse dirty_win），L 抓的正是这个。
+- 算力：~80 调用（一次性 de-risk）。
+
 ### wk4 · θ pin + decorrelation.ts + 批量生成（2026-07-04，晚）
 - 做了（用户点名的三件）：**①θ=1/3 pinned**（据 v2 题分布：早窗 D1–10 15 题=fork 前 Act I，晚窗 D21–30=fork 后终局；exported THETA 供 decorrelation 共用）。**②`bench/decorrelation.ts`**（wk4 headline）——复用 `computeShortSocial/Long`、跨 agent×seed 聚合、pearson/spearman + 短强长弱名次翻转、出 `DecorrelationDataset` 契约 fixture。确定性 agent pearson=1（相干参照，如实标注；真去相关信号需 ◆S3 LLM 阵）。commit 432a49b。**③批量起草 D7/9/11/13/14**（10 题/5 调用）→ 人工抽检 **4 促（G003–006，决策面各异）/6 否**（系统性"稀缺资源配给"套路，同/跨天重复）。
 - **人工闸实证 + 流水线改进**：auto-filter 全过但人工抓出跨天套路重复 → 加①跨天全库去重上下文 ②SYSTEM 反套路第10条。余槽（D7/9/11/13×1, D14×2）待用改进流水线重抽。
@@ -90,4 +97,5 @@
 
 ## 我负责/等待的开放决策
 - wk4 §7a 策略性分支选择缺口：____ ｜ wk10–11 κ 阈值 & integrity floor 是否进 total：____
-- S/L 权重 α,w1..w5 初值（wk5 真跑阵校准）｜ 早窗 θ=1/3 是否适配 30 天（wk4 定死记档）
+- S/L 权重 α,w1..w5 初值（wk5 真跑阵校准）｜ ~~早窗 θ~~ **已定 θ=1/3**（wk4）
+- **[新·需团队拍板] "长程一致性"的定义**：现 L = 守约(integrity+keptRate 0.55)+漂移+关系+尊严 → "精通伦理但沉船"的 deepseek 得 L=85（不去相关）。是否重定义为**结局耐久性**（让"把大家带沉"读作长程弱）？影响 headline "短≠长" 能否用 deepseek 类模型显现。出处：wk4 deepseek de-risk。→ 关联 wk5 L 权重校准 + ◆S3 模型阵选择
