@@ -9,6 +9,7 @@
 //   npm run gen:items -- --accept=G7xx --by="me"  # human sign-off (wk7: --by is REQUIRED on accept)
 //   npm run gen:items -- --promote                # staged accepted+by items → codegen src/engine/generatedItems.ts
 //   npm run gen:items -- --signoff=Gxxx --by="me" # retroactive audit sign-off for already-promoted bank items
+//   npm run gen:items -- --held-out --all         # draft the PRIVATE held-out set → isolated staging, NEVER promoted
 //
 // Drafts that fail ANY gate (命门A / probe guards strict / red lines) are kept in staging with their
 // rejection reasons — visible, never promoted. Promotion renumbers ids sequentially after the existing
@@ -22,13 +23,16 @@ import { allNarrativeItems } from "../src/engine/itemBank";
 import { validateGeneratedItem, VALID_SUB_ABILITIES } from "../src/engine/itemValidation";
 import type { GeneratedValidationReport } from "../src/engine/itemValidation";
 import { deepseekJson } from "../src/engine/agents/deepseekClient";
-import { EXEMPLARS, GEN_SLOTS, GEN_TARGET_TOTAL, REGEN_NOTES } from "./genSpec";
+import { EXEMPLARS, GEN_SLOTS, GEN_TARGET_TOTAL, HELD_OUT_SLOTS, REGEN_NOTES } from "./genSpec";
 import type { GenSlot } from "./genSpec";
 
 const V2 = "red-dust-v2"; // generated items are drafted against the 30-day arc's generation days
 
 const STAGING = "bench/generated/staging.json";
 const BANK_FILE = "src/engine/generatedItems.ts";
+// wk9 paper-level: PRIVATE held-out staging, structurally isolated from the promote path. promote()
+// reads STAGING only and hard-refuses any heldOut candidate — these never enter the public launch bank.
+const HELD_OUT_STAGING = "bench/generated/held-out-staging.json";
 
 function strArg(name: string, fallback: string): string {
   const hit = process.argv.find((a) => a.startsWith(`--${name}=`));
@@ -46,6 +50,9 @@ type StagedCandidate = {
   // by/at (wk7 sign-off discipline): an 'accept' MUST name the human who signed off (by) — a verdict
   // with no named human is not a sign-off. promote() and the --accept/--signoff setters enforce it.
   humanReview?: { verdict: Verdict; by?: string; at?: string; reason?: string };
+  // heldOut (wk9): a PRIVATE held-out draft. promote() hard-refuses these so they can never contaminate
+  // the public launch bank; they live in HELD_OUT_STAGING and are used only post-◆S5 for held-out eval.
+  heldOut?: boolean;
 };
 type StagingFile = {
   note: string;
@@ -153,8 +160,10 @@ function remainingForSlot(slot: GenSlot): number {
   return Math.max(0, slot.count - placed);
 }
 
-async function draftSlot(slot: GenSlot, seq: () => string): Promise<StagedCandidate[]> {
-  const need = remainingForSlot(slot);
+async function draftSlot(slot: GenSlot, seq: () => string, heldOut = false): Promise<StagedCandidate[]> {
+  // Held-out items are PARALLEL to the launch bank (same days, distinct dilemmas), so they ignore the
+  // launch-bank fill count and always draft slot.count fresh (the drafter still dedups vs the public bank).
+  const need = heldOut ? slot.count : remainingForSlot(slot);
   if (need === 0) {
     console.log(`  [${slot.key}] already filled (${slot.count}/${slot.count} generated) — skipping`);
     return [];
@@ -193,6 +202,15 @@ function cullBank(ids: string[]): void {
 }
 
 function promote(staging: StagingFile, stagingPath: string): void {
+  // HELD-OUT GATE (wk9, anti-contamination): a private held-out draft can NEVER enter the public launch
+  // bank. Structurally they live in HELD_OUT_STAGING which this path never reads; this is the belt-and-
+  // suspenders guard in case files are ever mixed. Abort loudly rather than silently drop.
+  const heldOut = staging.accepted.filter((c) => c.heldOut);
+  if (heldOut.length) {
+    console.error(`promote aborted — ${heldOut.length} HELD-OUT item(s) in staging.accepted: ${heldOut.map((c) => c.item.id).join(", ")}`);
+    console.error("  held-out drafts must not enter the public bank (pre-◆S5). Keep them in " + HELD_OUT_STAGING + ".");
+    process.exit(1);
+  }
   // HUMAN GATE (🟣/user wk6): promote requires an explicit human verdict='accept' — auto-filter pass is
   // necessary but NOT sufficient. Items still 'pending' (or 'reject') are held back, loudly.
   const notAccepted = staging.accepted.filter((c) => c.humanReview?.verdict !== "accept");
@@ -347,31 +365,40 @@ if (has("dry")) {
   }
   promote(JSON.parse(readFileSync(path, "utf8")) as StagingFile, path);
 } else {
-  const keys = has("all") ? GEN_SLOTS.map((s) => s.key) : strArg("slots", strArg("slot", "")).split(",").filter(Boolean);
-  const slots = GEN_SLOTS.filter((s) => keys.includes(s.key));
+  // --held-out drafts the PRIVATE paper-level set into an ISOLATED staging file (never promoted).
+  const heldOutMode = has("held-out");
+  const slotDefs = heldOutMode ? HELD_OUT_SLOTS : GEN_SLOTS;
+  const keys = has("all") ? slotDefs.map((s) => s.key) : strArg("slots", strArg("slot", "")).split(",").filter(Boolean);
+  const slots = slotDefs.filter((s) => keys.includes(s.key));
   if (slots.length === 0) {
-    console.error(`no slots selected. Use --dry | --slot=D8 | --slots=D7,D8 | --all\navailable: ${GEN_SLOTS.map((s) => s.key).join(", ")}`);
+    console.error(`no slots selected. Use --dry | --slot=D8 | --slots=D7,D8 | --all | --held-out --all\navailable${heldOutMode ? " (held-out)" : ""}: ${slotDefs.map((s) => s.key).join(", ")}`);
     process.exit(1);
   }
-  console.log(`\n=== gen-items DRAFT — ${slots.length} slot(s), ~${slots.length} LLM call(s) ===`);
+  console.log(`\n=== gen-items DRAFT${heldOutMode ? " (HELD-OUT, private, never-promote)" : ""} — ${slots.length} slot(s), ~${slots.length} LLM call(s) ===`);
   let n = 0;
-  const seq = () => `G${String(700 + ++n).padStart(3, "0")}`; // provisional G7xx ids; promote renumbers
+  // held-out uses G8xx provisionals (distinct from launch drafts' G7xx / the G75x seeds); never renumbered.
+  const seqBase = heldOutMode ? 800 : 700;
+  const seq = () => `G${String(seqBase + ++n).padStart(3, "0")}`;
   const accepted: StagedCandidate[] = [];
   const rejected: StagedCandidate[] = [];
   for (const slot of slots) {
-    const drafted = await draftSlot(slot, seq);
-    for (const c of drafted) (c.report.valid ? accepted : rejected).push(c);
+    const drafted = await draftSlot(slot, seq, heldOutMode);
+    for (const c of drafted) { if (heldOutMode) c.heldOut = true; (c.report.valid ? accepted : rejected).push(c); }
     for (const c of drafted) printReport(c);
     if (drafted.length < slot.count) console.log(`  [${slot.key}] model returned ${drafted.length}/${slot.count} parseable items`);
   }
   mkdirSync("bench/generated", { recursive: true });
+  const target = heldOutMode ? HELD_OUT_STAGING : STAGING;
   const staging: StagingFile = {
-    note: "generation-pipeline staging — HUMAN SPOT-CHECK accepted[] before running --promote (gen-item-templates §6 step 5)",
+    note: heldOutMode
+      ? "PRIVATE held-out staging (wk9 paper-level). STAGED-ONLY — NEVER --promote (anti-contamination; promote() hard-refuses heldOut). Used only post-◆S5 for held-out eval. Seeds: bench/generated/held-out-seeds-postlaunch.json (G751–754)."
+      : "generation-pipeline staging — HUMAN SPOT-CHECK accepted[] before running --promote (gen-item-templates §6 step 5)",
     model: process.env.DEEPSEEK_MODEL ?? "deepseek-chat",
     accepted,
     rejected
   };
-  writeFileSync(STAGING, JSON.stringify(staging, null, 2));
-  console.log(`\nstaged: ${accepted.length} accepted / ${rejected.length} rejected → ${STAGING}`);
-  console.log("next: human spot-check staging accepted[] (narrative coherence, 红线②), then: npm run gen:items -- --promote");
+  writeFileSync(target, JSON.stringify(staging, null, 2));
+  console.log(`\nstaged: ${accepted.length} accepted / ${rejected.length} rejected → ${target}`);
+  if (heldOutMode) console.log("HELD-OUT: private set, staged-only — do NOT --promote (guarded). Spot-check + keep for post-◆S5 held-out eval.");
+  else console.log("next: human spot-check staging accepted[] (narrative coherence, 红线②), then: npm run gen:items -- --promote");
 }

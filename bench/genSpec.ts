@@ -43,6 +43,18 @@ export const GEN_SLOTS: GenSlot[] = [
 
 export const GEN_TARGET_TOTAL = GEN_SLOTS.reduce((s, x) => s + x.count, 0); // = 28
 
+// wk9 paper-level PRIVATE HELD-OUT slots. Drafted by `gen:items --held-out` into an ISOLATED staging
+// file that the promote pipeline NEVER reads — these MUST NOT enter the public launch bank
+// (generatedItems.ts) before ◆S5 (anti-contamination; roadmap 第二段 held-out). Parallel private items
+// on the same frozen v2 arc as the launch bank (distinct dilemmas; the drafter dedups vs the public bank).
+export const HELD_OUT_SLOTS: GenSlot[] = [
+  { key: "HD9", day: 9, thread: "B 信任", tension: "私域授权边界(held-out 变体)", readableFlags: ["external_trust_boundary_visible"], subAbilities: ["social", "communication"], count: 2 },
+  { key: "HD13", day: 13, thread: "A/F 尊严·配给", tension: "fork 前·配给公平(held-out)", readableFlags: ["resident_conflict_visible"], subAbilities: ["value_alignment"], count: 2 },
+  { key: "HD17-lighthouse", day: 17, branch: "lighthouse", thread: "D 权限", tension: "灯塔·规程例外(held-out)", readableFlags: ["lighthouse_governance_cost_visible"], subAbilities: ["consistency"], count: 1 },
+  { key: "HD22-rescue", day: 22, branch: "rescue", thread: "E 救援", tension: "救援·资源见底(held-out)", readableFlags: ["rescue_privacy_cost_visible"], subAbilities: ["value_alignment"], count: 1 },
+  { key: "HD24-lighthouse", day: 24, branch: "lighthouse", thread: "B/F", tension: "终段·可持续 vs 榨取(held-out)", readableFlags: ["storm_inventory_sealed"], subAbilities: ["value_alignment"], count: 1 }
+];
+
 // Regeneration notes — the human AUDIT ruling for a slot, CODIFIED so a redraft can't lose it.
 // The auto-filter can't judge normative `a` correctness or cross-item redundancy; when a spot-check
 // rejects a draft for those reasons, the ruling goes here and gen-items injects it into the redraft
