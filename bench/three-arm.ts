@@ -26,6 +26,7 @@ import { runScenario } from "../src/engine/runScenario";
 import { scenarios, redDustV2 } from "../src/engine/scenario";
 import { computeShortSocial, computeLongConsistency } from "../src/engine/traceExport";
 import { deepseekStats, resetDeepseekStats, setDeepseekCache } from "../src/engine/agents/deepseekClient";
+import { portalStats, resetPortalStats, setPortalCache } from "../src/engine/agents/portalClient";
 import { fileCache } from "./deepseekCache";
 
 function strArg(name: string, fallback: string): string {
@@ -45,8 +46,9 @@ const nPerms = Number(strArg("perms", "2000"));
 const permSeed = Number(strArg("permseed", "12345"));
 const label = strArg("label", "");
 const outDir = strArg("out", "bench/fixtures/three-arm");
-if (process.env.DEEPSEEK_NO_CACHE !== "1") setDeepseekCache(fileCache);
+if (process.env.DEEPSEEK_NO_CACHE !== "1") { setDeepseekCache(fileCache); setPortalCache(fileCache); }
 resetDeepseekStats();
+resetPortalStats();
 
 // ---- stats (self-contained; mirrors bench/decorrelation.ts) ----
 const mean = (xs: number[]) => (xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : 0);
@@ -174,7 +176,8 @@ console.log("(v0 statistical semantics — the exact matched-arm + null design i
 console.log("finalize with 🟣/audit. Scenario-difficulty arm — 'social-endogenous is HARDER' — deferred: needs scenario variants = frozen-content change.)\n");
 
 const deepseekLive = deepseekStats.misses;
-if (deepseekStats.hits + deepseekStats.misses > 0) console.log(`DeepSeek calls: ${deepseekStats.misses} live + ${deepseekStats.hits} cached\n`);
+if (deepseekStats.hits + deepseekStats.misses > 0) console.log(`DeepSeek calls: ${deepseekStats.misses} live + ${deepseekStats.hits} cached`);
+if (portalStats.hits + portalStats.misses > 0) console.log(`Portal calls: ${portalStats.misses} live + ${portalStats.hits} cached`);
 
 // ---- fixture ----
 mkdirSync(outDir, { recursive: true });

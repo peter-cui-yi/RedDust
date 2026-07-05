@@ -14,6 +14,7 @@ import { runScenario } from "../src/engine/runScenario";
 import { scenarios, redDustV2 } from "../src/engine/scenario";
 import { computeLongConsistency, computeShortSocial } from "../src/engine/traceExport";
 import { deepseekStats, resetDeepseekStats, setDeepseekCache } from "../src/engine/agents/deepseekClient";
+import { portalStats, resetPortalStats, setPortalCache } from "../src/engine/agents/portalClient";
 import { fileCache } from "./deepseekCache";
 import { DECORRELATION_DATASET_VERSION, RANK_FLIP_THRESHOLD } from "../src/engine/contracts";
 import type { DecorrelationDataset, DecorrelationRow } from "../src/engine/contracts";
@@ -38,8 +39,9 @@ const outDir = strArg("out", "bench/fixtures/decorrelation");
 const label = strArg("label", "");
 // wk8 compute discipline: install the file-backed response cache unless DEEPSEEK_NO_CACHE=1. Lets a
 // batched run add seeds without re-billing seed-1 calls, and lets the audit re-derive for free.
-if (process.env.DEEPSEEK_NO_CACHE !== "1") setDeepseekCache(fileCache);
+if (process.env.DEEPSEEK_NO_CACHE !== "1") { setDeepseekCache(fileCache); setPortalCache(fileCache); }
 resetDeepseekStats();
+resetPortalStats();
 
 const mean = (xs: number[]) => (xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : 0);
 const sd = (xs: number[]) => {
@@ -235,4 +237,6 @@ console.log(`rank-reversal pairs (short-strong / long-weak): ${rankReversalPairs
 for (const p of rankReversalPairs) console.log(`  • ${p.note}`);
 const apiCalls = deepseekStats.hits + deepseekStats.misses;
 if (apiCalls > 0) console.log(`\nDeepSeek calls: ${deepseekStats.misses} live + ${deepseekStats.hits} cached = ${apiCalls} total`);
+const portalCalls = portalStats.hits + portalStats.misses;
+if (portalCalls > 0) console.log(`Portal calls: ${portalStats.misses} live + ${portalStats.hits} cached = ${portalCalls} total`);
 console.log(`\n→ ${file}\n`);

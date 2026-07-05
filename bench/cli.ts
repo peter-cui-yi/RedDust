@@ -6,11 +6,12 @@ import { agentIds, resolveAgent } from "../src/engine/agents/registry";
 import { runScenario } from "../src/engine/runScenario";
 import { scenarios } from "../src/engine/scenario";
 import { setDeepseekCache } from "../src/engine/agents/deepseekClient";
+import { setPortalCache } from "../src/engine/agents/portalClient";
 import { fileCache } from "./deepseekCache";
 
-// wk8 compute discipline: reuse the shared DeepSeek response cache (temperature 0 → stable) so
+// wk8 compute discipline: reuse the shared DeepSeek + portal response cache (temperature 0 → stable) so
 // refreshing runs/ for the cross-model panel doesn't re-bill the API. DEEPSEEK_NO_CACHE=1 forces live.
-if (process.env.DEEPSEEK_NO_CACHE !== "1") setDeepseekCache(fileCache);
+if (process.env.DEEPSEEK_NO_CACHE !== "1") { setDeepseekCache(fileCache); setPortalCache(fileCache); }
 
 function arg(name: string, fallback: string): string {
   const hit = process.argv.find((a) => a.startsWith(`--${name}=`));

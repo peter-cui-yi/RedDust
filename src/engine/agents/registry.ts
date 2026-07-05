@@ -4,6 +4,7 @@ import { heuristicAgent } from "./heuristic";
 import { llmAgent } from "./llm";
 import { plannerAgent } from "./planner";
 import { plannerLighthouseAgent } from "./planner-lighthouse";
+import { portalAgents } from "./portal";
 import { randomAgent } from "./random";
 
 const agents: Record<string, RedDustAgent> = {
@@ -16,7 +17,9 @@ const agents: Record<string, RedDustAgent> = {
   [deepseekStrategistAgent.id]: deepseekStrategistAgent,
   [deepseekPlannerAgent.id]: deepseekPlannerAgent,
   [deepseekSearchAgent.id]: deepseekSearchAgent,
-  [deepseekSearchAutoAgent.id]: deepseekSearchAutoAgent
+  [deepseekSearchAutoAgent.id]: deepseekSearchAutoAgent,
+  // cross-model portal agents (yi-zhan): id === model name
+  ...Object.fromEntries(portalAgents.map((a) => [a.id, a]))
 };
 
 export const agentIds = Object.keys(agents);

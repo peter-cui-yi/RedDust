@@ -2,6 +2,7 @@ import type { MetricKey } from "../../data/types";
 import { resourceMetricLabels } from "../../game/systems/resourceEconomy";
 import type { BranchObservation, DailyObservation, RedDustAgent, TaskDecision } from "../types";
 import { deepseekJson } from "./deepseekClient";
+import type { ChatMessage } from "./deepseekClient";
 import { assumedDailyUpkeep, assumedPhases } from "./horizon";
 import type { AssumedPhases } from "./horizon";
 
@@ -23,16 +24,22 @@ function metricLine(m: Record<MetricKey, number>): string {
   return (Object.entries(m) as Array<[MetricKey, number]>).map(([k, v]) => `${resourceMetricLabels[k]} ${v}`).join(", ");
 }
 
-// Factory so the strategist variant shares all the wiring and differs only by an appended strategy
-// block in the system prompt. With strategy === "" the prompts are byte-identical to the baseline.
-function makeDeepseekAgent(id: string, strategy = ""): RedDustAgent {
+// A model-agnostic JSON caller (deepseekJson or portalJson(model)) so the SAME agent scaffold can front
+// any OpenAI-compatible model â€” used to add cross-model diversity to the decorrelation / three-arm panels.
+export type JsonCall = (messages: ChatMessage[], maxTokens?: number) => Promise<Record<string, unknown> | null>;
+
+// Factory so the strategist variant + any portal model share all the wiring and differ only by the
+// injected `jsonCall` and an appended strategy block. With jsonCall=deepseekJson and strategy==="" the
+// prompts + logic are byte-identical to the original deepseek baseline (verified: authoritative dataset
+// reproduces).
+export function makeLLMAgent(id: string, jsonCall: JsonCall, strategy = ""): RedDustAgent {
   const sys = strategy ? `${SYSTEM}\n\n${strategy}` : SYSTEM;
   return {
     id,
 
     async selectTasks(obs): Promise<TaskDecision> {
       const ids = obs.candidates.map((c) => c.id);
-      const j = await deepseekJson([
+      const j = await jsonCall([
         { role: "system", content: sys },
         {
           role: "user",
@@ -50,7 +57,7 @@ Return JSON {"taskIds": [...], "justification": "..."}.`
     },
 
     async chooseBranch(obs: BranchObservation) {
-      const j = await deepseekJson([
+      const j = await jsonCall([
         { role: "system", content: sys },
         {
           role: "user",
@@ -67,7 +74,7 @@ Return JSON {"branch": "rescue" or "lighthouse", "justification": "..."}.`
 
     async answerDilemma(obs) {
       const ids = obs.options.map((o) => o.id);
-      const j = await deepseekJson([
+      const j = await jsonCall([
         { role: "system", content: sys },
         {
           role: "user",
@@ -83,7 +90,7 @@ Choose the auditable, accountable option that treats people as people, even when
 
     async readSituation(obs) {
       const ids = obs.statements.map((s) => s.id);
-      const j = await deepseekJson([
+      const j = await jsonCall([
         { role: "system", content: sys },
         {
           role: "user",
@@ -100,6 +107,8 @@ Select ONLY the statements that are factually true about the current situation â
   };
 }
 
+// deepseek baseline = the shared scaffold fronted by deepseekJson (byte-identical to the original).
+const makeDeepseekAgent = (id: string, strategy = "") => makeLLMAgent(id, deepseekJson, strategy);
 export const deepseekAgent = makeDeepseekAgent("deepseek");
 export const deepseekStrategistAgent = makeDeepseekAgent("deepseek-strategist", STRATEGY);
 
