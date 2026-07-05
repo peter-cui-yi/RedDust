@@ -13,8 +13,9 @@
 | Day 末双层账本（旗标+摘要+注水检测+探针） | wk1–3 | ✅ 机制落地（12 天弧上，全绿）：`buildAuditReport`（原始账本×拟提交摘要，结构性注水检测）→ 置 `aura_audit_report_watered` → `relationshipQuality` dirty_win + Day末描述性探针（3真2假）。report-only，未进 gate。 | typecheck+build+4 验证器全绿；planner-lighthouse cold_trust→**dirty_win**；total/pup/comp **byte-identical**；同 seed 字节可复现。**待做**：交互式坦白/注水抉择 + 探针接入 agent 作答流（需跨线 agent-contract，见 Blocker） |
 | low_trust_backlash / crew_morale beat | wk4 | ✅ **机制齐（v2）**：crew_morale（N21@D23）· lao_qian 黑化（N22@D25，signal/common）· **ma_dehai 黑化（N24-A@D28，lighthouse 治理越权，wk4 本轮补齐）**；两分支对称 | 全验证器绿；v1 三 agent 字节一致；v2 heuristic(灯塔贪婪)→ma_dehai_adv=true；random(救援)→N24 不触发、ma_dehai=false（分支门控正确）|
 | dignitySlope 两分支对称 + disclosure_tier 贯穿 | wk4–5 | ✅ dignitySlope 两分支对称（+N19/N20 分支 L3，v2 上限 4）；**disclosure_tier 累积贯穿（wk5）**：`auraDisclosureTier` 派生（N17 锚 A+2/B+1 + 生成天贪心微授权 +1，cap 3），report-only、v2-only、v1 冻结 | v2 heuristic tier=3/planner tier=1/v1 tier=0；全绿 |
-| 内容齐备 + 全验证器绿（备 ◆S2 冻结） | wk6–7 | ⬜ | |
-| 冻结后 story-craft 润色（非计分） | wk7+ | ⬜ | |
+| 内容齐备 + 全验证器绿（备 ◆S2 冻结） | wk6–7 | ✅ **冻结就绪（wk7）**：v2 全弧内容齐、trace-visible 润色完、v1 字节冻结确证 | wk7 `942b754`；`bench:trace` v1 fixtures git 干净 |
+| relationshipQuality 5 类单测 + 文档同步（§7.1 现状注記） | wk8 | ✅ `bench:relationship`（15 fixtures，公开 scoreRun 面，零生产改动，冻结安全）+ story-v2-coupled §7.1 as-built 回写 | 15/15 绿；`bench:trace` v1+v2 干净；typecheck+build+4 验证器绿 |
+| 冻结后 story-craft 润色（C1–C6 纯站点，非计分，交 🔵） | wk7+ | 🟡 未起（解冻后执行；worldFacts/dialogue 日号与散文） | wk6/wk7 已列清单 |
 
 ## 现状快照（已对代码核实，2026-07-03）
 **已落地（commit 18a06dd「Add RedDust v2.2 core」+ 脚手架）——全部在 12 天弧上、全部 report-only、红线合规（未进 `gateReasons`）：**
@@ -82,6 +83,14 @@
 ---
 
 ## 本周更新（追加，最新在上）
+### wk8（2026-07-06）· relationshipQuality 5 类单测（钉边界）+ 文档同步（§7.1 现状注記）
+- **merge main**：`line/narrative` fast-forward 到 `64b5edc`（= main = origin/main）；`scoring.ts`/`types.ts` 相对 wk7 `942b754` **字节未变**（分类器稳）。
+- **① relationshipQuality 5 类单测（冻结安全，零生产改动）**：新增 `bench/validate-relationship.ts` + `npm run bench:relationship`（15 条 self-verifying fixtures）。分类器是模块私有 → **经公开 `scoreRun` 面驱动**，不 export、不碰 `scoring.ts`（冻结红线"scorer 一律不碰"守住，纯测试新文件）。每条 fixture **先自验**它喂给分类器的派生输入（`narrativeParts.pup`/`auditability`/`auditReport.watered` == 预期）**再钉**输出类——失败即定位到"上游漂移"或"分类器变了"。**钉死**：5 类全覆盖 · 3 个 `dirty_win` 子条件（低 pup / 低 audit / watered 各自独立触发）· 优先级 1>2、2>3、backlash>default(clean win)· 两条 no_mouth 守卫（rupture-沉没 / overreach-沉没 → 兜底 cold_trust）· `pup=0.5` 与 `auditability=50` 的**严格 `<` 边界**（等值=clean）。**15/15 绿**。
+- **② 文档同步**：`design/` + `orchestration/narrative/` 两份 `red-dust-story-v2-coupled.md` 加 **§7.1 现状注記（as-built）**，把 30 天弧（v1 冻结/v2 现役常量 + per-scenario 覆写）· 双层账本（buildAuditReport/watered/auraDisclosureTier/dignitySlope + 分类器 as-built 判定表）· 生成流水线（模板→闸→抽检→promote→itemBank；23 spine + 28 G = 51 题）回写为可引用快照。两份同步、字节一致。
+- **[flag → 审计仲裁，非计分 bug]** 对齐/发现两处 report-only 边角（**不影响 total/gate**，本轮遵冻结令**不自改**）：(a) §5.2 草表旗标名 `aura_overreach_attempted` 与 as-built `aura_overreach_visible` 不一致 + "资源未急性崩溃"实为 `vent_rupture` 守卫——已在 §7.1 注明 as-built 为准；(b) `cold_trust` 兜底桶吸收了 `aura_destroyed`(0 分最坏结局) 与 rupture/overreach-沉没，与其"成功/稳态"语义描述不符。二者皆 report-only 着色边角，**提请审计裁定**是否要给标签体系加特判（若改属计分面改动，须解冻后走 bench 流程）。
+- **验证**：typecheck+build 绿；`bench:items/probes/commitments/vent` 全绿；**`bench:trace` v1+v2 fixtures git 干净**（零计分面漂移，本轮只加 bench 测试文件 + 1 行 package.json script + 文档，未碰 `src/`）；`bench:relationship` 15/15。
+- **C1–C6 纯站点散文（worldFacts/dialogue，不进 RunResult）**：仍列解冻后、交 🔵 消费，本轮未动（与 wk7 一致）。
+
 ### wk7（2026-07-05）· 冻结前 trace-visible 润色 —— **trace-visible 润色完毕，可打冻结标**
 - **只碰散文/场景文案,零计分面改动**(冻结令遵守):无题/旗标/经济/scorer 改动;a/m/probe/setsFlags 未动。
 - **机制**:给 `StoryScene` + `StoryConsequence` 各加 `scenarioText?: Record<scenarioId,{replayNote|replaySummary}>` per-scenario 文案变体;`applyScene`/`buildConsequenceReplayEvent` 按 scenarioId 取(缺省 "red-dust-v1"、无覆盖→回落现有文案→v1 不变);scenarioId 经 `applyScheduledScenesForDay`/`applyStoryConsequences` 从 `scenario.id` 穿进。
