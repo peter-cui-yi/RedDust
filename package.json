@@ -17,6 +17,7 @@
     "bench:commitments": "esbuild bench/validate-commitments.ts --bundle --platform=node --format=esm --packages=external --outfile=.bench/commitments.mjs --log-level=warning && node .bench/commitments.mjs",
     "bench:vent": "esbuild bench/validate-vent.ts --bundle --platform=node --format=esm --packages=external --outfile=.bench/vent.mjs --log-level=warning && node .bench/vent.mjs",
     "bench:probes": "esbuild bench/validate-probes.ts --bundle --platform=node --format=esm --packages=external --outfile=.bench/probes.mjs --log-level=warning && node .bench/probes.mjs",
+    "bench:relationship": "esbuild bench/validate-relationship.ts --bundle --platform=node --format=esm --packages=external --outfile=.bench/relationship.mjs --log-level=warning && node .bench/relationship.mjs",
     "grade": "esbuild bench/grade-comprehension.ts --bundle --platform=node --format=esm --packages=external --outfile=.bench/grade.mjs --log-level=warning && node .bench/grade.mjs",
     "grade:integrity": "esbuild bench/grade-integrity.ts --bundle --platform=node --format=esm --packages=external --outfile=.bench/grade-integrity.mjs --log-level=warning && node .bench/grade-integrity.mjs",
     "bench:compare": "esbuild bench/compare.ts --bundle --platform=node --format=esm --packages=external --outfile=.bench/compare.mjs --log-level=warning && node .bench/compare.mjs",
