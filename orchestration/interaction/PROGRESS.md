@@ -16,10 +16,27 @@
 | Stage 1 完成（冻结富化 trace） | wk7 | ✅ | ◆S2 `content-freeze-s2` 落地：`bench/fixtures/traces/` 对帐 web 副本**零漂移**（早于本轮已同步）；从零重产 v1+v2 **字节可复现**（内容真冻结，非巧合）。hero GIF 源不变,无需重出 |
 | Stage 2 换真数据集（◆S3） | wk8 | ✅ | **真 Figure-1 上线**：`red-dust-v2-authoritative.json`（8 agent×3 seed,冻结 v2,Pearson 0.84/Spearman 0.83/3 rank-reversal）换掉占位;散点+误差棒+双列翻转表实测全过；修了一个真实 label-clipping bug（`marginRight`,4 个 deepseek 变体聚簇被裁）；截图归档 `design/assets/figures/figure1-decorrelation.png` 并嵌入 README |
 | 集成 + README hero + human-play 钩子 | wk9 | ✅ | **提前到 wk3-6**：README hero 区（双语 caption + hero GIF,`502ce3c`）+ **human-play 钩子** `npm run play:human`（"你来当一次 AURA"交互 runner,只读 `src/engine`、不碰 bench/*,端到端实测通对账）。集成随每轮 `git merge main` |
-| ◆S4 集成冻结 + 冒烟 | wk10 | 🟡 | **`web/` 冒烟就位且预跑 11/11**（本轮回归：8 dots 真数据下仍全过）：`npm run smoke:web`（headless Chrome：选择器/时间轴/canvas/账本/图表/散点/翻转表/scrub/换模型/控制台净）。◆S4 就绪度提前验证过;集成冻结/性能校验待 wk10 |
+| ◆S4 集成冻结 + 冒烟 | wk10 | 🟢 **可叫审计跑端到端** | 试部署验证（子路径模拟,零 404）+ GH Pages 工作流备好 + 跨浏览器冒烟(Chrome 实测/Safari-Firefox 记档降级)+ 移动端粗查(修了真溢出 bug)+ 性能预算(修了真 7.3MB→2.8MB 首屏)+ 可达性(4 图表补 aria + 修了真 aria-hidden 误用)。详见下方 wk9-10 周更 |
 | ◆S5 上线 | wk12 | ⬜ | |
 
 ## 本周更新（追加,最新在上）
+### wk9-10 · ◆S4 集成冻结准备（2026-07-05）
+**`git merge main`**：本轮无新 main 提交（已是 tip）。
+
+**①试部署验证**——本沙盒无 `gh`/`vercel` CLI、无任何部署 token,且本轮未同步 origin(沿用"等最终定版再推"的既定节奏)——**无法从这里触发真正公网部署**。改做能做到的最严格验证：新 `scripts/serve-subpath-sim.mjs`(`npm run deploy:check`)把 `dist-web/` 挂到 `/RedDust/` 前缀,精确复现 GitHub Pages 项目站的托管形态(`base:'./'` 真正要过的考验)。**实测零遗漏**：JS/CSS/trace/去相关 JSON/image2 像素图**全部 200**,唯一 404 是模拟服务器自身路由之外的 favicon 探测噪音(非本站资产)。顺手发现 `web/index.html` 真缺 favicon,补上(复用根 demo 的 `aura_icon.png`)。另建 `.github/workflows/deploy-web.yml`(标准 `actions/deploy-pages` 配方,YAML 校验过、`npm ci --dry-run` 确认 lockfile 干净)——**真正上线只差仓库主人一次性手动开关**(Settings→Pages→Source→GitHub Actions),这一步没人能替仓库主人点,如实记录而非假装能做到。
+
+**②跨浏览器冒烟**——沙盒**无 Firefox**(未装应用,不擅自装);**Safari 有 `safaridriver` 但 `--enable` 要求 sudo 密码**(交互式安全同意,我不该替用户输入)——两条路都是真实环境限制,不是我图省事跳过。做了**静态兼容审计**替代：`web/` 全部 CSS/JS 过了一遍,只有 `backdrop-filter`(可优雅降级,底层已有纯色背景兜底可读)+ `-webkit-font-smoothing`(纯观感 no-op)两处非普适写法,零高危/新潮 JS API;Phaser 用 `Phaser.AUTO`(内置 WebGL→Canvas 自动降级)。建议:上线前找个人手动开一次 Safari 点一遍(2 分钟),或团队想要的话装 Playwright 换真机跨引擎(会加约 300MB+ 依赖体积,本轮未擅自加)。
+
+**③移动端粗查**——375px 下**发现真横向溢出**(536px 内容塞进 375px 视口,topbar 被挤破)：根因是 `<select>` 原生最小宽度锁死在最长 option 文字上,flex `min-width:0` 单独救不了。修完(`select{width:100%}` + `topbar` ≤480px 转纵向堆叠)验证 `scrollWidth===clientWidth===375`,零溢出。Stage 1/2 图表/回放画布/账本在此宽度下渲染良好(Plot 默认响应式 + 我早前手写的 `viewBox` 缩放本就支持)。
+
+**④性能预算**——评估 phaser JS chunk(1.2MB/330KB gzip)本身做动态 `import()`：**决定不做**——Phaser 挂载即是 Stage1 首屏主体,推迟脚本请求不会真正提前"可感知内容",反而引入异步挂载态/loading skeleton 的额外复杂度和风险,这时候不值。改查真正找到的浪费：`ReplayScene.preload()` **无条件预载 3 张分支背景图(共 7.3MB)**,而任一具体 trace 播放只会用到 common(必现)+ rescue/lighthouse 二选一——另一张永远用不上。改成**按需懒加载**：`preload()` 只吃 common,分支背景在 `applyFrame` 第一次真正需要时才 `this.load.image()`+`load.start()`,并加"当前分支是否仍是最新请求"防抖(避免快速 scrub 后旧纹理迟到覆盖)。**实测验证**：v2-planner-lighthouse 整场只请求了 common+lighthouse,**rescue 全程零请求**;hero GIF 重导出确认 fork 转场帧(Day 8)背景正确、无空白/黑屏(懒加载在 360ms 帧间隔内稳定完成)。首屏图片负载从 7.7MB 降到 2.8MB(-64%)。
+
+**⑤可达性**——4 处 Plot/自建 SVG 图表(日终指标/承诺折线/去相关散点)**原来零 aria-label**,补 `ariaLabel`+`ariaDescription`(Plot 0.6 原生支持,查过源码确认);翻转表原已有。**修了一个真 bug**：时间轴的 hero 标记按钮(可点击跳转)被包在 `aria-hidden` 容器里——`aria-hidden` 用在真正交互元素上是误用,会让读屏用户完全看不到"跳到这天"这个功能,已移除并给每个标记补 `aria-label`(此前只有鼠标 `title`)。Phaser 画布容器补 `role="img"`(画布本身对读屏无意义,同一天的真实信息已经在旁边 `.stage-overlay` 的可见文字里,不重复堆屏幕阅读器负担)。关系读数当前档位补 `aria-current="step"`。**滚动条键盘操作**：`<input type="range">` 是原生控件、代码里没有任何 `onKeyDown`/`tabindex` 干预,方向键/Home/End 是浏览器保证的默认行为——**如实说明**：受限于现有工具只能派发非受信 `KeyboardEvent`(浏览器出于安全设计不会让脚本模拟的按键真正驱动原生 range 控件,这是刻意的浏览器限制,不是我漏测),故未能机械"跑一次"证明,但代码审查 + 元素可正常获得焦点(已核实)支持这个默认行为成立。
+
+**验证**：`typecheck`+根 `build`+`build:web` 全绿;`bench:items/probes/commitments/vent` 全绿(内容零改动,例行核对);**`smoke:web` 回归 11/11**(每次改动后都重跑)。
+
+**给用户/审计的建议**：◆S4 门禁我这侧已就绪,可以叫审计跑端到端。唯二真正等人的事——① 仓库主人在 GitHub Settings 点一次"Pages: GitHub Actions"(工作流已就绪,等这一下就能真上线);② 找人手动开一次 Safari 远程自动化或干脆手动点开测一遍(2 分钟,或指示我装 Playwright 换真机跨引擎自动化)。
+
 ### wk7 收尾 + wk8 接真数据（2026-07-05）
 - **`git merge main`（FF `1b9ef66 → 5323872`,只走 main）**：一次拿下 **◆S2 内容冻结**（`d98d3e2`，打标 `content-freeze-s2`：narrativeItems/generatedItems/scoring/resourceEconomy/dayPlanData/taskData/storyFlags 冻结)+ **◆S3 权威去相关跑**（`5323872`：8-agent×3-seed 于冻结 v2,300 次真 deepseek API 调用)+ 🟣 wk7 trace-visible 散文润色（`942b754`)。
 - **①最终 sync:traces（Stage 1 收官）**：核对发现 `bench/fixtures/traces/` 在两个冻结提交里**未被触碰**——早前已同步，本轮零漂移；进一步**从零重新生成**核验字节可复现（真冻结，非巧合）。**hero GIF 源未变，无需重出**——Stage 1 正式收官。
@@ -101,7 +118,7 @@
 - 下周（wk2）：① 与 🟢 共签 ◆S1 契约（力争锁 A2 绝对逐日快照 + B schema + example fixture）；② Stage 1a 收尾——把 Phaser `ShelterScene` 接进 `ReplayStage` 挂载点，逐日驱动精灵/资产（解决 `web/` root 的资产路径）。
 
 ## 同步点就绪度
-- ◆S1（wk2 数据契约共签）：✅ 已会签 1.0.0（2026-07-03） ｜ ◆S2（wk7 内容冻结）：✅ **已接**（`content-freeze-s2`，Stage 1 fixture 核对零漂移/字节可复现）｜ ◆S3（wk8 接真数据）：✅ **已接**（`red-dust-v2-authoritative.json` 换入 Stage 2，真 Figure-1 上线）｜ ◆S4（wk10 集成冻结）：冒烟已预跑 11/11，正式集成冻结未启 ｜ ◆S5（wk12 上线）：未启
+- ◆S1（wk2 数据契约共签）：✅ 已会签 1.0.0（2026-07-03） ｜ ◆S2（wk7 内容冻结）：✅ **已接**（`content-freeze-s2`，Stage 1 fixture 核对零漂移/字节可复现）｜ ◆S3（wk8 接真数据）：✅ **已接**（`red-dust-v2-authoritative.json` 换入 Stage 2，真 Figure-1 上线）｜ ◆S4（wk10 集成冻结）：🟢 **就绪,可叫审计跑端到端**——试部署(子路径模拟零 404)+ GH Pages 工作流 + 跨浏览器(Chrome 实测/Safari-Firefox 记档)+ 移动端(修复溢出)+ 性能(7.7MB→2.8MB 首屏)+ 可达性(4 图表 aria + 修复 aria-hidden 误用)全部过。**真人工待办**(非阻塞我方就绪度)：① 仓库主人开 Pages Actions 开关；② 找人手动验证一次 Safari ｜ ◆S5（wk12 上线）：未启
 
 ### ◆S1 会签后待办（wk3，非阻塞）
 - ✅ fixture 源切换完成（2026-07-04，`8cbebf4`）：真 `TraceExport` 直接消费，客户端适配器已删，30 天真样例实测通过。见 wk3 周更。

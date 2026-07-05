@@ -31,6 +31,11 @@ export function PromiseDecayChart({ model, day }: Props) {
       height: 200,
       marginLeft: 44,
       marginBottom: 30,
+      ariaLabel: "承诺一致性折线图",
+      ariaDescription:
+        broken.length > 0
+          ? `integrity 随天演化，首次毁诺发生在第 ${broken[0].day} 天（${broken[0].key}）`
+          : "integrity 随天演化，本局无毁诺记录",
       style: { background: "transparent", color: "#c9c2b8", fontSize: "11px" },
       x: { label: "Day →", domain: [model.firstDay, model.lastDay], tickFormat: "d", grid: true },
       y: { label: "↑ 承诺一致性 (1−H)", domain: [0, 1], grid: true },

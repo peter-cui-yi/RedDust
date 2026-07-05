@@ -35,7 +35,7 @@ export function RelationshipRead({ model }: { model: ReplayModel }) {
           const m = META[k];
           const active = k === rq;
           return (
-            <div key={k} className={`rq-step ${active ? "active" : i < activeIdx ? "passed" : ""}`} title={m.meaning}>
+            <div key={k} className={`rq-step ${active ? "active" : i < activeIdx ? "passed" : ""}`} title={m.meaning} aria-current={active ? "step" : undefined}>
               <span className="rq-dot" style={{ background: m.color, boxShadow: active ? `0 0 0 3px ${m.color}44` : "none" }} />
               <span className="rq-step-label" style={active ? { color: m.color, fontWeight: 700 } : undefined}>{m.label}</span>
             </div>

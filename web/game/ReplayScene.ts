@@ -56,16 +56,36 @@ export class ReplayScene extends Phaser.Scene {
   private dayText!: Phaser.GameObjects.Text;
   private branchText!: Phaser.GameObjects.Text;
   private off?: () => void;
+  private loadingBg = new Set<string>();
 
   constructor() {
     super("ReplayScene");
   }
 
+  // Perf (◆S4 wk9-10): the 3 branch backgrounds are ~2.4MB each (~7.3MB combined) but a given trace
+  // only ever shows "common" (always, pre-fork) + exactly ONE of rescue/lighthouse (whichever branch
+  // that run took) — the other is never displayed. Preload only "common" (needed immediately); the
+  // branch-specific background lazy-loads on first actual use, once the trace tells us which one.
   preload() {
     const base = assetBase();
-    for (const b of Object.values(BG)) this.load.image(b.key, `${base}${b.path}`);
+    this.load.image(BG.common.key, `${base}${BG.common.path}`);
     for (const c of CHARACTERS) this.load.image(c.asset.key, `${base}${c.asset.path}`);
     this.load.image(image2Assets.auraIdle.key, `${base}${image2Assets.auraIdle.path}`);
+  }
+
+  private ensureBackground(key: string, path: string, onReady: () => void) {
+    if (this.textures.exists(key)) {
+      onReady();
+      return;
+    }
+    if (this.loadingBg.has(key)) return; // already in flight; applyFrame will re-set once loaded
+    this.loadingBg.add(key);
+    this.load.image(key, `${assetBase()}${path}`);
+    this.load.once(Phaser.Loader.Events.COMPLETE, () => {
+      this.loadingBg.delete(key);
+      onReady();
+    });
+    this.load.start();
   }
 
   create() {
@@ -106,8 +126,14 @@ export class ReplayScene extends Phaser.Scene {
     this.dayText.setText(`DAY ${String(m.day).padStart(2, "0")}`);
     this.branchText.setText(m.branch);
 
-    const bgKey = (BG[m.branch] ?? BG.common).key;
-    if (this.bg && this.textures.exists(bgKey)) this.bg.setTexture(bgKey).setDisplaySize(960, 540);
+    const bgEntry = BG[m.branch] ?? BG.common;
+    if (this.bg) {
+      this.ensureBackground(bgEntry.key, bgEntry.path, () => {
+        // guard: only apply if the LIVE current branch (branchText, updated above on every frame)
+        // still matches — fast scrubbing could otherwise land a stale texture after a slow load.
+        if (this.branchText.text === m.branch) this.bg.setTexture(bgEntry.key).setDisplaySize(960, 540);
+      });
+    }
 
     const loc = firstLocation(m.tasksPicked);
     if (loc) {

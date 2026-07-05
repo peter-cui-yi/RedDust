@@ -29,6 +29,8 @@ export function DriftChart({ model, day }: Props) {
       height: 240,
       marginLeft: 44,
       marginBottom: 30,
+      ariaLabel: "日终指标绝对值折线图",
+      ariaDescription: `trust/morale/dissatisfaction/safety 随天演化，第 ${day} 天用竖线标出`,
       style: { background: "transparent", color: "#c9c2b8", fontSize: "11px" },
       x: { label: "Day →", domain: [model.firstDay, model.lastDay], tickFormat: "d", grid: true },
       y: { label: "↑ 日终绝对值", grid: true, domain: [0, 100] },

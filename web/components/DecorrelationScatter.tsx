@@ -65,6 +65,8 @@ export function DecorrelationScatter({ data }: Props) {
       marginBottom: 44,
       marginRight: 110, // room for start-anchor labels (declutter can push text right of x=hi)
       marginTop: 26,
+      ariaLabel: "去相关散点图",
+      ariaDescription: `${rows.length} 个模型的${data.axes.short.label}对${data.axes.long.label}散点，Pearson ${data.pearson.toFixed(2)}，${data.rankReversalPairs.length} 组名次翻转`,
       style: { background: "transparent", color: "#c9c2b8", fontSize: "11px" },
       x: { label: `${data.axes.short.label} →`, domain: [lo, hi], grid: true },
       y: { label: `↑ ${data.axes.long.label}`, domain: [lo, hi], grid: true },

@@ -6,6 +6,12 @@
       "runtimeExecutable": "npm",
       "runtimeArgs": ["run", "dev:web"],
       "port": 5177
+    },
+    {
+      "name": "deploy-check",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["scripts/serve-subpath-sim.mjs"],
+      "port": 5199
     }
   ]
 }
