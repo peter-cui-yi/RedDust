@@ -23,7 +23,7 @@
 | 生成扩到 100+/私有 held-out | 🟡 | held-out 流水线落地：`gen:items --held-out`→隔离 staging（promote 硬拒 heldOut，实弹证）；首批 6 私有题(G801–807)+G751–754 seeds。**staged-only，永不入上线库**。扩到 100+ 待续 |
 | 三臂对照（内生/外生匹配/打散） | 🟡 | `bench:three-arm` 脚手架：置换对照(endogenous/exogenous-matched/shuffled)，零碰冻结路径。8-agent(含 cached deepseek，0 live)：endogenous pearson 0.84 vs shuffle-null 0.01±0.38→**p=0.002 关联真实非假象**、3 rank-reversal。v0 统计口径待 audit 定稿；"内生更难"（需情景变体=改冻结）延后 ◆S5 |
 | N2–N… 逐项承诺账本 | ⬜ | 延后到 κ 达标 + ◆S5 之后（本轮红线） |
-| κ 验证 → integrity 进 total（κ≥0.6） | 🟡 | κ 校准包已装配：`bench:kappa-pack`→盲标 30 条(20 natural sincere+10 adversarial contradictory)+密封答案键(judge+ledger 锚)。交用户标注→算 κ(wk10–11)；judge 共用 `integrityJudge.ts`(无漂移)。integrity 进 total 待 κ≥0.6 + ◆S5 |
+| κ 验证 → integrity 进 total（κ≥0.6） | 🟡 | **κ 已测（用户标注 30 条）：overall κ=0.745/binary 0.727、87% 一致 → 过 0.6 门**（`bench:kappa-score`，可复现）。但分层诚实：adversarial κ=1.0 撑起总分，natural κ=0（judge 全 sincere 退化）+ 4 处漏判（3 subtle spin + 1 真 contradiction K29/N17 judge 漏）。**integrity 进 total 仍延后 ◆S5+audit**（natural 硬样本不足，先扩再议） |
 | NPC 多样性验证 | ⬜ | |
 
 ## 本周更新（追加，最新在上）
