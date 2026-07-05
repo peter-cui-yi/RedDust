@@ -35,6 +35,19 @@
 
 ---
 
+## ◆S2 正式门禁 + ◆S3 交付核验 · wk7–8 波（2026-07-05）——**◆S2 PASS（冻结标全绿）；◆S3 已交付并被消费；真 Figure-1 落站**
+
+**◆S2 正式门禁：PASS**（标 `content-freeze-s2` = d98d3e2）。我在标上实跑：typecheck ✓、4 验证器（51 题）✓、fixture 字节自洽 ✓、`bench:rc` 难但可赢 HOLDS ✓。**冻结纪律首查：标后提交（5323872/4f8b91e）对保护路径零改动 ✓**（deepseekClient +47 行经查为纯缓存管道/DI 注入，非策略；🟣 标前的 942b754 是 scenarioText 散文覆写**机制**——touch 了 types/orchestration/runScenario/scenes，但在标前落地且 🟢 冻结重产验证 v1 字节/v2 分数零变后才打标——合规）。冻结基线快照：**tag=d98d3e2，51 题（23+28）、scorer v0.5.1、L-v2.1、契约 1.0.0**。此后每轮审计盘查 `content-freeze-s2..HEAD` 保护路径。
+**◆S3 交付核验：通过**（5323872）：
+- 权威数据集 `red-dust-v2-authoritative.json`：**8 agent（4 确定性锚 + deepseek 家族×4）× 3 seeds 于冻结 v2**；我逐行核对：planner/pl (100,100) 全赢、**deepseek 家族 S 96.4–96.8 / L 54.9–65.9**（sinking/aura_revoked）、random 53.4/30.5、heuristic 25/14 fail-both；**pearson 0.84 / spearman 0.83**；名次翻转 = strategist 短第 3 / 长第 6（对 base/planner/search 三对翻转）。wk6 真点精确复现（base S96.4/L65.2）✓。L-v2.1 命中设计意图（strategist integrity=1 但 each_alone → L=54.9）。
+- **诚实记档（加分）**：纪律化 agent 的 S/L 对 seed 不变（sd=0，绕开随机危机分支；seed42 诊断确认）——"×3 seeds=同轨三份"如实标注；**去相关是 agent 行为属性而非抽样噪声**。
+- **算力记账**：全程 **300 次 live 调用**（其余全 cache 命中）；新 `deepseekCache`（sha256 键，`DEEPSEEK_NO_CACHE=1` 可 live 复验）；runs/ 已刷新。
+**🔵 消费核验**：web 数据集副本 == canonical ✓；真数据换入散点（顺手修了 Plot 标签 declutter 真 bug + figure1 截图脚本视口 bug——node_modules 源码级定位，工程质量高）；`figure1-decorrelation.png` 归档 design/assets；🟣 散文经 `sceneProse.ts` 只读镜像消费（v1"Day 7"/v2"Day 15"覆写实测生效）；README 三层呈现（GIF→交互站→Figure-1）首次与锁定设计稿完整对齐；`smoke:web` 11/11（8 dots 确认真数据）；从零重产核验冻结 fixture 字节可复现（"真冻结，非巧合"）。**Stage 1 正式收官、Stage 2 接真数据完成——roadmap wk7/wk8 的 🔵 行提前清账。**
+**开放决策收口记录**：a) §7a 自由分支选择缺口（wk4 到期）——权威跑用指派分支阵，§7a 留给论文级三臂对照（有意识延后，记档）；b) `surface_evidence` 灯塔记功（wk7 前到期）——冻结即事实裁定"不入 v1.0 计分"，如要引入属 κ 时代 scorer 升版（论文级）。
+**下一站**：◆S4（wk10）集成冻结 = 跨浏览器冒烟 + 性能 + 试部署 + 审计端到端；🟢 转论文级（冻结安全子集）。
+
+---
+
 ## 决策记录 · ◆S2 冻结令（2026-07-05，用户）
 
 **用户裁定三项**：① **签核确认**——4 道回填题（G029 废水回收/G030 储电循环/G031 水循环 + D21-l 育苗）的人工评审由用户确认追认，🟢 补记 `humanReview.by = "user (2026-07-05, confirmed via audit)"`；此后 `humanReview.by` 强制填写。② **4 道未用草案**（G751 水保底/G752 药限量/G753 取药/G754 主动探）**留作论文级 held-out 批**，不扩前冻结库。③ **不拔自给题进人工主脊**，维持 17:13 配比。
