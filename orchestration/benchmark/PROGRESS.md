@@ -20,13 +20,21 @@
 ## 第二段 · 论文级（wk8+，跨过上线）
 | 项 | 状态 | 证据 |
 |---|---|---|
-| 生成扩到 100+/私有 held-out | ⬜ | |
-| 三臂对照（内生/外生匹配/打散） | ⬜ | |
-| N2–N… 逐项承诺账本 | ⬜ | |
-| κ 验证 → integrity 进 total（κ≥0.6） | ⬜ | |
+| 生成扩到 100+/私有 held-out | 🟡 | held-out 流水线落地：`gen:items --held-out`→隔离 staging（promote 硬拒 heldOut，实弹证）；首批 6 私有题(G801–807)+G751–754 seeds。**staged-only，永不入上线库**。扩到 100+ 待续 |
+| 三臂对照（内生/外生匹配/打散） | 🟡 | `bench:three-arm` 脚手架：置换对照(endogenous/exogenous-matched/shuffled)，零碰冻结路径。8-agent(含 cached deepseek，0 live)：endogenous pearson 0.84 vs shuffle-null 0.01±0.38→**p=0.002 关联真实非假象**、3 rank-reversal。v0 统计口径待 audit 定稿；"内生更难"（需情景变体=改冻结）延后 ◆S5 |
+| N2–N… 逐项承诺账本 | ⬜ | 延后到 κ 达标 + ◆S5 之后（本轮红线） |
+| κ 验证 → integrity 进 total（κ≥0.6） | 🟡 | κ 校准包已装配：`bench:kappa-pack`→盲标 30 条(20 natural sincere+10 adversarial contradictory)+密封答案键(judge+ledger 锚)。交用户标注→算 κ(wk10–11)；judge 共用 `integrityJudge.ts`(无漂移)。integrity 进 total 待 κ≥0.6 + ◆S5 |
 | NPC 多样性验证 | ⬜ | |
 
 ## 本周更新（追加，最新在上）
+### wk9+ · 论文级第一段：三臂 harness 脚手架 + held-out 起草 + κ 标注准备（2026-07-06）
+> 冻结纪律全程守：**零碰**冻结路径（narrativeItems/generatedItems/scoring/resourceEconomy/dayPlanData/taskData/storyFlags），只新增文件。合入 main（🔵 wk7-10：真 Figure-1 入站、README、◆S4 集成冻结 prep），冻结 tag `content-freeze-s2` 完好、我方 fixtures 字节不变。
+- **①三臂对照 harness 脚手架**（90cb9b7，`bench/three-arm.ts`）：置换对照——agent 只玩真冻结情景一次(endogenous)，matched/shuffled 是收集后 (S,L) 的 post-hoc 重配对 → **零碰冻结路径**。确定性阵演练(N=4：管路通但欠功效 p=0.083)；**8-agent 含 cached deepseek(0 live)：endogenous pearson 0.84 vs shuffle-null 0.01±0.38 → 双尾 p=0.002（关联真实、非配对假象）**，且 0.84<1.0 ⇒ 短不定长(去相关)、3 seed-稳 rank-reversal。v0 统计口径(matched/null 设计)标注待 🟣/audit 定稿；**"社交-内生版更难"半（需情景变体=改冻结内容）显式延后 ◆S5 + audit**。
+- **②held-out 私有集起草**（3fb7e86）：`gen:items --held-out` → 隔离 staging（`held-out-staging.json`），`heldOut` 标记 + G8xx 号段 + draftSlot 绕过上线库填充计数（held-out 与上线并行）；**promote() 硬拒任何 heldOut（实弹负对照：即便 fully-accepted 也 abort）**。首批 **6 accepted(G801–804/806/807)/1 rejected(G805 探针 prescriptive，验证器抓)**。上线库字节不变(28，无 G8xx 污染)。staged-only，post-◆S5 held-out eval 用。
+- **③κ 标注准备**（bbbe378）：`bench:kappa-pack` → **盲标表 30 条**(20 natural deepseek=全 sincere〔发现：N-spine 无言行差〕 + 10 adversarial〔真辩词配反向动作，judge 全判 contradictory〕)+**密封答案键**(judge 判决 + 确定性 Layer-1 ledger 锚)。共用 `integrityJudge.ts` 使 grade-integrity 与 pack 判官**无漂移**(重构后 deepseek 仍 20/20 sincere)。交用户标注 → wk10–11 算 κ；**integrity 进 total 延后 κ≥0.6 + ◆S5**。
+- **算力记账**：本轮 **~35 次 live DeepSeek 调用**（held-out 起草 ~5 + grade-integrity ~20 + κ adversarial 10）；三臂 8-agent、种子/重跑全 **cache 命中=0 live**。
+- **LLM 三臂扩量预算（报告待批）**：现三臂已含 deepseek 家族(cached,0 live)。真扩量=**非 deepseek 模型族**(需新 client/key，暂无)或 per-commitment(N2–N) 版三臂——每新 agent 的 endogenous 轨迹 ~110 live(matched/shuffled 免费 post-hoc)。**未跑，待批**（守"报预算再执行"）。
+
 ### wk7 · ◆S2 内容冻结执行 + 签核补记 + held-out 归档（2026-07-05）
 - **①合入 🟣 润色终版**（ff merge 942b754）：🟣 wk7 trace-visible prose polish（per-scenario day-refs）+ 🔵 human-play hook / ◆S4 smoke。合并后 typecheck 绿；**确定性 trace 输出零变化**——🟣 prose 不入这批 agent 的 seed-1 导出，v1/v2 fixtures 字节不变。
 - **②签核补记 + by 字段强制**（本提交）：4 道回填题（G028–G031，wk6 补 culled G024/25/26/28 的自给支柱）补记 `humanReview.by="user (2026-07-05, confirmed via audit)"`——其 staging 记录 promote 时未 durable 归档，今经新增 `--signoff` 命令重建入 `staging.json` promoted[] 审计账本（并清 1 条无 by 的陈旧 provisional G701）。流水线**今后 by 强制**：`humanReview` 类型 +`by/at`；`promote()` accept-without-by 挡回；`--accept` 需 `--by`；`--dry` 负对照升级证三态（pending 挡／accept-no-by 挡／accept-with-by 促，实弹）。
