@@ -27,6 +27,11 @@
 | NPC 多样性验证 | ⬜ | |
 
 ## 本周更新（追加，最新在上）
+### wk10 · κ 判官验证（过门）+ 跨模型 portal 集成（配额受阻）（2026-07-06）
+- **①κ 判官验证**（用户标注 30 条 → `bench:kappa-score`，可复现）：**overall κ=0.745(3-way)/0.727(binary)、87% 一致 → 过 0.6 门**。诚实分层：adversarial κ=1.0（漏判 0）撑起总分；**natural κ=0（judge 全 sincere 退化）+ 4 处分歧**（3 subtle spin judge 漏 + 1 真 contradiction K29/N17 judge 误判 sincere＝假阴）。→ 门达标但 natural 硬样本太薄，**integrity 进 total 仍延后 ◆S5+audit**，先扩硬样本再议。结果存 `kappa/kappa-result.md`。
+- **②跨模型 portal 集成**（yi-zhan `vip.yi-zhan.top`，用户给 key）：新 `portalClient.ts`（node-free，健壮处理异构模型——glm 拒 JSON mode→去掉、MiniMax 内联 `<think>`→剥离、推理模型大 token 预算、429/5xx 重试）+ `makeLLMAgent` 工厂（deepseek 重构后**字节不变**，S=96.4/L=65.2 复现）+ 5 portal agents（claude-opus-4-8-thinking/gemini-3.5-flash/glm-5.2/kimi-k2.6/MiniMax-M2.7，id=模型名）。**连通性 5/5 ✓、流水线 ✓**（~209 次有效调用、JSON 提取正常）。**BLOCKER：portal 令牌配额耗尽**（403 令牌额度不足），无模型跑完整局（每局 ~110 调用）→ **多模型 Figure-1 未完成，待配额充值后重跑**（cache 令已成的 ~209 调用免费续跑）。零碰冻结路径。
+- **算力记账**：本轮 κ 判官 ~10 live（adversarial）；portal ~209 live（未完整，配额中断）；deepseek/三臂全 cached。已推 origin/main + `content-freeze-s2` tag。
+
 ### wk9+ · 论文级第一段：三臂 harness 脚手架 + held-out 起草 + κ 标注准备（2026-07-06）
 > 冻结纪律全程守：**零碰**冻结路径（narrativeItems/generatedItems/scoring/resourceEconomy/dayPlanData/taskData/storyFlags），只新增文件。合入 main（🔵 wk7-10：真 Figure-1 入站、README、◆S4 集成冻结 prep），冻结 tag `content-freeze-s2` 完好、我方 fixtures 字节不变。
 - **①三臂对照 harness 脚手架**（90cb9b7，`bench/three-arm.ts`）：置换对照——agent 只玩真冻结情景一次(endogenous)，matched/shuffled 是收集后 (S,L) 的 post-hoc 重配对 → **零碰冻结路径**。确定性阵演练(N=4：管路通但欠功效 p=0.083)；**8-agent 含 cached deepseek(0 live)：endogenous pearson 0.84 vs shuffle-null 0.01±0.38 → 双尾 p=0.002（关联真实、非配对假象）**，且 0.84<1.0 ⇒ 短不定长(去相关)、3 seed-稳 rank-reversal。v0 统计口径(matched/null 设计)标注待 🟣/audit 定稿；**"社交-内生版更难"半（需情景变体=改冻结内容）显式延后 ◆S5 + audit**。

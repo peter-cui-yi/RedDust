@@ -48,15 +48,21 @@ export async function portalJson(model: string, messages: ChatMessage[], maxToke
   // No response_format:json_object — the portal fronts heterogeneous models and some reject JSON mode
   // ("Json mode is not supported"). The prompts already demand JSON and extractJson() recovers it (after
   // stripping any <think> reasoning), which is the most compatible path across model families.
-  const res = await fetch(`${base}/v1/chat/completions`, {
-    method: "POST",
-    headers: { "content-type": "application/json", authorization: `Bearer ${key}` },
-    body: JSON.stringify({ model, messages, temperature: 0, max_tokens: tokens })
-  });
-  if (!res.ok) {
-    const body = await res.text();
-    throw new Error(`Portal ${model} ${res.status}: ${body.slice(0, 180)}`);
+  // Retry on 429/5xx (a many-model parallel panel can transiently rate-limit); client errors fail fast.
+  let res: Response | null = null;
+  let lastErr = "";
+  for (let attempt = 0; attempt < 4; attempt++) {
+    res = await fetch(`${base}/v1/chat/completions`, {
+      method: "POST",
+      headers: { "content-type": "application/json", authorization: `Bearer ${key}` },
+      body: JSON.stringify({ model, messages, temperature: 0, max_tokens: tokens })
+    });
+    if (res.ok) break;
+    lastErr = `${res.status}: ${(await res.text()).slice(0, 180)}`;
+    if (res.status !== 429 && res.status < 500) break; // non-retryable (e.g. bad request)
+    await new Promise((r) => setTimeout(r, 1500 * (attempt + 1)));
   }
+  if (!res || !res.ok) throw new Error(`Portal ${model} ${lastErr}`);
   const data = (await res.json()) as { choices?: Array<{ message?: { content?: string } }> };
   const content = data.choices?.[0]?.message?.content;
   const result = content ? extractJson(content) : null;
