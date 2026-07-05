@@ -15,11 +15,18 @@
 | Stage 2b 承诺/关系折线图（联动日光标） | wk6 | ✅ | **承诺线**（`PromiseDecayChart` `integritySoFar` + 首次毁诺红标 + 逐日 as-of 账本，`68f7a4e`）+ **关系读数**（`RelationshipRead`：终局 5 类落点尺 + 关系破裂打点,回退方案——逐日 `relationshipByChar` 待 🟢 P2,非阻塞）。wk5-6 收尾 |
 | Stage 1 完成（冻结富化 trace） | wk7 | ⬜ | |
 | Stage 2 换真数据集（◆S3） | wk8 | ⬜ | |
-| 集成 + README hero + human-play 钩子 | wk9 | ⬜ | |
-| ◆S4 集成冻结 + 冒烟 | wk10 | 🟡 | **`web/` 冒烟已就位**：`npm run smoke:web`（headless Chrome，11 项断言：选择器/时间轴/canvas/账本/图表/散点/翻转表/scrub/换模型/控制台净）——补上了"browser-smoke 只覆盖根 app"的缺口。集成冻结/性能待 wk10 |
+| 集成 + README hero + human-play 钩子 | wk9 | ✅ | **提前到 wk3-6**：README hero 区（双语 caption + hero GIF,`502ce3c`）+ **human-play 钩子** `npm run play:human`（"你来当一次 AURA"交互 runner,只读 `src/engine`、不碰 bench/*,端到端实测通对账）。集成随每轮 `git merge main` |
+| ◆S4 集成冻结 + 冒烟 | wk10 | 🟡 | **`web/` 冒烟就位且预跑 11/11**：`npm run smoke:web`（headless Chrome：选择器/时间轴/canvas/账本/图表/散点/翻转表/scrub/换模型/控制台净）。◆S4 就绪度提前验证过;集成冻结/性能校验待 wk10 |
 | ◆S5 上线 | wk12 | ⬜ | |
 
 ## 本周更新（追加,最新在上）
+### wk6 · merge main + human-play 钩子 + ◆S4 冒烟预跑（2026-07-04）
+- **`git merge main`（FF `502ce3c → 7d47c4c`,只走 main）**：拿 🟢 wk6 ◆S2 **冻结彩排**（RC 判别力 + 3-seed 数据集 + 真 deepseek API 去相关验证,权重稳、无 L-v2.2）+ **生成库满 28/28** + 🟣 冻结前收尾。`sync:traces`：**仅 v2 漂移**(题库补审动 30 天弧),**v1 未变→hero GIF 无需重产**。
+- **富余①·human-play 钩子（wk9 提前）**：`scripts/play-human.ts` + `npm run play:human`——"你来当一次 AURA"交互式 readline runner。只读消费 `src/engine`（**不碰 bench/***,bench/play.ts 仍是 🟢 的 LLM 编排 runner）,人来答两难/选任务/选路线,结局对账承诺账本 + "你毁诺了吗"共情反思。**全程 auto-driver 实测通到对账**（跳过任务→aura_destroyed、integrity 0.5、2 守 2 毁、摘要注水、cold_trust）。
+- **富余②·◆S4 冒烟预跑**：`npm run smoke:web` **11/11 过**（选择器/时间轴/canvas/账本/图表/散点/翻转表/scrub/换模型/控制台净）——◆S4 就绪度提前验证。
+- 验证：`typecheck` + `build:web` 绿 · `smoke:web` 11/11 · play:human 端到端。
+- 纪律：集成一律 `git merge main`,未直接合他线。**待 🟢 彩排后的最终题库定版,再 `sync:traces` 一次到位**（本轮 v2 trace 仍会随补审动）。
+
 ### wk5-6（2026-07-04）
 - **`git merge main`（FF `aa3c42c → 8c822d3`,只走 main、不直接合他线）**：拿 🟢 wk5（L-v2.1 durability spacing swap + 生成批 + sensitivity）+ 🟣 wk5（v2 Day-30 终局场景）。
 - **`npm run sync:traces`**：v1-heuristic/v1-planner-lighthouse 漂移(narrativeItems 微调)→ 重拷。v1 planner-lighthouse **门面关键内容未变**(lighthouse_success/首次毁诺@5/dirty_win@12/摘要注水),但字节变→**重产 hero GIF**保持一致。L-spacing 经 ScoreChips 动态生效(header 现示 L 55.88)。

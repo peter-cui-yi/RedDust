@@ -32,6 +32,7 @@
     "preview:web": "vite preview --config web/vite.config.ts",
     "smoke:web": "npm run build:web && node scripts/browser-smoke-web.mjs",
     "hero:gif": "npm run build:web && node scripts/export-hero-gif.mjs",
+    "play:human": "esbuild scripts/play-human.ts --bundle --platform=node --format=esm --packages=external --outfile=.bench/play-human.mjs --log-level=warning && node .bench/play-human.mjs",
     "generate:story-art": "node scripts/generate-story-art.mjs",
     "validate:script": "node scripts/validate-script-upgrade.mjs",
     "smoke:browser": "node scripts/browser-smoke.mjs",
