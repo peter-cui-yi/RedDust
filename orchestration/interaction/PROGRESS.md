@@ -13,13 +13,22 @@
 | Stage 2a 去相关散点 + 名次翻转表（占位数据） | wk4 | ✅ | **提前到 wk2**：Plot 去相关散点（Pearson 0.02）+ SVG 双列名次翻转表（连线交叉=翻转，守不刷分）；占位 `DecorrelationDataset`；`2c3f0c5` |
 | Stage 1c hero 时刻标记 + GIF 导出 | wk5 | ✅ | **提前到 wk3**：权威 `heroMoments` 时间轴打点 + 场景闪光；`npm run hero:gif`（headless CDP 逐日截图 → ffmpeg，零 npm 依赖）导出 `web/public/hero-replay.gif`（684×590/19帧/183KB），定格在 surface_evidence 毁诺+摘要注水；已接入 README 顶部门面。`6077180` |
 | Stage 2b 承诺/关系折线图（联动日光标） | wk6 | ✅ | **承诺线**（`PromiseDecayChart` `integritySoFar` + 首次毁诺红标 + 逐日 as-of 账本，`68f7a4e`）+ **关系读数**（`RelationshipRead`：终局 5 类落点尺 + 关系破裂打点,回退方案——逐日 `relationshipByChar` 待 🟢 P2,非阻塞）。wk5-6 收尾 |
-| Stage 1 完成（冻结富化 trace） | wk7 | ⬜ | |
-| Stage 2 换真数据集（◆S3） | wk8 | ⬜ | |
+| Stage 1 完成（冻结富化 trace） | wk7 | ✅ | ◆S2 `content-freeze-s2` 落地：`bench/fixtures/traces/` 对帐 web 副本**零漂移**（早于本轮已同步）；从零重产 v1+v2 **字节可复现**（内容真冻结，非巧合）。hero GIF 源不变,无需重出 |
+| Stage 2 换真数据集（◆S3） | wk8 | ✅ | **真 Figure-1 上线**：`red-dust-v2-authoritative.json`（8 agent×3 seed,冻结 v2,Pearson 0.84/Spearman 0.83/3 rank-reversal）换掉占位;散点+误差棒+双列翻转表实测全过；修了一个真实 label-clipping bug（`marginRight`,4 个 deepseek 变体聚簇被裁）；截图归档 `design/assets/figures/figure1-decorrelation.png` 并嵌入 README |
 | 集成 + README hero + human-play 钩子 | wk9 | ✅ | **提前到 wk3-6**：README hero 区（双语 caption + hero GIF,`502ce3c`）+ **human-play 钩子** `npm run play:human`（"你来当一次 AURA"交互 runner,只读 `src/engine`、不碰 bench/*,端到端实测通对账）。集成随每轮 `git merge main` |
-| ◆S4 集成冻结 + 冒烟 | wk10 | 🟡 | **`web/` 冒烟就位且预跑 11/11**：`npm run smoke:web`（headless Chrome：选择器/时间轴/canvas/账本/图表/散点/翻转表/scrub/换模型/控制台净）。◆S4 就绪度提前验证过;集成冻结/性能校验待 wk10 |
+| ◆S4 集成冻结 + 冒烟 | wk10 | 🟡 | **`web/` 冒烟就位且预跑 11/11**（本轮回归：8 dots 真数据下仍全过）：`npm run smoke:web`（headless Chrome：选择器/时间轴/canvas/账本/图表/散点/翻转表/scrub/换模型/控制台净）。◆S4 就绪度提前验证过;集成冻结/性能校验待 wk10 |
 | ◆S5 上线 | wk12 | ⬜ | |
 
 ## 本周更新（追加,最新在上）
+### wk7 收尾 + wk8 接真数据（2026-07-05）
+- **`git merge main`（FF `1b9ef66 → 5323872`,只走 main）**：一次拿下 **◆S2 内容冻结**（`d98d3e2`，打标 `content-freeze-s2`：narrativeItems/generatedItems/scoring/resourceEconomy/dayPlanData/taskData/storyFlags 冻结)+ **◆S3 权威去相关跑**（`5323872`：8-agent×3-seed 于冻结 v2,300 次真 deepseek API 调用)+ 🟣 wk7 trace-visible 散文润色（`942b754`)。
+- **①最终 sync:traces（Stage 1 收官）**：核对发现 `bench/fixtures/traces/` 在两个冻结提交里**未被触碰**——早前已同步，本轮零漂移；进一步**从零重新生成**核验字节可复现（真冻结，非巧合）。**hero GIF 源未变，无需重出**——Stage 1 正式收官。
+- **②Stage 2 换真 Figure-1（◆S3）**：`red-dust-v2-authoritative.json`（8 模型×3 seed,Pearson **0.84**/Spearman 0.83/**3 组名次翻转**)换掉占位数据集(`sync:decorrelation` 新脚本)。**实测中揪出一个真 bug**：4 个 deepseek 变体聚簇在 S≈96–97 时,`start`-anchor 标签被裁成"Deeps"（Observable Plot 0.6 的 `dx/dy/textAnchor` 是**per-mark 常量、非 per-datum channel**，查过 node_modules 源码确认)——写了通用 declutter（按 x 邻近聚类、拆 3 个 `Plot.text` 调用避免同锚点冲突)+ 加大 `marginRight`修复。**这是站点的 Figure-1 时刻**：Planner/Planner-Lighthouse 干净 (100,100)；DeepSeek 家族短程 96–97(与最强 agent 齐平)但长程仅 55–66(sinking/aura_revoked)；Random/Heuristic 双低(fail-both)。新增 `scripts/capture-figure1.mjs`(`npm run figure1`)截图归档 `design/assets/figures/figure1-decorrelation.png`——过程中修了脚本自身一个 bug(固定 1600px 视口矮于实际页高,裁剪区域越界渲染成空白;改为量出 `scrollHeight` 后动态设置视口，一步到位不用滚动)。
+- **③接 🟣 的解说散文**：新 `web/lib/sceneProse.ts`——只读镜像引擎精确同款优先级(`scenarioText[scenarioId]?.replayNote ?? benchmarkLinks?.replayNote ?? summary`,核对 `src/engine/scenes.ts:47` 逐字对齐)，在 `DayEventPanel` 场景块下方展示叙事散文。**实测验证 scenario-aware 覆写生效**：同一幕"最优路线里，谁被留下"在 v1 显示"Day 7 公共议事会…"、v2 显示"Day 15 公共议事会…"——不是泛用 fallback，是真吃到 🟣 wk7 的日期感知覆写。零 schema 改动、零跨线文件越界（`src/data/storySceneData` 只读导入，同 `tasksById`/`image2Assets` 既有模式）。
+- **④README hero 区终稿**：站点(`npm run dev:web`)首次进 README（此前只有 hero caption 提过一句,连 `dev:web` 命令本身都没在任何命令表出现过）；新增"1b) 跑回放+去相关站点"小节 + 命令速查表补 `play:human`/`dev:web`/`smoke:web`/`figure1` 行 + Figure-1 大图嵌入(附 Pearson/翻转数据解读)。三层呈现(门面 GIF·转化交互站·飞轮 Figure-1)首次在 README 完整对齐设计稿。
+- 验证：`typecheck`+根 `build`+`build:web` 全绿；`bench:items/probes/commitments/vent` 全绿(未碰内容,例行核对)；**`smoke:web` 回归 11/11**(散点由 6→8 dots 确认真数据集生效)。
+- 纪律：集成一律 `git merge main`；`traceExport.ts`/`contracts.ts`/`src/data/*` 全程零改动(消费者角色守住)。
+
 ### wk6 · merge main + human-play 钩子 + ◆S4 冒烟预跑（2026-07-04）
 - **`git merge main`（FF `502ce3c → 7d47c4c`,只走 main）**：拿 🟢 wk6 ◆S2 **冻结彩排**（RC 判别力 + 3-seed 数据集 + 真 deepseek API 去相关验证,权重稳、无 L-v2.2）+ **生成库满 28/28** + 🟣 冻结前收尾。`sync:traces`：**仅 v2 漂移**(题库补审动 30 天弧),**v1 未变→hero GIF 无需重产**。
 - **富余①·human-play 钩子（wk9 提前）**：`scripts/play-human.ts` + `npm run play:human`——"你来当一次 AURA"交互式 readline runner。只读消费 `src/engine`（**不碰 bench/***,bench/play.ts 仍是 🟢 的 LLM 编排 runner）,人来答两难/选任务/选路线,结局对账承诺账本 + "你毁诺了吗"共情反思。**全程 auto-driver 实测通到对账**（跳过任务→aura_destroyed、integrity 0.5、2 守 2 毁、摘要注水、cold_trust）。
@@ -92,7 +101,7 @@
 - 下周（wk2）：① 与 🟢 共签 ◆S1 契约（力争锁 A2 绝对逐日快照 + B schema + example fixture）；② Stage 1a 收尾——把 Phaser `ShelterScene` 接进 `ReplayStage` 挂载点，逐日驱动精灵/资产（解决 `web/` root 的资产路径）。
 
 ## 同步点就绪度
-- ◆S1（wk2 数据契约共签）：✅ **已会签 1.0.0（2026-07-03）**，字段名/类型冻结；本线已对齐（enum 改名 + 适配器补新字段，build 绿） ｜ ◆S3（wk8 接真数据）：组件按冻结 `DecorrelationDataset` 先行 ｜ ◆S4（wk10 集成冻结）：未启 ｜ ◆S5（wk12 上线）：未启
+- ◆S1（wk2 数据契约共签）：✅ 已会签 1.0.0（2026-07-03） ｜ ◆S2（wk7 内容冻结）：✅ **已接**（`content-freeze-s2`，Stage 1 fixture 核对零漂移/字节可复现）｜ ◆S3（wk8 接真数据）：✅ **已接**（`red-dust-v2-authoritative.json` 换入 Stage 2，真 Figure-1 上线）｜ ◆S4（wk10 集成冻结）：冒烟已预跑 11/11，正式集成冻结未启 ｜ ◆S5（wk12 上线）：未启
 
 ### ◆S1 会签后待办（wk3，非阻塞）
 - ✅ fixture 源切换完成（2026-07-04，`8cbebf4`）：真 `TraceExport` 直接消费，客户端适配器已删，30 天真样例实测通过。见 wk3 周更。
@@ -105,8 +114,6 @@
 5. ⏳ 剩余：Stage 1c hero GIF 导出；Stage 2b 承诺/关系折线（待 A2/A3 逐日快照）；`web/` 站点 browser-smoke（◆S4 前）。
 
 ## Blocker / 跨线依赖
-- **对 🟢（benchmark）**：~~① ◆S1 签字~~ ✅；~~② 真导出器/fixture 切换~~ ✅；~~④ P1 逐日 ledger~~ ✅（`68f7a4e`）；~~⑤ ◆S2 经济重平衡~~ ✅。**剩**：
-  - **③ ◆S3 真 `DecorrelationDataset`**（wk8）→ 换散点/翻转表占位 + 真 LLM trace（届时承诺线才真"崩塌",现确定性 agent 只升不崩）。**注**：本轮已发现 `bench/fixtures/decorrelation/red-dust-{v1,v2}.json` + `bench:decorrelate` 已在库——Stage 2 可像换 trace 一样切真去相关集,待确认是否 ◆S3 正式集(下轮候选任务)。
-  - **P2 请求 `frames[].relationshipByChar`（非阻塞）**：Stage 2b 关系线的逐日原料。现导出器未填,已用回退（终局 5 类 + `relationship_rupture` 打点）。🟢 若在 `toTraceExport` 逐日 cutoff 重算每 NPC {trust,tension,stance}（schema 1.0.0 已有可选位),`RelationshipRead` 可零代码升级为真逐日关系折线。
-- **对 🟣（叙事）**：wk7 冻结富化 trace；此前用当前 trace 开发，冻结后换。
-- **自身待办**：`scripts/browser-smoke.mjs` 目前只冒烟根 app，需在 ◆S4 前适配/新增对 `web/` 站点的冒烟（记账于 wk10 行）。
+- **对 🟢（benchmark）**：~~①②③④⑤~~ 全部已接（◆S1/◆S2/◆S3 + P1 逐日 ledger + 经济重平衡）。**剩一条非阻塞 P2 请求**：`frames[].relationshipByChar`（Stage 2b 关系线的逐日原料，现回退＝终局 5 类 + `relationship_rupture` 打点；填了可零代码升级为真逐日关系折线，schema 1.0.0 已留可选位）。
+- **对 🟣（叙事）**：wk7 trace-visible 散文润色已接并验证生效（`sceneProse.ts`）；C1–C6 纯站点世界观/对白散文属 post-freeze，非阻塞。
+- **自身待办**：`scripts/browser-smoke.mjs`（根 app 冒烟）与 `scripts/browser-smoke-web.mjs`（本站冒烟）仍是两个独立脚本；◆S4 集成冻结时需确认两者都在 CI/发布检查清单里（非代码缺口，是流程记账）。

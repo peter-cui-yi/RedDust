@@ -56,6 +56,24 @@ npm ci
 npm run dev        # 打开终端显示的本地地址(默认 http://127.0.0.1:5176/)
 ```
 
+### 1b) 跑回放 + 去相关站点(`web/`,零后端静态站)
+
+```bash
+npm run dev:web     # 默认 http://127.0.0.1:5177/ —— 拖时间轴看逐日回放 + 承诺账本 + 去相关图
+npm run build:web   # 生产构建 → dist-web/(GitHub Pages / Vercel 可直接部署)
+```
+
+- **Stage 1 回放**：真 Phaser 像素避难所 + AURA 逐日移动，变长天数(12/30 天通用)，逐日承诺账本(守诺/待判/毁诺随拖动翻转)，联动指标/一致性折线。
+- **Stage 2 去相关 / 名次翻转**（下图为 ◆S3 权威权跑：冻结 30 天内容,8 模型 × 3 seeds）：
+
+  <p align="center">
+    <img src="design/assets/figures/figure1-decorrelation.png" alt="Figure 1: short-horizon social score vs long-horizon consistency — 8 agents, Pearson 0.84, 3 rank-reversals" width="820">
+  </p>
+
+  Planner / Planner-Lighthouse 干净拿满 (100, 100);**DeepSeek 家族短程社交 96–97(与最强 agent 齐平),长程一致性却只有 55–66**——sinking / aura_revoked。Pearson **0.84**、Spearman 0.83,**3 组名次翻转**(如 Deepseek-Strategist 短程第 3 却长程垫底第 6)。这就是"短程强 ≠ 长程稳"的现象本身,不是设计意图的自我实现——判别力来自真实 DeepSeek 家族跑阵,不是确定性基线的人造对比。
+
+  重新生成:`npm run sync:decorrelation && npm run figure1`(权威数据集刷新后)。
+
 ### 2) 跑无界面 Benchmark
 
 ```bash
@@ -85,7 +103,10 @@ npm run grade  -- --file=runs/red-dust-v1-deepseek-seed1.json   # 离线理解�
 | `npm run bench:items` | 校验价值两难题有效性(命门 A:做对必须扣分) |
 | `npm run bench:probes` | 校验理解探针(描述性 / ⟂ 选项 / 配平) |
 | `npm run grade -- --file=...` | 离线 LLM 理解判官(Phase 2.3) |
-| `npm run play` | 人在环 / 单步对局 |
+| `npm run play` | 人在环 / 单步对局(JSON 决策文件) |
+| `npm run play:human` | **你来当一次 AURA**——交互式回答两难/选任务/选路线,结局对账你的承诺账本 |
+| `npm run dev:web` / `build:web` / `smoke:web` | 回放 + 去相关站点:开发 / 生产构建 / 跨浏览器冒烟(11 项断言) |
+| `npm run hero:gif` / `figure1` | 重导出 README 顶部 hero GIF / 重截 Figure-1(源数据变更后用) |
 
 ## 可插拔 Agent 接口
 

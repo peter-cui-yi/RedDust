@@ -167,7 +167,7 @@ export default function App() {
             <DriftChart model={model} day={day} />
           </section>
           <section className="col-events">
-            <DayEventPanel frame={frame} day={day} />
+            <DayEventPanel frame={frame} day={day} scenarioId={model.export.meta.scenarioId} />
           </section>
         </main>
       ) : (
@@ -178,7 +178,9 @@ export default function App() {
         <section className="stage2">
           <div className="stage2-head">
             <h2>去相关 / 名次翻转 — 短程强 ≠ 长程稳</h2>
-            <span className="muted small">Stage 2a · 占位数据集（{decorr.models.length} 模型）· 待 ◆S3 接真数据</span>
+            <span className="muted small">
+              ◆S3 权威数据 · 冻结 v2 内容 · {decorr.models.length} 模型 × {decorr.seeds.length} seeds
+            </span>
           </div>
           <div className="stage2-grid">
             <DecorrelationScatter data={decorr} />

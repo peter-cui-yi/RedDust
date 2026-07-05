@@ -88,8 +88,10 @@ export async function fetchTrace(file: string): Promise<TraceExport> {
   return res.json();
 }
 
+// ◆S3 authoritative Figure-1: 8-agent × 3-seed panel on frozen v2 content (content-freeze-s2).
+// bench/fixtures/decorrelation/red-dust-v2-authoritative.json, copied by `npm run sync:decorrelation`.
 export async function fetchDecorrelation(): Promise<DecorrelationDataset> {
-  const res = await fetch(`${base()}decorrelation/placeholder.json`);
+  const res = await fetch(`${base()}decorrelation/red-dust-v2-authoritative.json`);
   if (!res.ok) throw new Error(`decorrelation fetch failed: ${res.status}`);
   return res.json();
 }

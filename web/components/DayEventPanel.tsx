@@ -1,6 +1,7 @@
 import type { TraceDayFrame, MetricKey } from "../lib/trace";
+import { sceneProse } from "../lib/sceneProse";
 
-type Props = { frame: TraceDayFrame | undefined; day: number };
+type Props = { frame: TraceDayFrame | undefined; day: number; scenarioId: string };
 
 // Narratively salient metrics to surface in the per-day readout (metricsEndOfDay carries all 14).
 const SHOWN: MetricKey[] = ["trust", "morale", "dissatisfaction", "safety", "water", "food", "medicine", "health"];
@@ -25,7 +26,7 @@ function DeltaChips({ delta }: { delta: Record<string, number> | undefined }) {
 }
 
 // The per-day frame digest, in the authoritative TraceDayFrame shape. Co-scrubs with the timeline.
-export function DayEventPanel({ frame, day }: Props) {
+export function DayEventPanel({ frame, day, scenarioId }: Props) {
   if (!frame) {
     return (
       <div className="day-panel empty">
@@ -44,11 +45,15 @@ export function DayEventPanel({ frame, day }: Props) {
       {frame.scenes.length > 0 && (
         <section className="frame-block">
           <h4 className="frame-h">场景</h4>
-          {frame.scenes.map((s, i) => (
-            <div key={i} className="frame-scene">
-              <span className="event-glyph">◆</span> {s}
-            </div>
-          ))}
+          {frame.scenes.map((s, i) => {
+            const prose = sceneProse(s, scenarioId);
+            return (
+              <div key={i} className="frame-scene">
+                <div><span className="event-glyph">◆</span> {s}</div>
+                {prose && <p className="scene-prose">{prose}</p>}
+              </div>
+            );
+          })}
         </section>
       )}
 
