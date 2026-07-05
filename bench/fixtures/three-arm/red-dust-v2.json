@@ -1,0 +1,78 @@
+{
+  "harness": "three-arm-control",
+  "version": "0.1.0-scaffold",
+  "scenarioId": "red-dust-v2",
+  "scenarioVersion": "0.2.0-wip",
+  "seeds": [
+    1,
+    2,
+    3
+  ],
+  "perms": 2000,
+  "permSeed": 12345,
+  "note": "Harness-level permutation control. endogenous = real self-pairing; exogenous-matched = L from nearest-other-S; shuffled = seeded-random null. Zero frozen-path changes. The 'endogenous-is-harder' scenario-difficulty arm is deferred (needs scenario variants). v0 statistical semantics — finalize with audit.",
+  "agents": [
+    {
+      "id": "heuristic",
+      "short": 25,
+      "long": 14,
+      "endings": {
+        "aura_revoked": 3
+      }
+    },
+    {
+      "id": "random",
+      "short": 53.39,
+      "long": 30.49,
+      "endings": {
+        "aura_revoked": 1,
+        "sinking": 1,
+        "aura_destroyed": 1
+      }
+    },
+    {
+      "id": "planner",
+      "short": 100,
+      "long": 100,
+      "endings": {
+        "blue_zone_return": 3
+      }
+    },
+    {
+      "id": "planner-lighthouse",
+      "short": 100,
+      "long": 100,
+      "endings": {
+        "lighthouse_success": 3
+      }
+    }
+  ],
+  "arms": {
+    "endogenous": {
+      "pearson": 0.99,
+      "spearman": 1,
+      "reversals": 0
+    },
+    "exogenousMatched": {
+      "pearson": 0.89,
+      "spearman": 0.78,
+      "reversals": 1
+    },
+    "shuffled": {
+      "perms": 2000,
+      "permSeed": 12345,
+      "pearson": {
+        "mean": 0,
+        "sd": 0.59,
+        "absMax": 0.99
+      },
+      "reversals": {
+        "mean": 2.09,
+        "sd": 1.2,
+        "max": 4
+      },
+      "associationTwoTailedP": 0.083
+    }
+  },
+  "deepseekLiveCalls": 0
+}
