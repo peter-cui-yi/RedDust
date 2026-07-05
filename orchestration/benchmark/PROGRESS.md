@@ -13,9 +13,9 @@
 | 生成流水线（模板→LLM→验证器筛→抽检→generatedItems.ts） | wk3–6 | 🟡 | **骨架落地+活体验证**：`bench/gen-items.ts`（draft/dry/promote 三模式）+ `genSpec.ts`（🟣 §4 槽位表 20 槽=28 题 + §3 样例）+ `src/engine/{itemValidation,generatedItems,itemBank}.ts`；dry-run 🟣 五样例全过滤器 ✓；**D8 活体冒烟：2 起草/2 过自动筛**（1 调用），staged 待人工抽检（我复检发现 G702 a 值归属问题→证明人工闸有效） |
 | 生成集扩到 ~50 题（上线量） | wk4–6 | 🟡 | **6/28 已入库**（G001/002 D8 · G003 D7 · G004 D9 · G005 D11 · G006 D13）。批量起草 D7/9/11/13/14=10 题：4 促入库、6 人工否（系统性"稀缺资源配给"套路重复，auto-filter 看不出）→ 已加**跨天去重+反套路**提示；余槽待改进后重抽 |
 | `bench/decorrelation.ts`（短/长 + 名次翻转） | wk4 | ✅ | `bench:decorrelate` 复用 §B 两轴、跨 agent×seed 聚合、算 pearson/spearman + 名次翻转、出 `DecorrelationDataset` 契约到 `bench/fixtures/decorrelation/`。确定性 agent = pearson 1（相干参照，如实）；真去相关待 ◆S3 LLM 阵。θ=1/3 pinned |
-| 刷新 runs + 扩模型阵 | wk5 | ⬜ | |
+| 刷新 runs + 扩模型阵 | wk5→8 | ✅ | ◆S3 扩到 deepseek 家族 4 模型（base/planner/search/strategist）；runs/ 刷新为 v1×4+v2×8 panel；响应 cache（`bench/deepseekCache.ts`）落地 |
 | integrity/comprehension 提为 headline 可见轴 | wk5 | ⬜ | |
-| 权威跨模型去相关跑（◆S3 交付 🔵） | wk8 | 🟡 | 内容基线 `content-freeze-s2` 已冻（v1 字节不变、四数据集可复现、全绿）；deepseek 家族×seeds 权威跑进行中 |
+| 权威跨模型去相关跑（◆S3 交付 🔵） | wk8 | ✅ | 冻结 v2 上 8-agent×3seed → `red-dust-v2-authoritative.json`：deepseek 家族短程 96–97/长程 55–66（短≠长）、pearson 0.84、3 rank-reversal；300 live 调用（cache+种子不变性）。canonical Figure-1 交 🔵 |
 
 ## 第二段 · 论文级（wk8+，跨过上线）
 | 项 | 状态 | 证据 |
@@ -32,7 +32,11 @@
 - **②签核补记 + by 字段强制**（本提交）：4 道回填题（G028–G031，wk6 补 culled G024/25/26/28 的自给支柱）补记 `humanReview.by="user (2026-07-05, confirmed via audit)"`——其 staging 记录 promote 时未 durable 归档，今经新增 `--signoff` 命令重建入 `staging.json` promoted[] 审计账本（并清 1 条无 by 的陈旧 provisional G701）。流水线**今后 by 强制**：`humanReview` 类型 +`by/at`；`promote()` accept-without-by 挡回；`--accept` 需 `--by`；`--dry` 负对照升级证三态（pending 挡／accept-no-by 挡／accept-with-by 促，实弹）。
 - **③4 道未用草案归档**（用户裁定）：G751–G754（common/rescue 生存-资源草案）移入 `bench/generated/held-out-seeds-postlaunch.json`，注明"post-launch batch, do not promote pre-◆S5"——不入前冻结库（未接 promote 流水线、不在 generatedItems.ts）。源 🟣 `gen-sr-batch-draft.json` 存留为史。
 - **④冻结基线全绿 → 打标 `content-freeze-s2`**：bench:trace v1+v2、去相关 v1+v2、bench:rc 全重产 → **v1 字节不变**✓、**v2 分数/结局不变**✓、四数据集字节可复现✓；typecheck / bench:items / probes / win 全绿（WINNABLE@pickLimit=2）；bench:rc 难但可赢 HOLDS（planner/pl 全赢 68/pass100%、baseline 从不 pass）。标即权威跑内容基线。**自此冻结纪律生效**：narrativeItems / generatedItems / scoring / resourceEconomy / dayPlanData / taskData / storyFlags 零改动（审计每轮盘查，违规作废权威跑）。
-- **⑤◆S3 权威跨模型去相关跑**（wk8 主线，进行中）：deepseek 家族 × seeds 于冻结 v2 → 权威 DecorrelationDataset 交 🔵。结果/算力见后续追补。
+- **⑤◆S3 权威跨模型去相关跑 → 真 Figure-1**（本提交，交 🔵）：8-agent 面板（4 确定性锚 + deepseek 家族 base/planner/search/strategist）× 3 seeds 于**冻结 v2** → `bench/fixtures/decorrelation/red-dust-v2-authoritative.json`（canonical，supersede wk6 rc-preview）。
+  - **判别力/去相关成立**：planner/pl **100/100 全赢**；**deepseek 家族 S≈96–97（短程近满，与 planner 齐）/ L 54.9–65.9（长程弱）→ sinking/aura_revoked**；random 53/31、heuristic 25/14 **fail-both**。pearson **0.84** spearman 0.83、**3 rank-reversal**（deepseek-strategist 短胜 base/planner/search 但长程垫底）。**复现 wk6 真点**（base S96.4/L65.2 精确一致），冻结内容上更强（家族铺开 L 到 55–66）。
+  - **L-v2.1 命中设计意图**：deepseek-strategist integrity=1（守诺满分）但 relationshipQuality=`each_alone`→durability 低→**L=54.9**——"精于伦理、沉了关系＝长程差"如设计判读。
+  - **种子不变性（诚实记档，非 bug）**：确定性/deepseek agent 的 S/L **sd=0**——纪律化玩法绕开随机危机分支，故 seed 无关（seed 42 亦全 cache 命中、S/L 不变，planner blue_zone×4）；**仅 random 随 seed 变**（aura_revoked/sinking/aura_destroyed）。⇒ 去相关是**agent 行为属性**，非 seed 抽样噪声——比 seed-鲁棒更强。故 deepseek 家族的"×3 seeds"= 同一轨迹三份（诚实标注），多 seed 只对 random 有信息。
+  - **算力（记账）**：全程 **300 次 live DeepSeek 调用**（110 base-seed1 探 + 190 家族-seed1 探）；seed 2/3、seed-42 诊断、全 3-seed 终产、runs/ 刷新**全 cache 命中=0 live**。新增 `bench/deepseekCache.ts`（sha256(model+messages+maxTokens)→`.bench/` gitignored；DI 注入使 `deepseekClient` 保持 engine node-free）；`DEEPSEEK_NO_CACHE=1` 可对 live API 复验。runs/ 已刷新（v1×4 + v2×8 panel seed1，deepseek 全 cached）。
 
 ### wk6 · 人工闸入码 + 🟣补审处理 + ◆S2 冻结彩排 + WF2 API 首批（2026-07-05）
 - **①人工闸写进代码**（f78d273）：`promote()` 强制 `humanReview.verdict==='accept'`（auto-filter 过≠可入库）+ promote 后归档 promoted[]（防重跑重复）+ `--accept/--reject` 设判决 + `--dry` 加人工闸负对照（pending 不可促/accept 可促，实弹证）。
