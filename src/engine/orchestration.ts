@@ -105,12 +105,15 @@ export function buildStoryReplayEvent(
   };
 }
 
-function buildConsequenceReplayEvent(consequence: StoryConsequence, task: RedDustTask, outcome: TaskOutcome, branch: Branch, index: number): StoryReplayEvent {
+function buildConsequenceReplayEvent(consequence: StoryConsequence, task: RedDustTask, outcome: TaskOutcome, branch: Branch, index: number, scenarioId = "red-dust-v1"): StoryReplayEvent {
   const sceneId = consequence.followUpSceneIds.find((candidate) => Boolean(storyScenesById[candidate]));
   const scene = sceneId ? storyScenesById[sceneId] : undefined;
+  // 🟣 wk7: per-scenario replaySummary override (arc-correct day numbers). No override → existing text →
+  // v1 byte-identical. Prose only; consequence setsFlags/relationships untouched.
+  const replaySummary = consequence.scenarioText?.[scenarioId]?.replaySummary ?? consequence.replaySummary;
 
   if (scene) {
-    return buildStoryReplayEvent(scene, consequence.replaySummary, {
+    return buildStoryReplayEvent(scene, replaySummary, {
       branch,
       sourceTaskId: task.id,
       sourceOutcome: outcome.result
@@ -124,16 +127,16 @@ function buildConsequenceReplayEvent(consequence: StoryConsequence, task: RedDus
     sceneId: `${consequence.id}-${index}`,
     title: "Delayed consequence",
     characters: consequence.affectedCharacters,
-    summary: consequence.replaySummary,
+    summary: replaySummary,
     sourceTaskId: task.id,
     sourceOutcome: outcome.result
   };
 }
 
-export function applyStoryConsequences(state: GlobalState, consequences: StoryConsequence[], task: RedDustTask, outcome: TaskOutcome, branch: Branch): GlobalState {
+export function applyStoryConsequences(state: GlobalState, consequences: StoryConsequence[], task: RedDustTask, outcome: TaskOutcome, branch: Branch, scenarioId = "red-dust-v1"): GlobalState {
   if (consequences.length === 0) return state;
 
-  const storyEvents = consequences.map((consequence, index) => buildConsequenceReplayEvent(consequence, task, outcome, branch, index));
+  const storyEvents = consequences.map((consequence, index) => buildConsequenceReplayEvent(consequence, task, outcome, branch, index, scenarioId));
   const relationships = consequences.reduce(
     (current, consequence) => applyRelationshipDeltas(current, consequence.relationshipDeltas, consequence.id),
     state.story.relationships

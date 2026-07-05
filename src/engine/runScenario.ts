@@ -203,7 +203,7 @@ export async function runScenario(agent: RedDustAgent, scenario: Scenario, seed:
       const task = tasksById[id];
       if (!task) continue;
       const { outcome, consequences } = resolveTaskWithConsequences(task, state);
-      state = applyStoryConsequences(applyOutcomeToState(state, task, outcome, branch), consequences, task, outcome, branch);
+      state = applyStoryConsequences(applyOutcomeToState(state, task, outcome, branch), consequences, task, outcome, branch, scenario.id);
       taskStatuses[id] = outcome.result;
       trace.push({
         step: step(),

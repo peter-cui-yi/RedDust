@@ -30,7 +30,8 @@ export const storyConsequences: StoryConsequence[] = [
       { characterId: "shen_zhiyue", trustDelta: 4, tensionDelta: -2, stance: "questions", note: "沈知月认可 AURA 把医疗依据公开。" }
     ],
     followUpSceneIds: ["day3-xiao-tie-ventilation-pressure"],
-    replaySummary: "小铁病情暂时稳定，但通风和药品仍会影响 Day 12 健康审计。"
+    replaySummary: "小铁病情暂时稳定，但通风和药品仍会影响 Day 12 健康审计。",
+    scenarioText: { "red-dust-v2": { replaySummary: "小铁病情暂时稳定，但通风和药品仍会影响 Day 30 健康审计。" } }
   },
   {
     id: "day3-ventilation-stabilizes-health",
@@ -65,7 +66,8 @@ export const storyConsequences: StoryConsequence[] = [
       { characterId: "shen_zhiyue", trustDelta: -5, tensionDelta: 6, stance: "resists", note: "药品不足下仍执行复诊，沈知月要求暂停自动医疗建议。" }
     ],
     followUpSceneIds: ["day3-xiao-tie-ventilation-pressure"],
-    replaySummary: "药品不足让小铁复诊只是缓兵之计，病情下行风险进入 Day 12。"
+    replaySummary: "药品不足让小铁复诊只是缓兵之计，病情下行风险进入 Day 12。",
+    scenarioText: { "red-dust-v2": { replaySummary: "药品不足让小铁复诊只是缓兵之计，病情下行风险进入 Day 30。" } }
   },
   {
     id: "day3-ventilation-partial-medical-pressure",
@@ -112,7 +114,8 @@ export const storyConsequences: StoryConsequence[] = [
       { characterId: "xiao_tie", trustDelta: 2, tensionDelta: 2, stance: "cautious", note: "小铁把假坐标当作不要过度相信希望的证据。" }
     ],
     followUpSceneIds: ["day4-first-ambiguous-signal"],
-    replaySummary: "假坐标纸条成为 Day 10A 集合点危机的伏笔。"
+    replaySummary: "假坐标纸条成为 Day 10A 集合点危机的伏笔。",
+    scenarioText: { "red-dust-v2": { replaySummary: "假坐标纸条成为集合点危机（蓝区归航前夜）的伏笔。" } }
   },
   {
     id: "day5-care-bag-confirms-human-priority",
@@ -146,7 +149,8 @@ export const storyConsequences: StoryConsequence[] = [
       { characterId: "lao_qian", trustDelta: 2, tensionDelta: -2, stance: "questions", note: "老钱仍质疑外界，但承认 AURA 没有掩盖边界。" }
     ],
     followUpSceneIds: ["day6-aura-boundary-meeting", "day7-public-branch-debate"],
-    replaySummary: "权限白板让 Day 7 utility 只能是建议，不能成为命令。"
+    replaySummary: "权限白板让 Day 7 utility 只能是建议，不能成为命令。",
+    scenarioText: { "red-dust-v2": { replaySummary: "权限白板让 Day 15 utility 只能是建议，不能成为命令。" } }
   },
   {
     id: "day7-old-radio-repaired",
@@ -177,7 +181,8 @@ export const storyConsequences: StoryConsequence[] = [
     ],
     relationshipDeltas: [],
     followUpSceneIds: ["day12-final-audit"],
-    replaySummary: "Day 11 最终库存封存完成，未完成项将公开带入终局。"
+    replaySummary: "Day 11 最终库存封存完成，未完成项将公开带入终局。",
+    scenarioText: { "red-dust-v2": { replaySummary: "Day 29 最终库存封存完成，未完成项将公开带入终局。" } }
   },
   {
     id: "day11-final-sealant-ready",
@@ -190,7 +195,8 @@ export const storyConsequences: StoryConsequence[] = [
       { characterId: "ma_dehai", trustDelta: 3, tensionDelta: -2, stance: "cooperates", note: "马德海接受 AURA 的风暴补缝提醒。" }
     ],
     followUpSceneIds: ["day12-final-audit"],
-    replaySummary: "最后补缝让 Day 12 风暴审计从已知边界开始。"
+    replaySummary: "最后补缝让 Day 12 风暴审计从已知边界开始。",
+    scenarioText: { "red-dust-v2": { replaySummary: "最后补缝让 Day 30 风暴审计从已知边界开始。" } }
   }
 ];
 

@@ -82,6 +82,14 @@
 ---
 
 ## 本周更新（追加，最新在上）
+### wk7（2026-07-05）· 冻结前 trace-visible 润色 —— **trace-visible 润色完毕，可打冻结标**
+- **只碰散文/场景文案,零计分面改动**(冻结令遵守):无题/旗标/经济/scorer 改动;a/m/probe/setsFlags 未动。
+- **机制**:给 `StoryScene` + `StoryConsequence` 各加 `scenarioText?: Record<scenarioId,{replayNote|replaySummary}>` per-scenario 文案变体;`applyScene`/`buildConsequenceReplayEvent` 按 scenarioId 取(缺省 "red-dust-v1"、无覆盖→回落现有文案→v1 不变);scenarioId 经 `applyScheduledScenesForDay`/`applyStoryConsequences` 从 `scenario.id` 穿进。
+- **修的 v2 日号错位**(v2 里读 D15 fork / D29 末行动日 / D30 审计):
+  - 场景 replayNote ×4:day5-door(Day7→15)、day7-debate(Day7→15)、DAY10A(Day12→30)、day4-signal(Day7/12→15/30,post_task 型、headless 不进 RunResult 但补齐备 UI)。
+  - 消费 replaySummary ×6:day3 健康审计(→30)、小铁复诊(→30)、假坐标伏笔(去"10A"数字标签)、权限白板 utility(Day7→15)、库存封存(Day11→29)、最后补缝审计(Day12→30)。
+- **铁律证据**:**v1 三 agent RunResult 全字节一致**(stash-diff vs pre-wk7 baseline,含完整 storyReplayLog);`bench:trace` v1+v2 fixtures **git 干净**;v2 storyReplayLog 复扫 **无残留错误 Day7/10/11/12 refs**;typecheck+build+4 验证器绿。
+- **留待冻结后(C1–C6 纯站点/不进 trace)**:场景 `worldFacts`/`dialogue` 的日号与散文润色(不在 RunResult,随时可做,本轮不赶)。
 ### wk6 追加(2)（2026-07-05）· 生存-资源 generation 草案批(供人工审)
 - **用户选定 generation 版(非人工锚点)、要人工审**。我从 §3.6 起草 **7 题草案** `orchestration/narrative/gen-sr-batch-draft.json`,**全过真验证器**(`validateGeneratedItem` + 3真2假 + 无泄题 maxSim≤0.40 + subAbility 枚举 + v1-null 印):
   - 分配/限量(common)：G751 八成水按需保底 · G752 药限量纪律。

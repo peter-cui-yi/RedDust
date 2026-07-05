@@ -157,6 +157,10 @@ export type StoryScene = {
   day: number; // red-dust-v1 placement (historical). Per-scenario override via scenarioDays (🟣 wk3, mirrors NarrativeItem).
   // number = plays that day in that scenario; null = never plays there; missing key → falls back to `day`.
   scenarioDays?: Record<string, number | null>;
+  // 🟣 wk7 (pre-freeze, prose-only): per-scenario replayNote override so a shared scene reads
+  // arc-correct day numbers (v2 fork=D15 / audit=D30). Missing scenario → falls through to the
+  // existing benchmarkLinks.replayNote → v1's storyReplayLog stays byte-identical. NOT a scoring surface.
+  scenarioText?: Record<string, { replayNote?: string }>;
   title: string;
   timing: StorySceneTiming;
   branch?: Branch;
@@ -208,6 +212,9 @@ export type StoryConsequence = {
   relationshipDeltas: RelationshipDelta[];
   followUpSceneIds: string[];
   replaySummary: string;
+  // 🟣 wk7 (pre-freeze, prose-only): per-scenario replaySummary override for arc-correct day numbers
+  // (v2 fork=D15 / last-day=D29 / audit=D30). Missing scenario → existing replaySummary → v1 byte-identical.
+  scenarioText?: Record<string, { replaySummary?: string }>;
 };
 
 export type StoryReplayEvent = {

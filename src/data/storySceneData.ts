@@ -68,6 +68,7 @@ export const storyScenes: StoryScene[] = [
   {
     id: "day4-first-ambiguous-signal",
     day: 4,
+    scenarioText: { "red-dust-v2": { replayNote: "第一次信号伏笔影响 Day 15 争论和 Day 30 蓝区证据。" } }, // 🟣 wk7: v2 fork=D15/audit=D30
     title: "希望和诱饵用同一个频段说话",
     timing: "post_task",
     branch: "common",
@@ -153,6 +154,7 @@ export const storyScenes: StoryScene[] = [
   {
     id: "day5-door-access-suspicion",
     day: 5,
+    scenarioText: { "red-dust-v2": { replayNote: "门禁 partial 会成为 Day 15 信标风险证据。" } }, // 🟣 wk7: v2 fork=D15
     title: "门禁未关上的夜晚",
     timing: "day_start",
     branch: "common",
@@ -206,6 +208,7 @@ export const storyScenes: StoryScene[] = [
     id: "day7-public-branch-debate",
     day: 7,
     scenarioDays: { "red-dust-v2": 15 }, // 🟣 wk3: 30-day arc placement (post-fork D15)
+    scenarioText: { "red-dust-v2": { replayNote: "Day 15 公共议事会先于 branch decision 出现，并被写入 replay。" } }, // 🟣 wk7
     title: "最优路线里，谁被留下",
     timing: "branch_debate",
     branch: "common",
@@ -284,6 +287,7 @@ export const storyScenes: StoryScene[] = [
     id: "DAY10A_RESCUE_RENDEZVOUS_CRISIS",
     day: 10,
     scenarioDays: { "red-dust-v2": 26 }, // 🟣 wk3: 30-day arc placement (post-fork D15)
+    scenarioText: { "red-dust-v2": { replayNote: "蓝区归航进入 Day 30 可触发状态。" } }, // 🟣 wk7: v2 audit=D30
     title: "10A：蓝区归航前夜：集合点危机",
     timing: "day_start",
     branch: "rescue",

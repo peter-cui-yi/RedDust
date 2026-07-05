@@ -41,8 +41,11 @@ export function branchDebateSceneForDay(day: number, state: GlobalState) {
 // Pure form of App's continueFromStoryScene scene-commit: apply a scene's flag and
 // relationship effects and append a story replay event. The headless engine uses this to
 // reach narrative-gated flags without a UI pause.
-export function applyScene(state: GlobalState, scene: StoryScene, branch: Branch): GlobalState {
-  const replay = buildStoryReplayEvent(scene, scene.benchmarkLinks?.replayNote ?? scene.summary, { branch });
+export function applyScene(state: GlobalState, scene: StoryScene, branch: Branch, scenarioId = "red-dust-v1"): GlobalState {
+  // 🟣 wk7: per-scenario replayNote override (arc-correct day numbers). No override → existing replayNote →
+  // v1 storyReplayLog byte-identical. Prose only; scene setsFlags/relationships untouched.
+  const replayNote = scene.scenarioText?.[scenarioId]?.replayNote ?? scene.benchmarkLinks?.replayNote ?? scene.summary;
+  const replay = buildStoryReplayEvent(scene, replayNote, { branch });
   return {
     ...state,
     story: {
@@ -67,7 +70,7 @@ export function applyScheduledScenesForDay(
   for (const timing of ["day_start", "branch_debate"] as const) {
     const scene = sceneForDayAndTiming(day, timing, next, scenarioId);
     if (scene) {
-      next = applyScene(next, scene, branch);
+      next = applyScene(next, scene, branch, scenarioId);
       applied.push(scene);
     }
   }
