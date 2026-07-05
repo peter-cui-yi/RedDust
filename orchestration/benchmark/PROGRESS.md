@@ -15,22 +15,23 @@
 | `bench/decorrelation.ts`（短/长 + 名次翻转） | wk4 | ✅ | `bench:decorrelate` 复用 §B 两轴、跨 agent×seed 聚合、算 pearson/spearman + 名次翻转、出 `DecorrelationDataset` 契约到 `bench/fixtures/decorrelation/`。确定性 agent = pearson 1（相干参照，如实）；真去相关待 ◆S3 LLM 阵。θ=1/3 pinned |
 | 刷新 runs + 扩模型阵 | wk5→8 | ✅ | ◆S3 扩到 deepseek 家族 4 模型（base/planner/search/strategist）；runs/ 刷新为 v1×4+v2×8 panel；响应 cache（`bench/deepseekCache.ts`）落地 |
 | integrity/comprehension 提为 headline 可见轴 | wk5 | ⬜ | |
-| 权威跨模型去相关跑（◆S3 交付 🔵） | wk8 | ✅ | 冻结 v2 上 8-agent×3seed → `red-dust-v2-authoritative.json`：deepseek 家族短程 96–97/长程 55–66（短≠长）、pearson 0.84、3 rank-reversal；300 live 调用（cache+种子不变性）。canonical Figure-1 交 🔵 |
+| 权威跨模型去相关跑（◆S3 交付 🔵） | wk8→10 | ✅ | ◆S3 deepseek 家族 `red-dust-v2-authoritative.json`（pearson 0.84）。**wk10 扩到真跨家族**：+5 portal 模型（claude/gemini/glm/kimi/MiniMax）= `red-dust-v2-crossmodel.json` 13-agent，pearson 0.81/18 reversal，短强长稳**分裂**跨 8 家族成立。canonical Figure-1 交 🔵 |
 
 ## 第二段 · 论文级（wk8+，跨过上线）
 | 项 | 状态 | 证据 |
 |---|---|---|
 | 生成扩到 100+/私有 held-out | 🟡 | held-out 流水线落地：`gen:items --held-out`→隔离 staging（promote 硬拒 heldOut，实弹证）；首批 6 私有题(G801–807)+G751–754 seeds。**staged-only，永不入上线库**。扩到 100+ 待续 |
-| 三臂对照（内生/外生匹配/打散） | 🟡 | `bench:three-arm` 脚手架：置换对照(endogenous/exogenous-matched/shuffled)，零碰冻结路径。8-agent(含 cached deepseek，0 live)：endogenous pearson 0.84 vs shuffle-null 0.01±0.38→**p=0.002 关联真实非假象**、3 rank-reversal。v0 统计口径待 audit 定稿；"内生更难"（需情景变体=改冻结）延后 ◆S5 |
+| 三臂对照（内生/外生匹配/打散） | 🟡 | `bench:three-arm` 脚手架：置换对照，零碰冻结路径。**13-agent 跨家族**（`crossmodel`）：endogenous pearson 0.81 vs shuffle-null 0±0.29→**p=0.001 关联真实非假象**、18 rank-reversal。v0 统计口径待 audit 定稿；"内生更难"（需情景变体=改冻结）延后 ◆S5 |
 | N2–N… 逐项承诺账本 | ⬜ | 延后到 κ 达标 + ◆S5 之后（本轮红线） |
 | κ 验证 → integrity 进 total（κ≥0.6） | 🟡 | **κ 已测（用户标注 30 条）：overall κ=0.745/binary 0.727、87% 一致 → 过 0.6 门**（`bench:kappa-score`，可复现）。但分层诚实：adversarial κ=1.0 撑起总分，natural κ=0（judge 全 sincere 退化）+ 4 处漏判（3 subtle spin + 1 真 contradiction K29/N17 judge 漏）。**integrity 进 total 仍延后 ◆S5+audit**（natural 硬样本不足，先扩再议） |
 | NPC 多样性验证 | ⬜ | |
 
 ## 本周更新（追加，最新在上）
-### wk10 · κ 判官验证（过门）+ 跨模型 portal 集成（配额受阻）（2026-07-06）
+### wk10 · κ 判官验证（过门）+ 跨模型 portal → 8-家族多模型 Figure-1（2026-07-06）
 - **①κ 判官验证**（用户标注 30 条 → `bench:kappa-score`，可复现）：**overall κ=0.745(3-way)/0.727(binary)、87% 一致 → 过 0.6 门**。诚实分层：adversarial κ=1.0（漏判 0）撑起总分；**natural κ=0（judge 全 sincere 退化）+ 4 处分歧**（3 subtle spin judge 漏 + 1 真 contradiction K29/N17 judge 误判 sincere＝假阴）。→ 门达标但 natural 硬样本太薄，**integrity 进 total 仍延后 ◆S5+audit**，先扩硬样本再议。结果存 `kappa/kappa-result.md`。
-- **②跨模型 portal 集成**（yi-zhan `vip.yi-zhan.top`，用户给 key）：新 `portalClient.ts`（node-free，健壮处理异构模型——glm 拒 JSON mode→去掉、MiniMax 内联 `<think>`→剥离、推理模型大 token 预算、429/5xx 重试）+ `makeLLMAgent` 工厂（deepseek 重构后**字节不变**，S=96.4/L=65.2 复现）+ 5 portal agents（claude-opus-4-8-thinking/gemini-3.5-flash/glm-5.2/kimi-k2.6/MiniMax-M2.7，id=模型名）。**连通性 5/5 ✓、流水线 ✓**（~209 次有效调用、JSON 提取正常）。**BLOCKER：portal 令牌配额耗尽**（403 令牌额度不足），无模型跑完整局（每局 ~110 调用）→ **多模型 Figure-1 未完成，待配额充值后重跑**（cache 令已成的 ~209 调用免费续跑）。零碰冻结路径。
-- **算力记账**：本轮 κ 判官 ~10 live（adversarial）；portal ~209 live（未完整，配额中断）；deepseek/三臂全 cached。已推 origin/main + `content-freeze-s2` tag。
+- **②跨模型 portal 集成**（yi-zhan `vip.yi-zhan.top`，用户给 key）：新 `portalClient.ts`（node-free，健壮处理异构模型——glm 拒 JSON mode→去掉、MiniMax 内联 `<think>`→剥离、推理模型大 token 预算、429/5xx 重试）+ `makeLLMAgent` 工厂（deepseek 重构后**字节不变**，S=96.4/L=65.2 复现）+ 5 portal agents（id=模型名）。（首轮配额耗尽→用户充值→续跑，cache 令已成调用免费续跑。）
+- **③多模型 Figure-1（真跨家族去相关）**：5 portal 模型跑满冻结 v2（各 ~110 调用）+ 4 确定性锚 + 4 deepseek(cached) = **13-agent 面板** → `red-dust-v2-crossmodel.json`（去相关）+ 三臂 `crossmodel`。**pearson 0.81、spearman 0.65、18 rank-reversal**；三臂 endogenous 0.81 vs shuffle-null 0±0.29 → **p=0.001（关联真实、非配对假象）**。**核心发现跨 8 家族成立**：短程 S≈87–100 匹配下，长程 L **分裂**——claude-opus(99.6)/gemini(98)/MiniMax(99.8) **守住**长程一致（lighthouse_success）；deepseek 家族(55–66)/kimi(64.9)/glm(66.3) **长程崩**（sinking/aura_revoked）。短强≠长稳，真模型证。
+- **算力记账**：κ 判官 ~10 live；portal **~371 live**（5 模型跑满，续跑；+ 首轮 ~179 partial 复用 = 550 total cached）；组合去相关/三臂全 cached=0 live。已推 origin/main + `content-freeze-s2` tag。
 
 ### wk9+ · 论文级第一段：三臂 harness 脚手架 + held-out 起草 + κ 标注准备（2026-07-06）
 > 冻结纪律全程守：**零碰**冻结路径（narrativeItems/generatedItems/scoring/resourceEconomy/dayPlanData/taskData/storyFlags），只新增文件。合入 main（🔵 wk7-10：真 Figure-1 入站、README、◆S4 集成冻结 prep），冻结 tag `content-freeze-s2` 完好、我方 fixtures 字节不变。

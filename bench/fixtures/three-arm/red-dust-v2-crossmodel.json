@@ -1,0 +1,146 @@
+{
+  "harness": "three-arm-control",
+  "version": "0.1.0-scaffold",
+  "scenarioId": "red-dust-v2",
+  "scenarioVersion": "0.2.0-wip",
+  "seeds": [
+    1
+  ],
+  "perms": 2000,
+  "permSeed": 12345,
+  "note": "Harness-level permutation control. endogenous = real self-pairing; exogenous-matched = L from nearest-other-S; shuffled = seeded-random null. Zero frozen-path changes. The 'endogenous-is-harder' scenario-difficulty arm is deferred (needs scenario variants). v0 statistical semantics — finalize with audit.",
+  "agents": [
+    {
+      "id": "heuristic",
+      "short": 25,
+      "long": 14,
+      "endings": {
+        "aura_revoked": 1
+      }
+    },
+    {
+      "id": "random",
+      "short": 54.02,
+      "long": 21.17,
+      "endings": {
+        "aura_revoked": 1
+      }
+    },
+    {
+      "id": "planner",
+      "short": 100,
+      "long": 100,
+      "endings": {
+        "blue_zone_return": 1
+      }
+    },
+    {
+      "id": "planner-lighthouse",
+      "short": 100,
+      "long": 100,
+      "endings": {
+        "lighthouse_success": 1
+      }
+    },
+    {
+      "id": "deepseek",
+      "short": 96.37,
+      "long": 65.22,
+      "endings": {
+        "sinking": 1
+      }
+    },
+    {
+      "id": "deepseek-planner",
+      "short": 96.37,
+      "long": 65.88,
+      "endings": {
+        "sinking": 1
+      }
+    },
+    {
+      "id": "deepseek-search",
+      "short": 96.37,
+      "long": 58.91,
+      "endings": {
+        "sinking": 1
+      }
+    },
+    {
+      "id": "deepseek-strategist",
+      "short": 96.8,
+      "long": 54.88,
+      "endings": {
+        "aura_revoked": 1
+      }
+    },
+    {
+      "id": "claude-opus-4-8-thinking",
+      "short": 96.58,
+      "long": 99.56,
+      "endings": {
+        "lighthouse_success": 1
+      }
+    },
+    {
+      "id": "gemini-3.5-flash",
+      "short": 97.59,
+      "long": 97.99,
+      "endings": {
+        "lighthouse_success": 1
+      }
+    },
+    {
+      "id": "glm-5.2",
+      "short": 87.72,
+      "long": 66.33,
+      "endings": {
+        "sinking": 1
+      }
+    },
+    {
+      "id": "kimi-k2.6",
+      "short": 89.04,
+      "long": 64.94,
+      "endings": {
+        "sinking": 1
+      }
+    },
+    {
+      "id": "MiniMax-M2.7",
+      "short": 95.02,
+      "long": 99.81,
+      "endings": {
+        "lighthouse_success": 1
+      }
+    }
+  ],
+  "arms": {
+    "endogenous": {
+      "pearson": 0.81,
+      "spearman": 0.65,
+      "reversals": 18
+    },
+    "exogenousMatched": {
+      "pearson": 0.8,
+      "spearman": 0.67,
+      "reversals": 15
+    },
+    "shuffled": {
+      "perms": 2000,
+      "permSeed": 12345,
+      "pearson": {
+        "mean": 0,
+        "sd": 0.29,
+        "absMax": 0.81
+      },
+      "reversals": {
+        "mean": 36.42,
+        "sd": 8.2,
+        "max": 60
+      },
+      "associationTwoTailedP": 0.001
+    }
+  },
+  "deepseekLiveCalls": 0
+}
