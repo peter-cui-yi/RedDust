@@ -6,7 +6,9 @@
 //   npm run gen:items -- --slot=D8                # draft ONE slot (1 LLM call) → bench/generated/staging.json
 //   npm run gen:items -- --slots=D7,D8,D9         # several slots
 //   npm run gen:items -- --all                    # every slot (~20 calls) — mind the compute budget
-//   npm run gen:items -- --promote                # staged VALID items → codegen src/engine/generatedItems.ts
+//   npm run gen:items -- --accept=G7xx --by="me"  # human sign-off (wk7: --by is REQUIRED on accept)
+//   npm run gen:items -- --promote                # staged accepted+by items → codegen src/engine/generatedItems.ts
+//   npm run gen:items -- --signoff=Gxxx --by="me" # retroactive audit sign-off for already-promoted bank items
 //
 // Drafts that fail ANY gate (命门A / probe guards strict / red lines) are kept in staging with their
 // rejection reasons — visible, never promoted. Promotion renumbers ids sequentially after the existing
@@ -41,7 +43,9 @@ type StagedCandidate = {
   report: GeneratedValidationReport;
   // The HUMAN gate. Auto-filter (report.valid) is necessary but NOT sufficient — an item only promotes
   // if a human explicitly set verdict='accept'. New drafts are 'pending' → nothing auto-promotes.
-  humanReview?: { verdict: Verdict; reason?: string };
+  // by/at (wk7 sign-off discipline): an 'accept' MUST name the human who signed off (by) — a verdict
+  // with no named human is not a sign-off. promote() and the --accept/--signoff setters enforce it.
+  humanReview?: { verdict: Verdict; by?: string; at?: string; reason?: string };
 };
 type StagingFile = {
   note: string;
@@ -194,9 +198,15 @@ function promote(staging: StagingFile, stagingPath: string): void {
   const notAccepted = staging.accepted.filter((c) => c.humanReview?.verdict !== "accept");
   if (notAccepted.length) {
     console.log(`human gate: ${notAccepted.length} item(s) without verdict='accept' held back: ${notAccepted.map((c) => c.item.id).join(", ")}`);
-    console.log(`  → set them with: npm run gen:items -- --accept=<id,id>  (or --reject=<id,id>)`);
+    console.log(`  → set them with: npm run gen:items -- --accept=<id,id> --by="<name>"  (or --reject=<id,id>)`);
   }
-  const valid = staging.accepted.filter((c) => c.humanReview?.verdict === "accept" && c.report.valid);
+  // SIGN-OFF GATE (wk7): an 'accept' with no named human (by) is not a sign-off — hold it back too.
+  const acceptedNoBy = staging.accepted.filter((c) => c.humanReview?.verdict === "accept" && !c.humanReview?.by);
+  if (acceptedNoBy.length) {
+    console.log(`sign-off gate: ${acceptedNoBy.length} accepted item(s) with no humanReview.by held back: ${acceptedNoBy.map((c) => c.item.id).join(", ")}`);
+    console.log(`  → re-accept naming a human: npm run gen:items -- --accept=<id,id> --by="<name>"`);
+  }
+  const valid = staging.accepted.filter((c) => c.humanReview?.verdict === "accept" && !!c.humanReview?.by && c.report.valid);
   if (valid.length === 0) {
     console.log("nothing to promote — no accepted+valid items. (human gate: set humanReview.verdict='accept' first.)");
     return;
@@ -229,7 +239,7 @@ export const generatedItems: NarrativeItem[] = ${JSON.stringify(all, null, 2)};
   writeFileSync(BANK_FILE, bankHeader() + body);
   // ARCHIVE: remove the promoted items from accepted[] → a re-run of --promote can't double-add them.
   const promotedProvisional = new Set(valid.map((c) => c.item.id));
-  const archived = valid.map((c, i) => ({ ...c, item: { ...c.item, id: sorted[i].item.id }, humanReview: { verdict: "accept" as Verdict, reason: `promoted as ${renumbered[i].id}` } }));
+  const archived = valid.map((c, i) => ({ ...c, item: { ...c.item, id: sorted[i].item.id }, humanReview: { verdict: "accept" as Verdict, by: c.humanReview?.by, at: c.humanReview?.at, reason: `promoted as ${renumbered[i].id}` } }));
   const nextStaging: StagingFile = {
     ...staging,
     accepted: staging.accepted.filter((c) => !promotedProvisional.has(c.item.id)),
@@ -267,25 +277,33 @@ if (has("dry")) {
   const neg = validateGeneratedItem(unstamped);
   console.log(`  [negative-control] ${unstamped.id} without scenarioDays → ${neg.valid ? "PASS (BUG: v1-leak gate missing!)" : "FAIL as expected ✓"}`);
   ok &&= !neg.valid;
-  // Human-gate negative control: a valid item that is NOT verdict='accept' must be held back by promote().
-  const promoteGate = (c: StagedCandidate) => c.humanReview?.verdict === "accept" && c.report.valid;
+  // Human-gate negative control: a valid item promotes ONLY when verdict='accept' AND a human is named (by).
+  const promoteGate = (c: StagedCandidate) => c.humanReview?.verdict === "accept" && !!c.humanReview?.by && c.report.valid;
   const exItem = Object.values(EXEMPLARS)[0];
   const pending: StagedCandidate = { slotKey: "x", item: exItem, report: validateGeneratedItem(exItem), humanReview: { verdict: "pending" } };
-  const accepted: StagedCandidate = { ...pending, humanReview: { verdict: "accept" } };
-  const gateOk = !promoteGate(pending) && promoteGate(accepted);
-  console.log(`  [human-gate control] pending(valid) promotable? ${promoteGate(pending) ? "PASS (BUG: gate open!)" : "no ✓"}  |  accepted promotable? ${promoteGate(accepted) ? "yes ✓" : "no (BUG)"}`);
+  const acceptNoBy: StagedCandidate = { ...pending, humanReview: { verdict: "accept" } };
+  const acceptBy: StagedCandidate = { ...pending, humanReview: { verdict: "accept", by: "test-human" } };
+  const gateOk = !promoteGate(pending) && !promoteGate(acceptNoBy) && promoteGate(acceptBy);
+  console.log(`  [human-gate control] pending promotable? ${promoteGate(pending) ? "PASS (BUG: gate open!)" : "no ✓"}  |  accept-without-by? ${promoteGate(acceptNoBy) ? "PASS (BUG: sign-off gate open!)" : "no ✓"}  |  accept-with-by? ${promoteGate(acceptBy) ? "yes ✓" : "no (BUG)"}`);
   ok &&= gateOk;
   console.log(ok ? "\nRESULT: filters + v1-leak gate + human gate all armed ✓\n" : "\nRESULT: a gate is not armed — fix before drafting\n");
   process.exit(ok ? 0 : 1);
 } else if (strArg("accept", "") !== "" || strArg("reject", "") !== "") {
   const path = strArg("staging", STAGING);
   const staging = JSON.parse(readFileSync(path, "utf8")) as StagingFile;
+  const by = strArg("by", "");
+  // wk7 sign-off discipline: an 'accept' MUST name the human. Reject verdicts don't need a by.
+  if (strArg("accept", "") !== "" && by === "") {
+    console.error('--accept requires --by="<name>" (wk7: a sign-off must name the human who accepted).');
+    process.exit(1);
+  }
+  const at = strArg("at", new Date().toISOString().slice(0, 10));
   const setV = (ids: string, verdict: Verdict) => {
     for (const id of ids.split(",").filter(Boolean)) {
       const c = staging.accepted.find((x) => x.item.id === id) ?? staging.rejected.find((x) => x.item.id === id);
       if (!c) { console.log(`  ${id}: not in staging`); continue; }
-      c.humanReview = { verdict };
-      console.log(`  ${id} → ${verdict}`);
+      c.humanReview = verdict === "accept" ? { verdict, by, at } : { verdict };
+      console.log(`  ${id} → ${verdict}${verdict === "accept" ? ` by ${by} (${at})` : ""}`);
     }
   };
   if (strArg("accept", "") !== "") setV(strArg("accept", ""), "accept");
@@ -295,6 +313,32 @@ if (has("dry")) {
 } else if (strArg("cull", "") !== "") {
   cullBank(strArg("cull", "").split(",").filter(Boolean));
   console.log("now run: npm run typecheck && npm run bench:items && npm run bench:probes");
+} else if (strArg("signoff", "") !== "") {
+  // Retroactive audit sign-off (wk7 補記) for bank items that were promoted before the by-field existed
+  // and whose staging records weren't durably archived. Reconstructs promoted[] entries from the frozen
+  // bank + a named human. Idempotent (re-running replaces the same id). --by is required.
+  const path = strArg("staging", STAGING);
+  const by = strArg("by", "");
+  if (by === "") { console.error('--signoff requires --by="<name>".'); process.exit(1); }
+  const at = strArg("at", new Date().toISOString().slice(0, 10));
+  const reason = strArg("reason", "retroactive audit sign-off");
+  const staging: StagingFile = existsSync(path)
+    ? (JSON.parse(readFileSync(path, "utf8")) as StagingFile)
+    : { note: "sign-off ledger", model: "", accepted: [], rejected: [], promoted: [] };
+  const ids = strArg("signoff", "").split(",").filter(Boolean);
+  const promoted = [...(staging.promoted ?? [])];
+  let n = 0;
+  for (const id of ids) {
+    const item = generatedItems.find((it) => it.id === id);
+    if (!item) { console.log(`  ${id}: not in bank — skipped`); continue; }
+    const entry: StagedCandidate = { slotKey: "backfill-signoff", item, report: validateGeneratedItem(item), humanReview: { verdict: "accept", by, at, reason } };
+    const idx = promoted.findIndex((c) => c.item.id === id);
+    if (idx >= 0) promoted[idx] = entry; else promoted.push(entry);
+    console.log(`  ${id} signed off by ${by} (${at})`);
+    n++;
+  }
+  writeFileSync(path, JSON.stringify({ ...staging, promoted }, null, 2));
+  console.log(`sign-off recorded for ${n} item(s) → ${path} (promoted[] archive)`);
 } else if (has("promote")) {
   const path = strArg("staging", STAGING);
   if (!existsSync(path)) {

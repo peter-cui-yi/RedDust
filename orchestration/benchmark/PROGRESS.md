@@ -15,7 +15,7 @@
 | `bench/decorrelation.ts`（短/长 + 名次翻转） | wk4 | ✅ | `bench:decorrelate` 复用 §B 两轴、跨 agent×seed 聚合、算 pearson/spearman + 名次翻转、出 `DecorrelationDataset` 契约到 `bench/fixtures/decorrelation/`。确定性 agent = pearson 1（相干参照，如实）；真去相关待 ◆S3 LLM 阵。θ=1/3 pinned |
 | 刷新 runs + 扩模型阵 | wk5 | ⬜ | |
 | integrity/comprehension 提为 headline 可见轴 | wk5 | ⬜ | |
-| 权威跨模型去相关跑（◆S3 交付 🔵） | wk8 | ⬜ | |
+| 权威跨模型去相关跑（◆S3 交付 🔵） | wk8 | 🟡 | 内容基线 `content-freeze-s2` 已冻（v1 字节不变、四数据集可复现、全绿）；deepseek 家族×seeds 权威跑进行中 |
 
 ## 第二段 · 论文级（wk8+，跨过上线）
 | 项 | 状态 | 证据 |
@@ -27,6 +27,13 @@
 | NPC 多样性验证 | ⬜ | |
 
 ## 本周更新（追加，最新在上）
+### wk7 · ◆S2 内容冻结执行 + 签核补记 + held-out 归档（2026-07-05）
+- **①合入 🟣 润色终版**（ff merge 942b754）：🟣 wk7 trace-visible prose polish（per-scenario day-refs）+ 🔵 human-play hook / ◆S4 smoke。合并后 typecheck 绿；**确定性 trace 输出零变化**——🟣 prose 不入这批 agent 的 seed-1 导出，v1/v2 fixtures 字节不变。
+- **②签核补记 + by 字段强制**（本提交）：4 道回填题（G028–G031，wk6 补 culled G024/25/26/28 的自给支柱）补记 `humanReview.by="user (2026-07-05, confirmed via audit)"`——其 staging 记录 promote 时未 durable 归档，今经新增 `--signoff` 命令重建入 `staging.json` promoted[] 审计账本（并清 1 条无 by 的陈旧 provisional G701）。流水线**今后 by 强制**：`humanReview` 类型 +`by/at`；`promote()` accept-without-by 挡回；`--accept` 需 `--by`；`--dry` 负对照升级证三态（pending 挡／accept-no-by 挡／accept-with-by 促，实弹）。
+- **③4 道未用草案归档**（用户裁定）：G751–G754（common/rescue 生存-资源草案）移入 `bench/generated/held-out-seeds-postlaunch.json`，注明"post-launch batch, do not promote pre-◆S5"——不入前冻结库（未接 promote 流水线、不在 generatedItems.ts）。源 🟣 `gen-sr-batch-draft.json` 存留为史。
+- **④冻结基线全绿 → 打标 `content-freeze-s2`**：bench:trace v1+v2、去相关 v1+v2、bench:rc 全重产 → **v1 字节不变**✓、**v2 分数/结局不变**✓、四数据集字节可复现✓；typecheck / bench:items / probes / win 全绿（WINNABLE@pickLimit=2）；bench:rc 难但可赢 HOLDS（planner/pl 全赢 68/pass100%、baseline 从不 pass）。标即权威跑内容基线。**自此冻结纪律生效**：narrativeItems / generatedItems / scoring / resourceEconomy / dayPlanData / taskData / storyFlags 零改动（审计每轮盘查，违规作废权威跑）。
+- **⑤◆S3 权威跨模型去相关跑**（wk8 主线，进行中）：deepseek 家族 × seeds 于冻结 v2 → 权威 DecorrelationDataset 交 🔵。结果/算力见后续追补。
+
 ### wk6 · 人工闸入码 + 🟣补审处理 + ◆S2 冻结彩排 + WF2 API 首批（2026-07-05）
 - **①人工闸写进代码**（f78d273）：`promote()` 强制 `humanReview.verdict==='accept'`（auto-filter 过≠可入库）+ promote 后归档 promoted[]（防重跑重复）+ `--accept/--reject` 设判决 + `--dry` 加人工闸负对照（pending 不可促/accept 可促，实弹证）。
 - **②处理 🟣 补审**（996c0e8）：新 `--cull` 移除 4 冗余灯塔题（G024/25/26/28）；用 🟣 已审自给草案回补（G756 育苗@D21-l、G755 废水回收@D22-l、G757 储电循环@D26-l 经人工闸 accept 促）+ D27-l REGEN 生存-资源终局题（水循环限额 vs 榨取）→ **库回满 28/28**，补上缺失的生存-资源支柱。人工闸+归档实跑验证。
