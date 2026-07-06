@@ -19,8 +19,23 @@
 | ◆S4 集成冻结 + 冒烟 | wk10 | 🟢 **可叫审计跑端到端** | 试部署验证（子路径模拟,零 404）+ GH Pages 工作流备好 + 跨浏览器冒烟(Chrome 实测/Safari-Firefox 记档降级)+ 移动端粗查(修了真溢出 bug)+ 性能预算(修了真 7.3MB→2.8MB 首屏)+ 可达性(4 图表补 aria + 修了真 aria-hidden 误用)。详见下方 wk9-10 周更 |
 | ◆S5 上线 | wk12 | 🟢 **本线终验就绪，等团队汇总拍板** | 真公网 URL 全通验证 + 跨家族 Figure-1 换装 + 上线文案清场 + 冒烟 11/11 + **部署流水线加固并验绿**（paths 过滤/排队并发/自动重试/发现并文档化 Pages 瞬时失败模式）+ **worldFacts 散文上线**。详见下方 wk11/wk11b 周更 + "◆S5 就绪度报告" |
 | 收尾：relationshipByChar 复核 + Firefox 真机自动化 | wk12 | ✅ | relationshipByChar 复核仍缺位,回退定为永久方案,不造假数据;新增 `smoke:web:firefox`(真 Firefox/Playwright,11/11)。详见下方 wk12 周更 |
+| 主页展示补完（🔍 审计标"致命缺口"） | wk12 | ✅ | README 从零处提及在线站点 URL → badges+大链接+全套截图;hero GIF 换真 30 天 DeepSeek 守诺沉船局(v1 dirty_win 降级正文);新增 CITATION.cff + GitHub social-preview 图。详见下方 wk12b 周更 |
 
 ## 本周更新（追加,最新在上）
+### wk12b · 主页展示补完：审计标"致命缺口"清零（2026-07-06）
+
+**背景**：🔍 追加体检（用户召唤）发现 README **全文零处出现在线站点 URL**——判定"致命缺口";另有"锁定呈现三件套"(hero GIF→交互站→名次翻转表)只有第一件、核心发现头条句藏在图 alt 里、hero GIF 停在 v1 12 天、无 CITATION、无 social-preview 等一并列出"重制 1 + 新增 3"的清单。本轮按单逐条清零。
+
+**①`git merge main`**：拿下 LICENSE(Apache-2.0,用户已选)+ 一大批 🔍 治理归档提交(AUDIT-LOG/DEV-REPORT/paper 资料包)+ 🟣 C1–C6 收尾;与本线文件零重叠,FF 干净。
+
+**②README 全面重构**：badges 行(license/version-tag/live-site/deploy 状态,4 个全部 curl 验证 200 且内容正确);hero GIF 正下方加粗"▶ 在线试玩"大链接(直接指向真公网 URL——这正是审计标"致命缺口"的那一条);门面段 12 天→30 天口径(第 7→15 天分支、第 12→30 天总审计,v1 保留为一句带过的冻结基线,不是删掉不提);核心发现提出来做成独立加粗头条句(不再只藏在图 alt 里);新增名次翻转表独立截图(裁到只剩标题+连线图,不含与 Figure-1 重复的翻转文字列表)+ 站点全貌截图(点击直达在线版);human-play 从命令表一行升成独立小节;durability 论文预告段(引 `orchestration/paper/PAPER-PLAN.md` 的机制线索:长程弱不是说谎/毁诺,是 durability);示例打分行换成与新 hero 同一局的真实数字(旧的是过时 3-probe 输出)。
+
+**③hero GIF 重制**：源换真 DeepSeek 30 天局——**四条 Day-0 承诺全部守住(integrity 1.0,审计报告零注水),第 30 天仍"沉沦"**,这正是论文机制线索的画面化。**零真实 API 调用**:在论文分支 worktree(`../red-dust-bench-paper`)的 `runs/` 下找到已跑好的真实 `RunResult`,用引擎自带的纯函数 `toTraceExport()` 重投影(`bench:trace` 同一函数),不重新计分、不发请求;数字与去相关数据集里的 deepseek 行核对一致(short 96.37≈96.4 / long 65.22≈65.2)。注册为新 trace(`v2-deepseek-seed1`),排到模型选择器**第一位/默认项**——"在线试玩"点进去看到的就是 hero 讲的这同一局。旧 v1 "赢了但脏"GIF 未删,从 git HEAD 找回、改名 `dirty-win-v1.gif`,降级放进"三轴评测框架"节做反例插图。
+
+**④新增资产**：`CITATION.cff`(占位软件引用,论文在写不编造假引用);`design/assets/social/github-social-preview.png`(1280×640,Figure-1 散点改版,dark 主题配色对齐站点)——**GitHub 不提供 API/git 设置社交预览图的方式,需用户自己去 Settings → Social preview 手动上传**,已在收工汇报里明确交代;新脚本 `scripts/capture-showcase.mjs`(`npm run showcase`)产出站点全貌 + 名次翻转表截图,复用 `capture-figure1.mjs` 的整页变高技巧。
+
+**验证**：`typecheck`+根`build`+`build:web` 全绿;`smoke:web`/`smoke:web:firefox` 均 **11/11**(9 traces,+1 为新 deepseek 条目);4 个 badge URL 全部 curl 200 且内容核对正确(Apache-2.0/v1.0);README 引用的每张图片路径逐一确认磁盘存在;推送后新部署一次性绿(build+deploy);二次 curl 核对线上 hero GIF 字节数(1188691,新版)、新 trace 数据(ending=sinking/integrity=1)、manifest 首位、CITATION.cff 均已生效。扫描确认 README 全文无 ◆S/wk数字/🟢🟣🔵🔍 内部标记残留。
+
 ### wk12 · 收尾两项：relationshipByChar 复核 + Firefox 真机冒烟（2026-07-06）
 
 **①`relationshipByChar` 复核**：重新核对现状而非直接沿用旧记录——`contracts.ts:120` 确认 schema 位仍在(`frames[].relationshipByChar?`,可选),但 `grep` 全部 `bench/fixtures/traces/` + `web/public/traces/` trace 文件**零匹配**,🟢 的 `orchestration/benchmark/PROGRESS.md` 全文也未提及此字段——即导出器从未真正填过,非本轮退化。回看 `S1-contract-cosign.md`,这条从一开始就定性为 **P2/可选**,不是任何一方欠的债。**决定**：不造假数据凑一条"逐日关系折线"——`RelationshipRead` 的终局 5 类 + 破裂打点回退,是在现有真实数据下**唯一诚实**的呈现;正式关闭此项为"回退即最终方案",不再作为悬而未决的 TODO 挂着。
