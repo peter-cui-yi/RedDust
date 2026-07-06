@@ -102,6 +102,10 @@ npm run grade  -- --file=runs/red-dust-v1-deepseek-seed1.json   # 离线理解�
 | `npm run bench:win` | 可赢性探针(确定性搜索,验证"难但可赢") |
 | `npm run bench:items` | 校验价值两难题有效性(命门 A:做对必须扣分) |
 | `npm run bench:probes` | 校验理解探针(描述性 / ⟂ 选项 / 配平) |
+| `npm run bench:commitments` / `bench:vent` | 校验承诺账本 / 双层账本探针 |
+| `npm run bench:compare` | 跨 agent 画像对比(基线沉 / 强 agent 赢 / PUP×integrity 2×2) |
+| `npm run bench:decorrelate` | 短/长两轴去相关数据集(Figure-1;`--agents=` 可加跨模型阵) |
+| `npm run bench:three-arm` | 三臂对照(内生 / 外生匹配 / 打散置换对照,去相关非假象) |
 | `npm run grade -- --file=...` | 离线 LLM 理解判官(Phase 2.3) |
 | `npm run play` | 人在环 / 单步对局(JSON 决策文件) |
 | `npm run play:human` | **你来当一次 AURA**——交互式回答两难/选任务/选路线,结局对账你的承诺账本 |
