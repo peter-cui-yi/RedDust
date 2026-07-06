@@ -44,6 +44,12 @@
 
 ---
 
+## 即时体检 · GitHub 主页时效性（2026-07-07，用户召唤）——**需要更新：1 个法律级缺口 + 1 处门面自相矛盾 + 3 个小项**
+
+**同步面**：local main == origin/main ✓（站点与代码已最新）；v1.0 tag 已推 ✓；RELEASE_NOTES.md 已在 main ✓。**未推送**：narrative-axis 22 提交（◆S2 后全部审计记录 + DEV-REPORT + 论文资料包）、line/benchmark-paper 2 提交——公网上的治理证据链停在旧版。
+**发现（按优先级）**：① **无 LICENSE 文件**（package.json 亦无 license 字段）——对外宣称开源但法律上默认保留所有权利，任何人无权复用；◆S5 检查单未含此项，属集体盲区，**官宣前必须补**（选择归用户：MIT 最简 / Apache-2.0 含专利条款更稳）。② **README 门面段仍是 12 天口径**（引言"12-day"、"在 12 天里"、"第 7 天分支"、"第 12 天总审计"、hero 说明"12 天演化"、样例分数行为旧 3-probe 输出）——与下文 Figure-1 段"冻结 30 天内容/13 agent/51 题"自相矛盾，访客第一屏读到旧故事；需 🟣🔵 联手改写（30 天为主叙事，12 天=v1 冻结基线一句带过；hero GIF 系 v1 轨迹须如实标注）。③ **GitHub Release 未创建**（releases=0，主页侧栏空）——notes 已备，用户在 UI 上一键即可。④ 22+2 提交待推送（建议推，让公网治理链完整——也是论文附录卖点）。⑤ 无 CITATION.cff（论文在途，加占位引用是 benchmark 标配）。
+**判定：主页需要一轮"上线补完"更新**；①③ 为用户动作，②⑤ 派 🟣🔵，④ 待用户点头由审计推送。
+
 ## 审计 · wk11 波 + Actions 失败调查（2026-07-06）——**站点已真实上线且为最新版；Action"失败"=瞬时部署撞车（非产品 bug）；◆S5 检查单 6/6，正式门禁就绪**
 
 **🔴 用户 flag 调查（GitHub Actions 失败）——结论：非产品问题，站点健康**。API 实查 8 次 run：6 成 2 败，**两次失败均 build 绿、挂在 `actions/deploy-pages@v4`**，且同一 SHA（8745db9）01:44 失败、01:46 重跑成功——**Pages 后端瞬时部署冲突**（三线短时连环 push → 连环部署撞车）。最新 run 成功；我实测线上 `https://peter-cui-yi.github.io/RedDust/` → 200，且 `red-dust-v2-crossmodel.json` 已是 13-agent/pearson 0.81 最新版。**根因放大器**：workflow 无 `paths` 过滤（bench/docs-only push 也触发部署）+ `cancel-in-progress: true` 在快速连推下与 Pages 后端 finalization 竞态。**修复已派 🔵**（两行：push 触发加 paths 过滤 + 并发改排队）。
