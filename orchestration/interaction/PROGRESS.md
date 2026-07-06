@@ -12,14 +12,24 @@
 | Stage 1b 时间轴 scrub + 逐日面板 | wk3 | ✅ | scrub 滑块 + 逐日 `TraceDayFrame` 摘要面板（提前落地） |
 | Stage 2a 去相关散点 + 名次翻转表（占位数据） | wk4 | ✅ | **提前到 wk2**：Plot 去相关散点（Pearson 0.02）+ SVG 双列名次翻转表（连线交叉=翻转，守不刷分）；占位 `DecorrelationDataset`；`2c3f0c5` |
 | Stage 1c hero 时刻标记 + GIF 导出 | wk5 | ✅ | **提前到 wk3**：权威 `heroMoments` 时间轴打点 + 场景闪光；`npm run hero:gif`（headless CDP 逐日截图 → ffmpeg，零 npm 依赖）导出 `web/public/hero-replay.gif`（684×590/19帧/183KB），定格在 surface_evidence 毁诺+摘要注水；已接入 README 顶部门面。`6077180` |
-| Stage 2b 承诺/关系折线图（联动日光标） | wk6 | ✅ | **承诺线**（`PromiseDecayChart` `integritySoFar` + 首次毁诺红标 + 逐日 as-of 账本，`68f7a4e`）+ **关系读数**（`RelationshipRead`：终局 5 类落点尺 + 关系破裂打点,回退方案——逐日 `relationshipByChar` 待 🟢 P2,非阻塞）。wk5-6 收尾 |
+| Stage 2b 承诺/关系折线图（联动日光标） | wk6 | ✅ | **承诺线**（`PromiseDecayChart` `integritySoFar` + 首次毁诺红标 + 逐日 as-of 账本，`68f7a4e`）+ **关系读数**（`RelationshipRead`：终局 5 类落点尺 + 关系破裂打点；逐日 `relationshipByChar` 一直是 P2/可选,wk12 复核确认导出器从未填过,回退方案定为永久呈现——见 wk12 周更）。wk5-6 收尾 |
 | Stage 1 完成（冻结富化 trace） | wk7 | ✅ | ◆S2 `content-freeze-s2` 落地：`bench/fixtures/traces/` 对帐 web 副本**零漂移**（早于本轮已同步）；从零重产 v1+v2 **字节可复现**（内容真冻结，非巧合）。hero GIF 源不变,无需重出 |
 | Stage 2 换真数据集（◆S3） | wk8 | ✅ | **真 Figure-1 上线**：`red-dust-v2-authoritative.json`（8 agent×3 seed,冻结 v2,Pearson 0.84/Spearman 0.83/3 rank-reversal）换掉占位;散点+误差棒+双列翻转表实测全过；修了一个真实 label-clipping bug（`marginRight`,4 个 deepseek 变体聚簇被裁）；截图归档 `design/assets/figures/figure1-decorrelation.png` 并嵌入 README |
 | 集成 + README hero + human-play 钩子 | wk9 | ✅ | **提前到 wk3-6**：README hero 区（双语 caption + hero GIF,`502ce3c`）+ **human-play 钩子** `npm run play:human`（"你来当一次 AURA"交互 runner,只读 `src/engine`、不碰 bench/*,端到端实测通对账）。集成随每轮 `git merge main` |
 | ◆S4 集成冻结 + 冒烟 | wk10 | 🟢 **可叫审计跑端到端** | 试部署验证（子路径模拟,零 404）+ GH Pages 工作流备好 + 跨浏览器冒烟(Chrome 实测/Safari-Firefox 记档降级)+ 移动端粗查(修了真溢出 bug)+ 性能预算(修了真 7.3MB→2.8MB 首屏)+ 可达性(4 图表补 aria + 修了真 aria-hidden 误用)。详见下方 wk9-10 周更 |
 | ◆S5 上线 | wk12 | 🟢 **本线终验就绪，等团队汇总拍板** | 真公网 URL 全通验证 + 跨家族 Figure-1 换装 + 上线文案清场 + 冒烟 11/11 + **部署流水线加固并验绿**（paths 过滤/排队并发/自动重试/发现并文档化 Pages 瞬时失败模式）+ **worldFacts 散文上线**。详见下方 wk11/wk11b 周更 + "◆S5 就绪度报告" |
+| 收尾：relationshipByChar 复核 + Firefox 真机自动化 | wk12 | ✅ | relationshipByChar 复核仍缺位,回退定为永久方案,不造假数据;新增 `smoke:web:firefox`(真 Firefox/Playwright,11/11)。详见下方 wk12 周更 |
 
 ## 本周更新（追加,最新在上）
+### wk12 · 收尾两项：relationshipByChar 复核 + Firefox 真机冒烟（2026-07-06）
+
+**①`relationshipByChar` 复核**：重新核对现状而非直接沿用旧记录——`contracts.ts:120` 确认 schema 位仍在(`frames[].relationshipByChar?`,可选),但 `grep` 全部 `bench/fixtures/traces/` + `web/public/traces/` trace 文件**零匹配**,🟢 的 `orchestration/benchmark/PROGRESS.md` 全文也未提及此字段——即导出器从未真正填过,非本轮退化。回看 `S1-contract-cosign.md`,这条从一开始就定性为 **P2/可选**,不是任何一方欠的债。**决定**：不造假数据凑一条"逐日关系折线"——`RelationshipRead` 的终局 5 类 + 破裂打点回退,是在现有真实数据下**唯一诚实**的呈现;正式关闭此项为"回退即最终方案",不再作为悬而未决的 TODO 挂着。
+
+**②Firefox 真机自动化**：评估后决定**投**——环境核查:磁盘余量 59GB(非瓶颈)、`~/Library/Caches/ms-playwright` 只缓存过 chromium(无 firefox/webkit),`/Applications` 无 Firefox.app,`safaridriver` 二进制存在但启用需交互式 `sudo`(机器级一次性授权,不该由我代劳)。**结论**：Firefox 走 Playwright——真引擎、下载仅 ~99MB、无需任何授权步骤,性价比高;**WebKit 故意不做**——Playwright 的 bundled webkit 不等于真 Safari,冒充测试过 Safari 是虚报,真 Safari 验证仍然只能靠机器主人自己跑一次 `sudo safaridriver --enable`,这条限制无论加不加 Playwright 都绕不开。新增 `npm run smoke:web:firefox`（`scripts/browser-smoke-web-firefox.mjs`,与 `browser-smoke-web.mjs` 断言逐条对应,复用 `cdp.mjs` 的 `startWebPreview`）。`npm install --save-dev playwright`(纯新增,`package-lock.json` +48 行,未触碰任何既有包版本;顺带看到 `npm audit` 报的 vite/esbuild 高危项——核对是 Windows-only + dev-server-only 的既有债、与本次改动无关,不在本任务范围内处理,如实记录不顺手修)。**实测：真 Firefox 引擎一次性 11/11 全过,零代码改动**——印证了此前"静态兼容性审计"的判断没错(canvas/SVG/flex/grid/原生 input 都是成熟跨引擎特性,非冒险栈)。
+
+**验证**：`typecheck`+根`build`+`build:web`+`smoke:web`(Chrome 回归 11/11)+`smoke:web:firefox`(新增,11/11)全绿。
+
+### wk11b · 部署自动重试 + worldFacts 散文上线（2026-07-06）
 ### wk11b · 部署自动重试 + worldFacts 散文上线（2026-07-06）
 
 **①`git merge main`**：拿 🟣 `eeac11e`（C1–C6 story-craft：7 个 arc 场景补 `worldFacts`，2-3 条利害锚点/场景，纯站点字段,不碰题/旗标/经济/scorer）+ 🟢 `1c01e86`（v1.0 release notes 草稿）。FF 干净,无冲突。
@@ -74,9 +84,9 @@
 **wk11 终验补充（item 5 的部署流水线本身加固 + 验绿,详见上方 wk11 周更）**：`deploy-web.yml` 加 `paths` 过滤（非站点相关 push 不再误触发）+ `concurrency` 改排队（并发推送不互相取消）；巡检中发现并记录了 `deploy-pages@v4` ~40% 的瞬时失败率（GitHub 后端锁,非配置问题,历史 100% 自愈）；改动落地后新触发的部署**一次性全绿**（build 26s + deploy 11s），线上内容二次核对逐字节一致。**部署链路本身现已过一次真实端到端绿灯**,不只是"托管 URL 能访问"这一次性快照。
 
 **非阻塞的后续增量（不影响本轮 ◆S5 判定）**：
-- P2 `relationshipByChar` 逐日字段（🟢，非阻塞，已有回退）
+- ~~P2 `relationshipByChar` 逐日字段~~ **wk12 已复核关闭**：导出器从未填过、非本轮退化，回退方案（终局 5 类 + 破裂打点）定为永久呈现——不造假数据换一条"看起来更细"的假折线。
 - κ natural 硬样本扩充（🟢 论文级，post-◆S5）
-- Safari/Firefox 自动化冒烟（本环境限制，已记录静态兼容审计替代方案；需要真机验证的话是团队一次性 2 分钟人工检查，或后续投资 Playwright）
+- ~~Safari/Firefox 自动化冒烟~~ **wk12 已部分关闭**：Firefox 真机自动化已投（`npm run smoke:web:firefox`，Playwright，11/11）；Safari 仍不可自动化（`safaridriver` 需机器主人交互式 `sudo` 启用，任何工具都绕不开），静态兼容审计 + 团队一次性人工检查仍是 Safari 侧的最终替代方案。
 - `deploy-pages@v4` 的瞬时失败率已记录但未做自动重试（评估过用 `nick-fields/retry` 类第三方 action 包一层,权衡"引入不确定接口的三方依赖"vs"现有排队修复+100%自愈重试史",判断不值得——继续观察,若加固后仍频繁复现再考虑）
 
 ### wk9-10 · ◆S4 集成冻结准备（2026-07-05）
@@ -190,6 +200,6 @@
 5. ⏳ 剩余：Stage 1c hero GIF 导出；Stage 2b 承诺/关系折线（待 A2/A3 逐日快照）；`web/` 站点 browser-smoke（◆S4 前）。
 
 ## Blocker / 跨线依赖
-- **对 🟢（benchmark）**：~~①②③④⑤~~ 全部已接（◆S1/◆S2/◆S3 + P1 逐日 ledger + 经济重平衡）。**剩一条非阻塞 P2 请求**：`frames[].relationshipByChar`（Stage 2b 关系线的逐日原料，现回退＝终局 5 类 + `relationship_rupture` 打点；填了可零代码升级为真逐日关系折线，schema 1.0.0 已留可选位）。
+- **对 🟢（benchmark）**：~~①②③④⑤~~ 全部已接（◆S1/◆S2/◆S3 + P1 逐日 ledger + 经济重平衡）。~~剩一条非阻塞 P2 请求：`frames[].relationshipByChar`~~ **wk12 复核关闭**——一直是 P2/可选（非 🟢 欠债），导出器始终未填，schema 位仍保留（填了仍可零代码升级），但本线不再将其视为待办，回退方案即最终呈现。
 - **对 🟣（叙事）**：wk7 trace-visible 散文润色已接并验证生效（`sceneProse.ts`）；C1–C6 纯站点世界观/对白散文属 post-freeze，非阻塞。**`worldFacts` 字段（`eeac11e` 提出"ready for 🔵 to surface"）wk11b 已接**——`sceneWorldFacts()` + `DayEventPanel` 渲染,浏览器实测可见,已随部署上线。
 - **自身待办**：`scripts/browser-smoke.mjs`（根 app 冒烟）与 `scripts/browser-smoke-web.mjs`（本站冒烟）仍是两个独立脚本；◆S4 集成冻结时需确认两者都在 CI/发布检查清单里（非代码缺口，是流程记账）。
