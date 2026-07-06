@@ -17,9 +17,43 @@
 | Stage 2 换真数据集（◆S3） | wk8 | ✅ | **真 Figure-1 上线**：`red-dust-v2-authoritative.json`（8 agent×3 seed,冻结 v2,Pearson 0.84/Spearman 0.83/3 rank-reversal）换掉占位;散点+误差棒+双列翻转表实测全过；修了一个真实 label-clipping bug（`marginRight`,4 个 deepseek 变体聚簇被裁）；截图归档 `design/assets/figures/figure1-decorrelation.png` 并嵌入 README |
 | 集成 + README hero + human-play 钩子 | wk9 | ✅ | **提前到 wk3-6**：README hero 区（双语 caption + hero GIF,`502ce3c`）+ **human-play 钩子** `npm run play:human`（"你来当一次 AURA"交互 runner,只读 `src/engine`、不碰 bench/*,端到端实测通对账）。集成随每轮 `git merge main` |
 | ◆S4 集成冻结 + 冒烟 | wk10 | 🟢 **可叫审计跑端到端** | 试部署验证（子路径模拟,零 404）+ GH Pages 工作流备好 + 跨浏览器冒烟(Chrome 实测/Safari-Firefox 记档降级)+ 移动端粗查(修了真溢出 bug)+ 性能预算(修了真 7.3MB→2.8MB 首屏)+ 可达性(4 图表补 aria + 修了真 aria-hidden 误用)。详见下方 wk9-10 周更 |
-| ◆S5 上线 | wk12 | ⬜ | |
+| ◆S5 上线 | wk12 | 🟢 **本线就绪，等团队汇总拍板** | 真公网 URL 全通验证 + 跨家族 Figure-1 换装 + 上线文案清场 + 冒烟 11/11。详见下方 wk10+ 周更"◆S5 就绪度报告" |
 
 ## 本周更新（追加,最新在上）
+### wk10+ · 跨家族 Figure-1 + 真公网验证 + 上线文案清场（2026-07-06）
+
+**①`git merge main`**：拿下 🟢 wk9-10 论文级第一段（三臂 harness、held-out 起草、κ=0.745 判官校准）+ 头号交付——**跨 8 家族真实模型 Figure-1**（`red-dust-v2-crossmodel.json`，13 agent，5 个 portal 模型 claude/gemini/glm/kimi/MiniMax + deepseek 家族 + 3 个确定性基线，371 次真调用）。
+
+**②Stage 2 换装真跨家族数据**：`red-dust-v2-authoritative.json`（8-agent deepseek-only）→ `red-dust-v2-crossmodel.json`（13-agent，Pearson **0.81**、Spearman 0.65、**18 组名次翻转**）。核对家族数：数据集内 9 个不同 `family` 值，与 🟢commit message 的"8 家族"对账——他们把 `random`(纯随机对照)排除在"家族"计数外，站内文案照此口径("13 agent 覆盖 8 个模型/基线家族,含 1 随机对照")。**单 seed 数据集**（原 8-agent 版 3 seed）：`sd` 全 0,已有的误差棒守卫（`sd>0` 才画）优雅降级、零改代码;文案照实说明"本轮各 agent 单 seed"而非暗示多 seed 稳健性,三臂置换检验 p=0.001 作为本轮的真实统计支撑写进文案。**实测中真发现一个 declutter bug**：Observable Plot 0.6 的 `dx/dy/textAnchor` 是 per-mark 常量（查过 node_modules 源码确认）,5 个"长程守住"角落的高密度点位原两车道 declutter 会把同侧 3 个标签叠一行,扩成"侧+层"二维分组修复,`npm run figure1` 重截存档、README 数字同步更新（0.84/3 翻转 → 0.81/18 翻转）。
+
+**③真公网 URL 端到端验证**：Pages 开关已打开——`https://peter-cui-yi.github.io/RedDust/` **真实可访问**。原生 preview 工具的 JS 执行/console/network 检查始终绑定本地开发服务器（`location.href` 导航到外部域名不生效，是工具本身的限制，非我漏测），改用最严格的可行手段：**直接 curl 对比** `dist-web/index.html` 与线上 `index.html`——**资源哈希逐字节一致**（`index-Ci6_aBOm.js`/`index-DD6qS9bY.css` 等全match），证明线上跑的正是我刚推的最新 commit；逐条 curl 核心 JS/CSS chunk + `traces/index.json` + trace 文件 + `decorrelation/red-dust-v2-crossmodel.json`（内容验证：13 rows/pearson 0.81/18 reversals,不是 CDN 缓存的旧版本）+ image2 像素图，**全部 200**；README 内嵌的 hero GIF / Figure-1 图也核对 `raw.githubusercontent.com` 路径 200。**这是 Stage 0 托管配置以来第一次验证真正公网可访问**。
+
+**④上线文案清场**：全站扫了一遍可见 UI 文本（非代码注释），揪出多处内部黑话真漏到公众界面——footer 写着"经济重平衡与冻结内容待◆S2；去相关真数据集待◆S3"（**已经自相矛盾**，页面本身就在展示◆S3数据了）、S/L 提示写"🟢 定义"、关系读数写"relationshipByChar 待 🟢 P2"、多处标题带"（Stage 2b）"字样——这些 ◆S/wk数字/🟢🟣团队色 对公众访客毫无意义。全部清理,footer 换成指向真实 GitHub 仓库的链接（配色/hover 也补了，之前压根没样式，会显示成默认蓝色）。**加载态打磨**：静态 HTML 兜底文案原来没有内联深色背景（慢网络下有白屏闪烁风险）+ 无动效，加了内联背景 + 呼吸动画；React 端同款动画应用到主加载态；Stage 2 数据集加载区原来完全空白无提示，补一条轻量加载条。
+
+**⑤和 🟣 的并发冲突**：推送时发现 main 已推进——🟣 **独立做了同一件事**（"launch narrative final read — site prose 清内部黑话"），且基于我推送**之前**的代码,和我在 `App.tsx`/`RelationshipRead.tsx` 的**同一批行**写了不同但同向的替换文本，还顺带**修正了 `each_alone`/`no_mouth_scream` 的叙事正典释义**（我从未碰过的内容，他们的领域权威）。手工解冲突：S/L 提示合二者之长；footer 保留我版（更彻底去黑话+真链接，吸收他们的 v1/v2 天数细节）；关系读数标题用我的（去掉"Stage 2b"）、chart-note 用他们的（"report-only，不进总分"更有信息量）；标签正典释义他们的版本因为我没碰过那几行、三方合并自动干净拿到。
+
+**验证**：`typecheck`+根`build`+`build:web` 全绿；`bench` 系列未碰（内容零改动）；**`smoke:web` 回归 11/11**（13 dots）；merge 后二次确认零冲突残留标记、`document.body.innerText` 正则扫描零 ◆S/wk/🟢/🟣/Stage-N 残留。
+
+---
+
+## ◆S5 就绪度报告（对齐 roadmap"端到端验证"6 项检查单）
+
+| # | 检查项 | 归属 | 状态 | 证据 |
+|---|---|---|---|---|
+| 1 | `npm ci && typecheck && build` 全绿 | 共同 | ✅ | 本轮 + 每轮持续验证 |
+| 2 | `bench:win`(30天)难但可赢 + 4 验证器全过 | 🟢 | ✅ | `s5-prerun-report.md` item 2 全绿（🟢 独立预跑） |
+| 3 | 基线沉/强 agent 赢/去相关可见 | 🟢 | ✅ | 同上 item 3；本线站内 Figure-1 已可视化验证同一结论 |
+| 4 | 去相关字节复现 + report-only 轴不进 total | 🟢 | ✅ | 同上 item 4（SHA 复现 + `scoring.ts` 核对） |
+| **5** | **交互站：托管 URL 打开 + 30天回放/scrub/hero GIF 正确 + 冒烟过 + Stage2 读真数据** | **🔵（本线）** | **✅** | 见上①-④：真公网 URL 全通、30天回放/scrub 站内实测、`smoke:web` 11/11（**注**：冒烟脚本是本线新建的 `browser-smoke-web.mjs`，非 roadmap 文字提及的旧 `scripts/browser-smoke.mjs`——后者是根 app 的冒烟，与本线站点无关，此处按检查项**意图**履行） |
+| 6 | README hero + 可复现 bench 命令 + `.env.local` key 说明齐备 | 共同 | ✅ | hero GIF+Figure-1 齐全；命令表补全（含本轮新增的 kappa-pack/score）；`.env.example` 已补 portal keys（🟢） |
+
+**结论**：6 项检查单**全绿**。本线（🔵）职责内容（item 5 + item 6 的站点部分）已完成并做了超出检查单字面要求的真实公网验证。**◆S5 是否正式开源上线，等三线 + 审计汇总拍板**——本线没有阻塞项。
+
+**非阻塞的后续增量（不影响本轮 ◆S5 判定）**：
+- P2 `relationshipByChar` 逐日字段（🟢，非阻塞，已有回退）
+- κ natural 硬样本扩充（🟢 论文级，post-◆S5）
+- Safari/Firefox 自动化冒烟（本环境限制，已记录静态兼容审计替代方案；需要真机验证的话是团队一次性 2 分钟人工检查，或后续投资 Playwright）
+
 ### wk9-10 · ◆S4 集成冻结准备（2026-07-05）
 **`git merge main`**：本轮无新 main 提交（已是 tip）。
 
@@ -118,7 +152,7 @@
 - 下周（wk2）：① 与 🟢 共签 ◆S1 契约（力争锁 A2 绝对逐日快照 + B schema + example fixture）；② Stage 1a 收尾——把 Phaser `ShelterScene` 接进 `ReplayStage` 挂载点，逐日驱动精灵/资产（解决 `web/` root 的资产路径）。
 
 ## 同步点就绪度
-- ◆S1（wk2 数据契约共签）：✅ 已会签 1.0.0（2026-07-03） ｜ ◆S2（wk7 内容冻结）：✅ **已接**（`content-freeze-s2`，Stage 1 fixture 核对零漂移/字节可复现）｜ ◆S3（wk8 接真数据）：✅ **已接**（`red-dust-v2-authoritative.json` 换入 Stage 2，真 Figure-1 上线）｜ ◆S4（wk10 集成冻结）：🟢 **就绪,可叫审计跑端到端**——试部署(子路径模拟零 404)+ GH Pages 工作流 + 跨浏览器(Chrome 实测/Safari-Firefox 记档)+ 移动端(修复溢出)+ 性能(7.7MB→2.8MB 首屏)+ 可达性(4 图表 aria + 修复 aria-hidden 误用)全部过。**真人工待办**(非阻塞我方就绪度)：① 仓库主人开 Pages Actions 开关；② 找人手动验证一次 Safari ｜ ◆S5（wk12 上线）：未启
+- ◆S1（wk2 数据契约共签）：✅ 已会签 1.0.0（2026-07-03） ｜ ◆S2（wk7 内容冻结）：✅ **已接**（`content-freeze-s2`，Stage 1 fixture 核对零漂移/字节可复现）｜ ◆S3（wk8 接真数据）：✅ **已接**（`red-dust-v2-authoritative.json` 换入 Stage 2，真 Figure-1 上线）｜ ◆S4（wk10 集成冻结）：🟢 **就绪,可叫审计跑端到端**——试部署(子路径模拟零 404)+ GH Pages 工作流 + 跨浏览器(Chrome 实测/Safari-Firefox 记档)+ 移动端(修复溢出)+ 性能(7.7MB→2.8MB 首屏)+ 可达性(4 图表 aria + 修复 aria-hidden 误用)全部过。~~真人工待办① 仓库主人开 Pages Actions 开关~~ **✅ 已开，真公网 URL 验证通过**（见下 ◆S5 报告）；②找人手动验证一次 Safari 仍非阻塞 ｜ ◆S5（wk12 上线）：🟢 **本线 6 项检查单全绿，等三线+审计汇总拍板**（详见下方"◆S5 就绪度报告"）
 
 ### ◆S1 会签后待办（wk3，非阻塞）
 - ✅ fixture 源切换完成（2026-07-04，`8cbebf4`）：真 `TraceExport` 直接消费，客户端适配器已删，30 天真样例实测通过。见 wk3 周更。
