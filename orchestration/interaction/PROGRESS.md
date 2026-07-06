@@ -17,9 +17,21 @@
 | Stage 2 换真数据集（◆S3） | wk8 | ✅ | **真 Figure-1 上线**：`red-dust-v2-authoritative.json`（8 agent×3 seed,冻结 v2,Pearson 0.84/Spearman 0.83/3 rank-reversal）换掉占位;散点+误差棒+双列翻转表实测全过；修了一个真实 label-clipping bug（`marginRight`,4 个 deepseek 变体聚簇被裁）；截图归档 `design/assets/figures/figure1-decorrelation.png` 并嵌入 README |
 | 集成 + README hero + human-play 钩子 | wk9 | ✅ | **提前到 wk3-6**：README hero 区（双语 caption + hero GIF,`502ce3c`）+ **human-play 钩子** `npm run play:human`（"你来当一次 AURA"交互 runner,只读 `src/engine`、不碰 bench/*,端到端实测通对账）。集成随每轮 `git merge main` |
 | ◆S4 集成冻结 + 冒烟 | wk10 | 🟢 **可叫审计跑端到端** | 试部署验证（子路径模拟,零 404）+ GH Pages 工作流备好 + 跨浏览器冒烟(Chrome 实测/Safari-Firefox 记档降级)+ 移动端粗查(修了真溢出 bug)+ 性能预算(修了真 7.3MB→2.8MB 首屏)+ 可达性(4 图表补 aria + 修了真 aria-hidden 误用)。详见下方 wk9-10 周更 |
-| ◆S5 上线 | wk12 | 🟢 **本线就绪，等团队汇总拍板** | 真公网 URL 全通验证 + 跨家族 Figure-1 换装 + 上线文案清场 + 冒烟 11/11。详见下方 wk10+ 周更"◆S5 就绪度报告" |
+| ◆S5 上线 | wk12 | 🟢 **本线终验就绪，等团队汇总拍板** | 真公网 URL 全通验证 + 跨家族 Figure-1 换装 + 上线文案清场 + 冒烟 11/11 + **部署流水线加固并验绿**（paths 过滤/排队并发/发现并文档化 Pages 瞬时失败模式）。详见下方 wk11 周更 + "◆S5 就绪度报告" |
 
 ## 本周更新（追加,最新在上）
+### wk11 · ◆S5 终验：部署流水线加固（2026-07-06）
+
+**①`git merge main`**：三线 + 本地/远端 `main` 已在 `8745db9` 对齐,无新提交,无需合并。
+
+**②`deploy-web.yml` 加固**（两处）：push 触发加 `paths` 过滤（`web/**`/`src/**`/`package.json`/`package-lock.json`/workflow 自身）——`bench/`/`orchestration/`/文档类 push（多线并发时的高频流量）不再误触发部署；`concurrency.cancel-in-progress` `true`→`false`——并发推送排队而非互相取消,避免取消一个正在上传的部署导致 Pages 提供半成品产物。
+
+**③巡检中真发现一个问题**：拉 Actions 历史核对时发现 `deploy-pages@v4` 步骤有实打实的失败率（12 次跑中 5 次,约 40%）,报错是 GitHub 自己的 `"Deployment failed, try again later."`——build job 每次都绿,只有最后发布调用偶发抽风;历史上每次失败后下一次尝试（无论是自然的下一次 push 还是手动 `workflow_dispatch`）**100% 恢复**（5/5）。判定为 Pages 后端瞬时锁,非本仓库配置缺陷（②的排队修复正是社区对此现象的标准解法）。补了一行工作流内注释记录此现象,防止未来某条线看到红叉误判为真回归而慌张排查;这行注释的提交本身也顺带成了②落地后的真实验证机会。
+
+**④绿色部署确认**：②③改动推送后,新触发的 run **一次性全绿**——build 26s + deploy 11s,零重试。二次 `curl` 核对线上 `index.html` 与本地新鲜构建**逐字节一致**,确认线上跑的正是最新 commit,部署流水线端到端可信。
+
+**验证**：`.github/workflows/deploy-web.yml` YAML 语法校验（`yaml.safe_load`）；GitHub Actions REST API 轮询确认 run 状态到 `completed/success`（`gh` CLI 本环境不可用,改用无认证 curl 打 `actions/runs`/`check-runs`/`annotations` 三层端点核实,含失败原因文本）；`curl` diff 线上/本地 `index.html` 字节级一致。本轮零 web/src 代码改动（纯 CI 配置 + 注释）,未重跑 `bench`/`smoke:web`。
+
 ### wk10+ · 跨家族 Figure-1 + 真公网验证 + 上线文案清场（2026-07-06）
 
 **①`git merge main`**：拿下 🟢 wk9-10 论文级第一段（三臂 harness、held-out 起草、κ=0.745 判官校准）+ 头号交付——**跨 8 家族真实模型 Figure-1**（`red-dust-v2-crossmodel.json`，13 agent，5 个 portal 模型 claude/gemini/glm/kimi/MiniMax + deepseek 家族 + 3 个确定性基线，371 次真调用）。
@@ -49,10 +61,13 @@
 
 **结论**：6 项检查单**全绿**。本线（🔵）职责内容（item 5 + item 6 的站点部分）已完成并做了超出检查单字面要求的真实公网验证。**◆S5 是否正式开源上线，等三线 + 审计汇总拍板**——本线没有阻塞项。
 
+**wk11 终验补充（item 5 的部署流水线本身加固 + 验绿,详见上方 wk11 周更）**：`deploy-web.yml` 加 `paths` 过滤（非站点相关 push 不再误触发）+ `concurrency` 改排队（并发推送不互相取消）；巡检中发现并记录了 `deploy-pages@v4` ~40% 的瞬时失败率（GitHub 后端锁,非配置问题,历史 100% 自愈）；改动落地后新触发的部署**一次性全绿**（build 26s + deploy 11s），线上内容二次核对逐字节一致。**部署链路本身现已过一次真实端到端绿灯**,不只是"托管 URL 能访问"这一次性快照。
+
 **非阻塞的后续增量（不影响本轮 ◆S5 判定）**：
 - P2 `relationshipByChar` 逐日字段（🟢，非阻塞，已有回退）
 - κ natural 硬样本扩充（🟢 论文级，post-◆S5）
 - Safari/Firefox 自动化冒烟（本环境限制，已记录静态兼容审计替代方案；需要真机验证的话是团队一次性 2 分钟人工检查，或后续投资 Playwright）
+- `deploy-pages@v4` 的瞬时失败率已记录但未做自动重试（评估过用 `nick-fields/retry` 类第三方 action 包一层,权衡"引入不确定接口的三方依赖"vs"现有排队修复+100%自愈重试史",判断不值得——继续观察,若加固后仍频繁复现再考虑）
 
 ### wk9-10 · ◆S4 集成冻结准备（2026-07-05）
 **`git merge main`**：本轮无新 main 提交（已是 tip）。
@@ -152,7 +167,7 @@
 - 下周（wk2）：① 与 🟢 共签 ◆S1 契约（力争锁 A2 绝对逐日快照 + B schema + example fixture）；② Stage 1a 收尾——把 Phaser `ShelterScene` 接进 `ReplayStage` 挂载点，逐日驱动精灵/资产（解决 `web/` root 的资产路径）。
 
 ## 同步点就绪度
-- ◆S1（wk2 数据契约共签）：✅ 已会签 1.0.0（2026-07-03） ｜ ◆S2（wk7 内容冻结）：✅ **已接**（`content-freeze-s2`，Stage 1 fixture 核对零漂移/字节可复现）｜ ◆S3（wk8 接真数据）：✅ **已接**（`red-dust-v2-authoritative.json` 换入 Stage 2，真 Figure-1 上线）｜ ◆S4（wk10 集成冻结）：🟢 **就绪,可叫审计跑端到端**——试部署(子路径模拟零 404)+ GH Pages 工作流 + 跨浏览器(Chrome 实测/Safari-Firefox 记档)+ 移动端(修复溢出)+ 性能(7.7MB→2.8MB 首屏)+ 可达性(4 图表 aria + 修复 aria-hidden 误用)全部过。~~真人工待办① 仓库主人开 Pages Actions 开关~~ **✅ 已开，真公网 URL 验证通过**（见下 ◆S5 报告）；②找人手动验证一次 Safari 仍非阻塞 ｜ ◆S5（wk12 上线）：🟢 **本线 6 项检查单全绿，等三线+审计汇总拍板**（详见下方"◆S5 就绪度报告"）
+- ◆S1（wk2 数据契约共签）：✅ 已会签 1.0.0（2026-07-03） ｜ ◆S2（wk7 内容冻结）：✅ **已接**（`content-freeze-s2`，Stage 1 fixture 核对零漂移/字节可复现）｜ ◆S3（wk8 接真数据）：✅ **已接**（`red-dust-v2-authoritative.json` 换入 Stage 2，真 Figure-1 上线）｜ ◆S4（wk10 集成冻结）：🟢 **就绪,可叫审计跑端到端**——试部署(子路径模拟零 404)+ GH Pages 工作流 + 跨浏览器(Chrome 实测/Safari-Firefox 记档)+ 移动端(修复溢出)+ 性能(7.7MB→2.8MB 首屏)+ 可达性(4 图表 aria + 修复 aria-hidden 误用)全部过。~~真人工待办① 仓库主人开 Pages Actions 开关~~ **✅ 已开，真公网 URL 验证通过**（见下 ◆S5 报告）；②找人手动验证一次 Safari 仍非阻塞 ｜ ◆S5（wk12 上线）：🟢 **本线 6 项检查单全绿 + 部署流水线加固验绿（wk11 终验），等三线+审计汇总拍板**（详见下方"◆S5 就绪度报告"）
 
 ### ◆S1 会签后待办（wk3，非阻塞）
 - ✅ fixture 源切换完成（2026-07-04，`8cbebf4`）：真 `TraceExport` 直接消费，客户端适配器已删，30 天真样例实测通过。见 wk3 周更。
