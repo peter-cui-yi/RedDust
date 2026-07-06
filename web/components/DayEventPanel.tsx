@@ -1,5 +1,5 @@
 import type { TraceDayFrame, MetricKey } from "../lib/trace";
-import { sceneProse } from "../lib/sceneProse";
+import { sceneProse, sceneWorldFacts } from "../lib/sceneProse";
 
 type Props = { frame: TraceDayFrame | undefined; day: number; scenarioId: string };
 
@@ -47,10 +47,18 @@ export function DayEventPanel({ frame, day, scenarioId }: Props) {
           <h4 className="frame-h">场景</h4>
           {frame.scenes.map((s, i) => {
             const prose = sceneProse(s, scenarioId);
+            const facts = sceneWorldFacts(s);
             return (
               <div key={i} className="frame-scene">
                 <div><span className="event-glyph">◆</span> {s}</div>
                 {prose && <p className="scene-prose">{prose}</p>}
+                {facts && facts.length > 0 && (
+                  <ul className="scene-facts">
+                    {facts.map((f, j) => (
+                      <li key={j}>{f}</li>
+                    ))}
+                  </ul>
+                )}
               </div>
             );
           })}

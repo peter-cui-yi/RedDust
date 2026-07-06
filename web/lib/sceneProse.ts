@@ -12,3 +12,8 @@ export function sceneProse(title: string, scenarioId: string): string | undefine
   if (!scene) return undefined;
   return scene.scenarioText?.[scenarioId]?.replayNote ?? scene.benchmarkLinks?.replayNote ?? scene.summary;
 }
+
+// worldFacts (🟣 wk11, pure-site): 2-3 stakes anchors per scene — same read-only byTitle lookup.
+export function sceneWorldFacts(title: string): string[] | undefined {
+  return byTitle.get(title)?.worldFacts;
+}

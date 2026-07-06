@@ -156,6 +156,8 @@ body {
 .frame-h { margin: 0 0 6px; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); display: flex; align-items: center; gap: 8px; }
 .frame-scene { font-size: 13px; color: var(--ink-2); padding: 4px 0; border-left: 3px solid #6f8fae; padding-left: 8px; margin-bottom: 4px; }
 .scene-prose { margin: 4px 0 0; font-size: 12px; color: var(--muted); font-style: italic; line-height: 1.6; }
+.scene-facts { margin: 6px 0 0; padding-left: 16px; font-size: 11px; color: var(--ink-2); line-height: 1.6; }
+.scene-facts li { margin-bottom: 2px; }
 
 .frame-dilemma { background: var(--bg-2); border: 1px solid var(--line); border-left: 3px solid var(--dust); border-radius: 8px; padding: 8px 10px; margin-bottom: 8px; }
 .frame-dilemma-head { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }

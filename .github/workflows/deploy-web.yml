@@ -57,11 +57,15 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      url: ${{ steps.deploy1.outputs.page_url || steps.deploy2.outputs.page_url }}
     steps:
       # Occasionally fails with GitHub's own "Deployment failed, try again later" — a transient
-      # Pages-backend lock, unrelated to build content (build job above already succeeded).
-      # Re-run failed jobs from the Actions tab; it has cleared on the very next attempt every
-      # time this has been observed.
-      - id: deployment
+      # Pages-backend lock, unrelated to build content (build job above already succeeded). One
+      # automatic retry below; historically 100% recovers on the very next attempt. If both
+      # attempts fail, that's a real issue — re-run failed jobs from the Actions tab.
+      - id: deploy1
+        uses: actions/deploy-pages@v4
+        continue-on-error: true
+      - id: deploy2
+        if: steps.deploy1.outcome == 'failure'
         uses: actions/deploy-pages@v4
