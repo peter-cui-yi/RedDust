@@ -59,5 +59,9 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
+      # Occasionally fails with GitHub's own "Deployment failed, try again later" — a transient
+      # Pages-backend lock, unrelated to build content (build job above already succeeded).
+      # Re-run failed jobs from the Actions tab; it has cleared on the very next attempt every
+      # time this has been observed.
       - id: deployment
         uses: actions/deploy-pages@v4
