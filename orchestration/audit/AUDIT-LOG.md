@@ -44,6 +44,12 @@
 
 ---
 
+## 执行记录 · 上线补完第一批（2026-07-07，用户三项裁定）——**License 落地 + 治理链上网**
+
+**用户裁定**：① License = **Apache-2.0**（暂定）；② 授权推送审计线 + 论文分支；③ GitHub UI 两动作（建 Release / 传 social preview）自办。
+**已执行（🔍）**：① `LICENSE`（Apache-2.0 全文）+ `package.json license 字段` → main（f6ab49e），**GitHub 已即时识别 Apache-2.0**，法律缺口闭合；② narrative-axis（含 ◆S2 后全部审计记录 + DEV-REPORT + 论文资料包）与 line/benchmark-paper 全量推送 origin，三分支 0 滞后——公网治理证据链补全；③ 推送触发的部署由重试管道兜底（后台验证中）。
+**余项**：README 主页补完 wave（🔵 指挥令已发：live 链接/30 天口径/三件套补全/hero GIF 重制/CITATION.cff/social preview 图）；用户 UI 动作（v1.0 Release + preview 上传）。License 如需在官宣前改选，趁未官宣成本为零。
+
 ## 补充体检 · 主页展示完整性 + 图资产（2026-07-07，用户追问）——**确认展示不完整；1 个致命缺口 + 图资产 1 重制 3 新增**
 
 **致命缺口（超越昨日全部发现）**：**README 全文零处出现线上站点 URL**（grep github.io = 0 hit）——🔵 wk10+ 把 `dev:web` 本地命令写进了 README，但公网地址 https://peter-cui-yi.github.io/RedDust/ 从未落进主页。项目最强转化资产在主页上不存在，访客无从知道有可交互站点。
