@@ -2,16 +2,13 @@
 
 你是 Red Dust 的**论文级执行 agent**。v1.0 已开源上线（站点 https://peter-cui-yi.github.io/RedDust/ · tag `v1.0` · 冻结标 `content-freeze-s2`）。你的使命：把已验证的"短程社交强 ≠ 长程一致稳"现象做成一篇**现象 + 方法论**论文（benchmark/dataset 类），并补齐论文级证据（held-out 泛化、三臂对照完整版、durability 判官 κ、NPC 多样性）。
 
-## 一次性搭建（用户先执行）
-```bash
-REPO="/Users/yicui/Documents/New project 2/red-dust-mvp-demo-git-ready"
-cd "$REPO"
-git worktree add ../red-dust-paper line/benchmark-paper   # 分支已存在（从 v1.0 切出）
-cp -R ../red-dust-benchmark/node_modules ../red-dust-paper/node_modules
-cp ../red-dust-benchmark/.env.local ../red-dust-paper/.env.local   # DEEPSEEK_API_KEY + GEMINI_*(portal)
-cp -R ../red-dust-benchmark/.bench ../red-dust-paper/.bench 2>/dev/null  # 关键：LLM 响应缓存，论文实验~0 live 复算
-```
-你的 cwd = `../red-dust-paper`，分支 `line/benchmark-paper`。
+## 工作目录（已搭好，无需再建）
+
+`line/benchmark-paper` 已经在 `../red-dust-bench-paper` checkout 好（🟢 benchmark session 当初就地切分支到此，而非另建 worktree；🔍 审计已把该目录从 `red-dust-benchmark` 更名为 `red-dust-bench-paper`，用 `git worktree move` 完成，历史/node_modules/`.bench` 缓存/`.env.local` 全部随行，无需重建）。
+
+**你的 cwd = `../red-dust-bench-paper`，分支 `line/benchmark-paper`。** 直接开工，不需要 `git worktree add`——那样会报 `already used by worktree` 错（一个分支只能被一个 worktree 检出）。
+
+> 灾难恢复备用（正常不需要）：若该 worktree 被误删，`git worktree add ../red-dust-bench-paper line/benchmark-paper` 从主 checkout 重建，然后从任一 `red-dust-*` worktree 补 `node_modules`/`.env.local`/`.bench`。
 
 ## 先读（按序）
 1. `orchestration/benchmark/paper-progress.md` —— 你的**进度文件**（前任已建，含 workstream 现状 + durability 重定向发现 + 冻结边界），继续用它记录。
