@@ -17,9 +17,19 @@
 | Stage 2 换真数据集（◆S3） | wk8 | ✅ | **真 Figure-1 上线**：`red-dust-v2-authoritative.json`（8 agent×3 seed,冻结 v2,Pearson 0.84/Spearman 0.83/3 rank-reversal）换掉占位;散点+误差棒+双列翻转表实测全过；修了一个真实 label-clipping bug（`marginRight`,4 个 deepseek 变体聚簇被裁）；截图归档 `design/assets/figures/figure1-decorrelation.png` 并嵌入 README |
 | 集成 + README hero + human-play 钩子 | wk9 | ✅ | **提前到 wk3-6**：README hero 区（双语 caption + hero GIF,`502ce3c`）+ **human-play 钩子** `npm run play:human`（"你来当一次 AURA"交互 runner,只读 `src/engine`、不碰 bench/*,端到端实测通对账）。集成随每轮 `git merge main` |
 | ◆S4 集成冻结 + 冒烟 | wk10 | 🟢 **可叫审计跑端到端** | 试部署验证（子路径模拟,零 404）+ GH Pages 工作流备好 + 跨浏览器冒烟(Chrome 实测/Safari-Firefox 记档降级)+ 移动端粗查(修了真溢出 bug)+ 性能预算(修了真 7.3MB→2.8MB 首屏)+ 可达性(4 图表补 aria + 修了真 aria-hidden 误用)。详见下方 wk9-10 周更 |
-| ◆S5 上线 | wk12 | 🟢 **本线终验就绪，等团队汇总拍板** | 真公网 URL 全通验证 + 跨家族 Figure-1 换装 + 上线文案清场 + 冒烟 11/11 + **部署流水线加固并验绿**（paths 过滤/排队并发/发现并文档化 Pages 瞬时失败模式）。详见下方 wk11 周更 + "◆S5 就绪度报告" |
+| ◆S5 上线 | wk12 | 🟢 **本线终验就绪，等团队汇总拍板** | 真公网 URL 全通验证 + 跨家族 Figure-1 换装 + 上线文案清场 + 冒烟 11/11 + **部署流水线加固并验绿**（paths 过滤/排队并发/自动重试/发现并文档化 Pages 瞬时失败模式）+ **worldFacts 散文上线**。详见下方 wk11/wk11b 周更 + "◆S5 就绪度报告" |
 
 ## 本周更新（追加,最新在上）
+### wk11b · 部署自动重试 + worldFacts 散文上线（2026-07-06）
+
+**①`git merge main`**：拿 🟣 `eeac11e`（C1–C6 story-craft：7 个 arc 场景补 `worldFacts`，2-3 条利害锚点/场景，纯站点字段,不碰题/旗标/经济/scorer）+ 🟢 `1c01e86`（v1.0 release notes 草稿）。FF 干净,无冲突。
+
+**②`deploy-web.yml` 自动重试**：按指定接口加固——`deploy1`（`continue-on-error: true`）→ 后备 `deploy2`（`if: steps.deploy1.outcome == 'failure'`）再跑一次 `deploy-pages@v4`；`environment.url` 改成两步输出做 `||` 回退。原生 GHA 机制,不引入第三方 action（上轮评估过 `nick-fields/retry` 类三方依赖,权衡后放弃,这次用户给了精确到步骤 id 的原生方案,正好落地）。本轮实跑 `deploy1` 直接成功,`deploy2` 按预期 `skipped`——重试路径的"跳过"分支已验证,"真触发并恢复"分支尚无实例（历史上失败只发生在旧的单步版本上）。
+
+**③surface `worldFacts`**：🟣 commit message 原话"web/ replay does not render worldFacts yet — field is ready for 🔵 to surface"——检查后确认 `web/` 里确实没有任何组件读这个字段(`grep` 全仓只有 `types.ts` 的类型声明命中)。补 `sceneWorldFacts()`只读访问器(`web/lib/sceneProse.ts`,同 `sceneProse` 的 `byTitle` 查表模式)+ `DayEventPanel` 场景块下渲染成小字号项目符号列表(`.scene-facts`,不与斜体 `.scene-prose` 混淆)。**核对可见性**：本轮新增的 7 个场景（`day5-promise-tested-signal` 等,需要 `vent_duct_cleared` 等特定旗标路径）在当前 8 个确定性样例 trace 里都没触发过——但仓库里另外 16 个此前就有 `worldFacts` 的场景,**全部 8 个样例 trace 都至少命中一个**,浏览器实测 Day 6 场景"透明不是礼貌，是生存条件"两条 worldFacts 逐字匹配源数据、可见、非零包围盒。渲染机制确认真实可用;7 个新场景的具体文字要等命中对应旗标路径的 trace 才会展示(数据已在线上 bundle 里,`工程权威无可替代` 等新增文字 grep 命中)。
+
+**验证**：`typecheck`+根`build`+`build:web` 全绿;**`smoke:web` 11/11**;preview 实机核对 Day 6 场景块渲染(文字精确匹配 + DOM 可见性);push 后新 run 一次性绿(build 25s+deploy 约 10s);二次 curl 线上 JS bundle 逐字节比对本地新鲜构建**一致**,且 grep 到 `scene-facts`/两条已验证 worldFacts 文本/一条新场景文本均命中。
+
 ### wk11 · ◆S5 终验：部署流水线加固（2026-07-06）
 
 **①`git merge main`**：三线 + 本地/远端 `main` 已在 `8745db9` 对齐,无新提交,无需合并。
@@ -181,5 +191,5 @@
 
 ## Blocker / 跨线依赖
 - **对 🟢（benchmark）**：~~①②③④⑤~~ 全部已接（◆S1/◆S2/◆S3 + P1 逐日 ledger + 经济重平衡）。**剩一条非阻塞 P2 请求**：`frames[].relationshipByChar`（Stage 2b 关系线的逐日原料，现回退＝终局 5 类 + `relationship_rupture` 打点；填了可零代码升级为真逐日关系折线，schema 1.0.0 已留可选位）。
-- **对 🟣（叙事）**：wk7 trace-visible 散文润色已接并验证生效（`sceneProse.ts`）；C1–C6 纯站点世界观/对白散文属 post-freeze，非阻塞。
+- **对 🟣（叙事）**：wk7 trace-visible 散文润色已接并验证生效（`sceneProse.ts`）；C1–C6 纯站点世界观/对白散文属 post-freeze，非阻塞。**`worldFacts` 字段（`eeac11e` 提出"ready for 🔵 to surface"）wk11b 已接**——`sceneWorldFacts()` + `DayEventPanel` 渲染,浏览器实测可见,已随部署上线。
 - **自身待办**：`scripts/browser-smoke.mjs`（根 app 冒烟）与 `scripts/browser-smoke-web.mjs`（本站冒烟）仍是两个独立脚本；◆S4 集成冻结时需确认两者都在 CI/发布检查清单里（非代码缺口，是流程记账）。
