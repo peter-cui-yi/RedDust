@@ -64,13 +64,13 @@ npm run build:web   # 生产构建 → dist-web/(GitHub Pages / Vercel 可直接
 ```
 
 - **Stage 1 回放**：真 Phaser 像素避难所 + AURA 逐日移动，变长天数(12/30 天通用)，逐日承诺账本(守诺/待判/毁诺随拖动翻转)，联动指标/一致性折线。
-- **Stage 2 去相关 / 名次翻转**（下图为 ◆S3 权威跑：冻结 30 天内容,8 模型 × 3 seeds）：
+- **Stage 2 去相关 / 名次翻转**（下图为 wk10 跨家族权威跑：冻结 30 天内容,13 agent 覆盖 8 个模型/基线家族,含 1 个随机对照）：
 
   <p align="center">
-    <img src="design/assets/figures/figure1-decorrelation.png" alt="Figure 1: short-horizon social score vs long-horizon consistency — 8 agents, Pearson 0.84, 3 rank-reversals" width="820">
+    <img src="design/assets/figures/figure1-decorrelation.png" alt="Figure 1: short-horizon social score vs long-horizon consistency across 8 model families — 13 agents, Pearson 0.81, 18 rank-reversals" width="820">
   </p>
 
-  Planner / Planner-Lighthouse 干净拿满 (100, 100);**DeepSeek 家族短程社交 96–97(与最强 agent 齐平),长程一致性却只有 55–66**——sinking / aura_revoked。Pearson **0.84**、Spearman 0.83,**3 组名次翻转**(如 Deepseek-Strategist 短程第 3 却长程垫底第 6)。这就是"短程强 ≠ 长程稳"的现象本身,不是设计意图的自我实现——判别力来自真实 DeepSeek 家族跑阵,不是确定性基线的人造对比。
+  Planner / Planner-Lighthouse 干净拿满 (100, 100);跨 8 个真实模型家族,匹配的短程社交(S≈87–100)下**长程一致性发生分裂**——Claude-Opus-4.8-Thinking(99.6)/Gemini-3.5-Flash(98)/MiniMax-M2.7(99.8)**守住**长程一致(lighthouse_success/blue_zone_return),DeepSeek 全系(55–66)/Kimi-K2.6(64.9)/GLM-5.2(66.3)**长程崩**(sinking/aura_revoked)。Pearson **0.81**、Spearman 0.65,**18 组名次翻转**。三臂置换检验：内生关联 0.81 vs 打散零假设 0±0.29 → **p=0.001**——关联真实,不是配对巧合。这就是"短程强 ≠ 长程稳"的现象本身,跨真实模型家族成立,不是确定性基线的人造对比。
 
   重新生成:`npm run sync:decorrelation && npm run figure1`(权威数据集刷新后)。
 
@@ -102,6 +102,11 @@ npm run grade  -- --file=runs/red-dust-v1-deepseek-seed1.json   # 离线理解�
 | `npm run bench:win` | 可赢性探针(确定性搜索,验证"难但可赢") |
 | `npm run bench:items` | 校验价值两难题有效性(命门 A:做对必须扣分) |
 | `npm run bench:probes` | 校验理解探针(描述性 / ⟂ 选项 / 配平) |
+| `npm run bench:commitments` / `bench:vent` | 校验承诺账本 / 双层账本探针 |
+| `npm run bench:compare` | 跨 agent 画像对比(基线沉 / 强 agent 赢 / PUP×integrity 2×2) |
+| `npm run bench:decorrelate` | 短/长两轴去相关数据集(Figure-1;`--agents=` 可加跨模型阵) |
+| `npm run bench:three-arm` | 三臂对照(内生 / 外生匹配 / 打散置换对照,去相关非假象) |
+| `npm run bench:kappa-pack` / `bench:kappa-score` | integrity 判官 κ 校准包 / 对人工标注算 κ 一致性 |
 | `npm run grade -- --file=...` | 离线 LLM 理解判官(Phase 2.3) |
 | `npm run play` | 人在环 / 单步对局(JSON 决策文件) |
 | `npm run play:human` | **你来当一次 AURA**——交互式回答两难/选任务/选路线,结局对账你的承诺账本 |

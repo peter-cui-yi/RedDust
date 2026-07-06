@@ -32,7 +32,7 @@
     "build": "tsc -b && vite build",
     "dev:web": "vite --config web/vite.config.ts",
     "sync:traces": "cp bench/fixtures/traces/*.trace.json web/public/traces/",
-    "sync:decorrelation": "cp bench/fixtures/decorrelation/red-dust-v2-authoritative.json web/public/decorrelation/",
+    "sync:decorrelation": "cp bench/fixtures/decorrelation/red-dust-v2-crossmodel.json web/public/decorrelation/",
     "build:web": "tsc -p web/tsconfig.json && vite build --config web/vite.config.ts",
     "preview:web": "vite preview --config web/vite.config.ts",
     "smoke:web": "npm run build:web && node scripts/browser-smoke-web.mjs",
