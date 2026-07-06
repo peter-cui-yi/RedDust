@@ -14,6 +14,15 @@ name: Deploy replay site to GitHub Pages
 on:
   push:
     branches: [main]
+    # Only redeploy when something that actually affects the built site changed. bench/
+    # orchestration/ and top-level docs (README, design/) churn constantly across the other
+    # lines' rounds and must not burn a Pages deploy each time.
+    paths:
+      - "web/**"
+      - "src/**"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/deploy-web.yml"
   workflow_dispatch: {}
 
 permissions:
@@ -23,7 +32,10 @@ permissions:
 
 concurrency:
   group: pages
-  cancel-in-progress: true
+  # Queue instead of cancel: a canceled mid-upload deploy can leave Pages serving a partial
+  # artifact. With two lines pushing to main in the same window, queuing (not racing) is what
+  # keeps the live site always fully one commit or the other, never a torn state.
+  cancel-in-progress: false
 
 jobs:
   build:
