@@ -44,6 +44,13 @@
 
 ---
 
+## 补充体检 · 主页展示完整性 + 图资产（2026-07-07，用户追问）——**确认展示不完整；1 个致命缺口 + 图资产 1 重制 3 新增**
+
+**致命缺口（超越昨日全部发现）**：**README 全文零处出现线上站点 URL**（grep github.io = 0 hit）——🔵 wk10+ 把 `dev:web` 本地命令写进了 README，但公网地址 https://peter-cui-yi.github.io/RedDust/ 从未落进主页。项目最强转化资产在主页上不存在，访客无从知道有可交互站点。
+**展示结构性缺口（对照锁定呈现三件套 hero GIF → 交互站 → 名次翻转表）**：README 仅有第一件；翻转表无视觉呈现、站点无截图无链接；核心发现未成头条句（"claude/gemini/MiniMax 守住 vs deepseek/kimi/glm 崩"这句最强 hook 只藏在图 alt 里）；durability 论文预告缺位；human-play 埋在命令表；无 badges 行（license/release/site/CI）。
+**图资产审计（现仅 2 张：hero GIF + figure1）**：① **hero GIF 建议重制**——现为 v1 12 天确定性轨迹（与 30 天主叙事不符）；库中已有真 LLM 30 天戏剧轨迹缓存（deepseek"四承诺全守仍沉船"= durability 主张的画面化，`hero:gif` 管线换源即出）；v1 dirty_win 版可降级为第二展示。② figure1 内容最新**无需重制**，可选增强 hold/collapse 两族分带标注。③ **新增三张**：名次翻转表截图（三件套第三件）、站点 UI 全貌截图（GIF→点击的桥）、GitHub social preview（Settings 分享卡片，官宣前必设）。
+**判定：主页需要一轮完整的"展示补完"，与昨日 5 项修复合并为一个 wave（🔵 主刀 + 🟣 文案）。**
+
 ## 即时体检 · GitHub 主页时效性（2026-07-07，用户召唤）——**需要更新：1 个法律级缺口 + 1 处门面自相矛盾 + 3 个小项**
 
 **同步面**：local main == origin/main ✓（站点与代码已最新）；v1.0 tag 已推 ✓；RELEASE_NOTES.md 已在 main ✓。**未推送**：narrative-axis 22 提交（◆S2 后全部审计记录 + DEV-REPORT + 论文资料包）、line/benchmark-paper 2 提交——公网上的治理证据链停在旧版。
