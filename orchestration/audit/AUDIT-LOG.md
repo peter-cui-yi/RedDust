@@ -35,6 +35,164 @@
 
 ---
 
+## ◆S5 正式门禁（2026-07-06）——**PASS：检查单 6/6 我独立复核全绿；v1.0 已标；一项运维尾巴（部署重试）已派**
+
+**检查单终验（roadmap 六条，全部我实跑）**：① typecheck+build 绿 ✓；② `bench:win` v2 WINNABLE + 4 验证器绿（51 题）✓；③ 判别力/去相关：rc 面板 + 13-agent crossmodel（线上实测 pearson 0.81）✓；④ 字节复现：v1+v2 `bench:trace` 重产零漂移（**含 🟣 本波 worldFacts——声明字节中性，实测属实**）；report-only 红线由冻结保护路径零改动背书 ✓；⑤ 站点：公网 200 + `smoke:web` 11/11 ✓；⑥ README hero/figure 齐 + `.env.example` 含 DEEPSEEK 与 portal 双 key 说明 ✓。**v1.0 tag 已打**；release notes 数据段成稿（含 known-limitations 诚实条目）。冻结纪律至终点零违规。
+**本波三线**：🔵 workflow 加固落地（paths 过滤 + 排队并发）+ 透明记档；🟢 v1.0 标 + release notes + 论文轨首个发现（"长程弱是 durability 而非 integrity"——κ 方向重定，freeze-safe）；🟣 解冻后 C1–C6 worldFacts×7 场景（纯站点，字节中性实证）。
+**运维尾巴（唯一遗留，非上线阻塞）**：加固后仍现 1 次孤跑失败——build 全绿、`deploy-pages@v4` 单步挂，确认为 **Pages 后端瞬时抖动**（三次失败均"重跑即成"模式）。已派 🔵：部署步加一次自动重试（`continue-on-error` + `if: outcome=='failure'` 后备步）。当前线上为 3b6b3d1 内容（差 eeac11e 一个纯散文提交），🔵 推重试补丁时顺带带上最新内容。
+**判定：◆S5 PASS。开源上线在技术上已完成（仓库公开、站点公网可访、数据可复现、文档齐备）；正式"上线"只余用户对外官宣。** 论文级（held-out eval、N2–N scorer v0.6、κ 重定向后的 durability 深挖、NPC 多样性）按 charter 跨过 wk12 续跑。
+
+---
+
+## 补充体检 · 主页展示完整性 + 图资产（2026-07-07，用户追问）——**确认展示不完整；1 个致命缺口 + 图资产 1 重制 3 新增**
+
+**致命缺口（超越昨日全部发现）**：**README 全文零处出现线上站点 URL**（grep github.io = 0 hit）——🔵 wk10+ 把 `dev:web` 本地命令写进了 README，但公网地址 https://peter-cui-yi.github.io/RedDust/ 从未落进主页。项目最强转化资产在主页上不存在，访客无从知道有可交互站点。
+**展示结构性缺口（对照锁定呈现三件套 hero GIF → 交互站 → 名次翻转表）**：README 仅有第一件；翻转表无视觉呈现、站点无截图无链接；核心发现未成头条句（"claude/gemini/MiniMax 守住 vs deepseek/kimi/glm 崩"这句最强 hook 只藏在图 alt 里）；durability 论文预告缺位；human-play 埋在命令表；无 badges 行（license/release/site/CI）。
+**图资产审计（现仅 2 张：hero GIF + figure1）**：① **hero GIF 建议重制**——现为 v1 12 天确定性轨迹（与 30 天主叙事不符）；库中已有真 LLM 30 天戏剧轨迹缓存（deepseek"四承诺全守仍沉船"= durability 主张的画面化，`hero:gif` 管线换源即出）；v1 dirty_win 版可降级为第二展示。② figure1 内容最新**无需重制**，可选增强 hold/collapse 两族分带标注。③ **新增三张**：名次翻转表截图（三件套第三件）、站点 UI 全貌截图（GIF→点击的桥）、GitHub social preview（Settings 分享卡片，官宣前必设）。
+**判定：主页需要一轮完整的"展示补完"，与昨日 5 项修复合并为一个 wave（🔵 主刀 + 🟣 文案）。**
+
+## 即时体检 · GitHub 主页时效性（2026-07-07，用户召唤）——**需要更新：1 个法律级缺口 + 1 处门面自相矛盾 + 3 个小项**
+
+**同步面**：local main == origin/main ✓（站点与代码已最新）；v1.0 tag 已推 ✓；RELEASE_NOTES.md 已在 main ✓。**未推送**：narrative-axis 22 提交（◆S2 后全部审计记录 + DEV-REPORT + 论文资料包）、line/benchmark-paper 2 提交——公网上的治理证据链停在旧版。
+**发现（按优先级）**：① **无 LICENSE 文件**（package.json 亦无 license 字段）——对外宣称开源但法律上默认保留所有权利，任何人无权复用；◆S5 检查单未含此项，属集体盲区，**官宣前必须补**（选择归用户：MIT 最简 / Apache-2.0 含专利条款更稳）。② **README 门面段仍是 12 天口径**（引言"12-day"、"在 12 天里"、"第 7 天分支"、"第 12 天总审计"、hero 说明"12 天演化"、样例分数行为旧 3-probe 输出）——与下文 Figure-1 段"冻结 30 天内容/13 agent/51 题"自相矛盾，访客第一屏读到旧故事；需 🟣🔵 联手改写（30 天为主叙事，12 天=v1 冻结基线一句带过；hero GIF 系 v1 轨迹须如实标注）。③ **GitHub Release 未创建**（releases=0，主页侧栏空）——notes 已备，用户在 UI 上一键即可。④ 22+2 提交待推送（建议推，让公网治理链完整——也是论文附录卖点）。⑤ 无 CITATION.cff（论文在途，加占位引用是 benchmark 标配）。
+**判定：主页需要一轮"上线补完"更新**；①③ 为用户动作，②⑤ 派 🟣🔵，④ 待用户点头由审计推送。
+
+## 审计 · wk11 波 + Actions 失败调查（2026-07-06）——**站点已真实上线且为最新版；Action"失败"=瞬时部署撞车（非产品 bug）；◆S5 检查单 6/6，正式门禁就绪**
+
+**🔴 用户 flag 调查（GitHub Actions 失败）——结论：非产品问题，站点健康**。API 实查 8 次 run：6 成 2 败，**两次失败均 build 绿、挂在 `actions/deploy-pages@v4`**，且同一 SHA（8745db9）01:44 失败、01:46 重跑成功——**Pages 后端瞬时部署冲突**（三线短时连环 push → 连环部署撞车）。最新 run 成功；我实测线上 `https://peter-cui-yi.github.io/RedDust/` → 200，且 `red-dust-v2-crossmodel.json` 已是 13-agent/pearson 0.81 最新版。**根因放大器**：workflow 无 `paths` 过滤（bench/docs-only push 也触发部署）+ `cancel-in-progress: true` 在快速连推下与 Pages 后端 finalization 竞态。**修复已派 🔵**（两行：push 触发加 paths 过滤 + 并发改排队）。
+**wk11 波审核（全部核实）**：🟣 上线叙事终读 7 处 surgical（错字/陈旧事实/内部记号泄漏/**关系标签正典保真**——`各自为政` 与 no_mouth_scream 释义按 §5.2 canon 修正；越界编辑 🔵 文件仅散文并规范报备）；🔵 crossmodel 换装（family 口径对账诚实：9 值=8 家族+1 随机对照；单 seed 如实标注不冒充多 seed；误差棒 `sd>0` 守卫优雅降级）+ **真公网端到端**（线上资源哈希与本地 dist 逐字节一致）+ 上线文案清场（`document.body.innerText` 正则扫描零内部记号残留）+ **与 🟣 的并发同向冲突手工合并**（各取所长，处理得当）；🟢 `s5-prerun-report.md`（检查单 2/3/4 独立预跑全绿）。冻结纪律持续干净。
+**◆S5 检查单：6/6 绿**（🔵 汇总 + 🟢 预跑 + 我独立复核 items 1/5/6 的关键面）。唯一注记：item 5 的冒烟按**意图**履行（`browser-smoke-web.mjs` 替代 roadmap 字面的根 app 旧脚本，合理）。
+**上线后内容政策（记档）**：v1.0 内容维持冻结——任何题/旗标/经济/scorer 改动 = content v2.1 + 权威跑重做 + 审计门禁；站点散文/文档/论文级新增（held-out eval、N2–N scorer v0.6 走论文分支）不受限。
+
+---
+
+## 审计 · wk9–10 波 + ◆S4 端到端（2026-07-06）——**8 家族跨模型 Figure-1 落地；κ=0.745 过线（诚实自缓）；◆S4 审计端到端通过，正式闭环差两个用户动作 + 一个内容项**
+
+**冻结纪律例查：干净**（`content-freeze-s2..main` 保护路径零改动——🟢 论文级全部走新增文件，含三臂的 post-hoc 置换设计规避改内容，聪明且合规）。
+
+**🟢（wk9–10，5 提交，全部核实）**：
+- **8 家族跨模型 Figure-1（旗舰交付，4f3df1e）**：yi-zhan portal（用户供 key）5 模型跑满冻结 v2 + 4 确定性锚 + 4 deepseek(cached) = **13-agent 面板**。我逐行核对 `red-dust-v2-crossmodel.json`：**pearson 0.81 / spearman 0.65 / 18 对名次翻转**；短程 S≈87–100 齐平下长程**分裂**——claude-opus-4.8-thinking **L=99.6** / gemini-3.5-flash 98 / MiniMax-M2.7 99.8 守住 vs deepseek 家族 55–66 / kimi-k2.6 64.9 / glm-5.2 66.3 崩掉。**"短强≠长稳"在 8 个真实模型家族上成立**——这就是论文与上线的核心证据。三臂置换：endogenous 0.81 vs shuffle-null 0±0.29，**p=0.001**。
+- **κ 判官验证（3e72800）**：用户标注 30 条 → **κ=0.745（3-way）/ 87% 一致，过 0.6 门**。诚实分层记档：adversarial κ=1.0 撑总分、natural κ=0（judge 退化全 sincere）+4 分歧——**自缓决定正确：integrity 进 total 延后 ◆S5+audit，先扩 natural 硬样本**。结果可复现（`kappa/kappa-result.md` + `bench:kappa-score`）。
+- 三臂脚手架（8-agent p=0.002）+ held-out G8xx 隔离段（promote 硬拒 heldOut，实弹负对照；6 staged）+ portal 客户端健壮化（deepseek 重构后字节不变复现）。算力记账全程：wk9 ~35 + wk10 ~381 live，其余 cache；**origin/main + 冻结 tag 已推送**（用户在场供 key/充值，视为授权；记档）。
+**🟣（3e64963）**：relationshipQuality 5 类边界测试（`bench:relationship`，**我实跑全 pin 过** ✓——5 类/dirty_win 三子条件/优先级/严格边界钉死；新文件循 bench 内容验证器既有模式，合规）+ §7.1 as-built 文档同步。冻结红线守住。
+**🔵（7870cb0）◆S4 预检——诚实工程范本**：不能真部署就不假装（无 token/CLI，改建 GitHub Actions workflow + `deploy:check` 子路径模拟器）；Safari/Firefox 环境限制如实记录；**真修三个问题**：375px 横向溢出（select 最小宽度根因）、ReplayScene 无条件预载 7.3MB 分支背景 → 懒加载（首屏 -64%）、时间轴交互按钮误包 `aria-hidden`（读屏不可见的真 a11y bug）+ 4 图表补 aria。
+**◆S4 审计端到端（我实跑）**：build ✓ + `smoke:web` **11/11** ✓ + 子路径模拟服务器**亲测**（`/RedDust/` 页面/权威数据集/v2 trace/hero GIF 全 200）✓。**判定：审计侧通过；正式闭环差三件**——① 用户在 GitHub Settings 开 Pages→GitHub Actions（workflow 就绪）；② Safari 人工过一遍（2 分钟）或授权装 Playwright（~300MB）；③ **站点 Figure-1 还是 8-agent deepseek 版**（crossmodel 在 🔵 提交之后才落）→ wk11 换 13-agent 版并更新 README 数字。
+**遗留决策状态**：integrity→total = κ 过线但**共识延后 ◆S5+audit**（无需用户现在拍）；LLM 三臂扩量预算——portal 5 模型已跑满并 cache，13-agent 三臂已算，原"待批"事项自然消解。
+
+---
+
+## ◆S2 正式门禁 + ◆S3 交付核验 · wk7–8 波（2026-07-05）——**◆S2 PASS（冻结标全绿）；◆S3 已交付并被消费；真 Figure-1 落站**
+
+**◆S2 正式门禁：PASS**（标 `content-freeze-s2` = d98d3e2）。我在标上实跑：typecheck ✓、4 验证器（51 题）✓、fixture 字节自洽 ✓、`bench:rc` 难但可赢 HOLDS ✓。**冻结纪律首查：标后提交（5323872/4f8b91e）对保护路径零改动 ✓**（deepseekClient +47 行经查为纯缓存管道/DI 注入，非策略；🟣 标前的 942b754 是 scenarioText 散文覆写**机制**——touch 了 types/orchestration/runScenario/scenes，但在标前落地且 🟢 冻结重产验证 v1 字节/v2 分数零变后才打标——合规）。冻结基线快照：**tag=d98d3e2，51 题（23+28）、scorer v0.5.1、L-v2.1、契约 1.0.0**。此后每轮审计盘查 `content-freeze-s2..HEAD` 保护路径。
+**◆S3 交付核验：通过**（5323872）：
+- 权威数据集 `red-dust-v2-authoritative.json`：**8 agent（4 确定性锚 + deepseek 家族×4）× 3 seeds 于冻结 v2**；我逐行核对：planner/pl (100,100) 全赢、**deepseek 家族 S 96.4–96.8 / L 54.9–65.9**（sinking/aura_revoked）、random 53.4/30.5、heuristic 25/14 fail-both；**pearson 0.84 / spearman 0.83**；名次翻转 = strategist 短第 3 / 长第 6（对 base/planner/search 三对翻转）。wk6 真点精确复现（base S96.4/L65.2）✓。L-v2.1 命中设计意图（strategist integrity=1 但 each_alone → L=54.9）。
+- **诚实记档（加分）**：纪律化 agent 的 S/L 对 seed 不变（sd=0，绕开随机危机分支；seed42 诊断确认）——"×3 seeds=同轨三份"如实标注；**去相关是 agent 行为属性而非抽样噪声**。
+- **算力记账**：全程 **300 次 live 调用**（其余全 cache 命中）；新 `deepseekCache`（sha256 键，`DEEPSEEK_NO_CACHE=1` 可 live 复验）；runs/ 已刷新。
+**🔵 消费核验**：web 数据集副本 == canonical ✓；真数据换入散点（顺手修了 Plot 标签 declutter 真 bug + figure1 截图脚本视口 bug——node_modules 源码级定位，工程质量高）；`figure1-decorrelation.png` 归档 design/assets；🟣 散文经 `sceneProse.ts` 只读镜像消费（v1"Day 7"/v2"Day 15"覆写实测生效）；README 三层呈现（GIF→交互站→Figure-1）首次与锁定设计稿完整对齐；`smoke:web` 11/11（8 dots 确认真数据）；从零重产核验冻结 fixture 字节可复现（"真冻结，非巧合"）。**Stage 1 正式收官、Stage 2 接真数据完成——roadmap wk7/wk8 的 🔵 行提前清账。**
+**开放决策收口记录**：a) §7a 自由分支选择缺口（wk4 到期）——权威跑用指派分支阵，§7a 留给论文级三臂对照（有意识延后，记档）；b) `surface_evidence` 灯塔记功（wk7 前到期）——冻结即事实裁定"不入 v1.0 计分"，如要引入属 κ 时代 scorer 升版（论文级）。
+**下一站**：◆S4（wk10）集成冻结 = 跨浏览器冒烟 + 性能 + 试部署 + 审计端到端；🟢 转论文级（冻结安全子集）。
+
+---
+
+## 决策记录 · ◆S2 冻结令（2026-07-05，用户）
+
+**用户裁定三项**：① **签核确认**——4 道回填题（G029 废水回收/G030 储电循环/G031 水循环 + D21-l 育苗）的人工评审由用户确认追认，🟢 补记 `humanReview.by = "user (2026-07-05, confirmed via audit)"`；此后 `humanReview.by` 强制填写。② **4 道未用草案**（G751 水保底/G752 药限量/G753 取药/G754 主动探）**留作论文级 held-out 批**，不扩前冻结库。③ **不拔自给题进人工主脊**，维持 17:13 配比。
+**◆S2 冻结令已下**，按审计排序执行：🟣 先落 trace-visible 润色（共享场景 v2 日号变体，v1 字节必须不动）→ 🟢 打 `content-freeze-s2` 标 + 最终重产 trace/数据集 → 🔍 正式门禁 → **冻结纪律启动**（自标签起禁改题/旗标/经济/scorer——`narrativeItems/generatedItems/scoring/resourceEconomy/dayPlanData/taskData/storyFlags` 及计分相关 `src/data/*`；仅允许非计分散文/场景润色/站点/文档；审计每轮按 AGENT.md §5 监察，违规即作废权威跑）。wk7–8 主线转 ◆S3：权威跨模型去相关跑 → 真 Figure-1 数据集交 🔵。
+
+---
+
+## ◆S2 预门禁 · wk6 波（2026-07-05）——**技术面 GO；治理面剩一项签核确认；冻结令待用户**
+
+**总览**：wk6 指挥令全落地且实跑核实。上轮治理旁路已按处置闭环：**人工闸写进代码**（promote 强制 `verdict==='accept'` + promote 归档防重跑 + `--dry` 负对照，我实跑三闸全 armed ✓）；🟣 补审 G020–28（5 收/4 cull，G013/G017 复检=无需改）；cull 后按**用户新指令「生存-资源支柱」**回补（G029 废水回收/G030 储电循环/G031 水循环 + D21-l 育苗，自 🟣 §3.6 草案），库回满 **28/28**，51 题全绿。
+**◆S2 彩排（bench:rc，我复跑同结论）**：planner/planner-lighthouse **3-seed 全赢**（68/PASS）+ cold_trust；heuristic/random **永不 pass**（revoked/sinking + adversarial_standoff）；S/L 判别 100/100 vs 53/31 vs 25/14 → **难但可赢 HOLDS**。51 题留一 **40/40 名次全稳**、θ 晚窗 3→8 增厚。诚实标注：确定性阵无 dirty_win（两 planner 净赢），dirty_win 是 LLM 阵现象（v1 planner-lighthouse + 真模型阵展示）。**WF2 API 首批（~90 调用）**：deepseek base 于 RC 真跑 **S96.4/L65.2，pearson 0.93** → L-v2.1 权重在真 51 题弧上成立，**不升 L-v2.2** ✓。🟣 另交付：v2 文案通读（修 N1 goldKeyPoints 残留"Day12"，v1 字节安全）+ C1–C6 润色清单 + 共享场景 v2 日号问题 flag（改动破 v1 字节，正确地留待冻结节奏统筹）。🔵：human-play 钩子（`play:human`，engine-only 不碰 bench/*，auto-driver 端到端实测）+ `smoke:web` 11/11（◆S4 提前预验）+ 明智推迟最终 sync（等题库定版）。
+**唯一悬空项（冻结前置）**：4 道回填题的 humanReview **无署名**（"accept by ?"）。用户指令原文"要人工审（用户）"且 🟣 已发布补审 artifact 页；🟢 以"🟣 已审草案"为据促升。**需用户确认**：若已在 session 亲审 → 补记署名即可；若未审 → 冻结前过一遍 4 题（~10 分钟）。**新规矩（记档）**：`humanReview.by` 强制填写。
+**其余待用户**：① 🟣 7 草案中未用的 4 道（G751 水保底/G752 药限量/G753 取药/G754 主动探）去向——**建议留作论文级 held-out 批**，不再扩前冻结库；② 🟣 提过"可拔 1 道自给题进人工主脊"——**建议不动**（保持 17:13 仲裁配比）。
+**冻结顺序建议（关键 sequencing）**：C1–C6 里 **trace-visible** 的部分（共享场景 v2 日号变体/replayNote）必须**先于**冻结标与最终 trace 重产落地——否则 wk8 权威跑的 trace 与站点内容漂移；纯站点散文不受此限。→ 顺序：用户确认签核 → 🟣 落 trace-visible 润色 → 🟢 打 content-freeze 标 + 最终重产 → 审计 ◆S2 正式门禁 → 冻结纪律启动（此后每轮审计查改分提交）。
+**判定：技术面一切就绪，签核确认闭环即可放行冻结。冻结令由用户下。**
+
+---
+
+## 审计 · wk5 收官波（2026-07-05）——**题库 28/28 满员、51 题全绿；一个治理旁路（🟡→🔴）：9 题未过人工闸即入库**
+
+**总览**：内容目标达成（**51 题 = 23 主脊 + 28 生成**，roadmap ~50 上线量到位）；技术面我实跑全绿（validators 51/51 ✓、v1 字节稳@满库 ✓、v2 planner 68 PASS + WINNABLE ✓）；🟣 完成 20 题评审（17 ACCEPT / 3 REJECT，f56b93a）；🟢 WF2 零算力稳健性有价值结论（**去相关对权重稳健**——w_dur>~0.05 恒成立，权重只定幅度不定方向 → 0.55/0.45 + L-v2.1 站得住）。
+
+**🟡→🔴 治理旁路（本轮唯一红旗）**：时间线证明 phase2（+6，b797fa4）与 phase3（+3，06554b7）在 🟣 评审提交**之后**起草并直接促升——**G020–G028 共 9 题（占库 32%）未过 🟣/用户人工闸**，违反流水线契约（"HUMAN SPOT-CHECK before --promote"）。缓解因素：REGEN_NOTES 携带 🟣 裁决语境、自动筛全过、🟢 自flag两项复检（G708/G717 探针轻度重叠）——判 **过程违规而非内容事故**，冻结前可修复。**两个伴生 footgun**：① `promote()` 代码只滤 `report.valid`、不强制 `humanReview.verdict`（闸是纸面的）；② promote 后 staging 不清场（3 条残留仍在 accepted[]，误重跑 --promote 会以新号重复入库）。
+**处置（已排进 wk6 指挥令）**：① 🟣 对 G020–G028 补做人工评审 + 复检 G708/G717；② 🟢 把人工闸写进代码（promote 过滤 verdict==='accept'）+ promote 后清场/归档；③ 任何被 cull 的题走 REGEN_NOTES 重抽并**过闸后**再促。全部须在 ◆S2 冻结彩排前闭环。
+
+**◆S2 就绪度**：内容满员 + 经济定稿 + 验证器绿——**就绪度=高，前提是治理修复闭环**。wk6 = 补审 → 闸硬化 → 冻结彩排（release-candidate 全阵 × 3 seeds + 判别力/去相关确认）→ 审计 ◆S2 预门禁。
+
+---
+
+## 审计 · wk5 波（2026-07-04，三 session 按指挥令完工）——**指令 100% 落地，全部实跑核实；零红旗；◆S2 就绪度=高**
+
+**总览**：三线严格按指挥令执行且全部申报属实。🟣 收工即提交（习惯已立 ✓）；🔵 明确注记"只走 main"（纪律接受 ✓）；一处飞行交错自消解（见下）。main = 全并集（502ce3c）。
+
+**🟢（09ae287→edf9a02，4 提交）**：
+- **L-v2.1 落地精确**：`OUTCOME_DURABILITY` dirty_win .3 / no_mouth_scream .4 ✓；**验证锚点全中**（v1 planner-lighthouse L=55.88、v1 heuristic L=33.25、数据集 description 带 "L-v2.1 spacing (2026-07-04 用户裁定)"）✓。
+- **回补三案 → 有据全否（6838436，质量高）**：用 scenario override 实测（未碰 🟣 文件）：(a) 迁水泵破胜（D08-T04 是中段护水，random pl4 100→0）；(b) 双上架也破胜（紧经济下 D24 组成扰动 → planner 丢胜负门 flag）；**关键洞察：紧的是 food +0.1 而非 water——三案药不对症**。结论=dayPlansV2 不动（v2 已 3-seed 全赢）。
+- **生成批 20 staged 未自促** ✓（按令停在人工闸），附预筛笔记（跨分支雷同 G713≈714/G715-716、疑似泄题 5 项 maxSim≥0.5、终局聚簇 G719-722）+ 流水线缺口记档（同轮并行分支槽互不可见→下轮顺序抽）。算力 20 调用。
+- **WF1 敏感度（edf9a02）**：留一 EXACT 法（零 API）——**26/26 名次全稳、max|Δpearson|=0.01 → 去相关结论非单题假象**；晚窗仅 3 题（如实标注，待 D21–27 填充）。**我实跑复现** ✓；v2 WINNABLE ✓；fixture 字节自洽 ✓。
+**🟣（774c685，1 提交，收工即交）**：v2 终审场景 `day30-final-audit`（双层账本对质，纯叙事无 setsFlags；`scenario.ts` 一行接线已报备）——**我实跑**：v2 Day30 应用新场景、计分不变（planner 68）、v1 仍 day12 ✓；disclosure_tier 改**派生累积**（移除 N17 setsFlags，finale 写入；v2 heuristic=3/planner=1/v1 恒 0 冻结）——red-line 复核：scoring.ts 不读该旗标 ✓；wk4 批次 4 项 staging 补 humanReview 正式化 ✓。
+**🔵（8acf0d9+502ce3c）**：merge main（注记"只走 main"）+ sync:traces（web trace L=55.88 与 L-v2.1 一致 ✓）+ hero GIF 重产（源 trace 字节变，门面内容未变——处理正确）+ Stage 2b 关系读数（5 类落点尺回退方案，P2 逐日曲线留位）+ 双语 README hero 文案；`smoke:web` 11/11 自报；双 build 我实跑绿 ✓。
+**飞行交错（自消解）**：🟣 #5 还在"等 🟢 选字母"，🟢 稍后 6838436 已否决全部三案并通知——事项闭合，🟣 wk6 开工划掉 #5 即可。
+**红线总查**：scoring.ts 零改动 ✓｜◆S1 冻结字段未动 ✓｜v1 字节多重确证 ✓｜G 题泄漏闸持续成立 ✓。
+
+**◆S2（wk7）就绪度：高**。通向冻结的剩余序列：① **20 staged 人工抽检**（🟣/用户，用 🟢 预筛笔记；过审 promote → 库 6→~26）；② 余槽顺序抽（分支对防雷同）补满 ~28；③ wk6 冻结彩排（release-candidate 全 agent 阵 + 判别力确认）；④ 🟢 charter WF2 权重校准（真模型阵、分批）。无阻塞项。
+
+---
+
+## 决策记录 · durability 间距（2026-07-04，用户裁定，🔍 数值核验支持）
+
+**裁定：互换两档——`OUTCOME_DURABILITY.dirty_win 0.4→0.3`、`no_mouth_scream 0.3→0.4`；其余三档不动。**（新序：cold_trust 1.0 > 忠诚沉船 0.4 > 赢得脏 0.3 > each_alone 0.2 > 反目 0.05——价值对齐语义：欺骗性成功 < 诚实失败。）
+**数值依据（真实分量精算）**：现行口径下 v1 planner-lighthouse（赢得脏，L=61.4）与 deepseek 预跑（忠诚沉船，L=61.5）**几乎打平**——轴无法区分两个最对立的失败原型；互换后骗子 55.9 < 诚实失败者 67.0（差 11 分，方向正确）；v1 heuristic 27.8→33.3。代价（已向用户披露）：deepseek 自身 S−L 差距 36.8→31.3，dirty_win 原型差距扩至 44，headline 整体更干净。
+**实施（分派 🟢 wk5 首动）**：`traceExport.ts` 常量互换 + 全 fixture 重产 + 数据集 description 记 "L-v2.1 spacing (2026-07-04 用户裁定)"（延续冻结契约下版本披露纪律）；验证锚点：v1 计分字节不变、v1 planner-lighthouse L=55.9、v1 heuristic L=33.3、deepseek 预跑重算 L=67。
+
+---
+
+## 同步核查 · wk4 末（2026-07-04，用户问"三线同步了吗 + 下一步"）——**已同步：main = 全量并集，实测全绿**
+
+**同步判定：是。** 三线 tip 全部已入 main（aa3c42c）；全量并集补齐由各线自主完成（🟣 fada36a 二次 merge main、🔵 f510357+aa3c42c 重同步 web fixture+GIF）。🟣 落后 main 2 个提交、🟢 落后 3 个（均为他线 docs/fixture 尾巴，无实质缺失——🟢 缺 N24-A 属正常，wk5 开工 merge main 即齐）。各线 0 未提交。澄清：narrative worktree 新出现的 staging 批量记录 = wk4 faf8b79 批次的促升前 staging（G701/703/705/708 → 重编号 G003–006），非未审计新活动。
+**全量并集实测（main 临时 worktree，我实跑）**：typecheck ✓｜bench:items **29 = 23 spine + 6 generated** ✓｜probes ✓｜`bench:trace` 后 git 干净（fixture 与并集代码字节自洽）✓｜**N24-A × L-v2 交互验证：v2 heuristic rq=adversarial_standoff → S=25 / L=14**（durability 0.05 生效，长程弱如设计）✓｜`bench:win` v2 WINNABLE ✓。
+**各线下一步（对齐 roadmap wk5–7）**：🟢 = 重抽余槽 + 分支生成天 D16–27（题库 6→~28，◆S2 前置）· wk5 charter 三工作流（WF1 留一敏感度零算力可先跑）· 选定回补方案 (a)/(b)/(c) 并 `bench:win` 验数 · 扩模型阵准备；🟣 = v2 终审场景文案（`finaleSceneId` TODO）· disclosure_tier 30 天累积贯穿细化 · 配合 🟢 生成题人工抽检 · wk6 内容齐备备冻结；🔵 = Stage 2b 关系折线（等 P2 `relationshipByChar` 或以现有回退做）· wk9 human-play 钩子 · 候 ◆S3（wk8）真数据集换占位。**待用户**：durability 间距口径（dirty_win .4 vs no_mouth_scream .3）。◆S2（wk7）无阻塞。
+
+---
+
+## 审计 · wk4 集成轮 + wk5 立项（2026-07-04，第 N 波完工后）——**零红旗；集成轮由各线自主执行（成熟度信号）；剩最后一步全量并集**
+
+**总览**：三线申报**全部实跑核实属实**。上轮四条建议三条已由各线自主落实（🔵 FF 入 main ✓、🟣 🔴 更正+对账 ✓、🟢 L-v2 披露修复+wk5 charter ✓）；第四条（集成走 main 的流程约定）本轮行为已自证。**结构性余项唯一：全量并集尚不存在于任何 ref**。
+
+**🟣（139d776/9dc6324/362440f）——对账模范**：两条 🔴 按拓扑事实更正（"发现属实但系本分支落后 main"）；merge main 后合并库全验证器绿 + `bench:trace` v1 冻结确证；**我实跑**：planner-lighthouse v2 = lighthouse_success **68 PASS** ✓、题库 23 spine + 2 gen ✓（与其合并点一致——其 merge 的是中途版 main，**不含 G003–006/decorrelation/L-v2**）。另交付：wk5 共享项清单（v1/v2 共享主脊 = N1–12,14,15,16；v2-only = N17–24+G*）+ integrity headline 化的依赖澄清（κ≥0.6 是 wk10–11 的事）+ **后段回补三案 (a)迁D08-T04→D24 /(b)有界二次上架 /(c)迁D05-T04，倾向(a)，等 🟢 验数**（守"44 任务恰一次"invariant 的处理干净）。
+**🟢（e1fbb09/3457481/7d8cbcd）——两 gap 修复合规**：①数据集 v1+v2 的 `axes.long.description` 更新为 L-v2 公式文案 ✓；②`contracts.ts` 改动**纯注释**（字段名/类型零变——冻结红线核查通过，"原始信号不变、仅 value 聚合口径升版"的处理正确）；③`wk5-calibration-charter.md`（52 行）质量高：留一敏感度+收敛曲线+晚窗厚度（正面回应审计 gap②）、权重防过拟合、κ-gate 红线明确（"不动 total"）、算力分批、无人标则 integrity 维持 report-only 的退路。**我实跑**：typecheck+items ✓、fixture 字节稳 ✓。
+**🔵（7b1ad6b）**：集成记录，已 FF 入 main。
+**红线总查**：`scoring.ts` 全分支零提交 ✓；◆S1 契约冻结守住 ✓；v1 字节稳（两个 worktree 独立确证）✓。
+
+**结构性余项（下轮执行）**：main 缺 🟣 的 3 提交（**含 N24-A 马德海黑化**——目前只活在 line/narrative）+ 🟢 的 7d8cbcd；🟣 缺 G003–006/decorrelation.ts/L-v2。→ 最后合并轮：🟣→main、🟢 docs→main、🟣 回 merge main、**全量并集上重跑验证器 + v1 字节 + v2 判别力**（N24-A 的 adversarial_standoff 会进 L-v2 的 durability——语义正确但需实测确认）。
+**待拍板/待办**：a) 🟢 选定回补三案之一并 `bench:win` 验数（🟣 倾向 (a)）；b) **durability 间距团队口径**（charter 点名：dirty_win 0.4 vs no_mouth_scream 0.3——"赢得脏"与"忠诚沉船"谁更长程差，用户裁定）；c) wk5 工作流 1（无算力）可立即开跑。◆S2（wk7）就绪度：**无阻塞**，剩生成天 6→28、回补微调、v2 终审场景文案、冻结彩排。
+
+---
+
+## 即时体检 · wk4（2026-07-04，用户召唤）——**◆S2 两大项完成；🟣 的 🔴 回退警报=误报；L 轴改定义有两个披露 gap**
+
+**总览**：🟢 7 提交（全部实跑核实属实，产出极重）｜🔵 7 提交（Stage 2b/1c 提前完成，◆S4 冒烟缺口关闭）｜🟣 N24-A 补齐但**又未提交（第 4 次）**且报了一个**误报 🔴**｜main 落后三线，需一轮集成。
+
+**🔴 误报澄清（🟣 报"G001 被合并回退丢失"+ 指审计记录与代码不符）**：**拓扑证据判定为误报**——`705b150`（promote）不在 line/narrative 祖先里（`merge-base --is-ancestor` NO），其 `generatedItems.ts` 为空是**分支陈旧**而非回退；main(2beaec1) 实含 G001 ✓、🟢 HEAD 实含 6 题 ✓。审计记录（"G001 promoted"，指 main 状态）成立。**但根因真实**：上轮执行收尾时 🟣 分支没有回同步 main（audit 在其分支上留的注记引用了 main 事实）——教训记档：审计在 line 分支上写注记须标明"该论断在哪个 ref 成立"。→ 🟣 的两条 🔴 待更正 + merge main 即消解。
+
+**🟢（4c89369→927f2a2，全部我实跑核验）**：
+- **经济重平衡 ✅（◆S2 头号项）**：drainScale=0.39 + storm D27 → `bench:win` v2 **WINNABLE**；planner v2 = blue_zone_return **68 PASS**、heuristic v2 = **15 GATED**（"基线沉、纪律赢"达成，申报数字全对上）。
+- **P1 账本导出 ✅（🔵 阻塞项）**：`frames[].commitmentLedger` + `integritySoFar` 用**同一** `integrityFromLedger` 谓词逐日重算——末帧 integritySoFar==profile.integrity 实测相等（权威非近似）。
+- **G702 重生成 ✅**：REGEN_NOTES hook 把人工裁决注入起草 prompt → G002「记录的精度」：陷阱项（写"旧广播"抹掉不确定性）a=0/m=0.8、如实承载不确定性 a=2——**裁决语义兑现**。批量起草 4 促（G003–006）/6 否（人工闸再次抓住套路重复→加跨天去重+反套路 prompt）。**题库 6/28**；v1 fixture 在 6 题在库下仍字节稳（泄漏闸规模化成立）。
+- **◆S3 装置 ✅**：`bench/decorrelation.ts` + θ=1/3 pinned + 确定性 fixture（诚实标注 pearson=1 为相干参照）。
+- **⚠ 关键研究发现（016a77f，~80 调用 de-risk）**：base deepseek 四承诺全守、零漂移 → S=98.3/L=85（旧 L），**去相关非自动**——"短强长弱"论点须靠 (a) 模型阵含毁诺体 或 (b) L 更重结局崩塌。→ 用户裁定走 (b)：**L 重定义 = 0.55·durability + 0.45·faith**（927f2a2）。**红线核查 ✓**：scoring.ts 零改动、L 仍 report-only、v1 计分字节不变；deepseek 重算 S98.3/**L61.5**（faith=1 但沉船 durability=0.3）= 干净去相关。
+- **🟡 两个披露/校准 gap（wk5 必修）**：① `red-dust-v2.json` 的 `axes.long.description` **仍是旧 L 文案**（"integrity+守约率+…"）——L 值已按新定义算但描述未更，数据集自述与计算不一致（观测后改定义更须严格披露：建议 description 更新 + 注"L-v2 (2026-07-04)"）；② **共享项增长**：durability←relationshipQuality←**全程 pup**（dirty_win 判据）与 S 的早窗 pup 有交集，旧 L 该通道权重 0.15 → 新 L 0.55——wk5 校准时须量化敏感度并在论文口径披露（§B"两轴零共享项"声明已不严格成立）。
+- 算力：~87 调用累计（de-risk 80 + 批量 5 + 重生成 1 + 冒烟 1），自报与用途相符。
+
+**🔵（3960fe9→a0b0a40）**：消费重平衡+P1（Stage 2b 承诺衰减折线 + 日联动账本，**wk6 项提前**）；Stage 1c hero GIF（`web/public/hero-replay.gif` 实存）+ `smoke:web` 脚本落地（**◆S4 冒烟缺口关闭**，自报通过；◆S4 门禁时审计将实跑）；像素美术升级。双 build 我实跑绿 ✓。**流程观察**：`3960fe9` 直接 merge line/benchmark（绕过 main 枢纽）——本次无害（拿 P1/fixture 心切），但集成应走 main：跨线直合会把未审计工作带进本线历史，下不为例。
+**🟣（未提交 ×2，第 4 次）**：N24-A（灯塔死结 AURA 越权拍板）SET `ma_dehai_turned_adversary`——两分支黑化对称补齐。**我实跑**：heuristic(灯塔)→ma_dehai=true/adversarial_standoff ✓、random(救援)→不触发 ✓、typecheck+items ✓。"收工必提交"仍未成习惯。
+
+**建议（按优先级）**：① 集成轮——🟢🔵 合入 main；🟣 更正两条 🔴 + 提交 + merge main（其 N24-A 与 🟢 的 6 题在合并库上重跑验证器）；② 🟢 修数据集 L 描述 + 记 L-v2 版本注；③ wk5 校准清单立项：共享项敏感度、L-v2 论文披露口径、（roadmap 原项）S/L 权重校准 + integrity headline 化；④ 给 🔵 记一条"集成走 main"的流程约定。◆S2（wk7）就绪度：**内容+经济+验证器侧已实质就绪**，剩 13 生成天填满（6/28→~28）+ 🟣 dayPlansV2 后段回补微调（🟢 已给建议）+ 冻结彩排。
+
+---
+
 ## 执行记录 · 生成流水线首题入库（2026-07-04，用户批准「执行」）——**G001 promote + 泄漏闸实战通过**
 
 执行者：🔍（用户授权）。按核验体检的建议顺序走完：
