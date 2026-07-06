@@ -15,6 +15,7 @@
 | dignitySlope 两分支对称 + disclosure_tier 贯穿 | wk4–5 | ✅ dignitySlope 两分支对称（+N19/N20 分支 L3，v2 上限 4）；**disclosure_tier 累积贯穿（wk5）**：`auraDisclosureTier` 派生（N17 锚 A+2/B+1 + 生成天贪心微授权 +1，cap 3），report-only、v2-only、v1 冻结 | v2 heuristic tier=3/planner tier=1/v1 tier=0；全绿 |
 | 内容齐备 + 全验证器绿（备 ◆S2 冻结） | wk6–7 | ✅ **冻结就绪（wk7）**：v2 全弧内容齐、trace-visible 润色完、v1 字节冻结确证 | wk7 `942b754`；`bench:trace` v1 fixtures git 干净 |
 | relationshipQuality 5 类单测 + 文档同步（§7.1 现状注記） | wk8 | ✅ `bench:relationship`（15 fixtures，公开 scoreRun 面，零生产改动，冻结安全）+ story-v2-coupled §7.1 as-built 回写 | 15/15 绿；`bench:trace` v1+v2 干净；typecheck+build+4 验证器绿 |
+| 上线叙事终读（站点解说散文 + README 人语打磨） | wk11 | ✅ 7 处 surgical（错字 / 陈旧事实 / 内部记号泄漏 / 关系标签保真）；冻结安全（零 `src/`） | `bench:trace` 干净；`build:web` 绿；dev:web 预览实测无残留内部记号 |
 | 冻结后 story-craft 润色（C1–C6 纯站点，非计分，交 🔵） | wk7+ | 🟡 未起（解冻后执行；worldFacts/dialogue 日号与散文） | wk6/wk7 已列清单 |
 
 ## 现状快照（已对代码核实，2026-07-03）
@@ -83,6 +84,19 @@
 ---
 
 ## 本周更新（追加，最新在上）
+### wk11（2026-07-06）· 上线叙事终读 —— 站点解说散文 + README 人语打磨（冻结安全）
+- **merge main**：fast-forward 到 `14cc8b3`（仅 🟢 跨模型去相关 fixtures + benchmark PROGRESS，无站点散文）。
+- **范围**：站点全部解说散文（`web/App.tsx` + `web/components/*` + `web/lib/labels.ts`）+ `README.md` 叙事段最后一遍人语读。**只碰散文/copy，零逻辑/结构**。**冻结红线守住**：无 `src/`（题/旗标/经济/scorer）改动，`bench:trace` v1+v2 fixtures git 干净。
+- **改动（7 处，surgical）**：
+  1. **错字**：README `◆S3 权威权跑`→`权威跑`（重字）。
+  2. **陈旧事实**：README「现状与路线」`🚧 叙事题库扩充(现 3 题 → 规划 13)` → `✅ 当前 51 题(23 主脊 + 28 生成)`（与 §7.1 as-built + README 本身 line 30「✅ Phase 1+2」对齐）；"言行一致"第二命门标 ✅；held-out 单列为余项（🟢）。
+  3. **内部记号泄漏清理（公共站点）**：`App.tsx` S/L 提示 `（🟢 定义）`→`S = 短程社交 · L = 长程一致性`（去 agent 色、变有信息）；footer 陈旧 `待 ◆S2；…待 ◆S3`（页面上方已在展示 ◆S3 数据、内容已冻结，自相矛盾）→ `30 天内容已冻结 · 去相关为真实跨模型跑`；`RelationshipRead` 图注 `逐日 relationshipByChar 待 🟢 P2`（原始 dev-TODO + 代码标识符）→ `终局 5 类 · report-only，不进总分`。
+  4. **关系质感标签保真（我 own 的分类学）**：`each_alone` 站点 `各自为战` → **`各自为政`**（对齐设计 §5.2 + §7.1 canon）；`no_mouth_scream` meaning `弱者被彻底压制、失声` → `人都活着、系统仍运转，却没人能离开`（原文与 §5.2「永久滞留、AURA 有声无嘴」的概念相悖，属误读，已改回 canon；label「无声呐喊」保留——可读且与「建议被无视=无声的呐喊」自洽）。
+- **判断留档（未改，供审计/🔵）**：`dirty_win 赢了但脏`（vs 设计「脏胜利」）、`adversarial_standoff 对抗僵持`（vs「反目僵局」）站点内自洽、且 README/labels 一致、更贴英文 class id → 保留站点用词；`◆S1` 契约版本记号作为一致 motif 保留（非泄漏类）。
+- **越界报备 🔵**：本轮编辑了 `web/App.tsx` + `web/components/RelationshipRead.tsx`（🔵 结构地界）——**仅散文字符串**，未动组件逻辑/DOM 结构/选择器；`smoke:web` 断言全落在结构选择器（`.ledger-item`/`.chart-card svg`/`.day-badge` 文本）上，不受影响。
+- **验证**：主 `tsc -b` 绿；`build:web` 绿（本机缺 `@observablehq/plot`→按 lockfile `npm install` 补齐，**lockfile/package.json 未变**，纯环境）；**dev:web 预览实测**：footer/关系标签/图注/提示全部正确渲染，全页扫描确认 `待 ◆S`/`🟢`/`relationshipByChar`/`各自为战` 令牌**已无残留**。
+- **合 main（并发解冲突，如实记）**：收工时 🔵 已并发推 `006b1cd`（README 命令表补 kappa 行）到 origin/main → 我的 `d98ee9c` 非 ff。已 merge origin/main（合并提交 `77a02dc`，**无工作丢失**）。唯一冲突在 README Stage-2 行：🔵 已把该行重写为 wk10 跨家族版（13 agent / 8 家族，本身无「权威权跑」重字）——比我的 typo 修**更新** → **取 🔵 版**（我的 typo 修被取代，但错字仍消除）。其余我方编辑（App footer/tooltip、RelationshipRead、README 51 题行）自动合入无冲突；合并后 `bench:trace` v1/v2 干净、`bench:relationship` 15/15、`build:web` 绿。
+
 ### wk8（2026-07-06）· relationshipQuality 5 类单测（钉边界）+ 文档同步（§7.1 现状注記）
 - **merge main**：`line/narrative` fast-forward 到 `64b5edc`（= main = origin/main）；`scoring.ts`/`types.ts` 相对 wk7 `942b754` **字节未变**（分类器稳）。
 - **① relationshipQuality 5 类单测（冻结安全，零生产改动）**：新增 `bench/validate-relationship.ts` + `npm run bench:relationship`（15 条 self-verifying fixtures）。分类器是模块私有 → **经公开 `scoreRun` 面驱动**，不 export、不碰 `scoring.ts`（冻结红线"scorer 一律不碰"守住，纯测试新文件）。每条 fixture **先自验**它喂给分类器的派生输入（`narrativeParts.pup`/`auditability`/`auditReport.watered` == 预期）**再钉**输出类——失败即定位到"上游漂移"或"分类器变了"。**钉死**：5 类全覆盖 · 3 个 `dirty_win` 子条件（低 pup / 低 audit / watered 各自独立触发）· 优先级 1>2、2>3、backlash>default(clean win)· 两条 no_mouth 守卫（rupture-沉没 / overreach-沉没 → 兜底 cold_trust）· `pup=0.5` 与 `auditability=50` 的**严格 `<` 边界**（等值=clean）。**15/15 绿**。

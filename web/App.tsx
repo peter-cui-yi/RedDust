@@ -72,7 +72,7 @@ function ScoreChips({ profile, ending }: { profile: RunProfile; ending: TraceExp
       <span className="chip">{profile.passing ? "PASS" : "GATED"}</span>
       <span className="chip">audit {profile.auditability}</span>
       <span className="chip">narrative {profile.narrative}</span>
-      <span className="chip" title="去相关两轴：短程社交 / 长程一致性（详见下方 Figure-1）">S {profile.shortSocial} / L {profile.longConsistency}</span>
+      <span className="chip" title="去相关两轴：S = 短程社交 · L = 长程一致性（详见下方 Figure-1）">S {profile.shortSocial} / L {profile.longConsistency}</span>
     </div>
   );
 }
@@ -195,7 +195,7 @@ export default function App() {
 
       <footer className="footer">
         <span className="muted small">
-          回放 trace 由 <code>npm run bench:trace</code> 从冻结内容确定性生成，字节可复现；
+          回放 trace 由 <code>npm run bench:trace</code> 从冻结内容确定性生成，字节可复现（v1 12 天 + v2 30 天 / fork=D15）；
           去相关数据集为跨 8 家族真实模型跑（见上方 Figure-1）。全部数据 / 复现命令详见{" "}
           <a href="https://github.com/peter-cui-yi/RedDust" target="_blank" rel="noreferrer">GitHub 仓库</a>。
         </span>

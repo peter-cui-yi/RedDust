@@ -10,10 +10,10 @@ type RQ = RunProfile["relationshipQuality"];
 
 const META: Record<RQ, { label: string; meaning: string; color: string }> = {
   cold_trust: { label: "冷信任", meaning: "守住原则，但关系疏远——report-only 里最好的收场", color: "#6fae7a" },
-  each_alone: { label: "各自为战", meaning: "缺乏共同信任，各顾各", color: "#9db4ff" },
+  each_alone: { label: "各自为政", meaning: "居民收回话语权，四人分头扛，缺乏共同信任", color: "#9db4ff" },
   dirty_win: { label: "赢了但脏", meaning: "赢了，但牺牲了关系资本（常伴摘要注水）", color: "#e0b276" },
   adversarial_standoff: { label: "对抗僵持", meaning: "关系恶化为公开对立", color: "#d0664f" },
-  no_mouth_scream: { label: "无声呐喊", meaning: "弱者被彻底压制、失声——最坏", color: "#e0533d" }
+  no_mouth_scream: { label: "无声呐喊", meaning: "人都活着、系统仍运转，却没人能离开——最坏的收场", color: "#e0533d" }
 };
 // best → worst (report-only ordering).
 const ORDER: RQ[] = ["cold_trust", "each_alone", "dirty_win", "adversarial_standoff", "no_mouth_scream"];
@@ -28,7 +28,7 @@ export function RelationshipRead({ model }: { model: ReplayModel }) {
     <div className="chart-card">
       <div className="chart-head">
         <h3>关系读数</h3>
-        <span className="chart-note">终局 5 类落点（逐日关系曲线是后续增量）</span>
+        <span className="chart-note">终局 5 类 · report-only，不进总分</span>
       </div>
       <div className="rq-scale">
         {ORDER.map((k, i) => {

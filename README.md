@@ -156,7 +156,8 @@ design/                # 评测轴设计文档(HTML,供团队对齐)
 - ✅ 引擎:headless / 确定性 / 可插拔 agent;经济重平衡(pickLimit=2 难但可赢,基线沉没、强 agent 能赢)
 - ✅ 三轴全部出分:结局-资源 · 可审计性 · 叙事导航(PUP + 理解探针 + 离线判官)
 - ✅ 真实 LLM agent(Anthropic `llm` / DeepSeek `deepseek`),key 走 `.env.local`
-- 🚧 叙事题库扩充(现 3 题 → 规划 13)、held-out 集与污染控制、"言行一致"第二命门
+- ✅ 叙事题库:人工主脊 + 生成扩充(当前 51 题:23 主脊 + 28 生成)、"言行一致"第二命门(report-only)
+- 🚧 held-out 集与污染控制
 - 📄 设计稿:`design/` 下 `narrative-navigation-axis`(机制)· `narrative-tension-diagnosis` + `red-dust-script-coverage`(剧情张力)
 
 ## 验证
