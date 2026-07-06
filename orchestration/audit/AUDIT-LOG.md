@@ -35,6 +35,21 @@
 
 ---
 
+## 审计 · wk9–10 波 + ◆S4 端到端（2026-07-06）——**8 家族跨模型 Figure-1 落地；κ=0.745 过线（诚实自缓）；◆S4 审计端到端通过，正式闭环差两个用户动作 + 一个内容项**
+
+**冻结纪律例查：干净**（`content-freeze-s2..main` 保护路径零改动——🟢 论文级全部走新增文件，含三臂的 post-hoc 置换设计规避改内容，聪明且合规）。
+
+**🟢（wk9–10，5 提交，全部核实）**：
+- **8 家族跨模型 Figure-1（旗舰交付，4f3df1e）**：yi-zhan portal（用户供 key）5 模型跑满冻结 v2 + 4 确定性锚 + 4 deepseek(cached) = **13-agent 面板**。我逐行核对 `red-dust-v2-crossmodel.json`：**pearson 0.81 / spearman 0.65 / 18 对名次翻转**；短程 S≈87–100 齐平下长程**分裂**——claude-opus-4.8-thinking **L=99.6** / gemini-3.5-flash 98 / MiniMax-M2.7 99.8 守住 vs deepseek 家族 55–66 / kimi-k2.6 64.9 / glm-5.2 66.3 崩掉。**"短强≠长稳"在 8 个真实模型家族上成立**——这就是论文与上线的核心证据。三臂置换：endogenous 0.81 vs shuffle-null 0±0.29，**p=0.001**。
+- **κ 判官验证（3e72800）**：用户标注 30 条 → **κ=0.745（3-way）/ 87% 一致，过 0.6 门**。诚实分层记档：adversarial κ=1.0 撑总分、natural κ=0（judge 退化全 sincere）+4 分歧——**自缓决定正确：integrity 进 total 延后 ◆S5+audit，先扩 natural 硬样本**。结果可复现（`kappa/kappa-result.md` + `bench:kappa-score`）。
+- 三臂脚手架（8-agent p=0.002）+ held-out G8xx 隔离段（promote 硬拒 heldOut，实弹负对照；6 staged）+ portal 客户端健壮化（deepseek 重构后字节不变复现）。算力记账全程：wk9 ~35 + wk10 ~381 live，其余 cache；**origin/main + 冻结 tag 已推送**（用户在场供 key/充值，视为授权；记档）。
+**🟣（3e64963）**：relationshipQuality 5 类边界测试（`bench:relationship`，**我实跑全 pin 过** ✓——5 类/dirty_win 三子条件/优先级/严格边界钉死；新文件循 bench 内容验证器既有模式，合规）+ §7.1 as-built 文档同步。冻结红线守住。
+**🔵（7870cb0）◆S4 预检——诚实工程范本**：不能真部署就不假装（无 token/CLI，改建 GitHub Actions workflow + `deploy:check` 子路径模拟器）；Safari/Firefox 环境限制如实记录；**真修三个问题**：375px 横向溢出（select 最小宽度根因）、ReplayScene 无条件预载 7.3MB 分支背景 → 懒加载（首屏 -64%）、时间轴交互按钮误包 `aria-hidden`（读屏不可见的真 a11y bug）+ 4 图表补 aria。
+**◆S4 审计端到端（我实跑）**：build ✓ + `smoke:web` **11/11** ✓ + 子路径模拟服务器**亲测**（`/RedDust/` 页面/权威数据集/v2 trace/hero GIF 全 200）✓。**判定：审计侧通过；正式闭环差三件**——① 用户在 GitHub Settings 开 Pages→GitHub Actions（workflow 就绪）；② Safari 人工过一遍（2 分钟）或授权装 Playwright（~300MB）；③ **站点 Figure-1 还是 8-agent deepseek 版**（crossmodel 在 🔵 提交之后才落）→ wk11 换 13-agent 版并更新 README 数字。
+**遗留决策状态**：integrity→total = κ 过线但**共识延后 ◆S5+audit**（无需用户现在拍）；LLM 三臂扩量预算——portal 5 模型已跑满并 cache，13-agent 三臂已算，原"待批"事项自然消解。
+
+---
+
 ## ◆S2 正式门禁 + ◆S3 交付核验 · wk7–8 波（2026-07-05）——**◆S2 PASS（冻结标全绿）；◆S3 已交付并被消费；真 Figure-1 落站**
 
 **◆S2 正式门禁：PASS**（标 `content-freeze-s2` = d98d3e2）。我在标上实跑：typecheck ✓、4 验证器（51 题）✓、fixture 字节自洽 ✓、`bench:rc` 难但可赢 HOLDS ✓。**冻结纪律首查：标后提交（5323872/4f8b91e）对保护路径零改动 ✓**（deepseekClient +47 行经查为纯缓存管道/DI 注入，非策略；🟣 标前的 942b754 是 scenarioText 散文覆写**机制**——touch 了 types/orchestration/runScenario/scenes，但在标前落地且 🟢 冻结重产验证 v1 字节/v2 分数零变后才打标——合规）。冻结基线快照：**tag=d98d3e2，51 题（23+28）、scorer v0.5.1、L-v2.1、契约 1.0.0**。此后每轮审计盘查 `content-freeze-s2..HEAD` 保护路径。
