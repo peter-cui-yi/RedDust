@@ -27,8 +27,8 @@ export function RelationshipRead({ model }: { model: ReplayModel }) {
   return (
     <div className="chart-card">
       <div className="chart-head">
-        <h3>关系读数（Stage 2b）</h3>
-        <span className="chart-note">终局 5 类 · 逐日 relationshipByChar 待 🟢 P2</span>
+        <h3>关系读数</h3>
+        <span className="chart-note">终局 5 类落点（逐日关系曲线是后续增量）</span>
       </div>
       <div className="rq-scale">
         {ORDER.map((k, i) => {

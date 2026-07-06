@@ -196,6 +196,10 @@ body {
 .rev-pair { font-family: ui-monospace, monospace; font-size: 11px; color: var(--dust); margin-right: 4px; }
 
 /* misc */
-.loading { padding: 40px; text-align: center; color: var(--muted); }
+.loading { padding: 40px; text-align: center; color: var(--muted); animation: rd-pulse 1.6s ease-in-out infinite; }
+.loading-inline { margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--line); color: var(--muted); font-size: 13px; animation: rd-pulse 1.6s ease-in-out infinite; }
+@keyframes rd-pulse { 0%, 100% { opacity: 0.55; } 50% { opacity: 1; } }
 .banner-error { margin-top: 12px; padding: 10px 14px; background: #3a1e18; border: 1px solid #5a3a34; border-radius: 8px; color: #e08a76; font-size: 13px; }
 .footer { margin-top: 22px; padding-top: 12px; border-top: 1px solid var(--line); }
+.footer a { color: var(--dust); text-decoration: none; }
+.footer a:hover { text-decoration: underline; }

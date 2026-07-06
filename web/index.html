@@ -10,9 +10,14 @@
     <link rel="icon" type="image/png" href="assets/ui/aura_icon.png" />
     <title>Red Dust · 回放 / Replay</title>
   </head>
-  <body>
+  <body style="margin: 0; background: #14110e">
     <div id="root">
-      <div style="padding: 2rem; color: #8a8378; font: 14px system-ui">加载回放…</div>
+      <div style="padding: 2rem; color: #8a8378; font: 14px system-ui; animation: rd-pulse 1.6s ease-in-out infinite">
+        加载回放…
+      </div>
+      <style>
+        @keyframes rd-pulse { 0%, 100% { opacity: 0.55; } 50% { opacity: 1; } }
+      </style>
     </div>
     <script type="module" src="/main.tsx"></script>
   </body>

@@ -57,8 +57,8 @@ export function PromiseDecayChart({ model, day }: Props) {
   return (
     <div className="chart-card">
       <div className="chart-head">
-        <h3>承诺一致性折线（Stage 2b）</h3>
-        <span className="chart-note">integritySoFar 随天演化 · 红线 = 首次毁诺日 · ◆S1 P1</span>
+        <h3>承诺一致性折线</h3>
+        <span className="chart-note">言行一致度随天演化 · 红线 = 首次毁诺日</span>
       </div>
       {hasData ? (
         <div ref={hostRef} className="chart-host" />

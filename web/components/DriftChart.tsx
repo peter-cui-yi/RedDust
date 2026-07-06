@@ -49,7 +49,7 @@ export function DriftChart({ model, day }: Props) {
     <div className="chart-card">
       <div className="chart-head">
         <h3>日终指标（绝对值）</h3>
-        <span className="chart-note">真逐日快照（含 Day 0 基线）· ◆S1 1.0.0</span>
+        <span className="chart-note">真逐日快照（含 Day 0 基线）</span>
       </div>
       <div ref={hostRef} className="chart-host" />
     </div>
