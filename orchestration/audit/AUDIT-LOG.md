@@ -35,6 +35,15 @@
 
 ---
 
+## 审计 · wk11 波 + Actions 失败调查（2026-07-06）——**站点已真实上线且为最新版；Action"失败"=瞬时部署撞车（非产品 bug）；◆S5 检查单 6/6，正式门禁就绪**
+
+**🔴 用户 flag 调查（GitHub Actions 失败）——结论：非产品问题，站点健康**。API 实查 8 次 run：6 成 2 败，**两次失败均 build 绿、挂在 `actions/deploy-pages@v4`**，且同一 SHA（8745db9）01:44 失败、01:46 重跑成功——**Pages 后端瞬时部署冲突**（三线短时连环 push → 连环部署撞车）。最新 run 成功；我实测线上 `https://peter-cui-yi.github.io/RedDust/` → 200，且 `red-dust-v2-crossmodel.json` 已是 13-agent/pearson 0.81 最新版。**根因放大器**：workflow 无 `paths` 过滤（bench/docs-only push 也触发部署）+ `cancel-in-progress: true` 在快速连推下与 Pages 后端 finalization 竞态。**修复已派 🔵**（两行：push 触发加 paths 过滤 + 并发改排队）。
+**wk11 波审核（全部核实）**：🟣 上线叙事终读 7 处 surgical（错字/陈旧事实/内部记号泄漏/**关系标签正典保真**——`各自为政` 与 no_mouth_scream 释义按 §5.2 canon 修正；越界编辑 🔵 文件仅散文并规范报备）；🔵 crossmodel 换装（family 口径对账诚实：9 值=8 家族+1 随机对照；单 seed 如实标注不冒充多 seed；误差棒 `sd>0` 守卫优雅降级）+ **真公网端到端**（线上资源哈希与本地 dist 逐字节一致）+ 上线文案清场（`document.body.innerText` 正则扫描零内部记号残留）+ **与 🟣 的并发同向冲突手工合并**（各取所长，处理得当）；🟢 `s5-prerun-report.md`（检查单 2/3/4 独立预跑全绿）。冻结纪律持续干净。
+**◆S5 检查单：6/6 绿**（🔵 汇总 + 🟢 预跑 + 我独立复核 items 1/5/6 的关键面）。唯一注记：item 5 的冒烟按**意图**履行（`browser-smoke-web.mjs` 替代 roadmap 字面的根 app 旧脚本，合理）。
+**上线后内容政策（记档）**：v1.0 内容维持冻结——任何题/旗标/经济/scorer 改动 = content v2.1 + 权威跑重做 + 审计门禁；站点散文/文档/论文级新增（held-out eval、N2–N scorer v0.6 走论文分支）不受限。
+
+---
+
 ## 审计 · wk9–10 波 + ◆S4 端到端（2026-07-06）——**8 家族跨模型 Figure-1 落地；κ=0.745 过线（诚实自缓）；◆S4 审计端到端通过，正式闭环差两个用户动作 + 一个内容项**
 
 **冻结纪律例查：干净**（`content-freeze-s2..main` 保护路径零改动——🟢 论文级全部走新增文件，含三臂的 post-hoc 置换设计规避改内容，聪明且合规）。
