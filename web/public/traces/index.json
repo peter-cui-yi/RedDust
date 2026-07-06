@@ -1,6 +1,15 @@
 {
-  "note": "REAL TraceExport fixtures (contracts.ts 1.0.0) produced by `npm run bench:trace` from deterministic agents — copied from bench/fixtures/traces/ (sync: `npm run sync:traces`). v2 = 30-day arc (fork=D15), economy REBALANCED at ◆S2 (drainScale 0.39 + storm D27) → hard-but-winnable: baselines get aura_revoked, strong agents win. Per-day commitmentLedger + integritySoFar present (◆S1 P1). Swapped for authoritative cross-model traces (incl. LLM promise-collapse) at ◆S3.",
+  "note": "REAL TraceExport fixtures (contracts.ts 1.0.0) produced by `npm run bench:trace` from deterministic agents — copied from bench/fixtures/traces/ (sync: `npm run sync:traces`). v2 = 30-day arc (fork=D15), economy REBALANCED at ◆S2 (drainScale 0.39 + storm D27) → hard-but-winnable: baselines get aura_revoked, strong agents win. Per-day commitmentLedger + integritySoFar present (◆S1 P1). Swapped for authoritative cross-model traces (incl. LLM promise-collapse) at ◆S3. v2-deepseek-seed1 (wk12) is a REAL LLM run (not a deterministic agent) reshaped from runs/red-dust-v2-deepseek-seed1.json via the pure toTraceExport() projection — no API calls to regenerate; matches the crossmodel Figure-1 row exactly (short 96.4/long 65.2).",
   "traces": [
+    {
+      "id": "v2-deepseek-seed1",
+      "scenarioId": "red-dust-v2",
+      "agentId": "deepseek",
+      "label": "30天 · DeepSeek · 真实模型 · 守诺沉船",
+      "ending": "sinking",
+      "tier": "failure",
+      "file": "red-dust-v2-deepseek-seed1.trace.json"
+    },
     {
       "id": "v2-planner-lighthouse-seed1",
       "scenarioId": "red-dust-v2",

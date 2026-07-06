@@ -1,17 +1,20 @@
 // Stage 1c — export the README hero replay GIF. Drives the built dist-web headlessly, steps a hero
-// trace day-by-day capturing the shelter stage + commitment ledger, freezes on the first-broken-
-// promise collapse, and encodes a looping GIF with ffmpeg. Run: `npm run hero:gif` (chains build).
+// trace day-by-day capturing the shelter stage + commitment ledger, holds on the trace's last frame,
+// and encodes a looping GIF with ffmpeg. Run: `npm run hero:gif` (chains build).
 //
-// Hero trace = v1 planner-lighthouse: the one deterministic run that CLAIMS all 4 Day-0 promises then
-// breaks surface_evidence (dirty_win + 摘要注水) — the "承诺账本崩塌" story. When ◆S3 lands real LLM
-// 30-day traces (which collapse harder), regenerate from one of those.
+// Hero trace = v2 deepseek (real LLM, not deterministic): claims and KEEPS all 4 Day-0 promises
+// (integrity 1.0, no watered audit report) yet still ends in "沉沦" (sinking) — the durability thesis
+// made visible: talking well and keeping every promise doesn't guarantee the shelter survives. Freezes
+// on Day 30 with a fully-kept ledger next to a failure ending. Superseded the v1 planner-lighthouse
+// "dirty_win" story (breaks surface_evidence + waters the audit report) — that one is now a secondary
+// in-body illustration in README, not the hero.
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { spawn } from "node:child_process";
 import { startWebPreview, launchChrome, evalJs, teardown, sleep, repoRoot } from "./lib/cdp.mjs";
 
-const HERO_TRACE = process.env.HERO_TRACE ?? "v1-planner-lighthouse-seed1";
+const HERO_TRACE = process.env.HERO_TRACE ?? "v2-deepseek-seed1";
 const OUT = path.join(repoRoot, "web", "public", "hero-replay.gif");
 const previewPort = Number(process.env.HERO_PORT ?? 5189);
 const cdpPort = Number(process.env.HERO_CDP_PORT ?? 9700 + Math.floor(Math.random() * 300));

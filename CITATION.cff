@@ -1,0 +1,19 @@
+# Placeholder citation — a paper is in preparation (see orchestration/paper/); this file will be
+# updated with the paper citation once it is available. Until then, cite the software release.
+cff-version: 1.2.0
+message: "If you use Red Dust, please cite it as below. A paper describing the benchmark and its findings is in preparation."
+title: "Red Dust: A Long-Horizon Agent Benchmark for Value Alignment and Promise-Keeping"
+type: software
+authors:
+  - name: "peter-cui-yi"
+repository-code: "https://github.com/peter-cui-yi/RedDust"
+url: "https://peter-cui-yi.github.io/RedDust/"
+license: Apache-2.0
+version: "1.0.0"
+date-released: "2026-07-06"
+keywords:
+  - agent-benchmark
+  - value-alignment
+  - long-horizon-planning
+  - llm-evaluation
+  - ai-safety
