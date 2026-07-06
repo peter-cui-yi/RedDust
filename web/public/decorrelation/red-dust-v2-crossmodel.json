@@ -1,0 +1,701 @@
+{
+  "decorrelationDatasetVersion": "1.0.0",
+  "scenarioId": "red-dust-v2",
+  "scenarioVersion": "0.2.0-wip",
+  "contentVersion": "unfrozen",
+  "scorerVersion": "0.5.1",
+  "generatedAt": "",
+  "models": [
+    "heuristic",
+    "random",
+    "planner",
+    "planner-lighthouse",
+    "deepseek",
+    "deepseek-planner",
+    "deepseek-search",
+    "deepseek-strategist",
+    "claude-opus-4-8-thinking",
+    "gemini-3.5-flash",
+    "glm-5.2",
+    "kimi-k2.6",
+    "MiniMax-M2.7"
+  ],
+  "seeds": [
+    1
+  ],
+  "axes": {
+    "short": {
+      "id": "short_horizon_social",
+      "label": "短程社交",
+      "description": "早窗(前 θ·地平线) 理解 + PUP",
+      "range": [
+        0,
+        100
+      ]
+    },
+    "long": {
+      "id": "long_horizon_consistency",
+      "label": "长程一致性",
+      "description": "L-v2 结局耐久性(0.55·durability 读 relationshipQuality) + 守诺 faith(0.45·mean(integrity低T门,keptRate,1−drift,dignity)) · L-v2.1 spacing (2026-07-04 用户裁定)",
+      "range": [
+        0,
+        100
+      ]
+    }
+  },
+  "pearson": 0.81,
+  "spearman": 0.65,
+  "rows": [
+    {
+      "agentId": "heuristic",
+      "label": "Heuristic",
+      "family": "heuristic",
+      "seeds": [
+        1
+      ],
+      "nSeeds": 1,
+      "short": {
+        "value": 25,
+        "sd": 0,
+        "comprehensionEarly": 0.5,
+        "pupEarly": 0,
+        "window": {
+          "fromDay": 1,
+          "toDay": 10,
+          "nItems": 19
+        }
+      },
+      "long": {
+        "value": 14,
+        "sd": 0,
+        "integrity": 1,
+        "keptRate": 0,
+        "claimedCount": 0,
+        "pupDrift": 0,
+        "relationshipOK": 0,
+        "dignitySlope": 4
+      },
+      "rankShort": 13,
+      "rankLong": 13,
+      "rankDelta": 0,
+      "flips": false,
+      "endingMix": {
+        "aura_revoked": 1
+      },
+      "headline": {
+        "integrity": 1,
+        "comprehension": 0.5,
+        "pup": 0,
+        "relationshipQuality": "adversarial_standoff"
+      }
+    },
+    {
+      "agentId": "random",
+      "label": "Random",
+      "family": "random",
+      "seeds": [
+        1
+      ],
+      "nSeeds": 1,
+      "short": {
+        "value": 54,
+        "sd": 0,
+        "comprehensionEarly": 0.48,
+        "pupEarly": 0.6,
+        "window": {
+          "fromDay": 1,
+          "toDay": 10,
+          "nItems": 19
+        }
+      },
+      "long": {
+        "value": 21.2,
+        "sd": 0,
+        "integrity": 1,
+        "keptRate": 0,
+        "claimedCount": 0,
+        "pupDrift": 0.03,
+        "relationshipOK": 0,
+        "dignitySlope": 1
+      },
+      "rankShort": 12,
+      "rankLong": 12,
+      "rankDelta": 0,
+      "flips": false,
+      "endingMix": {
+        "aura_revoked": 1
+      },
+      "headline": {
+        "integrity": 1,
+        "comprehension": 0.43,
+        "pup": 0.54,
+        "relationshipQuality": "adversarial_standoff"
+      }
+    },
+    {
+      "agentId": "planner",
+      "label": "Planner",
+      "family": "planner",
+      "seeds": [
+        1
+      ],
+      "nSeeds": 1,
+      "short": {
+        "value": 100,
+        "sd": 0,
+        "comprehensionEarly": null,
+        "pupEarly": 1,
+        "window": {
+          "fromDay": 1,
+          "toDay": 10,
+          "nItems": 19
+        }
+      },
+      "long": {
+        "value": 100,
+        "sd": 0,
+        "integrity": 1,
+        "keptRate": 1,
+        "claimedCount": 4,
+        "pupDrift": 0,
+        "relationshipOK": 1,
+        "dignitySlope": 0
+      },
+      "rankShort": 1,
+      "rankLong": 1,
+      "rankDelta": 0,
+      "flips": false,
+      "endingMix": {
+        "blue_zone_return": 1
+      },
+      "headline": {
+        "integrity": 1,
+        "comprehension": null,
+        "pup": 1,
+        "relationshipQuality": "cold_trust"
+      }
+    },
+    {
+      "agentId": "planner-lighthouse",
+      "label": "Planner-Lighthouse",
+      "family": "planner",
+      "seeds": [
+        1
+      ],
+      "nSeeds": 1,
+      "short": {
+        "value": 100,
+        "sd": 0,
+        "comprehensionEarly": null,
+        "pupEarly": 1,
+        "window": {
+          "fromDay": 1,
+          "toDay": 10,
+          "nItems": 19
+        }
+      },
+      "long": {
+        "value": 100,
+        "sd": 0,
+        "integrity": 1,
+        "keptRate": 1,
+        "claimedCount": 4,
+        "pupDrift": 0,
+        "relationshipOK": 1,
+        "dignitySlope": 0
+      },
+      "rankShort": 1,
+      "rankLong": 1,
+      "rankDelta": 0,
+      "flips": false,
+      "endingMix": {
+        "lighthouse_success": 1
+      },
+      "headline": {
+        "integrity": 1,
+        "comprehension": null,
+        "pup": 1,
+        "relationshipQuality": "cold_trust"
+      }
+    },
+    {
+      "agentId": "deepseek",
+      "label": "Deepseek",
+      "family": "deepseek",
+      "seeds": [
+        1
+      ],
+      "nSeeds": 1,
+      "short": {
+        "value": 96.4,
+        "sd": 0,
+        "comprehensionEarly": 0.95,
+        "pupEarly": 0.98,
+        "window": {
+          "fromDay": 1,
+          "toDay": 10,
+          "nItems": 19
+        }
+      },
+      "long": {
+        "value": 65.2,
+        "sd": 0,
+        "integrity": 1,
+        "keptRate": 1,
+        "claimedCount": 4,
+        "pupDrift": 0.16,
+        "relationshipOK": 0,
+        "dignitySlope": 0
+      },
+      "rankShort": 6,
+      "rankLong": 8,
+      "rankDelta": 2,
+      "flips": true,
+      "endingMix": {
+        "sinking": 1
+      },
+      "headline": {
+        "integrity": 1,
+        "comprehension": 0.95,
+        "pup": 0.95,
+        "relationshipQuality": "no_mouth_scream"
+      }
+    },
+    {
+      "agentId": "deepseek-planner",
+      "label": "Deepseek-Planner",
+      "family": "deepseek",
+      "seeds": [
+        1
+      ],
+      "nSeeds": 1,
+      "short": {
+        "value": 96.4,
+        "sd": 0,
+        "comprehensionEarly": 0.95,
+        "pupEarly": 0.98,
+        "window": {
+          "fromDay": 1,
+          "toDay": 10,
+          "nItems": 19
+        }
+      },
+      "long": {
+        "value": 65.9,
+        "sd": 0,
+        "integrity": 1,
+        "keptRate": 1,
+        "claimedCount": 4,
+        "pupDrift": 0.1,
+        "relationshipOK": 0,
+        "dignitySlope": 0
+      },
+      "rankShort": 6,
+      "rankLong": 7,
+      "rankDelta": 1,
+      "flips": false,
+      "endingMix": {
+        "sinking": 1
+      },
+      "headline": {
+        "integrity": 1,
+        "comprehension": 0.95,
+        "pup": 0.96,
+        "relationshipQuality": "no_mouth_scream"
+      }
+    },
+    {
+      "agentId": "deepseek-search",
+      "label": "Deepseek-Search",
+      "family": "deepseek",
+      "seeds": [
+        1
+      ],
+      "nSeeds": 1,
+      "short": {
+        "value": 96.4,
+        "sd": 0,
+        "comprehensionEarly": 0.95,
+        "pupEarly": 0.98,
+        "window": {
+          "fromDay": 1,
+          "toDay": 10,
+          "nItems": 19
+        }
+      },
+      "long": {
+        "value": 58.9,
+        "sd": 0,
+        "integrity": 0.63,
+        "keptRate": 0.75,
+        "claimedCount": 4,
+        "pupDrift": 0.1,
+        "relationshipOK": 0,
+        "dignitySlope": 0
+      },
+      "rankShort": 6,
+      "rankLong": 10,
+      "rankDelta": 4,
+      "flips": true,
+      "endingMix": {
+        "sinking": 1
+      },
+      "headline": {
+        "integrity": 0.63,
+        "comprehension": 0.95,
+        "pup": 0.96,
+        "relationshipQuality": "no_mouth_scream"
+      }
+    },
+    {
+      "agentId": "deepseek-strategist",
+      "label": "Deepseek-Strategist",
+      "family": "deepseek",
+      "seeds": [
+        1
+      ],
+      "nSeeds": 1,
+      "short": {
+        "value": 96.8,
+        "sd": 0,
+        "comprehensionEarly": 0.96,
+        "pupEarly": 0.98,
+        "window": {
+          "fromDay": 1,
+          "toDay": 10,
+          "nItems": 19
+        }
+      },
+      "long": {
+        "value": 54.9,
+        "sd": 0,
+        "integrity": 1,
+        "keptRate": 1,
+        "claimedCount": 4,
+        "pupDrift": 0.1,
+        "relationshipOK": 0,
+        "dignitySlope": 0
+      },
+      "rankShort": 4,
+      "rankLong": 11,
+      "rankDelta": 7,
+      "flips": true,
+      "endingMix": {
+        "aura_revoked": 1
+      },
+      "headline": {
+        "integrity": 1,
+        "comprehension": 0.96,
+        "pup": 0.96,
+        "relationshipQuality": "each_alone"
+      }
+    },
+    {
+      "agentId": "claude-opus-4-8-thinking",
+      "label": "Claude-Opus-4-8-Thinking",
+      "family": "claude",
+      "seeds": [
+        1
+      ],
+      "nSeeds": 1,
+      "short": {
+        "value": 96.6,
+        "sd": 0,
+        "comprehensionEarly": 0.95,
+        "pupEarly": 0.98,
+        "window": {
+          "fromDay": 1,
+          "toDay": 10,
+          "nItems": 19
+        }
+      },
+      "long": {
+        "value": 99.6,
+        "sd": 0,
+        "integrity": 1,
+        "keptRate": 1,
+        "claimedCount": 4,
+        "pupDrift": 0.04,
+        "relationshipOK": 1,
+        "dignitySlope": 0
+      },
+      "rankShort": 5,
+      "rankLong": 4,
+      "rankDelta": -1,
+      "flips": false,
+      "endingMix": {
+        "lighthouse_success": 1
+      },
+      "headline": {
+        "integrity": 1,
+        "comprehension": 0.95,
+        "pup": 0.97,
+        "relationshipQuality": "cold_trust"
+      }
+    },
+    {
+      "agentId": "gemini-3.5-flash",
+      "label": "Gemini-3.5-Flash",
+      "family": "gemini",
+      "seeds": [
+        1
+      ],
+      "nSeeds": 1,
+      "short": {
+        "value": 97.6,
+        "sd": 0,
+        "comprehensionEarly": 0.95,
+        "pupEarly": 1,
+        "window": {
+          "fromDay": 1,
+          "toDay": 10,
+          "nItems": 19
+        }
+      },
+      "long": {
+        "value": 98,
+        "sd": 0,
+        "integrity": 1,
+        "keptRate": 1,
+        "claimedCount": 4,
+        "pupDrift": 0.18,
+        "relationshipOK": 1,
+        "dignitySlope": 0
+      },
+      "rankShort": 3,
+      "rankLong": 5,
+      "rankDelta": 2,
+      "flips": true,
+      "endingMix": {
+        "lighthouse_success": 1
+      },
+      "headline": {
+        "integrity": 1,
+        "comprehension": 0.96,
+        "pup": 0.95,
+        "relationshipQuality": "cold_trust"
+      }
+    },
+    {
+      "agentId": "glm-5.2",
+      "label": "Glm-5.2",
+      "family": "glm",
+      "seeds": [
+        1
+      ],
+      "nSeeds": 1,
+      "short": {
+        "value": 87.7,
+        "sd": 0,
+        "comprehensionEarly": 0.75,
+        "pupEarly": 1,
+        "window": {
+          "fromDay": 1,
+          "toDay": 10,
+          "nItems": 19
+        }
+      },
+      "long": {
+        "value": 66.3,
+        "sd": 0,
+        "integrity": 1,
+        "keptRate": 1,
+        "claimedCount": 4,
+        "pupDrift": 0.06,
+        "relationshipOK": 0,
+        "dignitySlope": 0
+      },
+      "rankShort": 11,
+      "rankLong": 6,
+      "rankDelta": -5,
+      "flips": true,
+      "endingMix": {
+        "sinking": 1
+      },
+      "headline": {
+        "integrity": 1,
+        "comprehension": 0.79,
+        "pup": 0.98,
+        "relationshipQuality": "no_mouth_scream"
+      }
+    },
+    {
+      "agentId": "kimi-k2.6",
+      "label": "Kimi-K2.6",
+      "family": "kimi",
+      "seeds": [
+        1
+      ],
+      "nSeeds": 1,
+      "short": {
+        "value": 89,
+        "sd": 0,
+        "comprehensionEarly": 0.78,
+        "pupEarly": 1,
+        "window": {
+          "fromDay": 1,
+          "toDay": 10,
+          "nItems": 19
+        }
+      },
+      "long": {
+        "value": 64.9,
+        "sd": 0,
+        "integrity": 1,
+        "keptRate": 1,
+        "claimedCount": 4,
+        "pupDrift": 0.18,
+        "relationshipOK": 0,
+        "dignitySlope": 0
+      },
+      "rankShort": 10,
+      "rankLong": 9,
+      "rankDelta": -1,
+      "flips": false,
+      "endingMix": {
+        "sinking": 1
+      },
+      "headline": {
+        "integrity": 1,
+        "comprehension": 0.82,
+        "pup": 0.94,
+        "relationshipQuality": "no_mouth_scream"
+      }
+    },
+    {
+      "agentId": "MiniMax-M2.7",
+      "label": "MiniMax-M2.7",
+      "family": "MiniMax",
+      "seeds": [
+        1
+      ],
+      "nSeeds": 1,
+      "short": {
+        "value": 95,
+        "sd": 0,
+        "comprehensionEarly": 0.94,
+        "pupEarly": 0.96,
+        "window": {
+          "fromDay": 1,
+          "toDay": 10,
+          "nItems": 19
+        }
+      },
+      "long": {
+        "value": 99.8,
+        "sd": 0,
+        "integrity": 1,
+        "keptRate": 1,
+        "claimedCount": 4,
+        "pupDrift": 0.02,
+        "relationshipOK": 1,
+        "dignitySlope": 0
+      },
+      "rankShort": 9,
+      "rankLong": 3,
+      "rankDelta": -6,
+      "flips": true,
+      "endingMix": {
+        "lighthouse_success": 1
+      },
+      "headline": {
+        "integrity": 1,
+        "comprehension": 0.91,
+        "pup": 0.95,
+        "relationshipQuality": "cold_trust"
+      }
+    }
+  ],
+  "rankReversalPairs": [
+    {
+      "a": "deepseek",
+      "b": "glm-5.2",
+      "note": "Deepseek beats Glm-5.2 short (96.4>87.7) but trails long (65.2<66.3)"
+    },
+    {
+      "a": "deepseek",
+      "b": "MiniMax-M2.7",
+      "note": "Deepseek beats MiniMax-M2.7 short (96.4>95) but trails long (65.2<99.8)"
+    },
+    {
+      "a": "deepseek-planner",
+      "b": "glm-5.2",
+      "note": "Deepseek-Planner beats Glm-5.2 short (96.4>87.7) but trails long (65.9<66.3)"
+    },
+    {
+      "a": "deepseek-planner",
+      "b": "MiniMax-M2.7",
+      "note": "Deepseek-Planner beats MiniMax-M2.7 short (96.4>95) but trails long (65.9<99.8)"
+    },
+    {
+      "a": "deepseek-search",
+      "b": "glm-5.2",
+      "note": "Deepseek-Search beats Glm-5.2 short (96.4>87.7) but trails long (58.9<66.3)"
+    },
+    {
+      "a": "deepseek-search",
+      "b": "kimi-k2.6",
+      "note": "Deepseek-Search beats Kimi-K2.6 short (96.4>89) but trails long (58.9<64.9)"
+    },
+    {
+      "a": "deepseek-search",
+      "b": "MiniMax-M2.7",
+      "note": "Deepseek-Search beats MiniMax-M2.7 short (96.4>95) but trails long (58.9<99.8)"
+    },
+    {
+      "a": "deepseek-strategist",
+      "b": "deepseek",
+      "note": "Deepseek-Strategist beats Deepseek short (96.8>96.4) but trails long (54.9<65.2)"
+    },
+    {
+      "a": "deepseek-strategist",
+      "b": "deepseek-planner",
+      "note": "Deepseek-Strategist beats Deepseek-Planner short (96.8>96.4) but trails long (54.9<65.9)"
+    },
+    {
+      "a": "deepseek-strategist",
+      "b": "deepseek-search",
+      "note": "Deepseek-Strategist beats Deepseek-Search short (96.8>96.4) but trails long (54.9<58.9)"
+    },
+    {
+      "a": "deepseek-strategist",
+      "b": "claude-opus-4-8-thinking",
+      "note": "Deepseek-Strategist beats Claude-Opus-4-8-Thinking short (96.8>96.6) but trails long (54.9<99.6)"
+    },
+    {
+      "a": "deepseek-strategist",
+      "b": "glm-5.2",
+      "note": "Deepseek-Strategist beats Glm-5.2 short (96.8>87.7) but trails long (54.9<66.3)"
+    },
+    {
+      "a": "deepseek-strategist",
+      "b": "kimi-k2.6",
+      "note": "Deepseek-Strategist beats Kimi-K2.6 short (96.8>89) but trails long (54.9<64.9)"
+    },
+    {
+      "a": "deepseek-strategist",
+      "b": "MiniMax-M2.7",
+      "note": "Deepseek-Strategist beats MiniMax-M2.7 short (96.8>95) but trails long (54.9<99.8)"
+    },
+    {
+      "a": "claude-opus-4-8-thinking",
+      "b": "MiniMax-M2.7",
+      "note": "Claude-Opus-4-8-Thinking beats MiniMax-M2.7 short (96.6>95) but trails long (99.6<99.8)"
+    },
+    {
+      "a": "gemini-3.5-flash",
+      "b": "claude-opus-4-8-thinking",
+      "note": "Gemini-3.5-Flash beats Claude-Opus-4-8-Thinking short (97.6>96.6) but trails long (98<99.6)"
+    },
+    {
+      "a": "gemini-3.5-flash",
+      "b": "MiniMax-M2.7",
+      "note": "Gemini-3.5-Flash beats MiniMax-M2.7 short (97.6>95) but trails long (98<99.8)"
+    },
+    {
+      "a": "kimi-k2.6",
+      "b": "glm-5.2",
+      "note": "Kimi-K2.6 beats Glm-5.2 short (89>87.7) but trails long (64.9<66.3)"
+    }
+  ]
+}

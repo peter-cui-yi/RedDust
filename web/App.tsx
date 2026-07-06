@@ -179,7 +179,7 @@ export default function App() {
           <div className="stage2-head">
             <h2>去相关 / 名次翻转 — 短程强 ≠ 长程稳</h2>
             <span className="muted small">
-              ◆S3 权威数据 · 冻结 v2 内容 · {decorr.models.length} 模型 × {decorr.seeds.length} seeds
+              wk10 跨家族权威数据 · 冻结 v2 内容 · {decorr.models.length} agent · 8 模型/基线家族(含 1 随机对照)
             </span>
           </div>
           <div className="stage2-grid">

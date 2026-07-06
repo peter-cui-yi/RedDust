@@ -88,10 +88,12 @@ export async function fetchTrace(file: string): Promise<TraceExport> {
   return res.json();
 }
 
-// ◆S3 authoritative Figure-1: 8-agent × 3-seed panel on frozen v2 content (content-freeze-s2).
-// bench/fixtures/decorrelation/red-dust-v2-authoritative.json, copied by `npm run sync:decorrelation`.
+// wk10 canonical Figure-1: 13-agent cross-family panel (4 deterministic + 4 deepseek + 5 portal
+// models: claude/gemini/glm/kimi/MiniMax) on frozen v2 content (content-freeze-s2). Supersedes the
+// 8-agent deepseek-only red-dust-v2-authoritative.json. bench/fixtures/decorrelation/
+// red-dust-v2-crossmodel.json, copied by `npm run sync:decorrelation`.
 export async function fetchDecorrelation(): Promise<DecorrelationDataset> {
-  const res = await fetch(`${base()}decorrelation/red-dust-v2-authoritative.json`);
+  const res = await fetch(`${base()}decorrelation/red-dust-v2-crossmodel.json`);
   if (!res.ok) throw new Error(`decorrelation fetch failed: ${res.status}`);
   return res.json();
 }
