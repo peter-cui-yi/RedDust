@@ -35,6 +35,15 @@
 
 ---
 
+## ◆S5 正式门禁（2026-07-06）——**PASS：检查单 6/6 我独立复核全绿；v1.0 已标；一项运维尾巴（部署重试）已派**
+
+**检查单终验（roadmap 六条，全部我实跑）**：① typecheck+build 绿 ✓；② `bench:win` v2 WINNABLE + 4 验证器绿（51 题）✓；③ 判别力/去相关：rc 面板 + 13-agent crossmodel（线上实测 pearson 0.81）✓；④ 字节复现：v1+v2 `bench:trace` 重产零漂移（**含 🟣 本波 worldFacts——声明字节中性，实测属实**）；report-only 红线由冻结保护路径零改动背书 ✓；⑤ 站点：公网 200 + `smoke:web` 11/11 ✓；⑥ README hero/figure 齐 + `.env.example` 含 DEEPSEEK 与 portal 双 key 说明 ✓。**v1.0 tag 已打**；release notes 数据段成稿（含 known-limitations 诚实条目）。冻结纪律至终点零违规。
+**本波三线**：🔵 workflow 加固落地（paths 过滤 + 排队并发）+ 透明记档；🟢 v1.0 标 + release notes + 论文轨首个发现（"长程弱是 durability 而非 integrity"——κ 方向重定，freeze-safe）；🟣 解冻后 C1–C6 worldFacts×7 场景（纯站点，字节中性实证）。
+**运维尾巴（唯一遗留，非上线阻塞）**：加固后仍现 1 次孤跑失败——build 全绿、`deploy-pages@v4` 单步挂，确认为 **Pages 后端瞬时抖动**（三次失败均"重跑即成"模式）。已派 🔵：部署步加一次自动重试（`continue-on-error` + `if: outcome=='failure'` 后备步）。当前线上为 3b6b3d1 内容（差 eeac11e 一个纯散文提交），🔵 推重试补丁时顺带带上最新内容。
+**判定：◆S5 PASS。开源上线在技术上已完成（仓库公开、站点公网可访、数据可复现、文档齐备）；正式"上线"只余用户对外官宣。** 论文级（held-out eval、N2–N scorer v0.6、κ 重定向后的 durability 深挖、NPC 多样性）按 charter 跨过 wk12 续跑。
+
+---
+
 ## 审计 · wk11 波 + Actions 失败调查（2026-07-06）——**站点已真实上线且为最新版；Action"失败"=瞬时部署撞车（非产品 bug）；◆S5 检查单 6/6，正式门禁就绪**
 
 **🔴 用户 flag 调查（GitHub Actions 失败）——结论：非产品问题，站点健康**。API 实查 8 次 run：6 成 2 败，**两次失败均 build 绿、挂在 `actions/deploy-pages@v4`**，且同一 SHA（8745db9）01:44 失败、01:46 重跑成功——**Pages 后端瞬时部署冲突**（三线短时连环 push → 连环部署撞车）。最新 run 成功；我实测线上 `https://peter-cui-yi.github.io/RedDust/` → 200，且 `red-dust-v2-crossmodel.json` 已是 13-agent/pearson 0.81 最新版。**根因放大器**：workflow 无 `paths` 过滤（bench/docs-only push 也触发部署）+ `cancel-in-progress: true` 在快速连推下与 Pages 后端 finalization 竞态。**修复已派 🔵**（两行：push 触发加 paths 过滤 + 并发改排队）。
