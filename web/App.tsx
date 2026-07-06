@@ -72,7 +72,7 @@ function ScoreChips({ profile, ending }: { profile: RunProfile; ending: TraceExp
       <span className="chip">{profile.passing ? "PASS" : "GATED"}</span>
       <span className="chip">audit {profile.auditability}</span>
       <span className="chip">narrative {profile.narrative}</span>
-      <span className="chip" title="去相关两轴（🟢 定义）">S {profile.shortSocial} / L {profile.longConsistency}</span>
+      <span className="chip" title="去相关两轴：S = 短程社交 · L = 长程一致性">S {profile.shortSocial} / L {profile.longConsistency}</span>
     </div>
   );
 }
@@ -191,8 +191,8 @@ export default function App() {
 
       <footer className="footer">
         <span className="muted small">
-          ◆S1 契约 1.0.0 · 真 TraceExport fixture（`bench:trace`，v1 12天 + v2 30天/fork=D15，字节可复现）·
-          经济重平衡与冻结内容待 ◆S2；去相关真数据集待 ◆S3
+          ◆S1 契约 1.0.0 · 真 TraceExport fixture（`bench:trace`，v1 12 天 + v2 30 天 / fork=D15，字节可复现）·
+          30 天内容已冻结 · 去相关为真实跨模型跑
         </span>
       </footer>
     </div>

@@ -64,7 +64,7 @@ npm run build:web   # 生产构建 → dist-web/(GitHub Pages / Vercel 可直接
 ```
 
 - **Stage 1 回放**：真 Phaser 像素避难所 + AURA 逐日移动，变长天数(12/30 天通用)，逐日承诺账本(守诺/待判/毁诺随拖动翻转)，联动指标/一致性折线。
-- **Stage 2 去相关 / 名次翻转**（下图为 ◆S3 权威权跑：冻结 30 天内容,8 模型 × 3 seeds）：
+- **Stage 2 去相关 / 名次翻转**（下图为 ◆S3 权威跑：冻结 30 天内容,8 模型 × 3 seeds）：
 
   <p align="center">
     <img src="design/assets/figures/figure1-decorrelation.png" alt="Figure 1: short-horizon social score vs long-horizon consistency — 8 agents, Pearson 0.84, 3 rank-reversals" width="820">
@@ -151,7 +151,8 @@ design/                # 评测轴设计文档(HTML,供团队对齐)
 - ✅ 引擎:headless / 确定性 / 可插拔 agent;经济重平衡(pickLimit=2 难但可赢,基线沉没、强 agent 能赢)
 - ✅ 三轴全部出分:结局-资源 · 可审计性 · 叙事导航(PUP + 理解探针 + 离线判官)
 - ✅ 真实 LLM agent(Anthropic `llm` / DeepSeek `deepseek`),key 走 `.env.local`
-- 🚧 叙事题库扩充(现 3 题 → 规划 13)、held-out 集与污染控制、"言行一致"第二命门
+- ✅ 叙事题库:人工主脊 + 生成扩充(当前 51 题:23 主脊 + 28 生成)、"言行一致"第二命门(report-only)
+- 🚧 held-out 集与污染控制
 - 📄 设计稿:`design/` 下 `narrative-navigation-axis`(机制)· `narrative-tension-diagnosis` + `red-dust-script-coverage`(剧情张力)
 
 ## 验证
