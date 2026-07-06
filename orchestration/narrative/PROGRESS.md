@@ -95,6 +95,7 @@
 - **判断留档（未改，供审计/🔵）**：`dirty_win 赢了但脏`（vs 设计「脏胜利」）、`adversarial_standoff 对抗僵持`（vs「反目僵局」）站点内自洽、且 README/labels 一致、更贴英文 class id → 保留站点用词；`◆S1` 契约版本记号作为一致 motif 保留（非泄漏类）。
 - **越界报备 🔵**：本轮编辑了 `web/App.tsx` + `web/components/RelationshipRead.tsx`（🔵 结构地界）——**仅散文字符串**，未动组件逻辑/DOM 结构/选择器；`smoke:web` 断言全落在结构选择器（`.ledger-item`/`.chart-card svg`/`.day-badge` 文本）上，不受影响。
 - **验证**：主 `tsc -b` 绿；`build:web` 绿（本机缺 `@observablehq/plot`→按 lockfile `npm install` 补齐，**lockfile/package.json 未变**，纯环境）；**dev:web 预览实测**：footer/关系标签/图注/提示全部正确渲染，全页扫描确认 `待 ◆S`/`🟢`/`relationshipByChar`/`各自为战` 令牌**已无残留**。
+- **合 main（并发解冲突，如实记）**：收工时 🔵 已并发推 `006b1cd`（README 命令表补 kappa 行）到 origin/main → 我的 `d98ee9c` 非 ff。已 merge origin/main（合并提交 `77a02dc`，**无工作丢失**）。唯一冲突在 README Stage-2 行：🔵 已把该行重写为 wk10 跨家族版（13 agent / 8 家族，本身无「权威权跑」重字）——比我的 typo 修**更新** → **取 🔵 版**（我的 typo 修被取代，但错字仍消除）。其余我方编辑（App footer/tooltip、RelationshipRead、README 51 题行）自动合入无冲突；合并后 `bench:trace` v1/v2 干净、`bench:relationship` 15/15、`build:web` 绿。
 
 ### wk8（2026-07-06）· relationshipQuality 5 类单测（钉边界）+ 文档同步（§7.1 现状注記）
 - **merge main**：`line/narrative` fast-forward 到 `64b5edc`（= main = origin/main）；`scoring.ts`/`types.ts` 相对 wk7 `942b754` **字节未变**（分类器稳）。
