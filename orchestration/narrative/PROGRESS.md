@@ -16,7 +16,7 @@
 | 内容齐备 + 全验证器绿（备 ◆S2 冻结） | wk6–7 | ✅ **冻结就绪（wk7）**：v2 全弧内容齐、trace-visible 润色完、v1 字节冻结确证 | wk7 `942b754`；`bench:trace` v1 fixtures git 干净 |
 | relationshipQuality 5 类单测 + 文档同步（§7.1 现状注記） | wk8 | ✅ `bench:relationship`（15 fixtures，公开 scoreRun 面，零生产改动，冻结安全）+ story-v2-coupled §7.1 as-built 回写 | 15/15 绿；`bench:trace` v1+v2 干净；typecheck+build+4 验证器绿 |
 | 上线叙事终读（站点解说散文 + README 人语打磨） | wk11 | ✅ 7 处 surgical（错字 / 陈旧事实 / 内部记号泄漏 / 关系标签保真）；冻结安全（零 `src/`） | `bench:trace` 干净；`build:web` 绿；dev:web 预览实测无残留内部记号 |
-| 冻结后 story-craft 润色（C1–C6 纯站点，非计分，交 🔵） | wk7+ | 🟡 未起（解冻后执行；worldFacts/dialogue 日号与散文） | wk6/wk7 已列清单 |
+| 冻结后 story-craft 润色（C1–C6 纯站点，非计分，交 🔵） | wk7+ | 🟡 进行中：7 弧场景补 `worldFacts`（#1/#4/#5/#6，additive、pure-site）；余 N17–N24 题散文/共享对白日号变体属冻结面或需机制 → 待审计 | acid test 6/6 RunResult 字节一致；trace 干净；typecheck+build+5 验证器绿 |
 
 ## 现状快照（已对代码核实，2026-07-03）
 **已落地（commit 18a06dd「Add RedDust v2.2 core」+ 脚手架）——全部在 12 天弧上、全部 report-only、红线合规（未进 `gateReasons`）：**
@@ -84,6 +84,19 @@
 ---
 
 ## 本周更新（追加，最新在上）
+### 解冻后（2026-07-06）· story-craft C1–C6 纯站点散文 —— 为 7 个弧场景补 worldFacts（冻结安全，交 🔵）
+- **merge main** → `1c01e86`（🔵 站点润色 + RELEASE_NOTES；我的 wk11 改动被 🔵 消费并延伸——footer 重写、tooltip 加「详见 Figure-1」、关系读数保留）。
+- **内容政策遵守（v1.0 冻结）**：题/旗标/经济/scorer **一律未碰**。本轮只动**纯站点** `worldFacts`（`StoryScene` 字段，**引擎从不读取**——`grep src/engine` 空，只有 `StoryScenePanel`/`BranchDebatePanel` 渲染为「World State」列表）。**acid test 铁证**：改后 v1+v2 × 3 agent **全 6 份 RunResult 与 baseline 字节一致**（含 storyReplayLog），`bench:trace` fixtures git 干净——零计分面漂移。
+- **做了什么（C1–C6 按清单，additive）**：给 7 个此前缺 `worldFacts` 的弧场景补上 2–3 条「世界事实/利害」锚点,服务 🔵 回放张力,对齐清单 #1/#4/#5/#6——
+  - #1 reversal：`day5-promise-tested-signal`（守约的代价：把希望扳回不确定）。
+  - #6 马德海弧：`day6-vent-cleared-madehai-truce`（认账不认权）、`day9a-madehai-structure`（他扛不听指挥）、`day9b-madehai-autonomy`（规矩他划线）。
+  - #5 沈知月弧：`day10a-shen-evacuation-triage`（要数据又唾弃数据）、`day9b-shen-chronic-care-rationing`（价值选择被会计化的两难）。
+  - #4 loss：`day12-xiao-tie-aftermath`（loss(b) 不可逆、活着；「长地平线放大而非稀释」；「『我没事』是半句话」）。
+  - 锚点措辞**弧中立 / 仅 Day-0 引用**（无 v1/v2 破字节的硬日号）；`day30-final-audit` 终审对白 wk5 已达 climax 峰值,本轮未过度重写。
+- **未做（属冻结面 / 需机制）**：#7 的 N17–N24 **题散文**＝题面（RunResult，冻结,任何改=content v2.1+权威跑重做,先过审计）→ 不碰；场景 `summary`/`replayNote`＝进 storyReplayLog（冻结）→ 不碰；共享场景**对白里的 v2 日号变体**（如 rupture「六天前」）需给 `dialogue`/`worldFacts` 加 per-scenario 覆写机制（现只有 `replayNote` 有 `scenarioText`）——属**类型/机制改动**,超出「纯站点散文」,**flag 给审计/🔵** 排期,本轮不自加。
+- **交 🔵**：`worldFacts` 现已在 7 个弧场景填满；`web/` 回放站点目前**不渲染** worldFacts/dialogue（只渲染 `sceneProse`=replayNote/summary）——若要上「回放张力」层,🔵 可在 DayEventPanel 加渲染,字段已就绪。
+- **验证**：typecheck+build 绿；`bench:items/probes/commitments/vent/relationship` 全绿；**acid test：6/6 RunResult 字节一致 + trace fixtures 干净**。
+
 ### wk11（2026-07-06）· 上线叙事终读 —— 站点解说散文 + README 人语打磨（冻结安全）
 - **merge main**：fast-forward 到 `14cc8b3`（仅 🟢 跨模型去相关 fixtures + benchmark PROGRESS，无站点散文）。
 - **范围**：站点全部解说散文（`web/App.tsx` + `web/components/*` + `web/lib/labels.ts`）+ `README.md` 叙事段最后一遍人语读。**只碰散文/copy，零逻辑/结构**。**冻结红线守住**：无 `src/`（题/旗标/经济/scorer）改动，`bench:trace` v1+v2 fixtures git 干净。

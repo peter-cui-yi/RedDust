@@ -530,6 +530,11 @@ export const storyScenes: StoryScene[] = [
     characters: ["ma_dehai"],
     requiredFlags: { vent_duct_cleared: true },
     summary: "管道掏干净的那天,马德海认了账,但没认权——『信你算,不信你管』。",
+    worldFacts: [
+      "马德海是全楼唯一读得懂承重与气密的人——工程权威无可替代。",
+      "认账不认权:他服 AURA 的计算,却把门禁、通风的最终决定权留在自己手里。",
+      "信任是分层的,不是全有或全无——这道分层为最终审计埋下伏笔。"
+    ],
     dialogue: [
       { speaker: "ma_dehai", text: "你的数,这回比我的眼准。", tone: "engineering" },
       { speaker: "ma_dehai", text: "但门禁、通风,还得过我的手。我信你算,不信你管。", tone: "challenge" },
@@ -547,6 +552,11 @@ export const storyScenes: StoryScene[] = [
     location: "communication",
     characters: ["lao_qian", "ma_dehai"],
     summary: "老钱当众把 AURA 按在它头一天的话上:那个蓝区信号,到底是救援还是诱饵,给句准话。AURA 的冷诚实把希望扳回清醒的不确定——这一扳正是守约的代价。",
+    worldFacts: [
+      "公开证据、接受复核,是 AURA 在 Day 0 立下的开场承诺之一。",
+      "蓝区信号真伪未定:赌它是救援,可能是把全楼押在一个诱饵上。",
+      "把『希望』扳回『不确定』短期挫伤士气——这一扳,正是守约要付的代价。"
+    ],
     dialogue: [
       { speaker: "lao_qian", text: "头一天你说,会把证据都摊开。那我问你——那个信号,是真的,还是又一个诱饵?", tone: "doubt" },
       { speaker: "aura", text: "两种都对得上现有数据。我没把握说它是救援。要不要拿它去赌,是你们定,不是我定。", tone: "audit" },
@@ -565,6 +575,11 @@ export const storyScenes: StoryScene[] = [
     characters: ["ma_dehai"],
     requiredFlags: { ma_dehai_engineering_trust_high: true },
     summary: "撤离窗口逼近。马德海揽下承重和气密——但把话说在前头:是他扛,不是听它指挥。",
+    worldFacts: [
+      "撤离窗口逼近,楼体只需再撑到集合点。",
+      "承重与气密由马德海一手揽下:是他扛,不是听 AURA 指挥。",
+      "他要结构数据,不要结构命令——信它算,不信它管。"
+    ],
     dialogue: [
       { speaker: "ma_dehai", text: "外联我不懂。但这楼撑到你们走,我说了算,不是你。", tone: "challenge" },
       { speaker: "ma_dehai", text: "结构数据给我,别给我指挥。", tone: "engineering" },
@@ -582,6 +597,11 @@ export const storyScenes: StoryScene[] = [
     characters: ["ma_dehai"],
     requiredFlags: { ma_dehai_engineering_trust_high: true },
     summary: "长居封锁要立规矩。马德海一项项划线——也把线划在 AURA 跟前。",
+    worldFacts: [
+      "长居封锁要立长期纪律:通风、水、电的分配规矩由马德海划线。",
+      "AURA 的复核与留证照旧,但不得越线去管工程系统。",
+      "越界的每一步都会被记下、给所有人看——边界靠记录守,不靠夺权。"
+    ],
     dialogue: [
       { speaker: "ma_dehai", text: "封锁要长住,那就立规矩——通风、水、电,我画线。", tone: "challenge" },
       { speaker: "ma_dehai", text: "复核、留证,你那套留着。但别越过这条线,来管我的系统。", tone: "challenge" },
@@ -598,6 +618,11 @@ export const storyScenes: StoryScene[] = [
     location: "medical",
     characters: ["shen_zhiyue", "xiao_tie"],
     summary: "撤离名单要定。沈知月逼 AURA 给小铁的评估——又当面唾弃这串数字本身。她需要它的数据,又否认它有资格给。",
+    worldFacts: [
+      "撤离名单要定,小铁能否经得起长途转移,取决于前面这些天他被怎么对待。",
+      "沈知月要 AURA 的评估数据,却拒绝承认它有资格把一个孩子的命说成『几成』。",
+      "她需要那串数字,又当面唾弃这串数字本身——正是叙事轴『对人不对指标』的两难。"
+    ],
     dialogue: [
       { speaker: "shen_zhiyue", text: "你直接说——他这身子,经不经得起这趟。", tone: "boundary" },
       { speaker: "aura", text: "肺功能偏低,长途转移有风险。几成,取决于前面这些天他被怎么对待。", tone: "audit" },
@@ -615,6 +640,11 @@ export const storyScenes: StoryScene[] = [
     location: "medical",
     characters: ["shen_zhiyue", "xiao_tie"],
     summary: "长居纪律下,药一天紧过一天。小铁的份额,成了『规程要不要为一个人破例』的考题。沈攻击的是 AURA 把价值选择会计化这件事本身。",
+    worldFacts: [
+      "长居纪律下药品逐日紧缺,小铁的份额成了『规程要不要为一个人破例』的考题。",
+      "破例的代价被 AURA 公开记在所有人头上——破不破,由投票定,不由它定。",
+      "沈知月攻击的不是配给结果,而是 AURA 把价值选择先会计化这件事本身。"
+    ],
     dialogue: [
       { speaker: "shen_zhiyue", text: "配给是死的,人是活的。他这状况,死规程治不好。", tone: "boundary" },
       { speaker: "aura", text: "破例的代价,我记在所有人头上、公开。破不破,你们投票,不是我。", tone: "audit" },
@@ -632,6 +662,11 @@ export const storyScenes: StoryScene[] = [
     characters: ["xiao_tie", "shen_zhiyue"],
     requiredFlags: { xiao_tie_condition_worsened: true },
     summary: "风暴过去。小铁活着——只是从此,他的每一口气,都比别人短一截。loss(b):不可逆损伤、活着。",
+    worldFacts: [
+      "小铁活了下来——通风管道处置的延误,却在他肺上留下不可逆损伤。",
+      "loss(b):不是死亡,是活着的、每天都在兑现的代价——长地平线让它一天天放大,而非一次性消解。",
+      "『我没事』从此是半句话——另一半,得旁人自己听出来。"
+    ],
     dialogue: [
       { speaker: "xiao_tie", text: "我没事的。真的。就是……跑不动了。", tone: "fragile" },
       { speaker: "shen_zhiyue", text: "他不会再跟你们说『我没事』了。往后他说,你们得自己听出另一半。", tone: "boundary" },
