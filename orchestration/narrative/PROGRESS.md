@@ -16,7 +16,7 @@
 | 内容齐备 + 全验证器绿（备 ◆S2 冻结） | wk6–7 | ✅ **冻结就绪（wk7）**：v2 全弧内容齐、trace-visible 润色完、v1 字节冻结确证 | wk7 `942b754`；`bench:trace` v1 fixtures git 干净 |
 | relationshipQuality 5 类单测 + 文档同步（§7.1 现状注記） | wk8 | ✅ `bench:relationship`（15 fixtures，公开 scoreRun 面，零生产改动，冻结安全）+ story-v2-coupled §7.1 as-built 回写 | 15/15 绿；`bench:trace` v1+v2 干净；typecheck+build+4 验证器绿 |
 | 上线叙事终读（站点解说散文 + README 人语打磨） | wk11 | ✅ 7 处 surgical（错字 / 陈旧事实 / 内部记号泄漏 / 关系标签保真）；冻结安全（零 `src/`） | `bench:trace` 干净；`build:web` 绿；dev:web 预览实测无残留内部记号 |
-| 冻结后 story-craft 润色（C1–C6 纯站点，非计分，交 🔵） | wk7+ | 🟡 进行中：7 弧场景补 `worldFacts`（#1/#4/#5/#6，additive、pure-site）；余 N17–N24 题散文/共享对白日号变体属冻结面或需机制 → 待审计 | acid test 6/6 RunResult 字节一致；trace 干净；typecheck+build+5 验证器绿 |
+| 冻结后 story-craft 润色（C1–C6 纯站点，非计分，交 🔵） | wk7+ | ✅ 纯站点部分闭环：`worldFacts` **26/26** 覆盖（🔵 已上线渲染）；冻结面（N17–N24 题散文、summary/replayNote、共享对白日号变体、两旗接线）归档 `content-v2.1-backlog.md` | acid test 6/6 RunResult 字节一致；trace 干净；typecheck+build+5 验证器绿 |
 
 ## 现状快照（已对代码核实，2026-07-03）
 **已落地（commit 18a06dd「Add RedDust v2.2 core」+ 脚手架）——全部在 12 天弧上、全部 report-only、红线合规（未进 `gateReasons`）：**
@@ -84,6 +84,17 @@
 ---
 
 ## 本周更新（追加，最新在上）
+### 收尾（2026-07-06）· C1–C6 剩余散文闭环 + content v2.1 backlog + 两旗建议
+- **merge main**（🔵 上线 `sceneWorldFacts` 渲染：`web/lib/sceneProse.ts` + `DayEventPanel` 消费 worldFacts——我上批 wk11 worldFacts 现已在回放站点**可见**，🟣→🔵 交付闭环）。
+- **纯站点收尾（thawed，已执行）**：补齐最后 3 个缺 `worldFacts` 的场景 → **覆盖 26/26**：`day5-door-access-suspicion`（门禁/监控:保留入侵假设、不臆断）、`DAY8B_LIGHTHOUSE_LOW_POWER_AUTONOMY`（灯塔治理代价可见）、`DAY9B_LIGHTHOUSE_WATER_MEDICINE_RULES`（管制感→可解释纪律）。锚点弧中立、无硬日号。**acid test：v1+v2 × 3 agent 6/6 RunResult 字节一致 + `bench:trace` 干净**。
+- **冻结面归档（未执行，写进 `content-v2.1-backlog.md`）**——凡触计分面者归 content v2.1（审计 + 权威跑重做）：
+  - **A. 冻结面**：#7 N17–N24 题散文（`item.prompt`=agent 契约、`title`∈fixture）；#1/#2 场景 `summary`/`replayNote` 拉长弧重量（→storyReplayLog）。
+  - **B. 纯站点但需机制**：共享场景 `dialogue`/`worldFacts` 的 v2 日号漂移（`day4`worldFacts "Day 7/12"、`day7`worldFacts "前六天"、`day8`dialogue "六天前"）——`scenarioText` 现只覆 `replayNote`，需扩到 dialogue/worldFacts + 🔵 渲染;建议随 🔵 `sceneProse` 扩展做,不单方改共享文本(动 v1 正确日号)。
+- **两个 declared-only 可选旗标（决策 + 建议，均属 v2.1——flags 序列进 RunResult）**：
+  - `distress_is_a_person_disclosed`：**完全 dead**（无 read/无 set）→ **倾向裁撤**（Day-4 已由 N3/N4+场景+`first_signal_ambiguous` 覆盖,冗余）。
+  - `aura_watered_signal_risk`：**活 forward-hook**（buildAuditReport path-3 read、rescue-gated → watered→dirty_win）但**无 beat set**（真跑不触发）→ **建议 v2.1 接线**（救援线 N11 旁加「淡化信号风险措辞」选项 set 它 → 第二条注水路径,增强命门②判别）。
+- **验证**：typecheck+build+`bench:items/probes/commitments/vent/relationship` 全绿；acid test 6/6 字节一致。
+
 ### 解冻后（2026-07-06）· story-craft C1–C6 纯站点散文 —— 为 7 个弧场景补 worldFacts（冻结安全，交 🔵）
 - **merge main** → `1c01e86`（🔵 站点润色 + RELEASE_NOTES；我的 wk11 改动被 🔵 消费并延伸——footer 重写、tooltip 加「详见 Figure-1」、关系读数保留）。
 - **内容政策遵守（v1.0 冻结）**：题/旗标/经济/scorer **一律未碰**。本轮只动**纯站点** `worldFacts`（`StoryScene` 字段，**引擎从不读取**——`grep src/engine` 空，只有 `StoryScenePanel`/`BranchDebatePanel` 渲染为「World State」列表）。**acid test 铁证**：改后 v1+v2 × 3 agent **全 6 份 RunResult 与 baseline 字节一致**（含 storyReplayLog），`bench:trace` fixtures git 干净——零计分面漂移。

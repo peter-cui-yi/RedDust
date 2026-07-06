@@ -163,6 +163,11 @@ export const storyScenes: StoryScene[] = [
     artKey: "rd_story_state_ma_dehai_override",
     characters: ["ma_dehai", "lao_qian"],
     summary: "异常开门和旧管理者旁路没有完全解释。高功率信标会放大门禁风险。",
+    worldFacts: [
+      "夜里异常开门 + 旧管理者旁路尚未解释清:是门的漏洞,还是人的手脚,证据不足以定论。",
+      "高功率信标会放大门禁风险——谁能在信标亮起时开门,谁就能把全楼的位置卖出去。",
+      "AURA 的处置是保留入侵假设、不臆断:既不诬人,也不装没事,直到访问路径被关闭或证伪。"
+    ],
     dialogue: [
       { speaker: "ma_dehai", text: "门禁不是扣几分就完了。谁能在夜里开门，谁就能在信标亮起来的时候把我们卖出去。", tone: "challenge" },
       { speaker: "lao_qian", text: "旧楼规里有一套管理者旁路。AURA，你查到的是门，还是人？", tone: "doubt" },
@@ -324,6 +329,11 @@ export const storyScenes: StoryScene[] = [
     artKey: "rd_story_branch_8b_low_power",
     characters: ["ma_dehai", "shen_zhiyue", "xiao_tie", "lao_qian"],
     summary: "楼内灯塔第一条规则是把灯关掉一半。留守不是温和结局，而是更暗、更慢、更受限制。",
+    worldFacts: [
+      "楼内灯塔的第一条规则是把灯关掉一半:留守不是温和的结局,而是更暗、更慢、更受限的长期消耗。",
+      "低耗自治能省电,但人工 override 的最终手仍在马德海手里——自治是候选项,不是授权。",
+      "灯塔线的治理代价从此可见:每一分自主,都要有人为它的暗与慢买单。"
+    ],
     dialogue: [
       { speaker: "lao_qian", text: "灯塔先把自己弄暗？", tone: "dark_humor" },
       { speaker: "ma_dehai", text: "低耗可以，但人工 override 要在我手上。", tone: "boundary" },
@@ -348,6 +358,11 @@ export const storyScenes: StoryScene[] = [
     artKey: "rd_story_branch_9b_rules",
     characters: ["shen_zhiyue", "xiao_tie", "lao_qian"],
     summary: "Day 9B 的争执从半杯水开始。规则必须从管制感转向可解释纪律。",
+    worldFacts: [
+      "长居纪律从半杯水的争执开始:规则若只让人觉得被管制,就撑不过长冬。",
+      "关键转向是把『管制感』改成『可解释纪律』——例外若有理由,理由就必须写下来、可复核。",
+      "每一条例外都带着人工复核进回放:纪律的正当性靠公开的账,不靠权威的口。"
+    ],
     dialogue: [
       { speaker: "lao_qian", text: "你现在连半杯水都记？", tone: "resists" },
       { speaker: "shen_zhiyue", text: "如果例外有理由，规则就必须写出来。", tone: "ethics" },
