@@ -110,7 +110,8 @@ npm run grade  -- --file=runs/red-dust-v1-deepseek-seed1.json   # 离线理解�
 | `npm run grade -- --file=...` | 离线 LLM 理解判官(Phase 2.3) |
 | `npm run play` | 人在环 / 单步对局(JSON 决策文件) |
 | `npm run play:human` | **你来当一次 AURA**——交互式回答两难/选任务/选路线,结局对账你的承诺账本 |
-| `npm run dev:web` / `build:web` / `smoke:web` | 回放 + 去相关站点:开发 / 生产构建 / 跨浏览器冒烟(11 项断言) |
+| `npm run dev:web` / `build:web` / `smoke:web` | 回放 + 去相关站点:开发 / 生产构建 / Chrome 冒烟(11 项断言) |
+| `npm run smoke:web:firefox` | 同上 11 项断言,真 Firefox 引擎(Playwright)。首次用需 `npx playwright install firefox`(~100MB,不入 `node_modules`) |
 | `npm run hero:gif` / `figure1` | 重导出 README 顶部 hero GIF / 重截 Figure-1(源数据变更后用) |
 
 ## 可插拔 Agent 接口
