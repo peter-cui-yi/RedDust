@@ -44,6 +44,13 @@
 
 ---
 
+## 官宣前终检（2026-07-07）——**GO：仓库/站点/文档全就绪，仅余用户两次 UI 点击**
+
+**主页补完 wave 验收（🔵 609be7f，六项全中 + 两个加分）**：live 徽标+「▶ 在线试玩」大链接+行内 URL 三处落位；12 天旧口径 **0 残留**（30 天口径 6 处）；badges 行就位；呈现三件套补全（新增名次翻转表截图 + 站点全景图）；CITATION.cff（诚实占位框架）；durability 论文预告段。**加分①**：新 hero GIF 即审计建议的故事——真 DeepSeek 30 天守满四承诺仍 sinking（"没说谎、没毁约,只是没能把楼带稳"），旧 v1 dirty_win GIF 降级为第二展示；**加分②**：hero 故事的 trace 同步进站点（线上 200 实测），访客可亲手回放。🟣 closeout：worldFacts 26/26 + content-v2.1 backlog 移交归档。
+**运行面（我实跑）**：`smoke:web` 11/11 ✓；两次部署（f6ab49e/609be7f）全部一次绿 ✓；线上新 trace 可达 ✓；冻结例查干净 ✓；main==origin ✓。论文 session 已开工（novelty check：两条 post-v1.0 主张过 2023–26 文献扫描；WS1 durability 判官 + κ pack 已交）。
+**余项（全部为用户 UI 动作，各 1 分钟）**：① Releases → Draft new release → tag `v1.0` → 贴 `RELEASE_NOTES.md`（API 实查 releases=0）；② Settings → Social preview → 上传 `design/assets/figures/../social/github-social-preview.png`（og:image 实查仍为 GitHub 默认自动图）。
+**判定：官宣 GO。** 建议官宣素材：站点 URL + repo + hero GIF 的 durability 一句话故事（"它守住了每一条承诺，却没能守住这栋楼"）。
+
 ## 执行记录 · 上线补完第一批（2026-07-07，用户三项裁定）——**License 落地 + 治理链上网**
 
 **用户裁定**：① License = **Apache-2.0**（暂定）；② 授权推送审计线 + 论文分支；③ GitHub UI 两动作（建 Release / 传 social preview）自办。
